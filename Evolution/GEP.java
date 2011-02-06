@@ -27,7 +27,7 @@ public class GEP {
 			orgList[i].setFitness(fitness(orgList[i]));
 		}
 		
-		tournament(orgList, 2, prob);
+		chromList = tournament(orgList, 2, prob);
 		rotation(chromList, rotProb);
 		mutation(chromList, mutProb);
 		chromList = twoPointCross(onePointCross(chromList, onePtProb), twoPtProb);
