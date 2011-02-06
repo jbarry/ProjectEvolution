@@ -63,6 +63,7 @@ public class GUI{
 	public GUI(){
 		/**Create and set jframe attributes*/
 		jframe = new JFrame();
+		jframe.setLayout(null);
 		jframe.setAlwaysOnTop(true);
 		jframe.setSize(GUI.WIDTH, GUI.HEIGHT);
 		jframe.setVisible(true);
@@ -72,16 +73,10 @@ public class GUI{
 		
 		/**Create Game Grid Panel*/
 		theGrid = new GridPanel();
-		theGrid.setLocation(GUI.WIDTH - GridPanel.WIDTH, 0);
-		theGrid.setSize(GridPanel.WIDTH, GridPanel.HEIGHT);
-		theGrid.setBorder(BorderFactory.createLineBorder(Color.black));
 		jframe.add(theGrid);
 		
 		/**Create Options Panel*/
-		optionsPanel = new OptionsPanel();
-		optionsPanel.setLocation(0, 0);
-		optionsPanel.setSize(OptionsPanel.WIDTH, jframe.getHeight() - OptionsPanel.HEIGHT);
-		optionsPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+		optionsPanel = new OptionsPanel(theGrid);
 		jframe.add(optionsPanel);
 		
 		/**Create Menu*/
@@ -137,6 +132,7 @@ public class GUI{
 					}
 				}
 		);
+	
 	}
 	
 	//------------------------------------------------------------------------------------
@@ -149,9 +145,8 @@ public class GUI{
 	 * @param e an ActionEvent instance
 	 */
 	private void getGridPanelData(ActionEvent e){
-		//inquire initial game state settings.
-		jframe.setAlwaysOnTop(false);
 		//textbox for # organisms inquiry
+		jframe.setAlwaysOnTop(false);
 		JTextField numOrganisms = new JTextField();
 		JPanel jP = new JPanel();
 		jP.setLayout(new GridLayout(2,2,5,5));
@@ -188,7 +183,7 @@ public class GUI{
 					//try again
 					getGridPanelData(e);
 				}
-				if(x > 1000){
+				else if(x > 1000){
 					JOptionPane.showMessageDialog(jframe, 
 							"Enter an integer less than 1000", 
 							"Error", JOptionPane.INFORMATION_MESSAGE);
