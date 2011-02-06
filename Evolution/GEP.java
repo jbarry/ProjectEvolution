@@ -4,7 +4,7 @@ import Interactive.Chromosome;
 import Interactive.Organism;
 import java.util.Random;
 import java.util.Arrays;
-
+impot java.util.*;
 import static java.lang.System.out;
 import java.util.ArrayList;
 public class GEP {
