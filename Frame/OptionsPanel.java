@@ -1,8 +1,12 @@
 package Frame;
 
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -13,16 +17,31 @@ public class OptionsPanel extends JPanel{
 	
 	public static int numOrgamisms = 0;
 	
-	private JTextField numOrgs;
+	private JTextField numOrgsTxtBox;
+	private JLabel     numOrgsLbl;
 	
-	public OptionsPanel(){
+	public OptionsPanel(final GridPanel theGrid){
+		//initial JPanel settings
+		setLayout(null);
+		setLocation(0,0);
+		setSize(OptionsPanel.WIDTH, OptionsPanel.HEIGHT);
+		setBorder(BorderFactory.createLineBorder(Color.black));
+		
 		/** # Organisms TextField */
-		numOrgs = new JTextField(4);
-		numOrgs.setLayout(null);
-		numOrgs.setSize(100,20);
-		numOrgs.setLocation(OptionsPanel.WIDTH/10, OptionsPanel.HEIGHT/10);
-		numOrgs.setFocusable(true);
-		add(numOrgs);
+		numOrgsTxtBox = new JTextField(4);
+		numOrgsTxtBox.setLayout(null);
+		numOrgsTxtBox.setSize(130,20);
+		numOrgsTxtBox.setLocation(OptionsPanel.WIDTH/10, OptionsPanel.HEIGHT/10);
+		numOrgsTxtBox.setFocusable(true);
+		add(numOrgsTxtBox);
+		
+		/** # Organisms Label */
+		numOrgsLbl = new JLabel();
+		numOrgsLbl.setLayout(null);
+		numOrgsLbl.setText("# organisms (0-1000):");
+		numOrgsLbl.setSize(130,20);
+		numOrgsLbl.setLocation(OptionsPanel.WIDTH/10, (OptionsPanel.HEIGHT/10)-20);
+		add(numOrgsLbl);
 		
 	    KeyListener nOrgKeyListener = new KeyListener() {
 			@Override
@@ -31,25 +50,21 @@ public class OptionsPanel extends JPanel{
 		        
 		        if (key == KeyEvent.VK_ENTER) {
 					try {
-						int x = Integer.parseInt(numOrgs.getText());
+						int x = Integer.parseInt(numOrgsTxtBox.getText());
 						if(x < 0){
-							JOptionPane.showMessageDialog(null, 
-									"Enter a positive integer (0-1000)", 
-									"Error", JOptionPane.INFORMATION_MESSAGE);
+							numOrgsLbl.setText("# < 0");
 						}
-						if(x > 1000){
-							JOptionPane.showMessageDialog(null, 
-									"Enter an integer less than 1000", 
-									"Error", JOptionPane.INFORMATION_MESSAGE);
+						else if(x > 1000){
+							numOrgsLbl.setText("# > 1000");
 						}
 						else{
+							numOrgsLbl.setText("# organisms (0-1000):");
 							//the number of organisms given via user-input.
 							OptionsPanel.numOrgamisms = x;
+							theGrid.initialize();
 						}
 					} catch (NumberFormatException a) {
-						JOptionPane.showMessageDialog(null, 
-								"Enter a valid integer", 
-								"Error", JOptionPane.INFORMATION_MESSAGE);
+						numOrgsLbl.setText("Invalid Entry!");
 					}	
 		        }
 			}
@@ -62,6 +77,6 @@ public class OptionsPanel extends JPanel{
 			public void keyTyped(KeyEvent arg0) {
 			}
 	    };
-	    numOrgs.addKeyListener(nOrgKeyListener);
+	    numOrgsTxtBox.addKeyListener(nOrgKeyListener);
 	}
 }
