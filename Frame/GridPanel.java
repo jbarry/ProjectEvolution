@@ -2,6 +2,7 @@ package Frame;
 
 import Interactive.Organism;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 /**
@@ -32,7 +35,13 @@ public class GridPanel extends JPanel
 	 * all objects in the current game state.
 	 */
 	public GridPanel()
-	{		
+	{	
+		//initial JPanel settings
+		setLayout(null);
+		setLocation(GUI.WIDTH - GridPanel.WIDTH,0);
+		setSize(GridPanel.WIDTH, GridPanel.HEIGHT);
+		setBorder(BorderFactory.createLineBorder(Color.black));
+		
 		//initial program settings
 		organisms = new ArrayList<Organism>();
 		
