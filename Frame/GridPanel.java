@@ -1,6 +1,6 @@
 package Frame;
 
-import Interactive.Organism;
+import Interactive.*;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -26,6 +26,7 @@ public class GridPanel extends JPanel
 	public final static int HEIGHT = 400;
 	
 	private List<Organism> organisms;
+	private List<Food> foodSources;
 
 	//------------------------------------------------------------------------------------
 	//--constructors--
@@ -44,6 +45,7 @@ public class GridPanel extends JPanel
 		
 		//initial program settings
 		organisms = new ArrayList<Organism>();
+		foodSources = new ArrayList<Food>();
 		
 		//a timer and it's action event to call at every time t.
 		javax.swing.Timer t = new javax.swing.Timer(50, new ActionListener() {
@@ -53,7 +55,6 @@ public class GridPanel extends JPanel
 	        		  //create new, random number 0-7 representing a movement.
 		        	  Random r = new Random();
 		        	  int movement = r.nextInt(8);
-		        	  //int movement = 2;
 		        	  //perform movement
 	        		  switch(movement){
 		        		  case 0: org.moveNorth(); break;
@@ -65,6 +66,9 @@ public class GridPanel extends JPanel
 		        		  case 6: org.moveWest(); break;
 		        		  case 7: org.moveNorthWest(); break; 
 	        		  }
+	        	  }
+	        	  for(Food f: foodSources){
+	        		  f.deplete();
 	        	  }
 	              repaint();
 	          }
@@ -81,8 +85,12 @@ public class GridPanel extends JPanel
 	 */
 	public void initialize(){
 		organisms.clear();
-		for(int i=0; i<OptionsPanel.numOrgamisms; i++){
+		foodSources.clear();
+		for(int i=0; i<OptionsPanel.numOrganisms; i++){
 			organisms.add(new Organism());
+		}
+		for(int i=0;i<OptionsPanel.numOrganisms/2;i++){
+			foodSources.add(new Food());
 		}
 	}
 	
@@ -123,8 +131,14 @@ public class GridPanel extends JPanel
 		//handle each new organism created.
 		for(Organism org : organisms){
 			setWrapAround(org);
-			System.out.println(org.getLocation());
+			//System.out.println(org.getLocation());
 			org.paint(g);
+		}
+		for(Food f: foodSources){
+  		  if(f.getFoodRemaining()>=0){
+  			  System.out.println(f.getFoodRemaining());
+			  f.paint(g);
+		  }
 		}
 	}
 }

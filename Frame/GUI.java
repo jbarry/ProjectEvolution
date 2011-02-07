@@ -192,7 +192,7 @@ public class GUI{
 				}
 				else{
 					//the number of organisms given via user-input.
-					OptionsPanel.numOrgamisms = x;
+					OptionsPanel.numOrganisms = x;
 				}
 			} catch (NumberFormatException a) {
 				JOptionPane.showMessageDialog(jframe, 

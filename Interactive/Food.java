@@ -1,4 +1,6 @@
 package Interactive;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.util.Random;
 
 import Frame.*;
@@ -17,7 +19,8 @@ public class Food {
 	//------------------------------------------------------------------------------------
 	public Food(){
 		this.r = new Random();
-		this.location=new Coordinate(r.nextInt(),r.nextInt());
+		this.location=new Coordinate(r.nextInt(GridPanel.WIDTH + 1), 
+		r.nextInt(GridPanel.HEIGHT + 1));
 		this.foodRemaining=100.0;	
 	}
 	
@@ -40,7 +43,7 @@ public class Food {
 		return foodRemaining;
 	}
 	
-	public Coordinate getCoordinate(){
+	public Coordinate getLocation(){
 		return location;
 	}
 	
@@ -48,7 +51,15 @@ public class Food {
 	//--accessors/mutators--
 	//------------------------------------------------------------------------------------
 	public void deplete(){
+		if(foodRemaining>=0){
 		foodRemaining--;
+		}
+	}
+	
+	public void paint(Graphics g)
+	{
+		g.setColor(Color.BLUE);
+		g.fillRect((int)this.getLocation().getX(), (int)this.getLocation().getY(), 5, 5);
 	}
 	
 	

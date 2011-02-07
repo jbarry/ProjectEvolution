@@ -15,7 +15,7 @@ public class OptionsPanel extends JPanel{
 	public final static int WIDTH  = 200;
 	public final static int HEIGHT = 400;
 	
-	public static int numOrgamisms = 0;
+	public static int numOrganisms = 0;
 	
 	private JTextField numOrgsTxtBox;
 	private JLabel     numOrgsLbl;
@@ -60,7 +60,7 @@ public class OptionsPanel extends JPanel{
 						else{
 							numOrgsLbl.setText("# organisms (0-1000):");
 							//the number of organisms given via user-input.
-							OptionsPanel.numOrgamisms = x;
+							OptionsPanel.numOrganisms = x;
 							theGrid.initialize();
 						}
 					} catch (NumberFormatException a) {
