@@ -2,18 +2,28 @@ package Evolution;
 
 import Interactive.Chromosome;
 import Interactive.Organism;
+import Interactive.Pair;
+
 import java.util.Random;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.lang.Double;
+import java.awt.List;
+
 import static java.lang.System.out;
-import java.util.ArrayList;
+
 public class GEP {
 
 	// Class variables.
-	private Organism[] orgList;
-	private Chromosome[] chromList;
+	private LinkedList <Organism> orgList;
+	private LinkedList <Chromosome> chromList;
 	private Random ran;
 
-	public GEP(Organism[] orgList, double prob, double mutProb, 
+	//TODO: mutProb = .01
+	//TODO: rotProb = .01
+	//TODO: onePt = .8
+	//TODO: tournProb = .75
+	public GEP(LinkedList <Organism>orgList, double prob, double mutProb, 
 			double rotProb, double onePtProb, double twoPtProb) {
 		this.orgList = orgList;
 		ran = new Random();
@@ -22,9 +32,19 @@ public class GEP {
 		//Case1: Fitness will be assessed based on the 
 		//organism with the most amount of health left
 		//receives the highest fitness.
-		for(int i = 0; i < orgList.length; i++) {
-			orgList[i].setFitness(fitness(orgList[i]));
+		for(int i = 0; i < orgList.size(); i++) {
+			orgList.get(i).setFitness(fitness(orgList.get(i)));
 		}
+		
+		//TODO: another way of carrying fitness info for organisms. They have no knowledge of
+		//their own fitness.
+		LinkedList<Pair<Organism, Double>> orgFitPairList =
+			new LinkedList<Pair<Organism, Double>>();
+		for(int i = 0; i < orgList.size(); i++) {
+			orgFitPairList.add(new Pair<Organism,
+					Double>(orgList.get(i), fitness(orgList.get(i))));
+		}
+		//TODO:tournament method with orgFitListPair
 		
 		chromList = tournament(orgList, 2, prob);
 		rotation(chromList, rotProb);
@@ -34,7 +54,7 @@ public class GEP {
 		//TODO: should be no need for this. If organisms handle themselves.
 		//redistribute the chromosomes into the same organisms.
 //		for(int i = 0; i < orgList.length; i++) {
-//			orgList[i].setChromosome(chromList[i]);
+//			orgList.get(i).setChromosome(chromList[i]);
 //		}
 	}
 
@@ -44,35 +64,48 @@ public class GEP {
 	 * @return a double representing the evaluated fitness of the organism.
 	 */
 	private double fitness(Organism org) {
-		return org.getHealth();
+		return (Double)org.getHealth();
 	}
 	
-	private Chromosome[] tournament(Organism [] generation, int tournSize, double prob) {
-		Chromosome[] aChromList = new Chromosome[generation.length];
+	//TODO: redo with pairs
+	private LinkedList<Chromosome> tournament(LinkedList<Organism> generation, int tournSize, double prob) {
+		LinkedList<Chromosome> aChromList = new LinkedList<Chromosome>();
 		int size = 0;
-		Organism cur = generation[0];
-		while(size != aChromList.length) {
+		Organism cur = generation.get(0);
+		while(size != aChromList.size()) {
 			int i = 0, num = 0;
 			while(num != tournSize) {
 				if(ran.nextDouble() < prob) {
-					if(cur.getFitness() < generation[i].getFitness()) {
-						if(generation[i] != null) {
-							cur = generation[i];
+					if(cur.getFitness() < generation.get(i).getFitness()) {
+						if(generation.get(i) != null) {
+							cur = generation.get(i);
 						}
 					}
 					num++;
 				}
 				i++;
 			}
-			aChromList[size] = cur.getChromosome();
-			orgList[i] = null;
+			aChromList.set(size, cur.getChromosome());
+			orgList.set(i,null);
 			size++;
 		}
 		return aChromList;
 	}
-
-	private void mutation(Chromosome[] generation, double prob) {
-		for(Chromosome chrom: generation) {
+	
+//	TODO: TournSize always 2.
+	private LinkedList<Pair<Pair<Organism, Double>, Pair<Organism,Double>>> tournament2(
+			LinkedList<Pair<Organism, Double>> generation, double prob) {
+		LinkedList<Pair<Pair<Organism, Double>, Pair<Organism, Double>>> pairList =
+			new LinkedList<Pair<Pair<Organism, Double>, Pair<Organism, Double>>>();
+		for(Pair<Organism, Double> org: generation) {
+			int partner = ran.nextInt(generation.size());
+			pairList.add(new Pair< Pair<Organism, Double> , Pair<Organism,Double> >(org, generation.get(partner)));
+		}
+		return pairList;
+	}
+	
+	private void mutation(LinkedList<Chromosome> chromList2, double prob) {
+		for(Chromosome chrom: chromList2) {
 			if(ran.nextDouble() < prob) {
 				int gene = ran.nextInt((chrom.getChrom()[0].length));
 				chrom.mutate(gene);
@@ -80,7 +113,17 @@ public class GEP {
 		}
 	}
 
-	private Chromosome[] onePointCross(Chromosome[] generation, double prob) {
+	private LinkedList<Chromosome> onePointCross(LinkedList<Chromosome> chromList2, double prob) {
+		Chromosome[][] pairList = mateSelect(chromList2);
+		for(Chromosome[] gene: pairList) {
+			if(ran.nextDouble() < prob) {
+				
+			}
+		}
+		return null;
+	}
+	
+	private LinkedList<Chromosome> twoPointCross(LinkedList<Chromosome> generation, double prob) {
 		Chromosome[][] pairList = mateSelect(generation);
 		for(Chromosome[] gene: pairList) {
 			if(ran.nextDouble() < prob) {
@@ -90,32 +133,20 @@ public class GEP {
 		return null;
 	}
 	
-	private Chromosome[] twoPointCross(Chromosome[] generation, double prob) {
-		Chromosome[][] pairList = mateSelect(generation);
-		for(Chromosome[] gene: pairList) {
-			if(ran.nextDouble() < prob) {
-				
-			}
-		}
-		return null;
-	}
-	
-	private Chromosome[][] mateSelect(Chromosome[] generation) {
-		ArrayList<Chromosome> chromArList = 
-			new ArrayList<Chromosome>(Arrays.asList(generation));
-		Chromosome[][] pairList = new Chromosome[generation.length/2][2];
-		for(int i = 0; i < chromArList.size(); i++) {
-				int mate = ran.nextInt(chromArList.size());
-				Chromosome[] pair = {chromArList.get(i), chromArList.get(mate)};
+	private Chromosome[][] mateSelect(LinkedList<Chromosome> generation) {
+		Chromosome[][] pairList = new Chromosome[generation.size()/2][2];
+		for(int i = 0; i < generation.size(); i++) {
+				int mate = ran.nextInt(generation.size());
+				Chromosome[] pair = {generation.get(i), generation.get(mate)};
 				pairList[i] = pair;
-				chromArList.remove(i);
-				chromArList.remove(mate);
+				generation.remove(i);
+				generation.remove(mate);
 		}
 		return pairList;
 	}
 	
-	private void rotation(Chromosome[] generation, double prob) {
-		for(Chromosome chrom: generation) {
+	private void rotation(LinkedList<Chromosome> chromList2, double prob) {
+		for(Chromosome chrom: chromList2) {
 			if(ran.nextDouble() <= prob) {
 				int x = ran.nextInt(chrom.getChrom().length);
 				chrom.rotate(x);
@@ -123,7 +154,7 @@ public class GEP {
 		}
 	}
 	
-	public Organism[] getOrgList() {
+	public LinkedList<Organism> getOrgList() {
 		return orgList;
 	}
 	

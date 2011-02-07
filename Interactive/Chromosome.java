@@ -14,6 +14,7 @@ public class Chromosome implements Crossable{
 	private Random ran;
 
 	private List geneticmaterial;
+	
 	public Chromosome() {
 		ran = new Random();
 	}
