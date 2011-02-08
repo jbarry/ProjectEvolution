@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
+@SuppressWarnings("all")
 public class OptionsPanel extends JPanel{
 	public final static int WIDTH  = 200;
 	public final static int HEIGHT = 400;

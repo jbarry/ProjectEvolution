@@ -5,7 +5,7 @@ import java.util.Random;
 
 import Frame.*;
 import Evolution.*;
-
+@SuppressWarnings("all")
 public class Food {
 	//------------------------------------------------------------------------------------
 	//--globals--
@@ -51,7 +51,7 @@ public class Food {
 	//--accessors/mutators--
 	//------------------------------------------------------------------------------------
 	public void deplete(){
-		if(foodRemaining>=0){
+		if(foodRemaining>0){
 			foodRemaining--;
 		}
 	}
@@ -60,10 +60,7 @@ public class Food {
 	{
 		g.setColor(Color.BLUE);
 		
-		if(isDepleted){
-			g.drawRect((int)this.getLocation().getX()-3, (int)this.getLocation().getY()-3, 6, 6);
-		}
-		else{
+		if(!isDepleted){
 			g.fillRect((int)this.getLocation().getX()-3, (int)this.getLocation().getY()-3, 6, 6);
 		}
 	}

@@ -6,8 +6,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Random;
 
 import javax.swing.BorderFactory;
@@ -17,6 +16,7 @@ import javax.swing.JPanel;
 /**
  * This class will handle all of the simulation's display.
  */
+@SuppressWarnings("all")
 public class GridPanel extends JPanel
 {
 	//------------------------------------------------------------------------------------
@@ -25,8 +25,8 @@ public class GridPanel extends JPanel
 	public final static int WIDTH = 600;
 	public final static int HEIGHT = 400;
 
-	private List<Organism> organisms;
-	private List<Food> foodSources;
+	private LinkedList<Organism> organisms;
+	private LinkedList<Food> foodSources;
 
 	//------------------------------------------------------------------------------------
 	//--constructors--
@@ -44,8 +44,8 @@ public class GridPanel extends JPanel
 		setBorder(BorderFactory.createLineBorder(Color.black));
 
 		//initial program settings
-		organisms = new ArrayList<Organism>();
-		foodSources = new ArrayList<Food>();
+		organisms = new LinkedList<Organism>();
+		foodSources = new LinkedList<Food>();
 
 		//a timer and it's action event to call at every time t.
 		javax.swing.Timer t = new javax.swing.Timer(50, new ActionListener() {
@@ -135,7 +135,7 @@ public class GridPanel extends JPanel
 			org.paint(g);
 		}
 		for(Food f: foodSources){
-			if(f.getFoodRemaining()>=0){
+			if(f.getFoodRemaining()>0){
 				System.out.println(f.getFoodRemaining());
 				f.paint(g, false);
 			}

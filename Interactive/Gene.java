@@ -1,6 +1,7 @@
 package Interactive;
 
 //TODO: Gene can evaluate itself.
+@SuppressWarnings("all")
 public class Gene<A extends Crossable> implements Crossable<Gene<A>> {
 
 	@Override

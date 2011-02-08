@@ -1,5 +1,5 @@
 package Frame;
-
+@SuppressWarnings("all")
 public class Coordinate {
 	//------------------------------------------------------------------------------------
 	//--globals--

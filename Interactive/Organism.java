@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import java.util.Random;
 
 import Frame.*;
-
+@SuppressWarnings("all")
 public class Organism {
 	//------------------------------------------------------------------------------------
 	//--globals--
@@ -44,6 +44,10 @@ public class Organism {
 	public Chromosome getChromosome(){
 		return chromosome;
 	}
+	
+	public void setChromosome(Chromosome c){
+		chromosome=c;
+	}
 
 	public double getFitness(){
 		return fitness;
@@ -56,6 +60,7 @@ public class Organism {
 	public double getHealth(){
 		return health;
 	}
+	
 	//------------------------------------------------------------------------------------
 	//--accessors/mutators--
 	//------------------------------------------------------------------------------------
@@ -100,6 +105,7 @@ public class Organism {
 		g.setColor(Color.BLACK);
 		g.fillRect((int)this.getLocation().getX()-3, (int)this.getLocation().getY()-3, 6, 6);
 	}
+
 
 	//------------------------------------------------------------------------------------
 	//--overloaded functions--

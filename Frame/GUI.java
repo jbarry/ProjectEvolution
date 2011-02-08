@@ -38,6 +38,7 @@ import javax.swing.WindowConstants;
  *	This class will host and initialize all JPanels and JMenuItems. It will
  *	NOT perform any game logic.
  */
+@SuppressWarnings("all")
 public class GUI{
 	//------------------------------------------------------------------------------------
 	//--globals--

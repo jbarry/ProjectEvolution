@@ -1,5 +1,5 @@
 package Interactive;
-
+@SuppressWarnings("all")
 public class Pair<A, B> {
 	  A fst;
 	  B snd;
