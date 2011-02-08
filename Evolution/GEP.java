@@ -15,8 +15,8 @@ import static java.lang.System.out;
 public class GEP {
 
 	// Class variables.
-	private LinkedList <Organism> orgList;
-	private LinkedList <Chromosome> chromList;
+	private LinkedList<Organism> orgList;
+	private LinkedList<Chromosome> chromList = new LinkedList<Chromosome>();
 	private Random ran;
 	private double tournProb;
 	private double mutProb;
@@ -33,6 +33,9 @@ public class GEP {
 		rotProb=aRotProb;
 		onePtProb=aOnePtProb;
 		twoPtProb=aTwoPtProb;
+		for(Organism o: orgList){
+			chromList.add(o.getChromosome());
+		}
 		
 		//Assess the fitness of each organism
 		//Case1: Fitness will be assessed based on the 
@@ -118,6 +121,7 @@ public class GEP {
 				chrom.mutate(gene);
 			}
 		}
+		chromList=aChromList;
 	}
 	
 	public void rotation(LinkedList<Chromosome> aChromList) {
@@ -127,6 +131,7 @@ public class GEP {
 				chrom.rotate(rotAmt);
 			}
 		}
+		chromList=aChromList;
 	}
 
 	private LinkedList<Chromosome> onePointCross(LinkedList<Chromosome> chromList2, double prob) {
@@ -164,6 +169,10 @@ public class GEP {
 	
 	public LinkedList<Organism> getOrgList() {
 		return orgList;
+	}
+	
+	public LinkedList<Chromosome> getChromList(){
+		return chromList;
 	}
 	
 }
