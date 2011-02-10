@@ -106,6 +106,20 @@ public class GEP {
 	}
 	
 	/**
+	 * Iterates through the chromList
+	 * @param aChromList
+	 * @param prob
+	 */
+	private void rotation(LinkedList<Chromosome> aChromList, double prob) {
+		for(Chromosome chrom: aChromList) {
+			if(ran.nextDouble() <= prob) {
+				int x = ran.nextInt(chrom.size());
+				chrom.rotate(x);
+			}
+		}
+	}
+
+	/**
 	 * 
 	 * @param generation
 	 * @param prob
@@ -200,20 +214,6 @@ public class GEP {
 				}
 				return pairList;
 		}
-	
-	/**
-	 * Iterates through the chromList
-	 * @param aChromList
-	 * @param prob
-	 */
-	private void rotation(LinkedList<Chromosome> aChromList, double prob) {
-		for(Chromosome chrom: aChromList) {
-			if(ran.nextDouble() <= prob) {
-				int x = ran.nextInt(chrom.size());
-				chrom.rotate(x);
-			}
-		}
-	}
 	
 	/**
 	 * Used for testing the GEP class. Simply prints a organism list
