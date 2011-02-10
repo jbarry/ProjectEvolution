@@ -39,7 +39,7 @@ import javax.swing.WindowConstants;
  *	NOT perform any game logic.
  */
 @SuppressWarnings("all")
-public class GUI{
+public class GUI {
 	//------------------------------------------------------------------------------------
 	//--globals--
 	//------------------------------------------------------------------------------------

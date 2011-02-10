@@ -23,12 +23,12 @@ import static java.lang.System.err;
 //TODO: implement in such a way that so many probability
 //variables do not need to be passed to the ctor.
 public class GEP {
-	
+
 	// Class variables.
 	private LinkedList<Organism> orgList;
 	private LinkedList<Chromosome> aChromList;
 	private Random ran;
-	
+
 	//TODO: mutProb = .01
 	//TODO: rotProb = .01
 	//TODO: onePt = .8
@@ -45,7 +45,7 @@ public class GEP {
 			Character mut) {
 		this.orgList = orgList;
 		ran = new Random();
-		
+
 		//Assess the fitness of each organism
 		//Case1: Fitness will be assessed based on the
 		//organism with the most amount of health left
@@ -53,7 +53,7 @@ public class GEP {
 		for(int i = 0; i < orgList.size(); i++) {
 			orgList.get(i).setFitness(fitness(orgList.get(i)));
 		}
-		
+
 		//TODO: another way of carrying fitness info for organisms.
 		//They have no knowledge of their own fitness.
 		//By removing fitness from Organism class.
@@ -61,7 +61,7 @@ public class GEP {
 			new LinkedList<Pair<Organism, Double>>();
 		for(int i = 0; i < orgList.size(); i++) {
 			orgFitPairList.add(new Pair<Organism,
-			Double>(orgList.get(i), fitness(orgList.get(i))));
+					Double>(orgList.get(i), fitness(orgList.get(i))));
 		}
 		printOrgList(orgList);
 		aChromList = tournament(partnerSelect(orgList), tournProb);
@@ -71,16 +71,16 @@ public class GEP {
 		mutation(aChromList, mutProb, mut);
 		printChromList(aChromList);
 	}
-	
+
 	/**
-	* This method assigns a double representing fitness of each organism.
-	* @param org - a single organism to be assessed.
-	* @return a double representing the evaluated fitness of the organism.
-	*/
+	 * This method assigns a double representing fitness of each organism.
+	 * @param org - a single organism to be assessed.
+	 * @return a double representing the evaluated fitness of the organism.
+	 */
 	private double fitness(Organism org) {
 		return (Double)org.getHealth();
 	}
-	
+
 	/**
 	 * @param partners - A LinkedList of organism Pairs.
 	 * Each member of a pair will compete with the other member.
@@ -104,7 +104,7 @@ public class GEP {
 		}
 		return newPop;
 	}
-	
+
 	/**
 	 * Iterates through the chromList
 	 * @param aChromList
@@ -133,15 +133,15 @@ public class GEP {
 			}
 		}
 	}
-	
-	
+
+
 	@SuppressWarnings("unused")
 	private LinkedList <Pair<Chromosome, Chromosome>> onePointCrossOver(
 			LinkedList<Chromosome> generation, double prob) {
-	LinkedList <Pair<Chromosome, Chromosome>> pairList =
-		mateSelect(generation);
-	LinkedList <Pair<Chromosome, Chromosome>> result =
-		new LinkedList <Pair<Chromosome, Chromosome>>();
+		LinkedList <Pair<Chromosome, Chromosome>> pairList =
+			mateSelect(generation);
+		LinkedList <Pair<Chromosome, Chromosome>> result =
+			new LinkedList <Pair<Chromosome, Chromosome>>();
 		for(Pair<Chromosome, Chromosome> mates: pairList) {
 			if(ran.nextDouble() < prob) {
 				result.add(mates.left().crossOver(mates.right()));
@@ -150,30 +150,30 @@ public class GEP {
 		//TODO: correct the return.
 		return result;
 	}
-	
-	
+
+
 	@SuppressWarnings("unused")
 	private void twoPointCrossOver(
 			LinkedList <Pair<Chromosome, Chromosome>> generation, double prob) {
-	LinkedList <Pair<Chromosome, Chromosome>> pairList =
-		new LinkedList <Pair<Chromosome, Chromosome>>();
+		LinkedList <Pair<Chromosome, Chromosome>> pairList =
+			new LinkedList <Pair<Chromosome, Chromosome>>();
 		for(Pair<Chromosome, Chromosome> mates: pairList) {
 			if(ran.nextDouble() < prob) {
 				mates.left().crossOver(mates.right());
 			}
 		}
 	}
-	
+
 	//Pairs up indiv from the chromosome list parameter and 
 	//makes them into Pair objects. Puts Pairs into a LinkedList.
 	//TODO: Make mate select an efficient symmetries on n.
 	private LinkedList <Pair<Chromosome, Chromosome>> mateSelect(
-		LinkedList<Chromosome> generation) {
-		
+			LinkedList<Chromosome> generation) {
+
 		LinkedList<Chromosome> selection = generation;
 		LinkedList<Pair<Chromosome, Chromosome>> pairList =
 			new LinkedList<Pair<Chromosome, Chromosome>>();
-		
+
 		for(int i = 0; i < generation.size(); i++) {
 			if(selection.size() == 0) {
 				selection = generation;
@@ -181,14 +181,14 @@ public class GEP {
 			int mate = ran.nextInt(selection.size());
 			Pair<Chromosome, Chromosome> mates =
 				new Pair<Chromosome, Chromosome>(
-			generation.get(i), selection.get(mate));
+						generation.get(i), selection.get(mate));
 			pairList.set(i, mates);
 			selection.remove(i);
 			selection.remove(mate);
 		}
 		return pairList;
 	}
-	
+
 	/**
 	 *Pairs up indiv from the Organism Pair list parameter and 
 	 *makes them into Pair objects. Puts Pairs into a LinkedList.
@@ -199,22 +199,22 @@ public class GEP {
 	@SuppressWarnings("unchecked")
 	private LinkedList <Pair<Organism, Organism>> partnerSelect(
 			LinkedList<Organism> population) {
-				LinkedList<Organism> selection;
-				LinkedList<Pair<Organism, Organism>> pairList =
-					new LinkedList<Pair<Organism, Organism>>();
-				for(int i = 0; i < population.size(); i++) {
-					selection = (LinkedList<Organism>) population.clone();
-					selection.remove(i);
-					int mate = ran.nextInt(selection.size());
-					Pair<Organism, Organism> mates =
-						new Pair<Organism, Organism>(
-					population.get(i), selection.get(mate));
-					
-					pairList.add(mates);
-				}
-				return pairList;
+		LinkedList<Organism> selection;
+		LinkedList<Pair<Organism, Organism>> pairList =
+			new LinkedList<Pair<Organism, Organism>>();
+		for(int i = 0; i < population.size(); i++) {
+			selection = (LinkedList<Organism>) population.clone();
+			selection.remove(i);
+			int mate = ran.nextInt(selection.size());
+			Pair<Organism, Organism> mates =
+				new Pair<Organism, Organism>(
+						population.get(i), selection.get(mate));
+
+			pairList.add(mates);
 		}
-	
+		return pairList;
+	}
+
 	/**
 	 * Used for testing the GEP class. Simply prints a organism list
 	 * that is passed to it.
@@ -234,7 +234,7 @@ public class GEP {
 			}
 		}
 	}
-	
+
 	/**
 	 * Used for testing the GEP class. Simply prints a chromosome list
 	 * that is passed to it.
@@ -252,9 +252,9 @@ public class GEP {
 			}
 		}
 	}
-	
+
 	//Used for debugging. Prints the line number.
 	public static int getLineNumber() {
-	    return Thread.currentThread().getStackTrace()[2].getLineNumber();
+		return Thread.currentThread().getStackTrace()[2].getLineNumber();
 	}
 }

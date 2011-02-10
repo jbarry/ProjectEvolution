@@ -5,6 +5,6 @@ import java.util.LinkedList;
 
 public abstract class Genetic {
 
-abstract int size();
+	abstract int size();
 }
 
