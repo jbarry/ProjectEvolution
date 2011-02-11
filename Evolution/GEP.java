@@ -29,21 +29,30 @@ public class GEP {
 	private LinkedList<Chromosome> aChromList;
 	private Random ran;
 
-	//TODO: mutProb = .01
-	//TODO: rotProb = .01
-	//TODO: onePt = .8
-	//TODO: tournProb = .75
-	//TODO: mut is only used for the testing of GEP class.
-	//		will have another way of inserting random mutations.
+	double tournProb;
+	boolean level;
+	double mutProb;
+	double rotProb;
+	double onePtProb;
+	double twoPtProb;
+	//TODO: will have another way of inserting random mutations.
 	public GEP(LinkedList <Organism>orgList,
-			double tournProb,
-			boolean level,
-			double mutProb, 
-			double rotProb,
-			double onePtProb,
-			double twoPtProb,
+			double aTournProb,
+			boolean aLevel,
+			double aMutProb, 
+			double aRotProb,
+			double aOnePtProb,
+			double aTwoPtProb,
 			Character mut) {
+
 		this.orgList = orgList;
+		tournProb = aTournProb;
+		level = aLevel;
+		mutProb = aMutProb;
+		rotProb = aRotProb;
+		onePtProb = aOnePtProb;
+		twoPtProb = aTwoPtProb;
+//		TODO: handicap = aHandicap;
 		ran = new Random();
 
 		//Assess the fitness of each organism
@@ -64,11 +73,11 @@ public class GEP {
 					Double>(orgList.get(i), fitness(orgList.get(i))));
 		}
 		printOrgList(orgList);
-		aChromList = tournament(partnerSelect(orgList), tournProb);
+		aChromList = tournament(partnerSelect(orgList));
 		printChromList(aChromList);
-		rotation(aChromList, rotProb);
+		rotation(aChromList);
 		printChromList(aChromList);
-		mutation(aChromList, mutProb, mut);
+		mutation(aChromList, mut);
 		printChromList(aChromList);
 	}
 
@@ -92,8 +101,7 @@ public class GEP {
 	 * @return returns each winner of a match, as a Chromosome, in a LinkedList.
 	 */
 	private LinkedList<Chromosome> tournament(
-			LinkedList<Pair<Organism, Organism>> partners,
-			double tournProb) {
+			LinkedList<Pair<Organism, Organism>> partners) {
 		LinkedList<Chromosome> newPop = new LinkedList<Chromosome>();
 		for(int i = 0; i < partners.size(); i++) {
 			if(fitness(partners.get(i).left()) < fitness(partners.get(i).right())) {
@@ -110,9 +118,9 @@ public class GEP {
 	 * @param aChromList
 	 * @param prob
 	 */
-	private void rotation(LinkedList<Chromosome> aChromList, double prob) {
+	private void rotation(LinkedList<Chromosome> aChromList) {
 		for(Chromosome chrom: aChromList) {
-			if(ran.nextDouble() <= prob) {
+			if(ran.nextDouble() <= rotProb) {
 				int x = ran.nextInt(chrom.size());
 				chrom.rotate(x);
 			}
@@ -125,9 +133,9 @@ public class GEP {
 	 * @param prob
 	 * @param mutation
 	 */
-	private void mutation(LinkedList<Chromosome> generation, double prob, Character mutation) {
+	private void mutation(LinkedList<Chromosome> generation, Character mutation) {
 		for(Chromosome chrom: generation) {
-			if(ran.nextDouble() < prob) {
+			if(ran.nextDouble() < mutProb) {
 				int gene = ran.nextInt((chrom.size()));
 				chrom.mutate(gene, mutation);
 			}
