@@ -55,7 +55,7 @@ public class MonitorPanel extends JPanel implements Runnable{
 		simObjInfo.setOpaque(false);
 		simObjInfo.setLocation(0, simPause.getHeight());
 		simObjInfo.setText("No Object Selected");
-		simObjInfo.setSize(MonitorPanel.WIDTH, 40);
+		simObjInfo.setSize(MonitorPanel.WIDTH, 60);
 		add(simObjInfo);
 		
 		/**Current Mouse Location Relative to Panel*/

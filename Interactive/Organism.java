@@ -140,10 +140,11 @@ public class Organism {
 	 * @return a String representation of the Object.
 	 */
 	public String toString(){
-			String str = "";
-			str += "I am an Organism. Fear me."
-				+  "\nLocation: " + getLocation();
-			return str;
-		}
+		String str = "";
+		str += "I am an Organism. Fear me."
+			+  "\nLocation: " + getLocation()
+			+  "\nHealth: " + getHealth();
+		return str;
+	}
 	}	
 

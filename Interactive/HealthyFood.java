@@ -21,7 +21,8 @@ public class HealthyFood extends Food {
 	public String toString() {
 		String str = "";
 		str += "I am food. Eat me."
-			+ "\nLocation: " + getLocation();
+			+ "\nLocation: " + getLocation()
+			+ "\nRemaining Food: " + getFoodRemaining();
 		return str;		
 	}
 

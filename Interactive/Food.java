@@ -1,9 +1,12 @@
 package Interactive;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Random;
-import Frame.*;
 
-public abstract class Food {
+import Frame.*;
+import Evolution.*;
+@SuppressWarnings("all")
+public class Food {
 	//------------------------------------------------------------------------------------
 	//--globals--
 	//------------------------------------------------------------------------------------
@@ -48,13 +51,28 @@ public abstract class Food {
 	//--accessors/mutators--
 	//------------------------------------------------------------------------------------
 	public void deplete(){
-		if(foodRemaining>=0){
+		if(foodRemaining>0){
 			foodRemaining--;
 		}
 	}
 
-	public abstract String toString();
+	public void paint(Graphics g, boolean isDepleted)
+	{
+		g.setColor(Color.BLUE);
+		
+		if(!isDepleted){
+			g.fillRect((int)this.getLocation().getX()-3, (int)this.getLocation().getY()-3, 6, 6);
+		}
+	}
 
-	public abstract void paint(Graphics g, boolean isDepleted);
+	/**
+	 * @return a String representation of the Object.
+	 */
+	public String toString(){
+		String str = "";
+		str += "I am foooooood. Eat me."
+			+  "\nLocation: " + getLocation();
+		return str;
+	}
 
 }

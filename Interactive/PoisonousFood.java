@@ -21,7 +21,8 @@ public class PoisonousFood extends Food{
 	public String toString() {
 		String str = "";
 		str += "I am poisonous food. Don't eat me."
-			+ "\nLocation: " + getLocation();
+			+ "\nLocation: " + getLocation()
+			+ "\nRemaining Poison: " + getFoodRemaining();
 		return str;		
 	}
 
