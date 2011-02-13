@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package Interactive;
 
 import java.awt.Color;
