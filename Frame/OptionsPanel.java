@@ -1,17 +1,20 @@
 package Frame;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 @SuppressWarnings("all")
-public class OptionsPanel extends JPanel{
+public class OptionsPanel extends JPanel implements Runnable{
 	public final static int WIDTH  = 200;
 	public final static int HEIGHT = 400;
 	
@@ -19,8 +22,14 @@ public class OptionsPanel extends JPanel{
 	
 	private JTextField numOrgsTxtBox;
 	private JLabel     numOrgsLbl;
+	private JButton    pause;
 	
-	public OptionsPanel(final GridPanel theGrid){
+	//------------------------------------------------------------------------------------
+	//--constructors--
+	//------------------------------------------------------------------------------------
+	public OptionsPanel(final GridPanel simulation){
+		run();
+		
 		//initial JPanel settings
 		setLayout(null);
 		setLocation(0,0);
@@ -61,7 +70,7 @@ public class OptionsPanel extends JPanel{
 							numOrgsLbl.setText("# organisms (0-1000):");
 							//the number of organisms given via user-input.
 							OptionsPanel.numOrganisms = x;
-							theGrid.initialize();
+							simulation.initialize();
 						}
 					} catch (NumberFormatException a) {
 						numOrgsLbl.setText("Invalid Entry!");
@@ -78,5 +87,44 @@ public class OptionsPanel extends JPanel{
 			}
 	    };
 	    numOrgsTxtBox.addKeyListener(nOrgKeyListener);
+	    
+		/** Pause/Resume Button */
+		pause = new JButton();
+		pause.setLayout(null);
+		pause.setText("Pause");
+		pause.setSize(90,20);
+		pause.setLocation(OptionsPanel.WIDTH/10, (OptionsPanel.HEIGHT/20) + 60);
+		add(pause);
+		
+		ActionListener p = new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				eventPause(simulation);
+			}	
+		};
+		pause.addActionListener(p);
+	}
+	
+	//------------------------------------------------------------------------------------
+	//--accessors/mutators--
+	//------------------------------------------------------------------------------------
+	public void eventPause(GridPanel simulation){
+		if(simulation.isPaused()){
+			simulation.start();
+			pause.setText("Pause");
+		}
+		else{
+			simulation.stop();
+			pause.setText("Resume");
+		}
+	}
+	
+	//------------------------------------------------------------------------------------
+	//--overloaded functions--
+	//------------------------------------------------------------------------------------
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
 	}
 }

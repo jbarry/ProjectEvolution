@@ -3,7 +3,7 @@ package Interactive;
 import java.lang.Character;
 import java.util.List;
 import java.util.LinkedList;
-@SuppressWarnings("all")
+
 public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene<A>> {
 
 	private List<Character> symList;
