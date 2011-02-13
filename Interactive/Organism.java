@@ -106,10 +106,30 @@ public class Organism {
 		location.setX(location.getX() - 1);
 		location.setY(location.getY() - 1);
 	}
+	
+	public void eatFood(Food f){
+		f.deplete();
+		if(f instanceof HealthyFood){
+			if(health<100 && health>99){
+				health = 100;
+			}
+			else if(health<=99){
+				health += 1;
+			}
+		}
+		else if(f instanceof PoisonousFood){
+			if(health>0 && health<1){
+				health = 0;
+			}
+			else if(health>=1){
+				health -= 1;
+			}
+		}
+	}
 
 	public void paint(Graphics g) {
 		g.setColor(Color.BLACK);
-		g.fillRect((int)this.getLocation().getX(), (int)this.getLocation().getY(), 5, 5);
+		g.fillRect((int)this.getLocation().getX()-2, (int)this.getLocation().getY()-2, 5, 5);
 	}
 
 	//------------------------------------------------------------------------------------
