@@ -65,5 +65,14 @@ public class Food {
 		}
 	}
 
+	/**
+	 * @return a String representation of the Object.
+	 */
+	public String toString(){
+		String str = "";
+		str += "I am foooooood. Eat me."
+			+  "\nLocation: " + getLocation();
+		return str;
+	}
 
 }

@@ -22,7 +22,6 @@ import static java.lang.System.err;
  */
 //TODO: implement in such a way that so many probability
 //variables do not need to be passed to the ctor.
-@SuppressWarnings("all")
 public class GEP {
 
 	// Class variables.
@@ -67,20 +66,19 @@ public class GEP {
 		//TODO: another way of carrying fitness info for organisms.
 		//They have no knowledge of their own fitness.
 		//By removing fitness from Organism class.
-//		LinkedList<Pair<Organism, Double>> orgFitPairList =
-//			new LinkedList<Pair<Organism, Double>>();
-//		for(int i = 0; i < orgList.size(); i++) {
-//			orgFitPairList.add(new Pair<Organism,
-//					Double>(orgList.get(i), fitness(orgList.get(i))));
-//		}
-//		printOrgList(orgList);
+		LinkedList<Pair<Organism, Double>> orgFitPairList =
+			new LinkedList<Pair<Organism, Double>>();
+		for(int i = 0; i < orgList.size(); i++) {
+			orgFitPairList.add(new Pair<Organism,
+					Double>(orgList.get(i), fitness(orgList.get(i))));
+		}
+		printOrgList(orgList);
 		aChromList = tournament(partnerSelect(orgList));
-//		printChromList(aChromList);
+		printChromList(aChromList);
 		rotation(aChromList);
-//		printChromList(aChromList);
+		printChromList(aChromList);
 		mutation(aChromList, mut);
 		printChromList(aChromList);
-		twoPointCrossOver(onePointCrossOver(aChromList, onePtProb), twoPtProb);
 	}
 
 	/**
@@ -145,7 +143,7 @@ public class GEP {
 	}
 
 
-	
+	@SuppressWarnings("unused")
 	private LinkedList <Pair<Chromosome, Chromosome>> onePointCrossOver(
 			LinkedList<Chromosome> generation, double prob) {
 		LinkedList <Pair<Chromosome, Chromosome>> pairList =
@@ -162,7 +160,7 @@ public class GEP {
 	}
 
 
-	
+	@SuppressWarnings("unused")
 	private void twoPointCrossOver(
 			LinkedList <Pair<Chromosome, Chromosome>> generation, double prob) {
 		LinkedList <Pair<Chromosome, Chromosome>> pairList =
@@ -180,18 +178,21 @@ public class GEP {
 	private LinkedList <Pair<Chromosome, Chromosome>> mateSelect(
 			LinkedList<Chromosome> generation) {
 
-		LinkedList<Chromosome> selection;
+		LinkedList<Chromosome> selection = generation;
 		LinkedList<Pair<Chromosome, Chromosome>> pairList =
 			new LinkedList<Pair<Chromosome, Chromosome>>();
 
 		for(int i = 0; i < generation.size(); i++) {
-			selection = (LinkedList<Chromosome>) generation.clone();
-			selection.remove(i);
+			if(selection.size() == 0) {
+				selection = generation;
+			}
 			int mate = ran.nextInt(selection.size());
 			Pair<Chromosome, Chromosome> mates =
 				new Pair<Chromosome, Chromosome>(
 						generation.get(i), selection.get(mate));
-			pairList.add(mates);
+			pairList.set(i, mates);
+			selection.remove(i);
+			selection.remove(mate);
 		}
 		return pairList;
 	}
@@ -203,6 +204,7 @@ public class GEP {
 	//TODO: Make mateSelect and partnerSelect the same. Either by 
 	//changing the method or how the method is called.
 	//TODO: Have partner select be the Symmetries on n.
+	@SuppressWarnings("unchecked")
 	private LinkedList <Pair<Organism, Organism>> partnerSelect(
 			LinkedList<Organism> population) {
 		LinkedList<Organism> selection;
@@ -231,6 +233,7 @@ public class GEP {
 			out.println("Chromosome " + i);
 			Chromosome chromOne = orgList.get(i).getChromosome();
 			for(int j = 0; j < chromOne.size(); j++) {
+				@SuppressWarnings("rawtypes")
 				Gene aGene = chromOne.getGene(j);
 				for(int k = 0; k < aGene.size(); k++) {
 					out.print(aGene.getSym(k).charValue() + " ");

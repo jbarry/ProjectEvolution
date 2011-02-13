@@ -18,6 +18,10 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -52,11 +56,13 @@ public class GUI {
 	private JMenu    helpMenu;
 
 	private JMenuItem newSimulation;
+	private JMenuItem pause;
 	private JMenuItem exitApplication;
 	private JMenuItem about;
 	
 	private OptionsPanel optionsPanel;
-	private GridPanel    theGrid;
+	private GridPanel    simulation;
+	private MonitorPanel monitorPanel;
 	
 	//------------------------------------------------------------------------------------
 	//--constructors--
@@ -72,13 +78,64 @@ public class GUI {
 		jframe.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		jframe.setTitle("Project Evolution");
 		
+		KeyListener frameKeyListener = new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent keyEvent) {
+		        int key = keyEvent.getKeyCode();
+		        switch(key){	        
+			        //p-key
+			        case KeyEvent.VK_P: {
+			        	optionsPanel.eventPause(simulation);
+			        }
+			        break;
+		        }
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+			}
+			
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+			}
+		};
+		jframe.addKeyListener(frameKeyListener);
+		
+		MouseListener frameMouseListener = new MouseListener(){
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				jframe.requestFocusInWindow();
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {	
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+			}
+		};
+		jframe.addMouseListener(frameMouseListener);
+		
 		/**Create Game Grid Panel*/
-		theGrid = new GridPanel();
-		jframe.add(theGrid);
+		simulation = new GridPanel();
+		jframe.add(simulation);
 		
 		/**Create Options Panel*/
-		optionsPanel = new OptionsPanel(theGrid);
+		optionsPanel = new OptionsPanel(simulation);
 		jframe.add(optionsPanel);
+		
+		/**Create Monitor Panel*/
+		monitorPanel = new MonitorPanel(simulation);
+		jframe.add(monitorPanel);
 		
 		/**Create Menu*/
 		menuBar  = new JMenuBar();
@@ -97,11 +154,20 @@ public class GUI {
 			public void actionPerformed(ActionEvent e){
 				//initialize GridPanel.
 				getGridPanelData(e);
-				theGrid.initialize();
+				simulation.initialize();
 			}
 		});
 		fileMenu.add(newSimulation);
 		
+		//pause/resume option
+		pause = new JMenuItem("Pause/Resume");
+		pause.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				optionsPanel.eventPause(simulation);
+			}
+		});
+		fileMenu.add(pause);
+
 		//exit option
 		exitApplication = new JMenuItem("Exit");
 		exitApplication.addActionListener(new ActionListener(){

@@ -6,6 +6,9 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -17,7 +20,7 @@ import javax.swing.JPanel;
  * This class will handle all of the simulation's display.
  */
 @SuppressWarnings("all")
-public class GridPanel extends JPanel
+public class GridPanel extends JPanel implements Runnable
 {
 	//------------------------------------------------------------------------------------
 	//--globals--
@@ -27,6 +30,8 @@ public class GridPanel extends JPanel
 
 	private LinkedList<Organism> organisms;
 	private LinkedList<Food> foodSources;
+	
+	private javax.swing.Timer t;
 
 	//------------------------------------------------------------------------------------
 	//--constructors--
@@ -37,49 +42,25 @@ public class GridPanel extends JPanel
 	 */
 	public GridPanel()
 	{
-		//initial JPanel settings
-		setLayout(null);
-		setLocation(GUI.WIDTH - GridPanel.WIDTH,0);
-		setSize(GridPanel.WIDTH, GridPanel.HEIGHT);
-		setBorder(BorderFactory.createLineBorder(Color.black));
-
-		//initial program settings
-		organisms = new LinkedList<Organism>();
-		foodSources = new LinkedList<Food>();
-
-		//a timer and it's action event to call at every time t.
-		javax.swing.Timer t = new javax.swing.Timer(50, new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				/*begin game logic here:*/
-				for(Organism org: organisms){
-					//create new, random number 0-7 representing a movement.
-					Random r = new Random();
-					int movement = r.nextInt(8);
-					//perform movement
-					switch(movement){
-					case 0: org.moveNorth(); break;
-					case 1: org.moveNorthEast(); break;
-					case 2: org.moveEast(); break;
-					case 3: org.moveSouthEast(); break;
-					case 4: org.moveSouth(); break;
-					case 5: org.moveSouthWest(); break;
-					case 6: org.moveWest(); break;
-					case 7: org.moveNorthWest(); break;
-					}
-				}
-				for(Food f: foodSources){
-					f.deplete();
-				}
-				repaint();
-			}
-		});
-
-		t.start();
+		run();
 	}
 
 	//------------------------------------------------------------------------------------
 	//--accessors and mutators--
 	//------------------------------------------------------------------------------------
+	/**For the timer*/
+	public void start(){
+		t.start();
+	}
+	public void stop(){
+		t.stop();
+	}
+	public boolean isPaused(){
+		if(t.isRunning())
+			return false;
+		return true;
+	}
+	
 	/**
 	 * Sets the initial game state of the GridPanel
 	 */
@@ -144,5 +125,142 @@ public class GridPanel extends JPanel
 				f.paint(g, true);
 			}
 		}
+	}
+
+	@Override
+	public void run() {
+		//initial JPanel settings
+		setLayout(null);
+		setLocation(GUI.WIDTH - GridPanel.WIDTH,0);
+		setSize(GridPanel.WIDTH, GridPanel.HEIGHT);
+		setBorder(BorderFactory.createLineBorder(Color.black));
+		
+		/**Add Listeners*/
+		//track user mouse movement.
+		MouseMotionListener simMouseMotion = new MouseMotionListener(){
+			@Override
+			public void mouseDragged(MouseEvent arg0) {
+			}
+			@Override
+			public void mouseMoved(MouseEvent arg0) {
+				try{
+					//get and display current mouse location.
+					Coordinate mouseLocation = new Coordinate(arg0.getX(), arg0.getY());
+					MonitorPanel.currMouseLoc.setText(mouseLocation.toString());
+					
+					//used to manage checks
+					boolean isOrg = false;
+					boolean isFood = false;
+					
+					//check mouse location vs. all organism's locations.
+					for(Organism o: organisms){	
+						if(mouseLocation.approxEquals(o.getLocation(),5)){
+							//organism found
+							isOrg = true;
+							MonitorPanel.simObjInfo.setText(o.toString());
+							//break to prevent any more updating from occuring and loop overhead.
+							break;
+						}
+						else{
+							isOrg = false;
+						}
+					}
+					
+					for(Food f: foodSources){					
+						if(mouseLocation.approxEquals(f.getLocation(),5)){
+							//food found
+							isFood = true;
+							MonitorPanel.simObjInfo.setText(f.toString());
+							//break to prevent any more updating from occuring and loop overhead.
+							break;
+						}
+						else{
+							isFood = false;
+						}
+					}
+					
+					if(!isFood & !isOrg){
+						MonitorPanel.simObjInfo.setText("No Object Selected");
+					}
+				}
+				catch(NullPointerException e){
+					
+				}
+			}	
+		};
+		addMouseMotionListener(simMouseMotion);
+		
+		//handle other mouse events
+		MouseListener simMouseListener = new MouseListener(){
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				try{
+					//get and display current mouse location.
+					Coordinate mouseLocation = new Coordinate(arg0.getX(), arg0.getY());
+					MonitorPanel.currMouseLoc.setText(mouseLocation.toString());
+				}
+				catch(NullPointerException e){
+					
+				}
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				MonitorPanel.currMouseLoc.setText("");
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		};
+		addMouseListener(simMouseListener);
+
+		//initial program settings
+		organisms = new LinkedList<Organism>();
+		foodSources = new LinkedList<Food>();
+
+		//a timer and it's action event to call at every time t.
+		t = new javax.swing.Timer(50, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				/*begin game logic here:*/
+				for(Organism org: organisms){
+					//create new, random number 0-7 representing a movement.
+					Random r = new Random();
+					int movement = r.nextInt(8);
+					//perform movement
+					switch(movement){
+					case 0: org.moveNorth(); break;
+					case 1: org.moveNorthEast(); break;
+					case 2: org.moveEast(); break;
+					case 3: org.moveSouthEast(); break;
+					case 4: org.moveSouth(); break;
+					case 5: org.moveSouthWest(); break;
+					case 6: org.moveWest(); break;
+					case 7: org.moveNorthWest(); break;
+					}
+				}
+				for(Food f: foodSources){
+					f.deplete();
+				}
+				repaint();
+			}
+		});
+
+		t.start();
 	}
 }
