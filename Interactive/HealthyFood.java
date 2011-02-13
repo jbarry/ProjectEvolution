@@ -20,9 +20,9 @@ public class HealthyFood extends Food {
 	@Override
 	public String toString() {
 		String str = "";
-		str += "I am food. Eat me."
-			+ "\nLocation: " + getLocation()
-			+ "\nRemaining Food: " + getFoodRemaining();
+		str += " I am food. Eat me."
+			+ "\n Location: " + getLocation()
+			+ "\n Remaining Food: " + getFoodRemaining();
 		return str;		
 	}
 

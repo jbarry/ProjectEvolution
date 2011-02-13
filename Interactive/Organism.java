@@ -141,9 +141,9 @@ public class Organism {
 	 */
 	public String toString(){
 		String str = "";
-		str += "I am an Organism. Fear me."
-			+  "\nLocation: " + getLocation()
-			+  "\nHealth: " + getHealth();
+		str += " I am an Organism. Fear me."
+			+  "\n Location: " + getLocation()
+			+  "\n Health: " + getHealth();
 		return str;
 	}
 	}	

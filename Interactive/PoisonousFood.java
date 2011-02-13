@@ -20,9 +20,9 @@ public class PoisonousFood extends Food{
 	@Override
 	public String toString() {
 		String str = "";
-		str += "I am poisonous food. Don't eat me."
-			+ "\nLocation: " + getLocation()
-			+ "\nRemaining Poison: " + getFoodRemaining();
+		str += " I am poisonous food. Don't eat me."
+			+ "\n Location: " + getLocation()
+			+ "\n Remaining Poison: " + getFoodRemaining();
 		return str;		
 	}
 

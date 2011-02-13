@@ -70,10 +70,10 @@ public class MonitorPanel extends JPanel implements Runnable{
 		t = new javax.swing.Timer(50, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(simulation.isPaused()){
-					simPause.setText("Paused");
+					simPause.setText(" Paused");
 				}
 				else{
-					simPause.setText("Running");
+					simPause.setText(" Running");
 				}
 				repaint();
 			}
