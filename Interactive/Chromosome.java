@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.Queue;
 import java.util.LinkedList;
-
+@SuppressWarnings("all")
 public class Chromosome extends Genetic implements Crossable<Chromosome> {
 
 	private List<Character> terminals;
@@ -14,6 +14,7 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 	private Random ran;
 
 	//Default ctor.
+	
 	public Chromosome() {
 		chromosome = new LinkedList<Gene>();
 		ran = new Random();

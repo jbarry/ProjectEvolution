@@ -22,6 +22,7 @@ import static java.lang.System.err;
  */
 //TODO: implement in such a way that so many probability
 //variables do not need to be passed to the ctor.
+@SuppressWarnings("all")
 public class GEP {
 
 	// Class variables.
@@ -144,7 +145,7 @@ public class GEP {
 	}
 
 
-	@SuppressWarnings("unused")
+	
 	private LinkedList <Pair<Chromosome, Chromosome>> onePointCrossOver(
 			LinkedList<Chromosome> generation, double prob) {
 		LinkedList <Pair<Chromosome, Chromosome>> pairList =
@@ -161,7 +162,7 @@ public class GEP {
 	}
 
 
-	@SuppressWarnings("unused")
+	
 	private void twoPointCrossOver(
 			LinkedList <Pair<Chromosome, Chromosome>> generation, double prob) {
 		LinkedList <Pair<Chromosome, Chromosome>> pairList =
@@ -202,7 +203,6 @@ public class GEP {
 	//TODO: Make mateSelect and partnerSelect the same. Either by 
 	//changing the method or how the method is called.
 	//TODO: Have partner select be the Symmetries on n.
-	@SuppressWarnings("unchecked")
 	private LinkedList <Pair<Organism, Organism>> partnerSelect(
 			LinkedList<Organism> population) {
 		LinkedList<Organism> selection;
@@ -231,7 +231,6 @@ public class GEP {
 			out.println("Chromosome " + i);
 			Chromosome chromOne = orgList.get(i).getChromosome();
 			for(int j = 0; j < chromOne.size(); j++) {
-				@SuppressWarnings("rawtypes")
 				Gene aGene = chromOne.getGene(j);
 				for(int k = 0; k < aGene.size(); k++) {
 					out.print(aGene.getSym(k).charValue() + " ");
