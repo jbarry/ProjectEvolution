@@ -378,7 +378,8 @@ public class GridPanel extends JPanel implements Runnable
 					
 					//used to manage checks
 					boolean isOrg = false;
-					boolean isFood = false;
+					boolean isPFood = false;
+					boolean isHFood = false;
 					
 					//check mouse location vs. all organism's locations.
 					for(Organism o: organisms){	
@@ -397,29 +398,29 @@ public class GridPanel extends JPanel implements Runnable
 					for(HealthyFood r: healthyFoodSources){					
 						if(mouseLocation.approxEquals(r.getLocation(),5)){
 							//food found
-							isFood = true;
+							isHFood = true;
 							MonitorPanel.simObjInfo.setText(r.toString());
 							//break to prevent any more updating from occuring and loop overhead.
 							break;
 						}
 						else{
-							isFood = false;
+							isHFood = false;
 						}
 					}
 					for(PoisonousFood r: poisonousFoodSources){					
 						if(mouseLocation.approxEquals(r.getLocation(),5)){
 							//food found
-							isFood = true;
+							isPFood = true;
 							MonitorPanel.simObjInfo.setText(r.toString());
 							//break to prevent any more updating from occuring and loop overhead.
 							break;
 						}
 						else{
-							isFood = false;
+							isPFood = false;
 						}
 					}
 					
-					if(!isFood & !isOrg){
+					if(!isHFood & !isPFood & !isOrg){
 						MonitorPanel.simObjInfo.setText("No Object Selected");
 					}
 				}
