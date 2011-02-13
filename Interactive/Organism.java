@@ -64,6 +64,10 @@ public class Organism {
 	public double getHealth() {
 		return health;
 	}
+	
+	public void setChromosome(Chromosome aChrom){
+		chromosome=aChrom;
+	}
 	//------------------------------------------------------------------------------------
 	//--accessors/mutators--
 	//------------------------------------------------------------------------------------

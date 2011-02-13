@@ -1,5 +1,6 @@
 package Frame;
 
+import Evolution.GEP;
 import Interactive.*;
 
 import java.awt.Color;
@@ -42,6 +43,7 @@ public class GridPanel extends JPanel
 		setLocation(GUI.WIDTH - GridPanel.WIDTH,0);
 		setSize(GridPanel.WIDTH, GridPanel.HEIGHT);
 		setBorder(BorderFactory.createLineBorder(Color.black));
+		
 
 		//initial program settings
 		organisms = new LinkedList<Organism>();

@@ -9,8 +9,9 @@ import Interactive.Chromosome;
 import Interactive.Gene;
 import Interactive.Organism;
 
+@SuppressWarnings("all")
 public class GEPTest {
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	
 	public static void main(String[] args) {
 		ArrayList<Character> symList = new ArrayList<Character>();
 		symList.add(new Character('a'));
@@ -38,8 +39,7 @@ public class GEPTest {
 			org.add(new Organism((double)(r.nextDouble()*100.0), chrom));
 		}
 		Character mut = symList.get(r.nextInt(symList.size()));
-		@SuppressWarnings("unused")
-		GEP gep = new GEP(org, 1.00, true, 1.00, 1.00, 1.00, 1.00, mut);
+		GEP g= new GEP(org, 1, 1, 1, 1, 1);
 		// org = gep.getOrgList();
 	}
 }
