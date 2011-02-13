@@ -77,10 +77,11 @@ public class GEP {
 		chromList = tournament(partnerSelect(orgList));
 		rotation();
 		mutation();
-		
 		for(int i=0; i<orgList.size(); i++){
 			orgList.get(i).setChromosome(chromList.get(i));
+			orgList.get(i).setHealth(100);
 		}
+		
 		return orgList;
 	}
 	
