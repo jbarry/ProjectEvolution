@@ -66,19 +66,20 @@ public class GEP {
 		//TODO: another way of carrying fitness info for organisms.
 		//They have no knowledge of their own fitness.
 		//By removing fitness from Organism class.
-		LinkedList<Pair<Organism, Double>> orgFitPairList =
-			new LinkedList<Pair<Organism, Double>>();
-		for(int i = 0; i < orgList.size(); i++) {
-			orgFitPairList.add(new Pair<Organism,
-					Double>(orgList.get(i), fitness(orgList.get(i))));
-		}
-		printOrgList(orgList);
+//		LinkedList<Pair<Organism, Double>> orgFitPairList =
+//			new LinkedList<Pair<Organism, Double>>();
+//		for(int i = 0; i < orgList.size(); i++) {
+//			orgFitPairList.add(new Pair<Organism,
+//					Double>(orgList.get(i), fitness(orgList.get(i))));
+//		}
+//		printOrgList(orgList);
 		aChromList = tournament(partnerSelect(orgList));
-		printChromList(aChromList);
+//		printChromList(aChromList);
 		rotation(aChromList);
-		printChromList(aChromList);
+//		printChromList(aChromList);
 		mutation(aChromList, mut);
 		printChromList(aChromList);
+		twoPointCrossOver(onePointCrossOver(aChromList, onePtProb), twoPtProb);
 	}
 
 	/**
@@ -178,21 +179,18 @@ public class GEP {
 	private LinkedList <Pair<Chromosome, Chromosome>> mateSelect(
 			LinkedList<Chromosome> generation) {
 
-		LinkedList<Chromosome> selection = generation;
+		LinkedList<Chromosome> selection;
 		LinkedList<Pair<Chromosome, Chromosome>> pairList =
 			new LinkedList<Pair<Chromosome, Chromosome>>();
 
 		for(int i = 0; i < generation.size(); i++) {
-			if(selection.size() == 0) {
-				selection = generation;
-			}
+			selection = (LinkedList<Chromosome>) generation.clone();
+			selection.remove(i);
 			int mate = ran.nextInt(selection.size());
 			Pair<Chromosome, Chromosome> mates =
 				new Pair<Chromosome, Chromosome>(
 						generation.get(i), selection.get(mate));
-			pairList.set(i, mates);
-			selection.remove(i);
-			selection.remove(mate);
+			pairList.add(mates);
 		}
 		return pairList;
 	}

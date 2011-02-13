@@ -34,7 +34,7 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 
 	@Override
 	public Pair<Gene<A>, Gene<A>> crossOver(Gene<A> other) {
-
+		
 		return new Pair<Gene<A>, Gene<A>>(other, other);
 	}
 

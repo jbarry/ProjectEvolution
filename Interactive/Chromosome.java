@@ -43,19 +43,25 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 
 	@Override
 	public Pair<Chromosome, Chromosome> crossOver(Chromosome other) {
+		//The point where the crossover will occur.
 		int crossPoint = ran.nextInt(this.size());
-		LinkedList<Gene> child1 = (LinkedList<Gene>) chromosome.subList(0, crossPoint);
-		LinkedList<Gene> child2 = (LinkedList<Gene>) other.subListGene(crossPoint, other.size());
-		Gene g = (Gene)this.getGene(crossPoint);
-		g.crossOver(other.getGene(crossPoint));
-		Pair<Gene, Gene> crossedGenes = getGene(crossPoint).crossOver(other.getGene(crossPoint));
+		//Generate two sublists of the current chromosome
+		//at the crossover point.
+		List<Gene> child1 = (List<Gene>) chromosome.subList(0, crossPoint);
+		List<Gene> child2 = (List<Gene>) other.subListGene(
+				crossPoint, other.size());
+		//Call Crossover on the current chromosomes 
+		//gene at crossPoint with the other chromosomes gene
+		//at the same crossPoint.
+		Pair<Gene, Gene> crossedGenes = getGene(crossPoint).crossOver(
+				other.getGene(crossPoint));
 		child1.set(crossPoint, crossedGenes.left());
 		child2.set(crossPoint, crossedGenes.right());
 		return new Pair<Chromosome, Chromosome>(this, other);
 	}
 
-	public LinkedList<Gene> subListGene(int x, int y) {
-		return (LinkedList<Gene>) chromosome.subList(x, y);
+	public List<Gene> subListGene(int x, int y) {
+		return (List<Gene>) chromosome.subList(x, y);
 	}
 	public Gene getGene(int index) {
 		return (Gene) chromosome.get(index);
