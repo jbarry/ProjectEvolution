@@ -25,7 +25,7 @@ public class GEPTest {
 		symList.add(new Character('j'));
 		LinkedList <Organism> org = new LinkedList<Organism>();
 		Random r = new Random();
-		for(int i = 0; i < 5; i++) {
+		for(int i = 0; i < 2; i++) {
 			LinkedList<Gene> genes = new LinkedList<Gene>();
 			for (int j = 0; j < 3; j++){
 				LinkedList<Character> symList1 = new LinkedList<Character>();
@@ -38,7 +38,7 @@ public class GEPTest {
 			org.add(new Organism((double)(r.nextDouble()*100.0), chrom));
 		}
 		Character mut = symList.get(r.nextInt(symList.size()));
-		GEP gep = new GEP(org, 1.00, 1.00, 1.00, 1.00, 1.00);
+		GEP gep = new GEP(org, 0.00, 1.00, 1.00, 1.00, 1.00);
 		 org = gep.getOrgList();
 	}
 }
