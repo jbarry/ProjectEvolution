@@ -71,6 +71,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 							//the number of organisms given via user-input.
 							OptionsPanel.numOrganisms = x;
 							simulation.initialize();
+							simulation.start();
 						}
 					} catch (NumberFormatException a) {
 						numOrgsLbl.setText("Invalid Entry!");

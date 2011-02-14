@@ -155,6 +155,7 @@ public class GUI {
 				//initialize GridPanel.
 				getGridPanelData(e);
 				simulation.initialize();
+				simulation.start();
 			}
 		});
 		fileMenu.add(newSimulation);

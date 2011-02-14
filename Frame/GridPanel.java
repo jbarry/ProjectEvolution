@@ -37,6 +37,7 @@ public class GridPanel extends JPanel implements Runnable
 	private int timePassed=0;
 	private GEP g;
 	private javax.swing.Timer t;
+	private boolean[][] validLocationMap;
 
 	//------------------------------------------------------------------------------------
 	//--constructors--
@@ -74,13 +75,13 @@ public class GridPanel extends JPanel implements Runnable
 		organisms.clear();
 		healthyFoodSources.clear();
 		poisonousFoodSources.clear();
+		g= new GEP(organisms, 1,1,1,1,1);
 		
 		boolean validOrganismLocation = false;
 		for(int i=0; i<OptionsPanel.numOrganisms; i++){
 			while(!validOrganismLocation){
 				Organism o = new Organism();
 				boolean conflicts = organismConflictsWithAnotherOrganism(o);
-				
 				if(!conflicts){
 					organisms.add(o);
 					validOrganismLocation = true;
@@ -89,8 +90,6 @@ public class GridPanel extends JPanel implements Runnable
 			validOrganismLocation = false;
 			
 		}
-		g= new GEP(organisms, 1,1,1,1,1);
-		
 		initHealthyFoodLocations();
 		initPoisonousFoodLocations();
 	}
@@ -118,21 +117,28 @@ public class GridPanel extends JPanel implements Runnable
 	/**
 	 * Dwight will mess with this
 	 */
-	public void initNextOrganism(){
+	public void initNextGeneration(){
 		boolean validOrganismLocation = false;
+		for(Organism o: organisms){
+			o.newLocation();
+		}
+		validOrganismLocation=false;
 		for(int i=0; i<OptionsPanel.numOrganisms; i++){
 			while(!validOrganismLocation){
-				Organism o = new Organism();
+				Organism o = organisms.get(i);
+				o.newLocation();
 				boolean conflicts = organismConflictsWithAnotherOrganism(o);
-				
+				System.out.println(conflicts);
 				if(!conflicts){
-					organisms.add(o);
 					validOrganismLocation = true;
 				}
 			}
 			validOrganismLocation = false;
 			
 		}
+		
+		initHealthyFoodLocations();
+		initPoisonousFoodLocations();
 	}
 	
 	/**
@@ -606,6 +612,12 @@ public class GridPanel extends JPanel implements Runnable
 		organisms = new LinkedList<Organism>();
 		healthyFoodSources = new LinkedList<HealthyFood>();
 		poisonousFoodSources = new LinkedList<PoisonousFood>();
+		validLocationMap= new boolean[GridPanel.WIDTH][GridPanel.HEIGHT];
+		for(int i=0;i<validLocationMap.length;i++){
+			for(int j=0;j<validLocationMap[i].length;j++){
+				validLocationMap[i][j]=true;
+			}
+		}
 
 		//a timer and it's action event to call at every time t.
 		t = new javax.swing.Timer(lengthTimeStep, new ActionListener() {
@@ -646,13 +658,14 @@ public class GridPanel extends JPanel implements Runnable
 					repaint();
 				}
 				else{
-					timePassed=0;
 					g.setOrgList(organisms);
 					organisms=g.newGeneration();
+					initNextGeneration();
+					System.out.println("after init");
+					timePassed=0;
+					repaint();
 				}
 			}
 		});
-
-		t.start();
 	}
 }
