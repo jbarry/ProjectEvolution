@@ -16,6 +16,7 @@ public class Organism {
 	//TODO: fitness instance variable.
 	// Organism should not have knowledge of its own fitness
 	private double fitness;
+	private Random r;
 
 	//------------------------------------------------------------------------------------
 	//--constructors--
@@ -23,7 +24,7 @@ public class Organism {
 	public Organism() {
 		health = 100.00;
 		//location (x, y) is random between (0-width,0-height) inclusive
-		Random r = new Random();
+		r = new Random();
 		location = new Coordinate(r.nextInt(GridPanel.WIDTH + 1),
 				r.nextInt(GridPanel.HEIGHT + 1));
 		chromosome = new Chromosome();
@@ -40,6 +41,11 @@ public class Organism {
 		health = 100.0;
 		location = aLocation;
 		chromosome = aChromosome;
+	}
+	
+	public void newLocation(){
+		location = new Coordinate(r.nextInt(GridPanel.WIDTH + 1),
+				r.nextInt(GridPanel.HEIGHT + 1)); 
 	}
 
 	//------------------------------------------------------------------------------------
@@ -145,6 +151,11 @@ public class Organism {
 			+  "\n Location: " + getLocation()
 			+  "\n Health: " + getHealth();
 		return str;
+	}
+
+	public void setHealth(int aHealth) {
+		health=aHealth;
+		
 	}
 	}	
 

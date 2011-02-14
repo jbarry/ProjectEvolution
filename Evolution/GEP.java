@@ -80,6 +80,7 @@ public class GEP {
 		for(int i=0; i<orgList.size(); i++){
 			orgList.get(i).setChromosome(chromList.get(i));
 			orgList.get(i).setHealth(100);
+			orgList.get(i).newLocation();
 		}
 		
 		return orgList;
@@ -161,6 +162,7 @@ public class GEP {
 	public void rotation() {
 		for(Chromosome chrom: chromList) {
 			if(ran.nextDouble() <= rotProb) {
+				System.out.println(chrom.size());
 				int x = ran.nextInt(chrom.size());
 				chrom.rotate(x);
 			}

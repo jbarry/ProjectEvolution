@@ -12,11 +12,37 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 	private List<Character> nonTerminals;
 	private List<Gene> chromosome;
 	private Random ran;
+	private int numGenes=4;
+	private int lenGenes=4;
 
 	//Default ctor.
 	public Chromosome() {
 		chromosome = new LinkedList<Gene>();
+		terminals = new LinkedList<Character>();
+		nonTerminals = new LinkedList<Character>();
+		terminals.add('*');
+		terminals.add('/');
+		terminals.add('-');
+		terminals.add('+');
+		nonTerminals.add('a');
+		nonTerminals.add('b');
+		nonTerminals.add('c');
+		nonTerminals.add('d');
 		ran = new Random();
+		for(int i=0;i<numGenes;i++){
+			LinkedList<Character> toAdd= new LinkedList<Character>();
+			for(int j=0;j<lenGenes;j++){
+				if(ran.nextInt(2)==0){
+					toAdd.add(terminals.get(ran.nextInt(terminals.size())));
+				}
+				else{
+					toAdd.add(nonTerminals.get(ran.nextInt(nonTerminals.size())));
+				}
+			}
+			Gene gene = new Gene(toAdd);
+			chromosome.add(gene);
+		}
+		
 	}
 
 	//For testing purposes of the GEP class.
