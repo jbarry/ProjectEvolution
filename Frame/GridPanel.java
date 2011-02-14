@@ -1,5 +1,6 @@
 package Frame;
 
+import Evolution.GEP;
 import Interactive.*;
 
 import java.awt.Color;
@@ -31,7 +32,10 @@ public class GridPanel extends JPanel implements Runnable
 	private LinkedList<Organism> organisms;
 	private LinkedList<HealthyFood> healthyFoodSources;
 	private LinkedList<PoisonousFood> poisonousFoodSources;
-	
+	private int lengthTimeStep=50;
+	private int lengthGeneration=lengthTimeStep*200;
+	private int timePassed=0;
+	private GEP g;
 	private javax.swing.Timer t;
 
 	//------------------------------------------------------------------------------------
@@ -66,12 +70,15 @@ public class GridPanel extends JPanel implements Runnable
 	 * Sets the initial game state of the GridPanel
 	 */
 	public void initialize(){
+		timePassed=0;
 		organisms.clear();
 		healthyFoodSources.clear();
 		poisonousFoodSources.clear();
 		for(int i=0; i<OptionsPanel.numOrganisms; i++){
 			organisms.add(new Organism());
 		}
+		g= new GEP(organisms, 1,1,1,1,1);
+		
 		
 		boolean validHealthyFoodLocation = false;
 		for(int i=0;i<OptionsPanel.numOrganisms/2;i++){
@@ -335,21 +342,21 @@ public class GridPanel extends JPanel implements Runnable
 		}
 		for(HealthyFood h: healthyFoodSources){
 			if(h.getFoodRemaining()>0){
-				System.out.println(h.getFoodRemaining());
+				//System.out.println(h.getFoodRemaining());
 				h.paint(g, false);
 			}
 			else{
-				System.out.println(h.getFoodRemaining());
+				//System.out.println(h.getFoodRemaining());
 				h.paint(g, true);
 			}
 		}
 		for(PoisonousFood p: poisonousFoodSources){
 			if(p.getFoodRemaining()>0){
-				System.out.println(p.getFoodRemaining());
+				//System.out.println(p.getFoodRemaining());
 				p.paint(g, false);
 			}
 			else{
-				System.out.println(p.getFoodRemaining());
+				//System.out.println(p.getFoodRemaining());
 				p.paint(g, true);
 			}
 		}
@@ -477,39 +484,48 @@ public class GridPanel extends JPanel implements Runnable
 		poisonousFoodSources = new LinkedList<PoisonousFood>();
 
 		//a timer and it's action event to call at every time t.
-		t = new javax.swing.Timer(50, new ActionListener() {
+		t = new javax.swing.Timer(lengthTimeStep, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				/*begin game logic here:*/
-				for(Organism org: organisms){
-					
-					if(organismIsNextToHealthyFood(org) || organismIsNextToPoisonousFood(org)){
-						//organism eats food
-					}
-					else{
-						//create new, random number 0-7 representing a movement.
-						Random r = new Random();
-						int movement = r.nextInt(8);
+				if(timePassed < lengthGeneration){
+					/*begin game logic here:*/
+					timePassed+=lengthTimeStep;
+					System.out.println(timePassed);
+					for(Organism org: organisms){
 						
-						//perform movement
-						switch(movement){
-						case 0: org.moveNorth(); break;
-						case 1: org.moveNorthEast(); break;
-						case 2: org.moveEast(); break;
-						case 3: org.moveSouthEast(); break;
-						case 4: org.moveSouth(); break;
-						case 5: org.moveSouthWest(); break;
-						case 6: org.moveWest(); break;
-						case 7: org.moveNorthWest(); break;
+						if(organismIsNextToHealthyFood(org) || organismIsNextToPoisonousFood(org)){
+							//organism eats food
+						}
+						else{
+							//create new, random number 0-7 representing a movement.
+							Random r = new Random();
+							int movement = r.nextInt(8);
+							
+							//perform movement
+							switch(movement){
+							case 0: org.moveNorth(); break;
+							case 1: org.moveNorthEast(); break;
+							case 2: org.moveEast(); break;
+							case 3: org.moveSouthEast(); break;
+							case 4: org.moveSouth(); break;
+							case 5: org.moveSouthWest(); break;
+							case 6: org.moveWest(); break;
+							case 7: org.moveNorthWest(); break;
+							}
 						}
 					}
+					for(HealthyFood h: healthyFoodSources){
+						//h.deplete();
+					}
+					for(PoisonousFood p: poisonousFoodSources){
+						//p.deplete();
+					}
+					repaint();
 				}
-				for(HealthyFood h: healthyFoodSources){
-					//h.deplete();
+				else{
+					timePassed=0;
+					g.setOrgList(organisms);
+					organisms=g.newGeneration();
 				}
-				for(PoisonousFood p: poisonousFoodSources){
-					//p.deplete();
-				}
-				repaint();
 			}
 		});
 
