@@ -65,17 +65,35 @@ public class GEP {
 		//They have no knowledge of their own fitness.
 		//By removing fitness from Organism class.
 //		printOrgList(orgList);
-		chromList = tournament(partnerSelect(orgList));
+//		chromList = tournament(partnerSelect(orgList));
+		chromList = makeChromList(orgList);
 		printChromList(chromList);
 //		rotation();
 //		printChromList(chromList);
 //		mutation();
 //		printChromList(chromList);
-		onePointCrossOver(chromList, onePtProb);
+		LinkedList<Pair<Chromosome, Chromosome>> crossed = onePointCrossOver(onePtProb);
+		chromList.clear();
+		for(int i = 0; i < crossed.size(); i++) {
+			chromList.add(crossed.get(i).right());
+			chromList.add(crossed.get(i).left());
+		}
 		printChromList(chromList);
 	}
 	
-	public LinkedList<Organism> newGeneration(){
+	/**
+	 * For testing
+	 * @param population
+	 */
+	public LinkedList<Chromosome> makeChromList(LinkedList<Organism> population) {
+		LinkedList<Chromosome> result = new LinkedList<Chromosome>();
+		for(Organism org: population) {
+			result.add(org.getChromosome());
+		}
+		return result;
+	}
+	
+	public LinkedList<Organism> newGeneration() {
 		chromList = tournament(partnerSelect(orgList));
 		rotation();
 		mutation();
@@ -83,7 +101,6 @@ public class GEP {
 			orgList.get(i).setChromosome(chromList.get(i));
 			orgList.get(i).setHealth(100);
 		}
-		
 		return orgList;
 	}
 	
@@ -187,11 +204,10 @@ public class GEP {
 
 
 	
-	public LinkedList <Pair<Chromosome, Chromosome>> onePointCrossOver(
-			LinkedList<Chromosome> generation, double prob) {
-		LinkedList <Pair<Chromosome, Chromosome>> pairList =
-			mateSelect(generation);
-		LinkedList <Pair<Chromosome, Chromosome>> result =
+	public LinkedList <Pair<Chromosome, Chromosome>> onePointCrossOver(double prob) {
+		LinkedList<Pair<Chromosome, Chromosome>> pairList =
+			mateSelect(chromList);
+		LinkedList<Pair<Chromosome, Chromosome>> result =
 			new LinkedList <Pair<Chromosome, Chromosome>>();
 		for(Pair<Chromosome, Chromosome> mates: pairList) {
 			if(ran.nextDouble() < prob) {
@@ -224,7 +240,7 @@ public class GEP {
 		LinkedList<Chromosome> selection;
 		LinkedList<Pair<Chromosome, Chromosome>> pairList =
 			new LinkedList<Pair<Chromosome, Chromosome>>();
-
+		
 		for(int i = 0; i < generation.size(); i++) {
 			selection = (LinkedList<Chromosome>) generation.clone();
 			selection.remove(i);
@@ -256,7 +272,6 @@ public class GEP {
 			Pair<Organism, Organism> mates =
 				new Pair<Organism, Organism>(
 						population.get(i), selection.get(mate));
-
 			pairList.add(mates);
 		}
 		return pairList;
