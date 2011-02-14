@@ -74,12 +74,72 @@ public class GridPanel extends JPanel implements Runnable
 		organisms.clear();
 		healthyFoodSources.clear();
 		poisonousFoodSources.clear();
+		
+		boolean validOrganismLocation = false;
 		for(int i=0; i<OptionsPanel.numOrganisms; i++){
-			organisms.add(new Organism());
+			while(!validOrganismLocation){
+				Organism o = new Organism();
+				boolean conflicts = organismConflictsWithAnotherOrganism(o);
+				
+				if(!conflicts){
+					organisms.add(o);
+					validOrganismLocation = true;
+				}
+			}
+			validOrganismLocation = false;
+			
 		}
 		g= new GEP(organisms, 1,1,1,1,1);
 		
-		
+		initHealthyFoodLocations();
+		initPoisonousFoodLocations();
+	}
+
+	/**
+	 * Handles objects that stray off of the GridPanel and wraps their location.
+	 *
+	 * @param o The Organism object to apply the wrap-setting to.
+	 */
+	public void setWrapAround(Organism o){
+		if(o.getLocation().getX() > GridPanel.WIDTH){
+			o.getLocation().setX(o.getLocation().getX() - GridPanel.WIDTH);
+		}
+		if(o.getLocation().getX() <= 0){
+			o.getLocation().setX(o.getLocation().getX() + GridPanel.WIDTH);
+		}
+		if(o.getLocation().getY() > GridPanel.HEIGHT){
+			o.getLocation().setY(o.getLocation().getY() - GridPanel.HEIGHT);
+		}
+		if(o.getLocation().getY() <= 0){
+			o.getLocation().setY(o.getLocation().getY() + GridPanel.HEIGHT);
+		}
+	}
+	
+	/**
+	 * Dwight will mess with this
+	 */
+	public void initNextOrganism(){
+		boolean validOrganismLocation = false;
+		for(int i=0; i<OptionsPanel.numOrganisms; i++){
+			while(!validOrganismLocation){
+				Organism o = new Organism();
+				boolean conflicts = organismConflictsWithAnotherOrganism(o);
+				
+				if(!conflicts){
+					organisms.add(o);
+					validOrganismLocation = true;
+				}
+			}
+			validOrganismLocation = false;
+			
+		}
+	}
+	
+	/**
+	 * Adds valid healthy food locations to the grid
+	 */
+	public void initHealthyFoodLocations(){
+		healthyFoodSources.clear();
 		boolean validHealthyFoodLocation = false;
 		for(int i=0;i<OptionsPanel.numOrganisms/2;i++){
 			while(!validHealthyFoodLocation){
@@ -130,7 +190,13 @@ public class GridPanel extends JPanel implements Runnable
 			}
 			validHealthyFoodLocation = false;
 		}
-		
+	}
+	
+	/**
+	 * Adds valid poisonous food locations to the grid
+	 */
+	public void initPoisonousFoodLocations(){
+		poisonousFoodSources.clear();
 		boolean validPoisonousFoodLocation = false;
 		for(int i=0;i<OptionsPanel.numOrganisms/2;i++){
 			while(!validPoisonousFoodLocation){
@@ -174,6 +240,11 @@ public class GridPanel extends JPanel implements Runnable
 				}
 				
 				if(!conflict){
+					//No conflicts yet, so check if poisonous food conflicts with any healthy food
+					conflict = poisonousFoodConflictsWithHealthyFood(p);
+				}
+				
+				if(!conflict){
 					//No conflicts, so add food to foodSource list
 					poisonousFoodSources.add(p);
 					validPoisonousFoodLocation = true;
@@ -182,25 +253,40 @@ public class GridPanel extends JPanel implements Runnable
 			validPoisonousFoodLocation = false;
 		}
 	}
-
+	
 	/**
-	 * Handles objects that stray off of the GridPanel and wraps their location.
-	 *
-	 * @param o The Organism object to apply the wrap-setting to.
+	 * Determines whether or not an organism conflicts with another organisms' location
+	 * 
+	 * @param o The Organism that is being compared to the list of organisms.
+	 * @return (true/false) whether or not the organism conflicts with another organism.
 	 */
-	public void setWrapAround(Organism o){
-		if(o.getLocation().getX() > GridPanel.WIDTH){
-			o.getLocation().setX(o.getLocation().getX() - GridPanel.WIDTH);
+	private boolean organismConflictsWithAnotherOrganism(Organism o) {
+		int leftBoundary = o.getLocation().getX() - 2;
+		int rightBoundary = o.getLocation().getX() + 2;
+		int lowerBoundary = o.getLocation().getY() + 2;
+		int upperBoundary = o.getLocation().getY() - 2;
+		
+		boolean conflictsWithOrganism = false;
+		for(Organism org: organisms){
+			int leftBoundary2 = org.getLocation().getX() - 2;
+			int rightBoundary2 = org.getLocation().getX() + 2;
+			int lowerBoundary2 = org.getLocation().getY() + 2;
+			int upperBoundary2 = org.getLocation().getY() - 2;
+			
+			if((leftBoundary >= leftBoundary2 && leftBoundary <= rightBoundary2 &&
+				((upperBoundary >= upperBoundary2 && upperBoundary <= lowerBoundary2) ||
+				 (lowerBoundary >= upperBoundary2 && lowerBoundary <= lowerBoundary2))) ||
+				 (rightBoundary >= leftBoundary2 && rightBoundary <= rightBoundary2 &&
+					((upperBoundary >= upperBoundary2 && upperBoundary <= lowerBoundary2) ||
+					(lowerBoundary >= upperBoundary2 && lowerBoundary <= lowerBoundary2)))){
+				/*
+				 * Potential organism conflicts with another organism's location
+				 */
+				conflictsWithOrganism = true;
+				break;
+			}
 		}
-		if(o.getLocation().getX() <= 0){
-			o.getLocation().setX(o.getLocation().getX() + GridPanel.WIDTH);
-		}
-		if(o.getLocation().getY() > GridPanel.HEIGHT){
-			o.getLocation().setY(o.getLocation().getY() - GridPanel.HEIGHT);
-		}
-		if(o.getLocation().getY() <= 0){
-			o.getLocation().setY(o.getLocation().getY() + GridPanel.HEIGHT);
-		}
+		return conflictsWithOrganism;
 	}
 	
 	/**
@@ -318,6 +404,44 @@ public class GridPanel extends JPanel implements Runnable
 			}
 		}
 		return conflictsWithOrganism;
+	}
+	
+	/**
+	 * Checks if the potential poisonous food location conflicts with 
+	 * any healthy food location.
+	 * 
+	 * @param p The poisonous food source being compared to the list of
+	 *  healthy food sources.
+	 * @return (true/false) whether or not the poisonous food is spawned
+	 *  on a healthy food source.
+	 */
+	private boolean poisonousFoodConflictsWithHealthyFood(PoisonousFood p) {
+		int leftBoundary = p.getLocation().getX() - 2;
+		int rightBoundary = p.getLocation().getX() + 2;
+		int lowerBoundary = p.getLocation().getY() + 2;
+		int upperBoundary = p.getLocation().getY() - 2;
+		
+		boolean conflictsWithHealthyFood = false;
+		for(HealthyFood h: healthyFoodSources){
+			int leftBoundary2 = h.getLocation().getX() - 2;
+			int rightBoundary2 = h.getLocation().getX() + 2;
+			int lowerBoundary2 = h.getLocation().getY() + 2;
+			int upperBoundary2 = h.getLocation().getY() - 2;
+			
+			if((leftBoundary >= leftBoundary2 && leftBoundary <= rightBoundary2 &&
+				((upperBoundary >= upperBoundary2 && upperBoundary <= lowerBoundary2) ||
+				 (lowerBoundary >= upperBoundary2 && lowerBoundary <= lowerBoundary2))) ||
+				 (rightBoundary >= leftBoundary2 && rightBoundary <= rightBoundary2 &&
+					((upperBoundary >= upperBoundary2 && upperBoundary <= lowerBoundary2) ||
+					(lowerBoundary >= upperBoundary2 && lowerBoundary <= lowerBoundary2)))){
+				/*
+				 * Poisonous food conflicts with healthy food location
+				 */
+				conflictsWithHealthyFood = true;
+				break;
+			}
+		}
+		return conflictsWithHealthyFood;
 	}
 
 	//------------------------------------------------------------------------------------
