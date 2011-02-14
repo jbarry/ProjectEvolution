@@ -38,7 +38,7 @@ public class GEPTest {
 			org.add(new Organism((double)(r.nextDouble()*100.0), chrom));
 		}
 		Character mut = symList.get(r.nextInt(symList.size()));
-		
-		// org = gep.getOrgList();
+		GEP gep = new GEP(org, 1.00, 1.00, 1.00, 1.00, 1.00);
+		 org = gep.getOrgList();
 	}
 }

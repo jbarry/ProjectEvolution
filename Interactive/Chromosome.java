@@ -73,26 +73,33 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 		int crossPoint = ran.nextInt(size());
 		//Generate two sublists of the current chromosome
 		//at the crossover point.
-		List<Gene> child1 = (List<Gene>) subListGene(0, crossPoint);
-		List<Gene> child2 = (List<Gene>) other.subListGene(
+		//Sublist From beginning to crossPoint of this chromosome.
+		List<Gene> child1 = subListGene(0, crossPoint);
+		//Sublist from crossPoing to end of the partner chromosome.
+		List<Gene> child2 = other.subListGene(
 				crossPoint, other.size());
+		//combine first part of this to second part of other.
 		child1.addAll(child2);
-		List<Gene> tempChild1 = (List<Gene>) subListGene(crossPoint, size());
-		List<Gene> tempChild2 = (List<Gene>) other.subListGene(0, crossPoint);
+		setChrom(child1);
+		List<Gene> tempChild1 = subListGene(crossPoint, size());
+		List<Gene> tempChild2 = other.subListGene(0, crossPoint);
+		//combine first part of other to second part of this.
 		tempChild2.addAll(tempChild1);
-		child2 = tempChild2;
-		//Call Crossover on the current chromosomes 
-		//gene at crossPoint with the other chromosomes gene
-		//at the same crossPoint.
-		Pair<Gene, Gene> crossedGenes = getGene(crossPoint).crossOver(
-				other.getGene(crossPoint));
-		child1.set(crossPoint-1, crossedGenes.left());
-		child2.set(crossPoint-1, crossedGenes.right());
+		other.setChrom(tempChild2);
+		tempChild1 = child1;
+		Pair<Gene, Gene> crossedGenes = getGene(crossPoint).crossOver(other.getGene(crossPoint));
+		tempChild1.set(crossPoint, crossedGenes.left());
+		tempChild2.set(crossPoint, crossedGenes.right());
+		setChrom(child1);
+		other.setChrom(tempChild2);
 		return new Pair<Chromosome, Chromosome>(this, other);
 	}
 
+	public void setChrom(List<Gene> aChrom) {
+		chromosome = aChrom;
+	}
 	public List<Gene> subListGene(int x, int y) {
-		return (List<Gene>) chromosome.subList(x, y);
+		return chromosome.subList(x, y);
 	}
 	public Gene getGene(int index) {
 		return (Gene) chromosome.get(index);
