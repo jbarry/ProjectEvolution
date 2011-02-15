@@ -243,27 +243,25 @@ public class GEP {
 			LinkedList<Chromosome> generation) {
 		LinkedList<Pair<Chromosome, Chromosome>> pairList =
 			new LinkedList<Pair<Chromosome, Chromosome>>();
-		HashMap<Chromosome, LinkedList<Chromosome>> notSeenMap =
-			new HashMap<Chromosome, LinkedList<Chromosome>>();
-		for(int i = 0; i < generation.size(); i++) {
-			Chromosome chrom = generation.get(i);
-			notSeenMap.put(chrom, 
-					(LinkedList<Chromosome>) generation.clone());
-			notSeenMap.get(chrom).remove(i);
-		}
-		for(int i = 0; i < generation.size(); i++) {
-			Chromosome partner1 = generation.get(i);
-			LinkedList<Chromosome> selection = notSeenMap.get(partner1);
-			int mate = ran.nextInt(selection.size());
-			Chromosome partner2 = selection.get(mate);
-//			for(int j = 0; j < generation.size(); j++) {
-//				notSeenMap.
-//			}
-			Pair<Chromosome, Chromosome> mates =
-				new Pair<Chromosome, Chromosome>(partner1, partner2);
+		LinkedList<Chromosome> competitors = 
+			(LinkedList<Chromosome>) generation.clone();
+		while(!competitors.isEmpty()) {
+			Chromosome chrom = competitors.remove(0);
+			int mate;
+			Chromosome partner;
+			if(competitors.size() == 0) {
+				mate = ran.nextInt(generation.size());
+				generation.remove(chrom);
+				partner = generation.get(mate);
+			} else {
+				mate = ran.nextInt(competitors.size());
+				partner = competitors.remove(mate);
+			}
+			Pair<Chromosome, Chromosome> mates = 
+				new Pair<Chromosome, Chromosome>(chrom, partner);
 			pairList.add(mates);
 		}
-		return pairList;
+		return pairList; 
 	}
 	
 	/**
