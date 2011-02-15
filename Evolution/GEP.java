@@ -69,6 +69,7 @@ public class GEP {
 		//		chromList = tournament(partnerSelect(orgList));
 		chromList = makeChromList(orgList);
 		LinkedList<Pair<Chromosome, Chromosome>> x = mateSelect(chromList);
+		chromList.clear();
 		for(int i = 0; i < x.size(); i++) {
 			chromList.add(x.get(i).right());
 			chromList.add(x.get(i).left());
@@ -247,6 +248,8 @@ public class GEP {
 		HashMap<Chromosome, LinkedList<Chromosome>> notSeenMap =
 			new HashMap<Chromosome, LinkedList<Chromosome>>();
 		for(int i = 0; i < generation.size(); i++) {
+			out.println(generation.size());
+			err.println(i);
 			Chromosome partner1 = generation.get(i);
 			LinkedList<Chromosome> selection;
 			//If the mapping exists, then 
@@ -254,11 +257,13 @@ public class GEP {
 			//to choose from.
 			if(notSeenMap.containsKey(partner1)) {
 				selection = notSeenMap.get(partner1);
-				
+				err.println(getLineNumber());
 			} else {
 				selection = (LinkedList<Chromosome>) generation.clone();
 				selection.remove(partner1);
+				err.println(getLineNumber());
 			}
+			err.println(getLineNumber());
 			int mate = ran.nextInt(selection.size());
 			Chromosome partner2 = selection.get(mate);
 			//TODO: change Pair's partner1 and 2.
@@ -266,22 +271,31 @@ public class GEP {
 				new Pair<Chromosome, Chromosome>(
 						partner1, partner2);
 			pairList.add(mates);
+			err.println(getLineNumber());
 			if(notSeenMap.containsKey(partner1)) {
+				err.println(getLineNumber());
 				notSeenMap.get(partner1).remove(partner2);
 			} else {
-				LinkedList<Chromosome> notSeenList = generation;
+				err.println(getLineNumber());
+				LinkedList<Chromosome> notSeenList =
+					(LinkedList<Chromosome>) generation.clone();
 				notSeenList.remove(partner2);
 				notSeenList.remove(partner1);
 				notSeenMap.put(partner1, notSeenList);
 			} 
 			if(notSeenMap.containsKey(partner2)) {
+				err.println(getLineNumber());
 				notSeenMap.get(partner2).remove(partner1);
 			} else {
-				LinkedList<Chromosome> notSeenList = generation;
+				err.println(getLineNumber());
+				LinkedList<Chromosome> notSeenList = 
+					(LinkedList<Chromosome>) generation.clone();
 				notSeenList.remove(partner1);
 				notSeenList.remove(partner2);
 				notSeenMap.put(partner2, notSeenList);		
 			}
+			err.println(getLineNumber());
+			out.println(generation.size());
 		}
 		return pairList;
 	}
