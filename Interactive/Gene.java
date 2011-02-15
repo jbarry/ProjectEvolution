@@ -37,6 +37,9 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 	@Override
 	public Pair<Gene<A>, Gene<A>> crossOver(Gene<A> other) {
 		int crossPoint = ran.nextInt(size());
+		if(crossPoint == 0) {
+			crossPoint++;
+		}
 		List<Character> firstHalf1 = subListCharCopy(0, crossPoint);
 		List<Character> secHalf2 = other.subListCharCopy(crossPoint, other.size());
 		firstHalf1.addAll(secHalf2);
