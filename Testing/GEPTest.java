@@ -25,11 +25,11 @@ public class GEPTest {
 		symList.add(new Character('j'));
 		LinkedList <Organism> org = new LinkedList<Organism>();
 		Random r = new Random();
-		for(int i = 0; i < 5; i++) {
+		for(int i = 0; i < 4; i++) {
 			LinkedList<Gene> genes = new LinkedList<Gene>();
-			for (int j = 0; j < 3; j++){
+			for (int j = 0; j < 4; j++){
 				LinkedList<Character> symList1 = new LinkedList<Character>();
-				for(int q = 0; q < 3; q++) {
+				for(int q = 0; q < 4; q++) {
 					symList1.add(new Character(symList.get(r.nextInt(symList.size()))));
 				}
 				genes.add(new Gene(symList1));

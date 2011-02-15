@@ -62,30 +62,28 @@ public class GEP {
 			orgList.get(i).setFitness(fitness(orgList.get(i)));
 		}
 
-		//TODO: another way of carrying fitness info for organisms.
-		//They have no knowledge of their own fitness.
-		//By removing fitness from Organism class.
 		//		printOrgList(orgList);
 		//		chromList = tournament(partnerSelect(orgList));
 		chromList = makeChromList(orgList);
-		LinkedList<Pair<Chromosome, Chromosome>> x = mateSelect(chromList);
+		
+//		LinkedList<Pair<Chromosome, Chromosome>> x = mateSelect(chromList);
+//		chromList.clear();
+//		for(int i = 0; i < x.size(); i++) {
+//			chromList.add(x.get(i).right());
+//			chromList.add(x.get(i).left());
+//		}
+		printChromList(chromList);
+//		rotation();
+//		printChromList(chromList);
+//		mutation();
+//		printChromList(chromList);
+		LinkedList<Pair<Chromosome, Chromosome>> crossed = onePointCrossOver(onePtProb);
 		chromList.clear();
-		for(int i = 0; i < x.size(); i++) {
-			chromList.add(x.get(i).right());
-			chromList.add(x.get(i).left());
+		for(int i = 0; i < crossed.size(); i++) {
+			chromList.add(crossed.get(i).right());
+			chromList.add(crossed.get(i).left());
 		}
 		printChromList(chromList);
-		//		rotation();
-		//		printChromList(chromList);
-		//		mutation();
-		//		printChromList(chromList);
-//		LinkedList<Pair<Chromosome, Chromosome>> crossed = onePointCrossOver(onePtProb);
-//		chromList.clear();
-//		for(int i = 0; i < crossed.size(); i++) {
-//			chromList.add(crossed.get(i).right());
-//			chromList.add(crossed.get(i).left());
-//		}
-//		printChromList(chromList);
 	}
 
 	/**
@@ -240,7 +238,9 @@ public class GEP {
 
 	//Pairs up indiv from the chromosome list parameter and 
 	//makes them into Pair objects. Puts Pairs into a LinkedList.
-	//TODO: Make mate select an efficient symmetries on n.
+	
+	//TODO: this works for partnerSelect but not for mateSelect's uses.
+	//size of pairList should be n/2, where n is generation size.
 	public LinkedList <Pair<Chromosome, Chromosome>> mateSelect(
 			LinkedList<Chromosome> generation) {
 		LinkedList<Pair<Chromosome, Chromosome>> pairList =
@@ -248,8 +248,6 @@ public class GEP {
 		HashMap<Chromosome, LinkedList<Chromosome>> notSeenMap =
 			new HashMap<Chromosome, LinkedList<Chromosome>>();
 		for(int i = 0; i < generation.size(); i++) {
-			out.println(generation.size());
-			err.println(i);
 			Chromosome partner1 = generation.get(i);
 			LinkedList<Chromosome> selection;
 			//If the mapping exists, then 
@@ -257,13 +255,10 @@ public class GEP {
 			//to choose from.
 			if(notSeenMap.containsKey(partner1)) {
 				selection = notSeenMap.get(partner1);
-				err.println(getLineNumber());
 			} else {
 				selection = (LinkedList<Chromosome>) generation.clone();
 				selection.remove(partner1);
-				err.println(getLineNumber());
 			}
-			err.println(getLineNumber());
 			int mate = ran.nextInt(selection.size());
 			Chromosome partner2 = selection.get(mate);
 			//TODO: change Pair's partner1 and 2.
@@ -271,12 +266,9 @@ public class GEP {
 				new Pair<Chromosome, Chromosome>(
 						partner1, partner2);
 			pairList.add(mates);
-			err.println(getLineNumber());
 			if(notSeenMap.containsKey(partner1)) {
-				err.println(getLineNumber());
 				notSeenMap.get(partner1).remove(partner2);
 			} else {
-				err.println(getLineNumber());
 				LinkedList<Chromosome> notSeenList =
 					(LinkedList<Chromosome>) generation.clone();
 				notSeenList.remove(partner2);
@@ -284,18 +276,16 @@ public class GEP {
 				notSeenMap.put(partner1, notSeenList);
 			} 
 			if(notSeenMap.containsKey(partner2)) {
-				err.println(getLineNumber());
 				notSeenMap.get(partner2).remove(partner1);
 			} else {
-				err.println(getLineNumber());
 				LinkedList<Chromosome> notSeenList = 
 					(LinkedList<Chromosome>) generation.clone();
 				notSeenList.remove(partner1);
 				notSeenList.remove(partner2);
 				notSeenMap.put(partner2, notSeenList);		
 			}
-			err.println(getLineNumber());
-			out.println(generation.size());
+			generation.remove(partner1);
+			generation.remove(partner2);
 		}
 		return pairList;
 	}
