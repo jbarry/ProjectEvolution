@@ -15,6 +15,7 @@ import java.awt.List;
 
 import static java.lang.System.out;
 import static java.lang.System.err;
+import java.util.HashMap;
 
 /**
  * 
@@ -35,7 +36,7 @@ public class GEP {
 	private double rotProb;
 	private double onePtProb;
 	private double twoPtProb;
-	
+
 	//TODO: will have another way of inserting random mutations.
 	public GEP(LinkedList <Organism> anOrgList,
 			double aTournProb,
@@ -50,7 +51,7 @@ public class GEP {
 		rotProb = aRotProb;
 		onePtProb = aOnePtProb;
 		twoPtProb = aTwoPtProb;
-//		TODO: handicap = aHandicap;
+		//		TODO: handicap = aHandicap;
 		ran = new Random();
 
 		//Assess the fitness of each organism
@@ -64,14 +65,14 @@ public class GEP {
 		//TODO: another way of carrying fitness info for organisms.
 		//They have no knowledge of their own fitness.
 		//By removing fitness from Organism class.
-//		printOrgList(orgList);
-//		chromList = tournament(partnerSelect(orgList));
+		//		printOrgList(orgList);
+		//		chromList = tournament(partnerSelect(orgList));
 		chromList = makeChromList(orgList);
 		printChromList(chromList);
-//		rotation();
-//		printChromList(chromList);
-//		mutation();
-//		printChromList(chromList);
+		//		rotation();
+		//		printChromList(chromList);
+		//		mutation();
+		//		printChromList(chromList);
 		LinkedList<Pair<Chromosome, Chromosome>> crossed = onePointCrossOver(onePtProb);
 		chromList.clear();
 		for(int i = 0; i < crossed.size(); i++) {
@@ -80,7 +81,7 @@ public class GEP {
 		}
 		printChromList(chromList);
 	}
-	
+
 	/**
 	 * For testing
 	 * @param population
@@ -92,7 +93,7 @@ public class GEP {
 		}
 		return result;
 	}
-	
+
 	public LinkedList<Organism> newGeneration() {
 		chromList = tournament(partnerSelect(orgList));
 		rotation();
@@ -103,39 +104,39 @@ public class GEP {
 		}
 		return orgList;
 	}
-	
+
 	public LinkedList<Organism> getOrgList(){
 		return orgList;
 	}
-	
+
 	public LinkedList<Chromosome> getChromList(){
 		return chromList;
 	}
-	
+
 	public void setTournProb(double x){
 		tournProb=x;
 	}
-	
+
 	public void setMutProb(double x){
 		mutProb=x;
 	}
-	
+
 	public void setRotProb(double x){
 		rotProb=x;
 	}
-	
+
 	public void setOnePtProb(double x){
 		onePtProb=x;
 	}
-	
+
 	public void setTwoPtProb(double x){
 		twoPtProb=x;
 	}
-	
+
 	public void setChromList(LinkedList<Chromosome> aChromList){
 		chromList=aChromList;
 	}
-	
+
 	public void setOrgList(LinkedList<Organism> anOrgList){
 		orgList=anOrgList;
 	}
@@ -203,7 +204,7 @@ public class GEP {
 	}
 
 
-	
+
 	public LinkedList <Pair<Chromosome, Chromosome>> onePointCrossOver(double prob) {
 		LinkedList<Pair<Chromosome, Chromosome>> pairList =
 			mateSelect(chromList);
@@ -219,7 +220,7 @@ public class GEP {
 	}
 
 
-	
+
 	public void twoPointCrossOver(
 			LinkedList <Pair<Chromosome, Chromosome>> generation, double prob) {
 		LinkedList <Pair<Chromosome, Chromosome>> pairList =
@@ -236,18 +237,33 @@ public class GEP {
 	//TODO: Make mate select an efficient symmetries on n.
 	public LinkedList <Pair<Chromosome, Chromosome>> mateSelect(
 			LinkedList<Chromosome> generation) {
-
-		LinkedList<Chromosome> selection;
 		LinkedList<Pair<Chromosome, Chromosome>> pairList =
 			new LinkedList<Pair<Chromosome, Chromosome>>();
-		
+		HashMap<Chromosome, LinkedList<Chromosome>> notSeenMap =
+			new HashMap<Chromosome, LinkedList<Chromosome>>();
 		for(int i = 0; i < generation.size(); i++) {
-			selection = (LinkedList<Chromosome>) generation.clone();
-			selection.remove(i);
-			int mate = ran.nextInt(selection.size());
+			int mate = ran.nextInt(generation.size());
+			Chromosome partner1 = generation.get(i);
+			Chromosome partner2 = generation.get(mate);
+			if(notSeenMap.containsKey(partner1)) {
+				notSeenMap.get(i).remove(partner2);
+			} else {
+				LinkedList<Chromosome> notSeenList = generation;
+				notSeenList.remove(partner2);
+				notSeenList.remove(partner1);
+				notSeenMap.put(partner1, notSeenList);
+			} 
+			if(notSeenMap.containsKey(partner2)) {
+				notSeenMap.get(i).remove(partner1);
+			} else {
+				LinkedList<Chromosome> notSeenList = generation;
+				notSeenList.remove(partner1);
+				notSeenList.remove(partner2);
+				notSeenMap.put(partner2, notSeenList);		
+			}
 			Pair<Chromosome, Chromosome> mates =
 				new Pair<Chromosome, Chromosome>(
-						generation.get(i), selection.get(mate));
+						partner1, partner2);
 			pairList.add(mates);
 		}
 		return pairList;
