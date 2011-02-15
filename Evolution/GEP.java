@@ -7,6 +7,7 @@ import Interactive.Organism;
 import Interactive.Pair;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Random;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -16,7 +17,7 @@ import java.awt.List;
 import static java.lang.System.out;
 import static java.lang.System.err;
 import java.util.HashMap;
-
+import java.util.Collection;
 /**
  * 
  *
@@ -241,12 +242,65 @@ public class GEP {
 	
 	//TODO: this works for partnerSelect but not for mateSelect's uses.
 	//size of pairList should be n/2, where n is generation size.
+//	public LinkedList <Pair<Chromosome, Chromosome>> mateSelect(
+//			LinkedList<Chromosome> generation) {
+//		LinkedList<Pair<Chromosome, Chromosome>> pairList =
+//			new LinkedList<Pair<Chromosome, Chromosome>>();
+//		HashMap<Chromosome, LinkedList<Chromosome>> notSeenMap =
+//			new HashMap<Chromosome, LinkedList<Chromosome>>();
+//		for(int i = 0; i < generation.size(); i++) {
+//			Chromosome partner1 = generation.get(i);
+//			LinkedList<Chromosome> selection;
+//			//If the mapping exists, then 
+//			//make selection, the list of competitors
+//			//to choose from.
+//			if(notSeenMap.containsKey(partner1)) {
+//				selection = notSeenMap.get(partner1);
+//			} else {
+//				selection = (LinkedList<Chromosome>) generation.clone();
+//				selection.remove(partner1);
+//			}
+//			int mate = ran.nextInt(selection.size());
+//			Chromosome partner2 = selection.get(mate);
+//			//TODO: change Pair's partner1 and 2.
+//			Pair<Chromosome, Chromosome> mates =
+//				new Pair<Chromosome, Chromosome>(
+//						partner1, partner2);
+//			pairList.add(mates);
+//			if(notSeenMap.containsKey(partner1)) {
+//				notSeenMap.get(partner1).remove(partner2);
+//			} else {
+//				LinkedList<Chromosome> notSeenList =
+//					(LinkedList<Chromosome>) generation.clone();
+//				notSeenList.remove(partner2);
+//				notSeenList.remove(partner1);
+//				notSeenMap.put(partner1, notSeenList);
+//			} 
+//			if(notSeenMap.containsKey(partner2)) {
+//				notSeenMap.get(partner2).remove(partner1);
+//			} else {
+//				LinkedList<Chromosome> notSeenList = 
+//					(LinkedList<Chromosome>) generation.clone();
+//				notSeenList.remove(partner1);
+//				notSeenList.remove(partner2);
+//				notSeenMap.put(partner2, notSeenList);		
+//			}
+//			generation.remove(partner1);
+//			generation.remove(partner2);
+//		}
+//		return pairList;
+//	}
+
 	public LinkedList <Pair<Chromosome, Chromosome>> mateSelect(
 			LinkedList<Chromosome> generation) {
 		LinkedList<Pair<Chromosome, Chromosome>> pairList =
 			new LinkedList<Pair<Chromosome, Chromosome>>();
 		HashMap<Chromosome, LinkedList<Chromosome>> notSeenMap =
 			new HashMap<Chromosome, LinkedList<Chromosome>>();
+		for(int i = 0; i < generation.size(); i++) {
+			notSeenMap.put(generation.get(i), 
+					(LinkedList<Chromosome>) generation.clone());
+		}
 		for(int i = 0; i < generation.size(); i++) {
 			Chromosome partner1 = generation.get(i);
 			LinkedList<Chromosome> selection;
@@ -289,7 +343,7 @@ public class GEP {
 		}
 		return pairList;
 	}
-
+	
 	/**
 	 *Pairs up indiv from the Organism Pair list parameter and 
 	 *makes them into Pair objects. Puts Pairs into a LinkedList.

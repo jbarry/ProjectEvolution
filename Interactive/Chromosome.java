@@ -71,6 +71,7 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 	public Pair<Chromosome, Chromosome> crossOver(Chromosome other) {
 		//The point where the crossover will occur.
 		int crossPoint = ran.nextInt(size());
+		if(crossPoint == 0) crossPoint++;
 		//Generate two sublists of the current chromosome
 		//at the crossover point.
 		//Sublist From beginning to crossPoint of this chromosome.
@@ -109,38 +110,6 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 		}
 		return sListCop;
 	}
-
-//	@Override
-//	public Pair<Chromosome, Chromosome> crossOver(Chromosome other) {
-//		int crossPoint = ran.nextInt(size());
-//		LinkedList<Gene> chromTemp = 
-//			chromosome;
-//		Collections.copy(chromTemp, chromosome);
-//		List<Gene> child1 =
-//			(List<Gene>) chromTemp.subList(0, crossPoint);
-//		List<Gene> sndThis =
-//			(List<Gene>) chromTemp.subList(0, crossPoint);
-//		List<Gene> chromTemp2 = 
-//			new LinkedList<Gene>();
-//		Collections.copy(chromTemp2, other.chromosome);
-//		List<Gene> child2 =
-//			(List<Gene>) chromTemp2.subList(0, crossPoint);
-//		List<Gene> sndOther =
-//			(List<Gene>) chromTemp2.subList(crossPoint, other.size());
-////		child1 = (LinkedList<Gene>) child1.clone();
-////		sndThis = (LinkedList<Gene>) sndThis.clone();
-////		child2 = (LinkedList<Gene>) child2.clone();
-////		sndOther = (LinkedList<Gene>) sndOther.clone();
-//		child1.addAll(sndOther);
-//		child2.addAll(sndThis);
-//		Pair<Gene, Gene> crossedGenes = 
-//			getGene(crossPoint).crossOver(other.getGene(crossPoint));
-//		child1.set(crossPoint, crossedGenes.left());
-//		child2.set(crossPoint, crossedGenes.right());
-//		setChrom(child1);
-//		other.setChrom(child2);
-//		return new Pair<Chromosome, Chromosome>(this, other);
-//	}
 	
 	public void setChrom(List<Gene> aChrom) {
 		chromosome = aChrom;
