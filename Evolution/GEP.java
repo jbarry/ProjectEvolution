@@ -245,6 +245,12 @@ public class GEP {
 			int mate = ran.nextInt(generation.size());
 			Chromosome partner1 = generation.get(i);
 			Chromosome partner2 = generation.get(mate);
+			
+			//TODO: change Pair's partner1 and 2.
+			Pair<Chromosome, Chromosome> mates =
+				new Pair<Chromosome, Chromosome>(
+						partner1, partner2);
+			pairList.add(mates);
 			if(notSeenMap.containsKey(partner1)) {
 				notSeenMap.get(i).remove(partner2);
 			} else {
@@ -261,10 +267,6 @@ public class GEP {
 				notSeenList.remove(partner2);
 				notSeenMap.put(partner2, notSeenList);		
 			}
-			Pair<Chromosome, Chromosome> mates =
-				new Pair<Chromosome, Chromosome>(
-						partner1, partner2);
-			pairList.add(mates);
 		}
 		return pairList;
 	}
