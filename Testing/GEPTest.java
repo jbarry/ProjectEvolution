@@ -25,7 +25,7 @@ public class GEPTest {
 		symList.add(new Character('j'));
 		LinkedList <Organism> org = new LinkedList<Organism>();
 		Random r = new Random();
-		for(int i = 0; i < 2; i++) {
+		for(int i = 0; i < 5; i++) {
 			LinkedList<Gene> genes = new LinkedList<Gene>();
 			for (int j = 0; j < 3; j++){
 				LinkedList<Character> symList1 = new LinkedList<Character>();
