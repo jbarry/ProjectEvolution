@@ -68,18 +68,23 @@ public class GEP {
 		//		printOrgList(orgList);
 		//		chromList = tournament(partnerSelect(orgList));
 		chromList = makeChromList(orgList);
+		LinkedList<Pair<Chromosome, Chromosome>> x = mateSelect(chromList);
+		for(int i = 0; i < x.size(); i++) {
+			chromList.add(x.get(i).right());
+			chromList.add(x.get(i).left());
+		}
 		printChromList(chromList);
 		//		rotation();
 		//		printChromList(chromList);
 		//		mutation();
 		//		printChromList(chromList);
-		LinkedList<Pair<Chromosome, Chromosome>> crossed = onePointCrossOver(onePtProb);
-		chromList.clear();
-		for(int i = 0; i < crossed.size(); i++) {
-			chromList.add(crossed.get(i).right());
-			chromList.add(crossed.get(i).left());
-		}
-		printChromList(chromList);
+//		LinkedList<Pair<Chromosome, Chromosome>> crossed = onePointCrossOver(onePtProb);
+//		chromList.clear();
+//		for(int i = 0; i < crossed.size(); i++) {
+//			chromList.add(crossed.get(i).right());
+//			chromList.add(crossed.get(i).left());
+//		}
+//		printChromList(chromList);
 	}
 
 	/**
@@ -242,17 +247,27 @@ public class GEP {
 		HashMap<Chromosome, LinkedList<Chromosome>> notSeenMap =
 			new HashMap<Chromosome, LinkedList<Chromosome>>();
 		for(int i = 0; i < generation.size(); i++) {
-			int mate = ran.nextInt(generation.size());
 			Chromosome partner1 = generation.get(i);
-			Chromosome partner2 = generation.get(mate);
-			
+			LinkedList<Chromosome> selection;
+			//If the mapping exists, then 
+			//make selection, the list of competitors
+			//to choose from.
+			if(notSeenMap.containsKey(partner1)) {
+				selection = notSeenMap.get(partner1);
+				
+			} else {
+				selection = (LinkedList<Chromosome>) generation.clone();
+				selection.remove(partner1);
+			}
+			int mate = ran.nextInt(selection.size());
+			Chromosome partner2 = selection.get(mate);
 			//TODO: change Pair's partner1 and 2.
 			Pair<Chromosome, Chromosome> mates =
 				new Pair<Chromosome, Chromosome>(
 						partner1, partner2);
 			pairList.add(mates);
 			if(notSeenMap.containsKey(partner1)) {
-				notSeenMap.get(i).remove(partner2);
+				notSeenMap.get(partner1).remove(partner2);
 			} else {
 				LinkedList<Chromosome> notSeenList = generation;
 				notSeenList.remove(partner2);
@@ -260,7 +275,7 @@ public class GEP {
 				notSeenMap.put(partner1, notSeenList);
 			} 
 			if(notSeenMap.containsKey(partner2)) {
-				notSeenMap.get(i).remove(partner1);
+				notSeenMap.get(partner2).remove(partner1);
 			} else {
 				LinkedList<Chromosome> notSeenList = generation;
 				notSeenList.remove(partner1);
