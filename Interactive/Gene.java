@@ -37,12 +37,12 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 	@Override
 	public Pair<Gene<A>, Gene<A>> crossOver(Gene<A> other) {
 		int crossPoint = ran.nextInt(size());
-		List<Character> firstHalf1 = subListChar(0, crossPoint);
-		List<Character> secHalf2 = other.subListChar(crossPoint, other.size());
+		List<Character> firstHalf1 = subListCharCopy(0, crossPoint);
+		List<Character> secHalf2 = other.subListCharCopy(crossPoint, other.size());
 		firstHalf1.addAll(secHalf2);
 		symList = firstHalf1;
-		List<Character> secHalf1 = subListChar(crossPoint, size());
-		List<Character> firstHalf2 = other.subListChar(0, crossPoint);
+		List<Character> secHalf1 = subListCharCopy(crossPoint, size());
+		List<Character> firstHalf2 = other.subListCharCopy(0, crossPoint);
 		firstHalf2.addAll(secHalf1);
 		other.setSymList(firstHalf2);
 		return new Pair<Gene<A>, Gene<A>>(this, other);
@@ -50,6 +50,14 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 
 	private List<Character> subListChar(int x, int y) {
 		return symList.subList(x, y);
+	}
+	
+	private List<Character> subListCharCopy(int x, int y) {
+		LinkedList<Character> sListCop = new LinkedList<Character>();
+		for(int i = 0; i < (y-x); i++) {
+			sListCop.add(symList.get(i));
+		}
+		return sListCop;
 	}
 
 	public void setSymList(List<Character> firstHalf2) {
