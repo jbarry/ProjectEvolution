@@ -658,8 +658,22 @@ public class GridPanel extends JPanel implements Runnable
 					repaint();
 					
 					//Begin AI logic. ROUGH
-					
-				}
+					//TODO: make org find its way to closest food source.
+					//variables in gene:
+					//distance to closest food(maybe put in a certain range)
+					//#opponents around food in food
+					//amount left in food
+					//amount of health left
+					for(Organism org: organisms) {
+						org.getChromosome().getGene(Chromosome.MOVEFOOD).setGene(aSymList).findClosestFood();
+					}
+					for(HealthyFood h: healthyFoodSources){
+						numSurrounding(h);
+					}
+					for(PoisonousFood p: poisonousFoodSources){
+						numSurrounding(p);
+					}
+					}
 				else{
 					g.setOrgList(organisms);
 					organisms=g.newGeneration();
@@ -668,6 +682,18 @@ public class GridPanel extends JPanel implements Runnable
 					timePassed=0;
 					repaint();
 				}
+			}
+
+			//TODO: make all objects on grid inherit from a
+			//gamePiece or whatever. Then make this method 
+			//available for any piece.
+			private void numSurrounding(Food h) {
+				// TODO Auto-generated method stub
+				int xPos = h.getLocation().getX();
+				int yPos = h.getLocation().getY();
+//				if() {
+//					
+//				}
 			}
 		});
 	}

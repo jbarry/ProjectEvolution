@@ -15,6 +15,10 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 	private int numGenes=4;
 	private int lenGenes=4;
 
+	public static final int MOVEFOOD = 0;
+	public static final int MOVERANDOM = 1;
+	public static final int EAT = 2;
+	
 	//Default ctor.
 	public Chromosome() {
 		chromosome = new LinkedList<Gene>();
