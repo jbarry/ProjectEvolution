@@ -622,11 +622,11 @@ public class GridPanel extends JPanel implements Runnable
 		//a timer and it's action event to call at every time t.
 		t = new javax.swing.Timer(lengthTimeStep, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(timePassed < lengthGeneration){
+				if(timePassed < lengthGeneration) {
 					/*begin game logic here:*/
 					timePassed+=lengthTimeStep;
 					System.out.println(timePassed);
-					for(Organism org: organisms){
+					for(Organism org: organisms) {
 						
 						if(organismIsNextToHealthyFood(org) || organismIsNextToPoisonousFood(org)){
 							//organism eats food
@@ -656,6 +656,9 @@ public class GridPanel extends JPanel implements Runnable
 						//p.deplete();
 					}
 					repaint();
+					
+					//Begin AI logic. ROUGH
+					
 				}
 				else{
 					g.setOrgList(organisms);
