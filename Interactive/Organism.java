@@ -2,6 +2,7 @@ package Interactive;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.LinkedList;
 import java.util.Random;
 
 import Frame.*;
@@ -77,40 +78,85 @@ public class Organism {
 	//------------------------------------------------------------------------------------
 	//--accessors/mutators--
 	//------------------------------------------------------------------------------------
-	public void moveNorth() {
+	public void moveNorth(LinkedList<Organism> organisms) {
 		location.setY(location.getY() - 1);
+		setWrapAround(this);
+		if(organismConflictsWithAnotherOrganism(this, organisms)){
+			location.setY(location.getY() + 1);
+			setWrapAround(this);
+		}
+		
 	}
 
-	public void moveNorthEast() {
+	public void moveNorthEast(LinkedList<Organism> organisms) {
 		location.setX(location.getX() + 1);
 		location.setY(location.getY() - 1);
+		setWrapAround(this);
+		if(organismConflictsWithAnotherOrganism(this, organisms)){
+			location.setX(location.getX() - 1);
+			location.setY(location.getY() + 1);
+			setWrapAround(this);
+		}
 	}
 
-	public void moveEast() {
+	public void moveEast(LinkedList<Organism> organisms) {
 		location.setX(location.getX() + 1);
+		setWrapAround(this);
+		if(organismConflictsWithAnotherOrganism(this, organisms)){
+			location.setX(location.getX() - 1);
+			setWrapAround(this);
+		}
 	}
 
-	public void moveSouthEast() {
+	public void moveSouthEast(LinkedList<Organism> organisms) {
 		location.setX(location.getX() + 1);
 		location.setY(location.getY() + 1);
+		setWrapAround(this);
+		if(organismConflictsWithAnotherOrganism(this, organisms)){
+			location.setX(location.getX() - 1);
+			location.setY(location.getY() - 1);
+			setWrapAround(this);
+		}
 	}
 
-	public void moveSouth() {
+	public void moveSouth(LinkedList<Organism> organisms) {
 		location.setY(location.getY() + 1);
+		setWrapAround(this);
+		if(organismConflictsWithAnotherOrganism(this, organisms)){
+			location.setY(location.getY() - 1);
+			setWrapAround(this);
+		}
 	}
 
-	public void moveSouthWest() {
+	public void moveSouthWest(LinkedList<Organism> organisms) {
 		location.setX(location.getX() - 1);
 		location.setY(location.getY() + 1);
+		setWrapAround(this);
+		if(organismConflictsWithAnotherOrganism(this, organisms)){
+			location.setX(location.getX() + 1);
+			location.setY(location.getY() - 1);
+			setWrapAround(this);
+		}
 	}
 
-	public void moveWest() {
+	public void moveWest(LinkedList<Organism> organisms) {
 		location.setX(location.getX() - 1);
+		setWrapAround(this);
+		if(organismConflictsWithAnotherOrganism(this, organisms)){
+			location.setX(location.getX() + 1);
+			setWrapAround(this);
+		}
 	}
 
-	public void moveNorthWest() {
+	public void moveNorthWest(LinkedList<Organism> organisms) {
 		location.setX(location.getX() - 1);
 		location.setY(location.getY() - 1);
+		setWrapAround(this);
+		if(organismConflictsWithAnotherOrganism(this, organisms)){
+			location.setX(location.getX() + 1);
+			location.setY(location.getY() + 1);
+			setWrapAround(this);
+		}
 	}
 	
 	public void eatFood(Food f){
@@ -136,6 +182,63 @@ public class Organism {
 	public void paint(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.fillRect((int)this.getLocation().getX()-2, (int)this.getLocation().getY()-2, 5, 5);
+	}
+	
+	/**
+	 * Handles objects that stray off of the GridPanel and wraps their location.
+	 *
+	 * @param o The Organism object to apply the wrap-setting to.
+	 */
+	public void setWrapAround(Organism o){
+		if(o.getLocation().getX() > GridPanel.WIDTH){
+			o.getLocation().setX(o.getLocation().getX() - GridPanel.WIDTH);
+		}
+		if(o.getLocation().getX() <= 0){
+			o.getLocation().setX(o.getLocation().getX() + GridPanel.WIDTH);
+		}
+		if(o.getLocation().getY() > GridPanel.HEIGHT){
+			o.getLocation().setY(o.getLocation().getY() - GridPanel.HEIGHT);
+		}
+		if(o.getLocation().getY() <= 0){
+			o.getLocation().setY(o.getLocation().getY() + GridPanel.HEIGHT);
+		}
+	}
+	
+	/**
+	 * Determines whether or not an organism conflicts with another organisms' location
+	 *
+	 * @param o The Organism that is being compared to the list of organisms.
+	 * @return (true/false) whether or not the organism conflicts with another organism.
+	 */
+	private boolean organismConflictsWithAnotherOrganism(Organism o, LinkedList<Organism> organisms) {
+		int leftBoundary = o.getLocation().getX() - 2;
+		int rightBoundary = o.getLocation().getX() + 2;
+		int lowerBoundary = o.getLocation().getY() + 2;
+		int upperBoundary = o.getLocation().getY() - 2;
+
+		boolean conflictsWithOrganism = false;
+		for(Organism org: organisms){
+			if(!org.equals(o)){
+				int leftBoundary2 = org.getLocation().getX() - 2;
+				int rightBoundary2 = org.getLocation().getX() + 2;
+				int lowerBoundary2 = org.getLocation().getY() + 2;
+				int upperBoundary2 = org.getLocation().getY() - 2;
+
+				if((leftBoundary >= leftBoundary2 && leftBoundary <= rightBoundary2 &&
+						((upperBoundary >= upperBoundary2 && upperBoundary <= lowerBoundary2) ||
+								(lowerBoundary >= upperBoundary2 && lowerBoundary <= lowerBoundary2))) ||
+								(rightBoundary >= leftBoundary2 && rightBoundary <= rightBoundary2 &&
+										((upperBoundary >= upperBoundary2 && upperBoundary <= lowerBoundary2) ||
+												(lowerBoundary >= upperBoundary2 && lowerBoundary <= lowerBoundary2)))){
+					/*
+					 * Organism conflicts with another organism's location
+					 */
+					conflictsWithOrganism = true;
+					break;
+				}
+			}
+		}
+		return conflictsWithOrganism;
 	}
 
 	//------------------------------------------------------------------------------------

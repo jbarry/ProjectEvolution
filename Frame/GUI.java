@@ -63,6 +63,7 @@ public class GUI {
 	private OptionsPanel optionsPanel;
 	private GridPanel    simulation;
 	private MonitorPanel monitorPanel;
+	private GenerationPanel genPanel;
 	
 	//------------------------------------------------------------------------------------
 	//--constructors--
@@ -136,6 +137,10 @@ public class GUI {
 		/**Create Monitor Panel*/
 		monitorPanel = new MonitorPanel(simulation);
 		jframe.add(monitorPanel);
+		
+		/**Create Generation Panel*/
+		genPanel = new GenerationPanel(simulation);
+		jframe.add(genPanel);
 		
 		/**Create Menu*/
 		menuBar  = new JMenuBar();

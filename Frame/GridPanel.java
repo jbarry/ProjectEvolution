@@ -34,7 +34,10 @@ public class GridPanel extends JPanel implements Runnable
 	private LinkedList<PoisonousFood> poisonousFoodSources;
 	private int lengthTimeStep=50;
 	private int lengthGeneration=lengthTimeStep*200;
+	private int trialsPerGen=10;
 	private int timePassed=0;
+	private int trialNum=0;
+	private int generationNum=0;
 	private GEP g;
 	private javax.swing.Timer t;
 	private boolean[][] validLocationMap;
@@ -72,6 +75,8 @@ public class GridPanel extends JPanel implements Runnable
 	 */
 	public void initialize(){
 		timePassed=0;
+		generationNum=0;
+		trialNum=0;
 		organisms.clear();
 		healthyFoodSources.clear();
 		poisonousFoodSources.clear();
@@ -126,19 +131,20 @@ public class GridPanel extends JPanel implements Runnable
 		for(int i=0; i<OptionsPanel.numOrganisms; i++){
 			while(!validOrganismLocation){
 				Organism o = organisms.get(i);
-				o.newLocation();
 				boolean conflicts = organismConflictsWithAnotherOrganism(o);
-				System.out.println(conflicts);
-				if(!conflicts){
-					validOrganismLocation = true;
+				if(conflicts){
+					o.newLocation();
+				}
+				else{
+					validOrganismLocation=true;
 				}
 			}
 			validOrganismLocation = false;
 			
 		}
-		
 		initHealthyFoodLocations();
 		initPoisonousFoodLocations();
+		
 	}
 	
 	/**
@@ -274,6 +280,7 @@ public class GridPanel extends JPanel implements Runnable
 		
 		boolean conflictsWithOrganism = false;
 		for(Organism org: organisms){
+			if(!org.equals(o)){
 			int leftBoundary2 = org.getLocation().getX() - 2;
 			int rightBoundary2 = org.getLocation().getX() + 2;
 			int lowerBoundary2 = org.getLocation().getY() + 2;
@@ -290,6 +297,7 @@ public class GridPanel extends JPanel implements Runnable
 				 */
 				conflictsWithOrganism = true;
 				break;
+			}
 			}
 		}
 		return conflictsWithOrganism;
@@ -625,7 +633,7 @@ public class GridPanel extends JPanel implements Runnable
 				if(timePassed < lengthGeneration){
 					/*begin game logic here:*/
 					timePassed+=lengthTimeStep;
-					System.out.println(timePassed);
+					//System.out.println(timePassed);
 					for(Organism org: organisms){
 						
 						if(organismIsNextToHealthyFood(org) || organismIsNextToPoisonousFood(org)){
@@ -638,14 +646,14 @@ public class GridPanel extends JPanel implements Runnable
 							
 							//perform movement
 							switch(movement){
-							case 0: org.moveNorth(); break;
-							case 1: org.moveNorthEast(); break;
-							case 2: org.moveEast(); break;
-							case 3: org.moveSouthEast(); break;
-							case 4: org.moveSouth(); break;
-							case 5: org.moveSouthWest(); break;
-							case 6: org.moveWest(); break;
-							case 7: org.moveNorthWest(); break;
+							case 0: org.moveNorth(organisms); break;
+							case 1: org.moveNorthEast(organisms); break;
+							case 2: org.moveEast(organisms); break;
+							case 3: org.moveSouthEast(organisms); break;
+							case 4: org.moveSouth(organisms); break;
+							case 5: org.moveSouthWest(organisms); break;
+							case 6: org.moveWest(organisms); break;
+							case 7: org.moveNorthWest(organisms); break;
 							}
 						}
 					}
@@ -657,12 +665,27 @@ public class GridPanel extends JPanel implements Runnable
 					}
 					repaint();
 				}
+				else if(trialNum<trialsPerGen){
+					System.out.println(trialNum);
+					t.stop();
+					initNextGeneration();
+					trialNum++;
+					timePassed=0;
+					t.start();
+				}
 				else{
+					t.stop();
 					g.setOrgList(organisms);
+					//organisms.clear();
+					healthyFoodSources.clear();
+					poisonousFoodSources.clear();	
 					organisms=g.newGeneration();
 					initNextGeneration();
 					System.out.println("after init");
 					timePassed=0;
+					trialNum=0;
+					generationNum++;
+					t.start();
 					repaint();
 				}
 			}
