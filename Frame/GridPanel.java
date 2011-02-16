@@ -665,12 +665,12 @@ public class GridPanel extends JPanel implements Runnable
 					//amount left in food
 					//amount of health left
 					for(Organism org: organisms) {
-						org.getChromosome().getGene(Chromosome.MOVEFOOD).setGene(aSymList).findClosestFood();
+						org.getChromosome().getGene(Chromosome.MOVEFOOD).setSym('x', findClosestFood(org));
 					}
-					for(HealthyFood h: healthyFoodSources){
+					for(HealthyFood h: healthyFoodSources) {
 						numSurrounding(h);
 					}
-					for(PoisonousFood p: poisonousFoodSources){
+					for(PoisonousFood p: poisonousFoodSources) {
 						numSurrounding(p);
 					}
 					}
@@ -684,6 +684,18 @@ public class GridPanel extends JPanel implements Runnable
 				}
 			}
 
+			//TODO: Can organism differentiate bw pois and non
+			//pois?
+			private double findClosestFood(Organism org) {
+				for(PoisonousFood p: poisonousFoodSources) {
+					p.getLocation().getX();
+					p.getLocation().getY();
+				}
+				for(HealthyFood h: healthyFoodSources) {
+					h.getLocation().getX();
+					h.getLocation().getY();
+				}
+			}
 			//TODO: make all objects on grid inherit from a
 			//gamePiece or whatever. Then make this method 
 			//available for any piece.
