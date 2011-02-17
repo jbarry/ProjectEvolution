@@ -26,10 +26,25 @@ public class Food {
 		int x = r.nextInt(GridPanel.WIDTH);
 		int y = r.nextInt(GridPanel.HEIGHT);
 
-		while(!GridPanel.isValidLocation[x][y]){
-			x = r.nextInt(GridPanel.WIDTH);
-			y = r.nextInt(GridPanel.HEIGHT);
+		//check for collisions
+		try{
+			while(!GridPanel.isValidLocation[x+width/2][y+height/2] 
+			   || !GridPanel.isValidLocation[x+width/2][y-height/2]
+			   || !GridPanel.isValidLocation[x-width/2][y+height/2]
+			   || !GridPanel.isValidLocation[x-width/2][y-height/2]
+			   || !GridPanel.isValidLocation[x][y-height/2]
+			   || !GridPanel.isValidLocation[x][y+height/2]
+			   || !GridPanel.isValidLocation[x+width/2][y]
+			   || !GridPanel.isValidLocation[x-width/2][y]
+			){
+				x = r.nextInt(GridPanel.WIDTH);
+			    y = r.nextInt(GridPanel.HEIGHT);
+			}
 		}
+		catch(ArrayIndexOutOfBoundsException e){
+			
+		}
+
 		location = new Coordinate(x, y);
 
 		//set boundaries
