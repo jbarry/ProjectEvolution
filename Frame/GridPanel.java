@@ -35,7 +35,7 @@ public class GridPanel extends JPanel implements Runnable
 	private LinkedList<HealthyFood> healthyFoodSources;
 	private LinkedList<PoisonousFood> poisonousFoodSources;
 	private int lengthTimeStep=50;
-	private int lengthGeneration=lengthTimeStep*20;
+	private int lengthGeneration=lengthTimeStep*2000;
 	private int timePassed=0;
 	private int trialsPerGen=10;
 	private int trialNum=0;
@@ -243,7 +243,7 @@ public class GridPanel extends JPanel implements Runnable
 
 					//check mouse location vs. all organism's locations.
 					for(Organism o: organisms){
-						if(mouseLocation.approxEquals(o.getLocation(),5)){
+						if(mouseLocation.approxEquals(o.getLocation(), Organism.width/2)){
 							//organism found
 							isOrg = true;
 							MonitorPanel.simObjInfo.setText(o.toString());
@@ -256,7 +256,7 @@ public class GridPanel extends JPanel implements Runnable
 					}
 
 					for(HealthyFood r: healthyFoodSources){
-						if(mouseLocation.approxEquals(r.getLocation(),5)){
+						if(mouseLocation.approxEquals(r.getLocation(),Food.width/2)){
 							//food found
 							isHFood = true;
 							MonitorPanel.simObjInfo.setText(r.toString());
@@ -268,7 +268,7 @@ public class GridPanel extends JPanel implements Runnable
 						}
 					}
 					for(PoisonousFood r: poisonousFoodSources){
-						if(mouseLocation.approxEquals(r.getLocation(),5)){
+						if(mouseLocation.approxEquals(r.getLocation(),Food.width/2)){
 							//food found
 							isPFood = true;
 							MonitorPanel.simObjInfo.setText(r.toString());
@@ -410,7 +410,6 @@ public class GridPanel extends JPanel implements Runnable
 					generationNum++;
 					t.start();
 					repaint();
-					
 				}
 			}
 		});

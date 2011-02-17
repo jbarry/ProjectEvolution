@@ -11,8 +11,8 @@ public class Organism {
 	//------------------------------------------------------------------------------------
 	//--globals--
 	//------------------------------------------------------------------------------------
-	private static final int width = 5;
-	private static final int height = 5;
+	public static final int width = 5;
+	public static final int height = 5;
 	
 	private double health;
 	private Coordinate location;
