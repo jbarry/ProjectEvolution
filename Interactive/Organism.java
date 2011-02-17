@@ -11,6 +11,9 @@ public class Organism {
 	//------------------------------------------------------------------------------------
 	//--globals--
 	//------------------------------------------------------------------------------------
+	private static final int width = 5;
+	private static final int height = 5;
+	
 	private double health;
 	private Coordinate location;
 	private Chromosome chromosome;
@@ -24,10 +27,21 @@ public class Organism {
 	//------------------------------------------------------------------------------------
 	public Organism() {
 		health = 100.00;
-		//location (x, y) is random between (0-width,0-height) inclusive
+		
+		//location (x, y) is random between (0-width,0-height) exclusive
 		r = new Random();
-		location = new Coordinate(r.nextInt(GridPanel.WIDTH + 1),
-				r.nextInt(GridPanel.HEIGHT + 1));
+		int x = r.nextInt(GridPanel.WIDTH);
+		int y = r.nextInt(GridPanel.HEIGHT);
+		while(!GridPanel.isValidLocation[x][y]){
+			x = r.nextInt(GridPanel.WIDTH);
+			y = r.nextInt(GridPanel.HEIGHT);
+		}
+		location = new Coordinate(x, y);
+		
+		//set boundaries
+		setWrapAround(width, height);
+		setRange(width, height, false);
+		
 		chromosome = new Chromosome();
 		fitness=0.0;
 	}
@@ -52,6 +66,14 @@ public class Organism {
 	//------------------------------------------------------------------------------------
 	//--getters/setters--
 	//------------------------------------------------------------------------------------
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+	
 	public Coordinate getLocation() {
 		return location;
 	}
@@ -59,7 +81,11 @@ public class Organism {
 	public Chromosome getChromosome() {
 		return chromosome;
 	}
-
+	
+	public void setChromosome(Chromosome aChrom){
+		chromosome=aChrom;
+	}
+	
 	public double getFitness() {
 		return fitness;
 	}
@@ -72,91 +98,139 @@ public class Organism {
 		return health;
 	}
 	
-	public void setChromosome(Chromosome aChrom){
-		chromosome=aChrom;
+	public void setHealth(int aHealth) {
+		health=aHealth;
+		
 	}
+	
 	//------------------------------------------------------------------------------------
 	//--accessors/mutators--
 	//------------------------------------------------------------------------------------
 	public void moveNorth(LinkedList<Organism> organisms) {
-		location.setY(location.getY() - 1);
-		setWrapAround(this);
-		if(organismConflictsWithAnotherOrganism(this, organisms)){
-			location.setY(location.getY() + 1);
-			setWrapAround(this);
+		setWrapAround(width, height);
+		//make old location available.
+		setRange(width, height, true);
+		//if the next move is available.
+		try{
+			if(GridPanel.isValidLocation[location.getX()][location.getY() - 1 - height/2]){
+				//move there.
+				location.setY(location.getY() - 1);
+			}
 		}
-		
+		catch(ArrayIndexOutOfBoundsException e){
+			
+		}
+		//make current location unavailable
+		setRange(width, height, false);
 	}
 
 	public void moveNorthEast(LinkedList<Organism> organisms) {
-		location.setX(location.getX() + 1);
-		location.setY(location.getY() - 1);
-		setWrapAround(this);
-		if(organismConflictsWithAnotherOrganism(this, organisms)){
-			location.setX(location.getX() - 1);
-			location.setY(location.getY() + 1);
-			setWrapAround(this);
+		setWrapAround(width, height);
+		setRange(width, height, true);
+		try{
+			if(GridPanel.isValidLocation[location.getX() + 1 + width/2][location.getY() - 1 - height/2]){
+				location.setX(location.getX() + 1);
+				location.setY(location.getY() - 1);
+			}
 		}
+		catch(ArrayIndexOutOfBoundsException e){
+		
+		}
+		setRange(width, height, false);
 	}
 
 	public void moveEast(LinkedList<Organism> organisms) {
-		location.setX(location.getX() + 1);
-		setWrapAround(this);
-		if(organismConflictsWithAnotherOrganism(this, organisms)){
-			location.setX(location.getX() - 1);
-			setWrapAround(this);
+		setWrapAround(width, height);
+		setRange(width, height, true);
+		try{
+			if(location.getX() + 1 + width/2 >= GridPanel.WIDTH){
+				location.setX(width/2);
+			}
+			if(GridPanel.isValidLocation[location.getX() + 1 + width/2][location.getY()]){
+				location.setX(location.getX() + 1);
+			}
 		}
+		catch(ArrayIndexOutOfBoundsException e){
+		
+		}	
+		setRange(width, height, false);
 	}
 
 	public void moveSouthEast(LinkedList<Organism> organisms) {
-		location.setX(location.getX() + 1);
-		location.setY(location.getY() + 1);
-		setWrapAround(this);
-		if(organismConflictsWithAnotherOrganism(this, organisms)){
-			location.setX(location.getX() - 1);
-			location.setY(location.getY() - 1);
-			setWrapAround(this);
+		setWrapAround(width, height);
+		setRange(width, height, true);
+		try{
+			if(location.getY() + 1 + height/2>= GridPanel.HEIGHT){
+				location.setY(height/2);
+			}
+			if(GridPanel.isValidLocation[location.getX() + 1 + width/2][location.getY() + 1 + height/2]){
+				location.setX(location.getX() + 1);
+				location.setY(location.getY() + 1);
+			}
 		}
+		catch(ArrayIndexOutOfBoundsException e){
+			
+		}
+		setRange(width, height, false);
 	}
 
 	public void moveSouth(LinkedList<Organism> organisms) {
-		location.setY(location.getY() + 1);
-		setWrapAround(this);
-		if(organismConflictsWithAnotherOrganism(this, organisms)){
-			location.setY(location.getY() - 1);
-			setWrapAround(this);
+		setWrapAround(width, height);
+		setRange(width, height, true);
+		try{
+			if(GridPanel.isValidLocation[location.getX()][location.getY() + 1 + height/2]){
+				location.setY(location.getY() + 1);
+			}
 		}
+		catch(ArrayIndexOutOfBoundsException e){
+			
+		}
+		setRange(width, height, false);
+
 	}
 
 	public void moveSouthWest(LinkedList<Organism> organisms) {
-		location.setX(location.getX() - 1);
-		location.setY(location.getY() + 1);
-		setWrapAround(this);
-		if(organismConflictsWithAnotherOrganism(this, organisms)){
-			location.setX(location.getX() + 1);
-			location.setY(location.getY() - 1);
-			setWrapAround(this);
+		setWrapAround(width, height);
+		setRange(width, height, true);
+		try{
+			if(GridPanel.isValidLocation[location.getX() - 1 - width/2][location.getY() + 1 + height/2]){
+				location.setX(location.getX() - 1);
+				location.setY(location.getY() + 1);
+			}
 		}
+		catch(ArrayIndexOutOfBoundsException e){
+			
+		}
+		setRange(width, height, false);
 	}
 
 	public void moveWest(LinkedList<Organism> organisms) {
-		location.setX(location.getX() - 1);
-		setWrapAround(this);
-		if(organismConflictsWithAnotherOrganism(this, organisms)){
-			location.setX(location.getX() + 1);
-			setWrapAround(this);
+		setWrapAround(width, height);
+		setRange(width, height, true);
+		try{
+			if(GridPanel.isValidLocation[location.getX() - 1 - width/2][location.getY()]){
+				location.setX(location.getX() - 1);
+			}
 		}
+		catch(ArrayIndexOutOfBoundsException e){
+			
+		}
+		setRange(width, height, false);
 	}
 
 	public void moveNorthWest(LinkedList<Organism> organisms) {
-		location.setX(location.getX() - 1);
-		location.setY(location.getY() - 1);
-		setWrapAround(this);
-		if(organismConflictsWithAnotherOrganism(this, organisms)){
-			location.setX(location.getX() + 1);
-			location.setY(location.getY() + 1);
-			setWrapAround(this);
+		setWrapAround(width, height);
+		setRange(width, height, true);
+		try{
+			if(GridPanel.isValidLocation[location.getX() - 1 - width/2][location.getY() - 1 - height/2]){
+				location.setX(location.getX() - 1);
+				location.setY(location.getY() - 1);
+			}
 		}
+		catch(ArrayIndexOutOfBoundsException e){
+
+		}
+		setRange(width, height, false);
 	}
 	
 	public void eatFood(Food f){
@@ -181,64 +255,55 @@ public class Organism {
 
 	public void paint(Graphics g) {
 		g.setColor(Color.BLACK);
-		g.fillRect((int)this.getLocation().getX()-2, (int)this.getLocation().getY()-2, 5, 5);
+		g.fillRect((int)this.getLocation().getX()-(width/2), 
+				   (int)this.getLocation().getY()-(height/2), 
+				   width, height);
+	}
+	
+	/**
+	 * This method will modify the boolean location map and account for wrapping.
+	 * 
+	 * @param x        x-size for rectangle
+	 * @param y        y-size for rectangle
+	 * @param validity the value to mark the location map.
+	 */
+	public void setRange(int x, int y, boolean validity){
+		for(int i=(getLocation().getX()-(x/2)); i<=(getLocation().getX()+(x/2)); i++){
+			//adjust coordinates for wrapping
+			for(int j=(getLocation().getY()-(y/2)); j<=(getLocation().getY()+(y/2)); j++){
+				//no conflicts
+				try{
+					GridPanel.isValidLocation[i][j] = validity;
+				}
+				catch(ArrayIndexOutOfBoundsException e){
+					
+				}
+			}
+		}
 	}
 	
 	/**
 	 * Handles objects that stray off of the GridPanel and wraps their location.
-	 *
-	 * @param o The Organism object to apply the wrap-setting to.
+	 * @param rightLeftBound   - right and left boundary to trigger wrap
+	 * @param topBottomBound   - top and bottom boundary to trigger wrap
 	 */
-	public void setWrapAround(Organism o){
-		if(o.getLocation().getX() > GridPanel.WIDTH){
-			o.getLocation().setX(o.getLocation().getX() - GridPanel.WIDTH);
+	public void setWrapAround(int rightLeftBound, int topBottomBound){
+		if(getLocation().getX() + (rightLeftBound/2) >= GridPanel.WIDTH){
+			//right
+			location.setX((width/2)+1);
 		}
-		if(o.getLocation().getX() <= 0){
-			o.getLocation().setX(o.getLocation().getX() + GridPanel.WIDTH);
+		if(getLocation().getX() - (rightLeftBound/2) <= 0){
+			//left
+			location.setX(GridPanel.WIDTH - (width/2));
 		}
-		if(o.getLocation().getY() > GridPanel.HEIGHT){
-			o.getLocation().setY(o.getLocation().getY() - GridPanel.HEIGHT);
+		if(getLocation().getY() + (topBottomBound/2) >= GridPanel.HEIGHT){
+			//bottom
+			location.setY(height/2 + 1);
 		}
-		if(o.getLocation().getY() <= 0){
-			o.getLocation().setY(o.getLocation().getY() + GridPanel.HEIGHT);
+		if(getLocation().getY() - (topBottomBound/2) <= 0){
+			//top
+			location.setY(GridPanel.HEIGHT - (height/2));
 		}
-	}
-	
-	/**
-	 * Determines whether or not an organism conflicts with another organisms' location
-	 *
-	 * @param o The Organism that is being compared to the list of organisms.
-	 * @return (true/false) whether or not the organism conflicts with another organism.
-	 */
-	private boolean organismConflictsWithAnotherOrganism(Organism o, LinkedList<Organism> organisms) {
-		int leftBoundary = o.getLocation().getX() - 2;
-		int rightBoundary = o.getLocation().getX() + 2;
-		int lowerBoundary = o.getLocation().getY() + 2;
-		int upperBoundary = o.getLocation().getY() - 2;
-
-		boolean conflictsWithOrganism = false;
-		for(Organism org: organisms){
-			if(!org.equals(o)){
-				int leftBoundary2 = org.getLocation().getX() - 2;
-				int rightBoundary2 = org.getLocation().getX() + 2;
-				int lowerBoundary2 = org.getLocation().getY() + 2;
-				int upperBoundary2 = org.getLocation().getY() - 2;
-
-				if((leftBoundary >= leftBoundary2 && leftBoundary <= rightBoundary2 &&
-						((upperBoundary >= upperBoundary2 && upperBoundary <= lowerBoundary2) ||
-								(lowerBoundary >= upperBoundary2 && lowerBoundary <= lowerBoundary2))) ||
-								(rightBoundary >= leftBoundary2 && rightBoundary <= rightBoundary2 &&
-										((upperBoundary >= upperBoundary2 && upperBoundary <= lowerBoundary2) ||
-												(lowerBoundary >= upperBoundary2 && lowerBoundary <= lowerBoundary2)))){
-					/*
-					 * Organism conflicts with another organism's location
-					 */
-					conflictsWithOrganism = true;
-					break;
-				}
-			}
-		}
-		return conflictsWithOrganism;
 	}
 
 	//------------------------------------------------------------------------------------
@@ -255,10 +320,5 @@ public class Organism {
 			+  "\n Health: " + getHealth();
 		return str;
 	}
-
-	public void setHealth(int aHealth) {
-		health=aHealth;
-		
-	}
-	}	
+}	
 

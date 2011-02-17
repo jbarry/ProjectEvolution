@@ -31,7 +31,9 @@ public class PoisonousFood extends Food{
 		g.setColor(Color.RED);
 
 		if(!isDepleted){
-			g.fillRect((int)this.getLocation().getX()-2, (int)this.getLocation().getY()-2, 5, 5);
+			g.fillRect((int)this.getLocation().getX()-(getWidth()/2), 
+					   (int)this.getLocation().getY()-(getHeight()/2), 
+					   getWidth(), getHeight());
 		}
 
 	}

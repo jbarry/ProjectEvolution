@@ -29,12 +29,11 @@ public class HealthyFood extends Food {
 	@Override
 	public void paint(Graphics g, boolean isDepleted) {
 		g.setColor(Color.BLUE);
-
+		
 		if(!isDepleted){
-			g.fillRect((int)this.getLocation().getX()-2, (int)this.getLocation().getY()-2, 5, 5);
+			g.fillRect((int)this.getLocation().getX()-(getWidth()/2), 
+					   (int)this.getLocation().getY()-(getHeight()/2), 
+					   getWidth(), getHeight());
 		}
-
 	}
-
-
 }
