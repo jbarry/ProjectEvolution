@@ -77,6 +77,13 @@ public class GridPanel extends JPanel implements Runnable
 	public void initialize(){
 		timePassed=0;
 		
+		isValidLocation = new boolean[GridPanel.WIDTH][GridPanel.HEIGHT];
+		for(int i=0; i<isValidLocation.length; i++){
+			for(int j=0; j<isValidLocation[i].length; j++){
+				isValidLocation[i][j] = true;
+			}
+		}
+		
 		organisms.clear();
 		for(int i=0; i<OptionsPanel.numOrganisms; i++){
 			Organism o = new Organism();
@@ -104,17 +111,17 @@ public class GridPanel extends JPanel implements Runnable
 	 * @return (true/false) whether or not the organism is next to food.
 	 */
 	private boolean organismIsNextToHealthyFood(Organism org) {
-		int leftBoundary = org.getLocation().getX() - org.getWidth()/2;
-		int rightBoundary = org.getLocation().getX() + org.getWidth()/2;
-		int lowerBoundary = org.getLocation().getY() + org.getHeight()/2;
-		int upperBoundary = org.getLocation().getY() - org.getHeight()/2;
+		int leftBoundary = org.getLocation().getX() - Food.width/2;
+		int rightBoundary = org.getLocation().getX() + Food.width/2;
+		int lowerBoundary = org.getLocation().getY() + Food.height/2;
+		int upperBoundary = org.getLocation().getY() - Food.height/2;
 
 		boolean isNextToFood = false;
 		for(HealthyFood foodList: healthyFoodSources){
-			int leftBoundary2 = foodList.getLocation().getX() - org.getWidth()/2;;
-			int rightBoundary2 = foodList.getLocation().getX() + org.getWidth()/2;;
-			int lowerBoundary2 = foodList.getLocation().getY() + org.getHeight()/2;
-			int upperBoundary2 = foodList.getLocation().getY() - org.getHeight()/2;
+			int leftBoundary2 = foodList.getLocation().getX() - Organism.width/2 - 1;
+			int rightBoundary2 = foodList.getLocation().getX() + Organism.width/2 + 1;
+			int lowerBoundary2 = foodList.getLocation().getY() + Organism.height/2 + 1;
+			int upperBoundary2 = foodList.getLocation().getY() - Organism.height/2 - 1;
 
 			if((leftBoundary >= leftBoundary2 && leftBoundary <= rightBoundary2 &&
 					((upperBoundary >= upperBoundary2 && upperBoundary <= lowerBoundary2) ||
@@ -145,17 +152,17 @@ public class GridPanel extends JPanel implements Runnable
 	 * @return (true/false) whether or not the organism is next to food.
 	 */
 	private boolean organismIsNextToPoisonousFood(Organism org) {
-		int leftBoundary = org.getLocation().getX() - org.getWidth()/2;
-		int rightBoundary = org.getLocation().getX() + org.getWidth()/2;
-		int lowerBoundary = org.getLocation().getY() + org.getHeight()/2;
-		int upperBoundary = org.getLocation().getY() - org.getHeight()/2;
+		int leftBoundary = org.getLocation().getX() - Food.width/2;
+		int rightBoundary = org.getLocation().getX() + Food.width/2;
+		int lowerBoundary = org.getLocation().getY() + Food.height/2;
+		int upperBoundary = org.getLocation().getY() - Food.height/2;
 
 		boolean isNextToFood = false;
 		for(PoisonousFood foodList: poisonousFoodSources){
-			int leftBoundary2 = foodList.getLocation().getX() - org.getWidth()/2;;
-			int rightBoundary2 = foodList.getLocation().getX() + org.getWidth()/2;;
-			int lowerBoundary2 = foodList.getLocation().getY() + org.getHeight()/2;
-			int upperBoundary2 = foodList.getLocation().getY() - org.getHeight()/2;
+			int leftBoundary2 = foodList.getLocation().getX() - Organism.width/2 - 1;
+			int rightBoundary2 = foodList.getLocation().getX() + Organism.width/2 + 1;
+			int lowerBoundary2 = foodList.getLocation().getY() + Organism.height/2 + 1;
+			int upperBoundary2 = foodList.getLocation().getY() - Organism.height/2 - 1;
 
 			if((leftBoundary >= leftBoundary2 && leftBoundary <= rightBoundary2 &&
 					((upperBoundary >= upperBoundary2 && upperBoundary <= lowerBoundary2) ||
@@ -329,12 +336,6 @@ public class GridPanel extends JPanel implements Runnable
 		organisms = new LinkedList<Organism>();
 		healthyFoodSources = new LinkedList<HealthyFood>();
 		poisonousFoodSources = new LinkedList<PoisonousFood>();
-		isValidLocation = new boolean[GridPanel.WIDTH][GridPanel.HEIGHT];
-		for(int i=0; i<isValidLocation.length; i++){
-			for(int j=0; j<isValidLocation[i].length; j++){
-				isValidLocation[i][j] = true;
-			}
-		}
 		
 		//a timer and it's action event to call at every time t.
 		t = new javax.swing.Timer(lengthTimeStep, new ActionListener() {

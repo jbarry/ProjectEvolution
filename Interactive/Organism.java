@@ -11,8 +11,8 @@ public class Organism {
 	//------------------------------------------------------------------------------------
 	//--globals--
 	//------------------------------------------------------------------------------------
-	public static final int width = 50;
-	public static final int height = 50;
+	public static final int width = 5;
+	public static final int height = 5;
 	
 	private double health;
 	private Coordinate location;
@@ -67,13 +67,6 @@ public class Organism {
 	//------------------------------------------------------------------------------------
 	//--getters/setters--
 	//------------------------------------------------------------------------------------
-	public int getWidth() {
-		return width;
-	}
-
-	public int getHeight() {
-		return height;
-	}
 	
 	public Coordinate getLocation() {
 		return location;
@@ -108,12 +101,13 @@ public class Organism {
 	//--accessors/mutators--
 	//------------------------------------------------------------------------------------
 	public void moveNorth(LinkedList<Organism> organisms) {
-		setWrapAround(width, height);
 		//make old location available.
 		setRange(width, height, true);
+		setWrapAround(width, height);
+		
 		//if the next move is available.
 		try{
-			if(GridPanel.isValidLocation[location.getX()][location.getY() - 1 - height/2]){
+			if(canSpawn(location.getX(), location.getY() - 1)){
 				//move there.
 				location.setY(location.getY() - 1);
 			}
@@ -126,10 +120,10 @@ public class Organism {
 	}
 
 	public void moveNorthEast(LinkedList<Organism> organisms) {
-		setWrapAround(width, height);
 		setRange(width, height, true);
+		setWrapAround(width, height);
 		try{
-			if(GridPanel.isValidLocation[location.getX() + 1 + width/2][location.getY() - 1 - height/2]){
+			if(canSpawn(location.getX() + 1, location.getY() - 1)){
 				location.setX(location.getX() + 1);
 				location.setY(location.getY() - 1);
 			}
@@ -141,13 +135,14 @@ public class Organism {
 	}
 
 	public void moveEast(LinkedList<Organism> organisms) {
-		setWrapAround(width, height);
 		setRange(width, height, true);
+		setWrapAround(width, height);
 		try{
 			if(location.getX() + 1 + width/2 >= GridPanel.WIDTH){
-				location.setX(width/2);
+				if(canSpawn(width/2, location.getY()))
+					location.setX(width/2);
 			}
-			if(GridPanel.isValidLocation[location.getX() + 1 + width/2][location.getY()]){
+			if(canSpawn(location.getX() + 1, location.getY())){
 				location.setX(location.getX() + 1);
 			}
 		}
@@ -158,13 +153,14 @@ public class Organism {
 	}
 
 	public void moveSouthEast(LinkedList<Organism> organisms) {
-		setWrapAround(width, height);
 		setRange(width, height, true);
+		setWrapAround(width, height);
 		try{
 			if(location.getY() + 1 + height/2>= GridPanel.HEIGHT){
-				location.setY(height/2);
+				if(canSpawn(location.getX(), height/2))
+					location.setY(height/2);
 			}
-			if(GridPanel.isValidLocation[location.getX() + 1 + width/2][location.getY() + 1 + height/2]){
+			if(canSpawn(location.getX() + 1, location.getY() + 1)){
 				location.setX(location.getX() + 1);
 				location.setY(location.getY() + 1);
 			}
@@ -176,10 +172,10 @@ public class Organism {
 	}
 
 	public void moveSouth(LinkedList<Organism> organisms) {
-		setWrapAround(width, height);
 		setRange(width, height, true);
+		setWrapAround(width, height);
 		try{
-			if(GridPanel.isValidLocation[location.getX()][location.getY() + 1 + height/2]){
+			if(canSpawn(location.getX(), location.getY() + 1)){
 				location.setY(location.getY() + 1);
 			}
 		}
@@ -191,10 +187,10 @@ public class Organism {
 	}
 
 	public void moveSouthWest(LinkedList<Organism> organisms) {
-		setWrapAround(width, height);
 		setRange(width, height, true);
+		setWrapAround(width, height);
 		try{
-			if(GridPanel.isValidLocation[location.getX() - 1 - width/2][location.getY() + 1 + height/2]){
+			if(canSpawn(location.getX() - 1, location.getY() + 1)){
 				location.setX(location.getX() - 1);
 				location.setY(location.getY() + 1);
 			}
@@ -206,10 +202,10 @@ public class Organism {
 	}
 
 	public void moveWest(LinkedList<Organism> organisms) {
-		setWrapAround(width, height);
 		setRange(width, height, true);
+		setWrapAround(width, height);
 		try{
-			if(GridPanel.isValidLocation[location.getX() - 1 - width/2][location.getY()]){
+			if(canSpawn(location.getX() - 1, location.getY())){
 				location.setX(location.getX() - 1);
 			}
 		}
@@ -220,10 +216,10 @@ public class Organism {
 	}
 
 	public void moveNorthWest(LinkedList<Organism> organisms) {
-		setWrapAround(width, height);
 		setRange(width, height, true);
+		setWrapAround(width, height);
 		try{
-			if(GridPanel.isValidLocation[location.getX() - 1 - width/2][location.getY() - 1 - height/2]){
+			if(canSpawn(location.getX() - 1, location.getY() - 1)){
 				location.setX(location.getX() - 1);
 				location.setY(location.getY() - 1);
 			}
@@ -256,8 +252,8 @@ public class Organism {
 
 	public void paint(Graphics g) {
 		g.setColor(Color.BLACK);
-		g.fillRect((int)this.getLocation().getX()-(width/2), 
-				   (int)this.getLocation().getY()-(height/2), 
+		g.fillRect((int)this.location.getX()-(width/2), 
+				   (int)this.location.getY()-(height/2), 
 				   width, height);
 	}
 	
@@ -292,9 +288,9 @@ public class Organism {
 	 * @param validity the value to mark the location map.
 	 */
 	private void setRange(int x, int y, boolean validity){
-		for(int i=(getLocation().getX()-(x/2)); i<=(getLocation().getX()+(x/2)); i++){
+		for(int i=(location.getX()-(x/2)); i<=(location.getX()+(x/2)); i++){
 			//adjust coordinates for wrapping
-			for(int j=(getLocation().getY()-(y/2)); j<=(getLocation().getY()+(y/2)); j++){
+			for(int j=(location.getY()-(y/2)); j<=(location.getY()+(y/2)); j++){
 				//no conflicts
 				try{
 					GridPanel.isValidLocation[i][j] = validity;
@@ -312,21 +308,25 @@ public class Organism {
 	 * @param topBottomBound   - top and bottom boundary to trigger wrap
 	 */
 	private void setWrapAround(int rightLeftBound, int topBottomBound){
-		if(getLocation().getX() + (rightLeftBound/2) >= GridPanel.WIDTH){
+		if(location.getX() + (rightLeftBound/2) >= GridPanel.WIDTH){
 			//right
-			location.setX((width/2)+1);
+			if(canSpawn(width/2+1, location.getY()))
+				location.setX((width/2)+1);
 		}
-		if(getLocation().getX() - (rightLeftBound/2) <= 0){
+		if(location.getX() - (rightLeftBound/2) <= 0){
 			//left
-			location.setX(GridPanel.WIDTH - (width/2));
+			if(canSpawn(GridPanel.WIDTH - (width/2), location.getY()))
+				location.setX(GridPanel.WIDTH - (width/2));
 		}
-		if(getLocation().getY() + (topBottomBound/2) >= GridPanel.HEIGHT){
+		if(location.getY() + (topBottomBound/2) >= GridPanel.HEIGHT){
 			//bottom
-			location.setY(height/2 + 1);
+			if(canSpawn(location.getX(), height/2 + 1))
+				location.setY(height/2 + 1);
 		}
-		if(getLocation().getY() - (topBottomBound/2) <= 0){
+		if(location.getY() - (topBottomBound/2) <= 0){
 			//top
-			location.setY(GridPanel.HEIGHT - (height/2));
+			if(canSpawn(location.getX(), GridPanel.HEIGHT - (height/2)))
+				location.setY(GridPanel.HEIGHT - (height/2));
 		}
 	}
 
@@ -340,8 +340,8 @@ public class Organism {
 	public String toString(){
 		String str = "";
 		str += " I am an Organism. Fear me."
-			+  "\n Location: " + getLocation()
-			+  "\n Health: " + getHealth();
+			+  "\n Location: " + location
+			+  "\n Health: " + health;
 		return str;
 	}
 }	

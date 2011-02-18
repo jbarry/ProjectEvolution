@@ -111,9 +111,9 @@ public class Food {
 	 * @param validity the value to mark the location map.
 	 */
 	private void setRange(int x, int y, boolean validity){
-		for(int i=(getLocation().getX()-(x/2)); i<=(getLocation().getX()+(x/2)); i++){
+		for(int i=(location.getX()-(x/2)); i<=(location.getX()+(x/2)); i++){
 			//adjust coordinates for wrapping
-			for(int j=(getLocation().getY()-(y/2)); j<=(getLocation().getY()+(y/2)); j++){
+			for(int j=(location.getY()-(y/2)); j<=(location.getY()+(y/2)); j++){
 				//no conflicts
 				try{
 					GridPanel.isValidLocation[i][j] = validity;
@@ -131,21 +131,25 @@ public class Food {
 	 * @param topBottomBound   - top and bottom boundary to trigger wrap
 	 */
 	private void setWrapAround(int rightLeftBound, int topBottomBound){
-		if(getLocation().getX() + (rightLeftBound/2) >= GridPanel.WIDTH){
+		if(location.getX() + (rightLeftBound/2) >= GridPanel.WIDTH){
 			//right
-			location.setX((width/2)+1);
+			if(canSpawn(width/2+1, location.getY()))
+				location.setX((width/2)+1);
 		}
-		if(getLocation().getX() - (rightLeftBound/2) <= 0){
+		if(location.getX() - (rightLeftBound/2) <= 0){
 			//left
-			location.setX(GridPanel.WIDTH - (width/2));
+			if(canSpawn(GridPanel.WIDTH - (width/2), location.getY()))
+				location.setX(GridPanel.WIDTH - (width/2));
 		}
-		if(getLocation().getY() + (topBottomBound/2) >= GridPanel.HEIGHT){
+		if(location.getY() + (topBottomBound/2) >= GridPanel.HEIGHT){
 			//bottom
-			location.setY(height/2 + 1);
+			if(canSpawn(location.getX(), height/2 + 1))
+				location.setY(height/2 + 1);
 		}
-		if(getLocation().getY() - (topBottomBound/2) <= 0){
+		if(location.getY() - (topBottomBound/2) <= 0){
 			//top
-			location.setY(GridPanel.HEIGHT - (height/2));
+			if(canSpawn(location.getX(), GridPanel.HEIGHT - (height/2)))
+				location.setY(GridPanel.HEIGHT - (height/2));
 		}
 	}
 	
@@ -153,8 +157,8 @@ public class Food {
 	{
 		g.setColor(Color.BLUE);
 		if(!isDepleted){
-			g.fillRect((int)this.getLocation().getX()-(width/2), 
-					   (int)this.getLocation().getY()-(height/2), 
+			g.fillRect((int)this.location.getX()-(width/2), 
+					   (int)this.location.getY()-(height/2), 
 					   width, height);
 		}
 	}
@@ -165,7 +169,7 @@ public class Food {
 	public String toString(){
 		String str = "";
 		str += "I am foooooood. Eat me."
-			+  "\nLocation: " + getLocation();
+			+  "\nLocation: " + location;
 		return str;
 	}
 
