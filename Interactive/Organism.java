@@ -264,9 +264,7 @@ public class Organism {
 	 */
 	private boolean canSpawn(int x, int y){
 		for(int i=x-width/2; i<=x+width/2; i++){
-			//adjust coordinates for wrapping
 			for(int j=y-height/2; j<=y+height/2; j++){
-				//no conflicts
 				try{
 					if(!GridPanel.isValidLocation[i][j]){
 						return false;
@@ -289,9 +287,7 @@ public class Organism {
 	 */
 	private void setRange(int x, int y, boolean validity){
 		for(int i=(location.getX()-(x/2)); i<=(location.getX()+(x/2)); i++){
-			//adjust coordinates for wrapping
 			for(int j=(location.getY()-(y/2)); j<=(location.getY()+(y/2)); j++){
-				//no conflicts
 				try{
 					GridPanel.isValidLocation[i][j] = validity;
 				}
