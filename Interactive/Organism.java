@@ -11,8 +11,8 @@ public class Organism {
 	//------------------------------------------------------------------------------------
 	//--globals--
 	//------------------------------------------------------------------------------------
-	public static final int width = 5;
-	public static final int height = 5;
+	public static final int width = 50;
+	public static final int height = 50;
 	
 	private double health;
 	private Coordinate location;
@@ -33,22 +33,9 @@ public class Organism {
 		int x = r.nextInt(GridPanel.WIDTH);
 		int y = r.nextInt(GridPanel.HEIGHT);
 		//check for collisions
-		try{
-			while(!GridPanel.isValidLocation[x+width/2][y+height/2] 
-			   || !GridPanel.isValidLocation[x+width/2][y-height/2]
-			   || !GridPanel.isValidLocation[x-width/2][y+height/2]
-			   || !GridPanel.isValidLocation[x-width/2][y-height/2]
-			   || !GridPanel.isValidLocation[x][y-height/2]
-			   || !GridPanel.isValidLocation[x][y+height/2]
-			   || !GridPanel.isValidLocation[x+width/2][y]
-			   || !GridPanel.isValidLocation[x-width/2][y]
-			){
-				x = r.nextInt(GridPanel.WIDTH);
-			    y = r.nextInt(GridPanel.HEIGHT);
-			}
-		}
-		catch(ArrayIndexOutOfBoundsException e){
-			
+		while(!canSpawn(x, y)){
+			x = r.nextInt(GridPanel.WIDTH);
+			y = r.nextInt(GridPanel.HEIGHT);
 		}
 		location = new Coordinate(x, y);
 		
@@ -275,13 +262,36 @@ public class Organism {
 	}
 	
 	/**
+	 * @param x - current x location if valid.
+	 * @param y - current y location if valid.
+	 * @return true if organism can spawn at given location.
+	 */
+	private boolean canSpawn(int x, int y){
+		for(int i=x-width/2; i<=x+width/2; i++){
+			//adjust coordinates for wrapping
+			for(int j=y-height/2; j<=y+height/2; j++){
+				//no conflicts
+				try{
+					if(!GridPanel.isValidLocation[i][j]){
+						return false;
+					}
+				}
+				catch(ArrayIndexOutOfBoundsException e){
+					
+				}
+			}
+		}
+		return true;
+	}
+	
+	/**
 	 * This method will modify the boolean location map and account for wrapping.
 	 * 
 	 * @param x        x-size for rectangle
 	 * @param y        y-size for rectangle
 	 * @param validity the value to mark the location map.
 	 */
-	public void setRange(int x, int y, boolean validity){
+	private void setRange(int x, int y, boolean validity){
 		for(int i=(getLocation().getX()-(x/2)); i<=(getLocation().getX()+(x/2)); i++){
 			//adjust coordinates for wrapping
 			for(int j=(getLocation().getY()-(y/2)); j<=(getLocation().getY()+(y/2)); j++){
@@ -301,7 +311,7 @@ public class Organism {
 	 * @param rightLeftBound   - right and left boundary to trigger wrap
 	 * @param topBottomBound   - top and bottom boundary to trigger wrap
 	 */
-	public void setWrapAround(int rightLeftBound, int topBottomBound){
+	private void setWrapAround(int rightLeftBound, int topBottomBound){
 		if(getLocation().getX() + (rightLeftBound/2) >= GridPanel.WIDTH){
 			//right
 			location.setX((width/2)+1);
