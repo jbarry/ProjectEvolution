@@ -19,15 +19,29 @@ public class Eval{
 	public Eval() {
 
 	}
-
+	
+	public static void main(String[] args) {
+		ArrayList<String> strL = new ArrayList<String>();
+		strL.add("/");
+		strL.add("y");
+		strL.add("x");
+		strL.add("y");
+		strL.add("-");
+		strL.add("x");
+		strL.add("/");
+		strL.add("+");
+		strL.add("+");
+		Eval.evaluation(strL);
+	}
+	
 	//this code takes a list of strings
-	public Expr evaluation() {
-		Scanner sc = new Scanner(System.in);
-		String expression = sc.nextLine();
-		List<String> symlist = new ArrayList<String>();
-		symlist.addAll(Arrays.asList(expression.split(" ")));
-		for (int i = 0; i < symlist.size(); i++)
-			System.out.print(symlist.get(i) + " ");
+	public static Expr evaluation(ArrayList<String> symList) {
+		//		Scanner sc = new Scanner(System.in);
+		//		String expression = sc.nextLine();
+		//		symlist.addAll(Arrays.asList(expression.split(" ")));
+
+		for (int i = 0; i < symList.size(); i++)
+			System.out.print(symList.get(i) + " ");
 		System.out.println();
 
 		Stack<Expr> stack = new Stack<Expr>();
@@ -36,54 +50,67 @@ public class Eval{
 		//this is the evaluator for the postfix expression.
 		//when you do this in your project, you will want to ignore operators
 		//that cause a stack underflow. Here these operators will crash the program.
-		while (!symlist.isEmpty()) {
-			current = symlist.remove(0);//pop off first symbol.
-
-			if      (current.equals("+")) {
+		theLoop: while (!symList.isEmpty()) {
+			current = symList.remove(0);//pop off first symbol.
+			if (current.equals("+") && stack.size() > 1) {
 				try{
 					Expr left = stack.pop();
 					Expr right = stack.pop();
 					expr = new Add(left, right);
+					System.out.println("pushed Plus");
 				} catch(Exception e) {
-
+					System.out.println("No operators for operand");
+					System.out.println(stack.size());
+					continue theLoop;
 				}
 			}
-			else if (current.equals("-")) {
+			else if (current.equals("-") && stack.size() > 1) {
 				try{
 					Expr left = stack.pop();
 					Expr right = stack.pop();
 					expr = new Minus(left, right);
+					System.out.println("pushed Minus");
 				} catch(Exception e) {
-
+					System.out.println("No operators for operand");
+					continue theLoop;
 				}     
 			}
-			else if (current.equals("*")) {
+			else if (current.equals("*") && stack.size() > 1) {
 				try{
 					Expr left = stack.pop();
 					Expr right = stack.pop();
 					expr = new Mult(left, right);
+					System.out.println("pushed Mult");
 				} catch(Exception e) {
+					System.out.println("No operators for operand");
+					continue theLoop;
 				}
 			}
-			else if (current.equals("/")) {
+			else if (current.equals("/") && stack.size() > 1) {
 				try{
 					Expr left = stack.pop();
 					Expr right = stack.pop();
 					expr = new Div(left, right);
+					System.out.println("pushed Div");
 				} catch(Exception e) {
-
+					System.out.println("No operators for operand");
+					continue theLoop;
 				}		
 			}
 			else {
 				try {//try to turn it into a number.
 					double d = Double.parseDouble(current);
 					expr = new Constant(d);
+					System.out.println("pushed double");
 				}
 				catch (Exception e){//not a number, so must be a variable
 					expr = new Var(current);
+					System.out.println("pushed variable");
 				}
 			}
+			System.out.println(expr.toString());
 			stack.push(expr);//push the resulting expression back on the stack and loop.
+			System.out.println(stack.size());
 		}
 
 		return stack.pop();

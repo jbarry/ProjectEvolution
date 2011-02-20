@@ -20,10 +20,8 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 	//Default ctor.
 	public Chromosome(int numGenes) {
 		chromosome = new LinkedList<Gene>();
-		for (int i = 0; i < numGenes; i++) {
+		for (int i = 0; i < numGenes; i++)
 			chromosome.add(new Gene(7));
-		}
-		
 	}
 
 	//TODO: find symbols position and update this class when found.

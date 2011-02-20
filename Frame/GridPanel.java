@@ -287,9 +287,8 @@ public class GridPanel extends JPanel implements Runnable
 						}
 					}
 
-					if(!isHFood & !isPFood & !isOrg){
+					if(!isHFood & !isPFood & !isOrg)
 						MonitorPanel.simObjInfo.setText("No Object Selected");
-					}
 				}
 				catch(NullPointerException e){
 
@@ -350,7 +349,7 @@ public class GridPanel extends JPanel implements Runnable
 							//organism eats food
 						}
 						//otherwise keep moving.
-						else{
+						else {
 							//create new, random number 0-7 representing a movement.
 							Random r = new Random();
 							int movement = r.nextInt(8);
@@ -367,13 +366,17 @@ public class GridPanel extends JPanel implements Runnable
 							}
 						}
 					}
+					
 					for(HealthyFood h: healthyFoodSources){
 						//h.deplete();
 					}
+					
 					for(PoisonousFood p: poisonousFoodSources){
 						//p.deplete();
 					}
+					
 					repaint();
+					
 					//Begin AI logic. ROUGH
 					//TODO: make org find its way to closest food source.
 					//variables in gene:
@@ -381,21 +384,21 @@ public class GridPanel extends JPanel implements Runnable
 					//#opponents around food in food
 					//amount left in food
 					//amount of health left
-					for(Organism org: organisms) {
+					for (Organism org: organisms) {
 						Chromosome chrom = org.getChromosome();
-						//TODO:Maybe have symValue <=> symbol correspondence
-						//in each Chrom's gene. Or maybe parent class.
-//						chrom.getGene(Chromosome.MOVEFOOD).setSymValue(
-//								chrom.symPos('x'), findClosestFood(org));
+						for(int i = 0; i < chrom.size(); i++) {
+							chrom.getGene(i).makeStringArray();
+						}
 					}
-					for(HealthyFood h: healthyFoodSources) {
+					
+					for (HealthyFood h: healthyFoodSources) {
 						numSurrounding(h);
 					}
-					for(PoisonousFood p: poisonousFoodSources) {
+					
+					for (PoisonousFood p: poisonousFoodSources) {
 						numSurrounding(p);
 					}
-				}
-				else if(trialNum<trialsPerGen){
+				} else if (trialNum<trialsPerGen) {
 					t.stop();
 					System.out.println("new trial!");
 					for(Organism o: organisms){

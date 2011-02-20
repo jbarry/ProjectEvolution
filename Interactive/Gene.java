@@ -15,14 +15,14 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 	private Random ran;
 	private List<Character> terminals;
 	private List<Character> nonTerminals;
-	private List<Gene> chromosome;
-
+	private int lenGenes;
 	//Possible variable meanings:
 	//x.Amount of health left
 	//y.Number of organisms around food
 	//z.distance to food
 	//w.Amount of food left in food source.
-	public Gene(int lenGenes) {
+	public Gene(int aLenGenes) {
+		lenGenes = aLenGenes;
 		symList = new LinkedList<Character>();
 		ran = new Random();
 		terminals = new LinkedList<Character>();
@@ -62,7 +62,7 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 	}
 
 	public int size() {
-		return symList.size();
+		return lenGenes;
 	}
 
 	public List<Character> getList() {
@@ -77,16 +77,14 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 		symList.set(index, sym);
 	}
 
-	public String makeSymList() {
-		String retString = "";
-		for(int i = 0; i < symList.size(); i++) {
-			retString = retString + symList.get(i);
-		}
+	//TODO: Make the symList a String Array.
+	//no need to have two separate lists.
+	public ArrayList<String> makeStringArray() {
+		ArrayList<String> retString = new ArrayList<String>();
+		for(int i = 0; i < lenGenes; i++)
+			retString.add(symList.get(i).toString());
 		return retString;
 	}
-	//	public void setSymValue(int index, double sym) {
-	//		symList.set(index, (char) sym);
-	//	}
 
 	public void setGene(LinkedList<Character> aSymList) {
 		symList = aSymList;
