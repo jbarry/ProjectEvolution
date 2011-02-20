@@ -14,7 +14,13 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 	private Random ran;
 	private int numGenes=4;
 	private int lenGenes=4;
-
+	private int xPos;
+	private int yPos;
+	private int zPos;
+	public static final int MOVEFOOD = 0;
+	public static final int MOVERANDOM = 1;
+	public static final int EAT = 2;
+	
 	//Default ctor.
 	public Chromosome() {
 		chromosome = new LinkedList<Gene>();
@@ -29,11 +35,14 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 		nonTerminals.add('c');
 		nonTerminals.add('d');
 		ran = new Random();
-		for(int i=0;i<numGenes;i++){
+		for(int i = 0; i < numGenes; i++){
 			LinkedList<Character> toAdd= new LinkedList<Character>();
-			for(int j=0;j<lenGenes;j++){
-				if(ran.nextInt(2)==0){
-					toAdd.add(terminals.get(ran.nextInt(terminals.size())));
+			for(int j = 0; j < lenGenes; j++){
+				if(ran.nextBoolean()){
+					Character term = terminals.get(
+							ran.nextInt(terminals.size()));
+					toAdd.add(term);
+					initPositions(term, j);
 				}
 				else{
 					toAdd.add(nonTerminals.get(ran.nextInt(nonTerminals.size())));
@@ -45,6 +54,26 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 		
 	}
 
+	//TODO: find symbols position and update this class when found.
+	public int symPos(char symbol) {
+		if(symbol == 'x') return xPos;
+		if(symbol == 'y') return yPos;
+		if(symbol == 'z') return zPos;
+		return -1;
+	}
+	
+	//TODO: call after selection, etc to reinitialize variable
+	//positions.
+	public void redoPositions() {
+		
+	}
+	
+	public void initPositions(char term, int pos) {
+		if(term == 'x') xPos = pos;
+		if(term == 'y') yPos = pos;
+		if(term == 'z') zPos = pos;
+	}
+	
 	//For testing purposes of the GEP class.
 	public Chromosome(LinkedList<Gene> aChrom) {
 		chromosome = aChrom;
