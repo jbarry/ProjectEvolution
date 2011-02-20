@@ -30,7 +30,7 @@ public class GridPanel extends JPanel implements Runnable
 	public final static int HEIGHT = 400;
 
 	public static boolean[][] isValidLocation;
-	
+
 	private LinkedList<Organism> organisms;
 	private LinkedList<HealthyFood> healthyFoodSources;
 	private LinkedList<PoisonousFood> poisonousFoodSources;
@@ -76,14 +76,14 @@ public class GridPanel extends JPanel implements Runnable
 	 */
 	public void initialize(){
 		timePassed=0;
-		
+
 		isValidLocation = new boolean[GridPanel.WIDTH][GridPanel.HEIGHT];
 		for(int i=0; i<isValidLocation.length; i++){
 			for(int j=0; j<isValidLocation[i].length; j++){
 				isValidLocation[i][j] = true;
 			}
 		}
-		
+
 		organisms.clear();
 		for(int i=0; i<OptionsPanel.numOrganisms; i++){
 			Organism o = new Organism();
@@ -287,9 +287,8 @@ public class GridPanel extends JPanel implements Runnable
 						}
 					}
 
-					if(!isHFood & !isPFood & !isOrg){
+					if(!isHFood & !isPFood & !isOrg)
 						MonitorPanel.simObjInfo.setText("No Object Selected");
-					}
 				}
 				catch(NullPointerException e){
 
@@ -336,21 +335,21 @@ public class GridPanel extends JPanel implements Runnable
 		organisms = new LinkedList<Organism>();
 		healthyFoodSources = new LinkedList<HealthyFood>();
 		poisonousFoodSources = new LinkedList<PoisonousFood>();
-		
+
 		//a timer and it's action event to call at every time t.
 		t = new javax.swing.Timer(lengthTimeStep, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(timePassed < lengthGeneration){
+				if(timePassed < lengthGeneration) {
 					/*begin game logic here:*/
 					timePassed+=lengthTimeStep;
-					//System.out.println(timePassed);
-					for(Organism org: organisms){
-						//if near food, eat it.
+					System.out.println(timePassed);
+					for(Organism org: organisms) {
+
 						if(organismIsNextToHealthyFood(org) || organismIsNextToPoisonousFood(org)){
 							//organism eats food
 						}
 						//otherwise keep moving.
-						else{
+						else {
 							//create new, random number 0-7 representing a movement.
 							Random r = new Random();
 							int movement = r.nextInt(8);
@@ -367,15 +366,39 @@ public class GridPanel extends JPanel implements Runnable
 							}
 						}
 					}
+					
 					for(HealthyFood h: healthyFoodSources){
 						//h.deplete();
 					}
+					
 					for(PoisonousFood p: poisonousFoodSources){
 						//p.deplete();
 					}
+					
 					repaint();
-				}
-				else if(trialNum<trialsPerGen){
+					
+					//Begin AI logic. ROUGH
+					//TODO: make org find its way to closest food source.
+					//variables in gene:
+					//distance to closest food(maybe put in a certain range)
+					//#opponents around food in food
+					//amount left in food
+					//amount of health left
+					for (Organism org: organisms) {
+						Chromosome chrom = org.getChromosome();
+						for(int i = 0; i < chrom.size(); i++) {
+							chrom.getGene(i).makeStringArray();
+						}
+					}
+					
+					for (HealthyFood h: healthyFoodSources) {
+						numSurrounding(h);
+					}
+					
+					for (PoisonousFood p: poisonousFoodSources) {
+						numSurrounding(p);
+					}
+				} else if (trialNum<trialsPerGen) {
 					t.stop();
 					System.out.println("new trial!");
 					for(Organism o: organisms){
@@ -392,8 +415,7 @@ public class GridPanel extends JPanel implements Runnable
 					}
 					timePassed=0;
 					t.start();
-				}
-				else{
+				} else {
 					t.stop();
 					System.out.println("new generation!");
 					timePassed=0;
@@ -412,6 +434,31 @@ public class GridPanel extends JPanel implements Runnable
 					t.start();
 					repaint();
 				}
+			}
+
+			//TODO: Can organism differentiate bw pois and non
+			//pois?
+			private double findClosestFood(Organism org) {
+				for(PoisonousFood p: poisonousFoodSources) {
+					p.getLocation().getX();
+					p.getLocation().getY();
+				}
+				for(HealthyFood h: healthyFoodSources) {
+					h.getLocation().getX();
+					h.getLocation().getY();
+				}
+				return 0.0;
+			}
+			//TODO: make all objects on grid inherit from a
+			//gamePiece or whatever. Then make this method 
+			//available for any piece.
+			private void numSurrounding(Food h) {
+				// TODO Auto-generated method stub
+				int xPos = h.getLocation().getX();
+				int yPos = h.getLocation().getY();
+				//				if() {
+				//					
+				//				}
 			}
 		});
 

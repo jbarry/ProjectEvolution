@@ -16,7 +16,7 @@ public class Food {
 	private Coordinate location;
 	private double foodRemaining;
 	private Random r;
-
+	private int numSurr;
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
@@ -44,12 +44,14 @@ public class Food {
 		this.r = new Random();
 		this.location=new Coordinate(x,y);
 		this.foodRemaining=100.0;
+		numSurr = 0;
 	}
 
 	public Food(Coordinate aCoord){
 		this.r = new Random();
 		this.location=aCoord;
 		this.foodRemaining=100.0;
+		numSurr = 0;
 	}
 
 	//------------------------------------------------------------------------------------
@@ -168,5 +170,8 @@ public class Food {
 			+  "\nLocation: " + location;
 		return str;
 	}
-
+	
+	public int numSurround() {
+		return numSurr;
+	}
 }
