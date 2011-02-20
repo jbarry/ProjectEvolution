@@ -63,7 +63,7 @@ public class GUI {
 	private OptionsPanel optionsPanel;
 	private GridPanel    simulation;
 	private MonitorPanel monitorPanel;
-	private GenerationPanel genPanel;
+	public static GenerationPanel genPanel;
 	
 	//------------------------------------------------------------------------------------
 	//--constructors--
@@ -158,9 +158,11 @@ public class GUI {
 		newSimulation.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				//initialize GridPanel.
-				getGridPanelData(e);
-				simulation.initialize();
-				simulation.start();
+				if(!getGridPanelData(e)){
+					pause.setEnabled(true);
+					simulation.initialize();
+					simulation.start();
+				}
 			}
 		});
 		fileMenu.add(newSimulation);
@@ -173,7 +175,8 @@ public class GUI {
 			}
 		});
 		fileMenu.add(pause);
-
+		pause.setEnabled(false);
+		
 		//exit option
 		exitApplication = new JMenuItem("Exit");
 		exitApplication.addActionListener(new ActionListener(){
@@ -217,8 +220,9 @@ public class GUI {
 	 * 
 	 * @param e an ActionEvent instance
 	 */
-	private void getGridPanelData(ActionEvent e){
+	private boolean getGridPanelData(ActionEvent e){
 		//textbox for # organisms inquiry
+		boolean userCancel = true;
 		jframe.setAlwaysOnTop(false);
 		JTextField numOrganisms = new JTextField();
 		JPanel jP = new JPanel();
@@ -247,6 +251,7 @@ public class GUI {
 		}
 
 		if(result == JOptionPane.OK_OPTION){
+			userCancel = false;
 			try {
 				int x = Integer.parseInt(numOrganisms.getText());
 				if(x < 0){
@@ -266,6 +271,8 @@ public class GUI {
 				else{
 					//the number of organisms given via user-input.
 					OptionsPanel.numOrganisms = x;
+					optionsPanel.enablePause();
+					pause.setEnabled(false);
 				}
 			} catch (NumberFormatException a) {
 				JOptionPane.showMessageDialog(jframe, 
@@ -277,6 +284,7 @@ public class GUI {
 		}
 		jframe.setAlwaysOnTop(true);
 		dialog.dispose();
+		return userCancel;
 	}
 	
 	private void confirmExit() {
