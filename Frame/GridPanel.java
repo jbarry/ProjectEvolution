@@ -665,7 +665,11 @@ public class GridPanel extends JPanel implements Runnable
 					//amount left in food
 					//amount of health left
 					for(Organism org: organisms) {
-						org.getChromosome().getGene(Chromosome.MOVEFOOD).setSym('x', findClosestFood(org));
+						Chromosome chrom = org.getChromosome();
+						//TODO:Maybe have symValue <=> symbol correspondence
+						//in each Chrom's gene. Or maybe parent class.
+						chrom.getGene(Chromosome.MOVEFOOD).setSymValue(
+								chrom.symPos('x'), findClosestFood(org));
 					}
 					for(HealthyFood h: healthyFoodSources) {
 						numSurrounding(h);
