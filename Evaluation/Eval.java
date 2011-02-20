@@ -16,8 +16,12 @@ import Evaluation.Expr.Var;
 
 public class Eval{
 
+	public Eval() {
+
+	}
+
 	//this code takes a list of strings
-	public static void main(String[] args) {
+	public Expr evaluation() {
 		Scanner sc = new Scanner(System.in);
 		String expression = sc.nextLine();
 		List<String> symlist = new ArrayList<String>();
@@ -81,35 +85,38 @@ public class Eval{
 			}
 			stack.push(expr);//push the resulting expression back on the stack and loop.
 		}
+
+		return stack.pop();
+
 		//now the top of the stack has an expression object that is exactly the
 		//expression typed in from the command line.
-		Expr result = stack.pop();
-
-		//for some environment of variables, which I will hardcode.
-		Map<String, Double> environment = new HashMap<String, Double>();
-		environment.put("x", 10.0);
-		environment.put("y", 1.0);
-		//we can now evaluate the expression with this environment:
-		System.out.println("with bindings: ");
-		for (String key : environment.keySet()) {
-			System.out.println(key + "-> " + environment.get(key));
-		}
-		System.out.print("will evaluate to: ");
-		System.out.println(result.evaluate(environment));
-		System.out.println();
-
-		//second evaluation, to show that we can use many environments.
-		environment = new HashMap<String, Double>();
-		environment.put("x", 2.0);
-		environment.put("y", -1.0);
-		System.out.println("and with bindings: ");
-		for (String key : environment.keySet()) {
-			System.out.println(key + "-> " + environment.get(key));
-		}
-		System.out.print("will evaluate to: ");
-		System.out.println(result.evaluate(environment));
-		System.out.println("and the expr object can be printed with toString:");
-		System.out.println(result.toString());
+		//		Expr result = stack.pop();
+		//		
+		//		//for some environment of variables, which I will hardcode.
+		//		Map<String, Double> environment = new HashMap<String, Double>();
+		//		environment.put("x", 10.0);
+		//		environment.put("y", 1.0);
+		//		//we can now evaluate the expression with this environment:
+		//		System.out.println("with bindings: ");
+		//		for (String key : environment.keySet()) {
+		//			System.out.println(key + "-> " + environment.get(key));
+		//		}
+		//		System.out.print("will evaluate to: ");
+		//		System.out.println(result.evaluate(environment));
+		//		System.out.println();
+		//
+		//		//second evaluation, to show that we can use many environments.
+		//		environment = new HashMap<String, Double>();
+		//		environment.put("x", 2.0);
+		//		environment.put("y", -1.0);
+		//		System.out.println("and with bindings: ");
+		//		for (String key : environment.keySet()) {
+		//			System.out.println(key + "-> " + environment.get(key));
+		//		}
+		//		System.out.print("will evaluate to: ");
+		//		System.out.println(result.evaluate(environment));
+		//		System.out.println("and the expr object can be printed with toString:");
+		//		System.out.println(result.toString());
 	}
 }
 

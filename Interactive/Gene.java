@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static java.lang.System.out;
 import static java.lang.System.err;
@@ -18,6 +17,11 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 	private List<Character> nonTerminals;
 	private List<Gene> chromosome;
 
+	//Possible variable meanings:
+	//x.Amount of health left
+	//y.Number of organisms around food
+	//z.distance to food
+	//w.Amount of food left in food source.
 	public Gene(int lenGenes) {
 		symList = new LinkedList<Character>();
 		ran = new Random();

@@ -51,22 +51,7 @@ public class Organism {
 	//just removing the GridPanel call.
 	public Organism(boolean boo) {
 		health = 100.00;
-		
-		//location (x, y) is random between (0-width,0-height) exclusive
 		r = new Random();
-//		int x = r.nextInt(GridPanel.WIDTH);
-//		int y = r.nextInt(GridPanel.HEIGHT);
-//		//check for collisions
-//		while(!canSpawn(x, y)){
-//			x = r.nextInt(GridPanel.WIDTH);
-//			y = r.nextInt(GridPanel.HEIGHT);
-//		}
-//		location = new Coordinate(x, y);
-//		
-//		//set boundaries
-//		setWrapAround(width, height);
-//		setRange(width, height, false);
-		
 		chromosome = new Chromosome(4);
 		fitness=0.0;
 	}

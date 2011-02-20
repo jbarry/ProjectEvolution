@@ -18,10 +18,6 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 	public static final int EAT = 2;
 	
 	//Default ctor.
-	//Amount of health left
-	//Number of organisms around food
-	//distance to food
-	//Amount of food left in food source.
 	public Chromosome(int numGenes) {
 		chromosome = new LinkedList<Gene>();
 		for (int i = 0; i < numGenes; i++) {
