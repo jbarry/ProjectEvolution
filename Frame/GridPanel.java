@@ -44,7 +44,7 @@ public class GridPanel extends JPanel implements Runnable
 	private int generationNum=0;
 	private GEP g;
 	private javax.swing.Timer t;
-
+	private int numFoodSources;
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
@@ -78,7 +78,7 @@ public class GridPanel extends JPanel implements Runnable
 	 */
 	public void initialize(){
 		timePassed=0;
-
+		numFoodSources = 0;
 		isValidLocation = new boolean[GridPanel.WIDTH][GridPanel.HEIGHT];
 		for(int i=0; i<isValidLocation.length; i++){
 			for(int j=0; j<isValidLocation[i].length; j++){
@@ -95,6 +95,7 @@ public class GridPanel extends JPanel implements Runnable
 		for(int i=0; i<OptionsPanel.numOrganisms/2; i++){
 			HealthyFood h = new HealthyFood();
 			healthyFoodSources.add(h);
+			numFoodSources++;
 		}
 		poisonousFoodSources.clear();
 		for(int i=0; i<OptionsPanel.numOrganisms/2; i++){
@@ -388,6 +389,8 @@ public class GridPanel extends JPanel implements Runnable
 					//amount of health left
 					for (Organism org: organisms) {
 						Chromosome chrom = org.getChromosome();
+						//The first loop is for the food genes.
+						//ie deciding which food source to go to.
 						for(int i = 0; i < chrom.size(); i++) {
 							Expr result = Eval.evaluation(
 									chrom.getGene(i).makeStringArray());
@@ -403,7 +406,6 @@ public class GridPanel extends JPanel implements Runnable
 									left().getFoodRemaining());
 							result.evaluate(environment);
 						}
-						
 					}
 				} else if (trialNum < trialsPerGen) {
 					t.stop();
