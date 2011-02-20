@@ -75,8 +75,7 @@ public class Eval{
 						continue theLoop;
 					}
 				}
-			}
-			else if (current.equals("-")) {
+			} else if (current.equals("-")) {
 				isOp = true;
 				if (stack.size() > 1) {
 					try{
@@ -89,8 +88,7 @@ public class Eval{
 						continue theLoop;
 					}
 				}
-			}
-			else if (current.equals("*")) {
+			} else if (current.equals("*")) {
 				isOp = true;
 				if(stack.size() > 1) {
 					try{
@@ -103,8 +101,7 @@ public class Eval{
 						continue theLoop;
 					}
 				}
-			}
-			else if (current.equals("/")) {
+			} else if (current.equals("/")) {
 				isOp = true;
 				if(stack.size() > 1) {
 					try{
@@ -117,8 +114,7 @@ public class Eval{
 						continue theLoop;
 					}
 				}
-			}
-			else if(!isOp) {
+			} else if (!isOp) {
 				expr = new Var(current);
 				System.out.println("pushed variable");
 			}

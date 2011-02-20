@@ -174,4 +174,8 @@ public class Food {
 	public int numSurround() {
 		return numSurr;
 	}
+
+	public double numSurroundingObjects(int i) {
+		return 0;
+	}
 }

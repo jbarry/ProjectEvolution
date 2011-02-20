@@ -1,5 +1,7 @@
 package Frame;
 
+import Evaluation.Eval;
+import java.util.HashMap;
 import Evolution.GEP;
 import Interactive.*;
 
@@ -12,11 +14,11 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.LinkedList;
 import java.util.Random;
-
+import Interactive.Pair;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
+import Evaluation.Expr;
 /**
  * This class will handle all of the simulation's display.
  */
@@ -366,17 +368,17 @@ public class GridPanel extends JPanel implements Runnable
 							}
 						}
 					}
-					
+
 					for(HealthyFood h: healthyFoodSources){
 						//h.deplete();
 					}
-					
+
 					for(PoisonousFood p: poisonousFoodSources){
 						//p.deplete();
 					}
-					
+
 					repaint();
-					
+
 					//Begin AI logic. ROUGH
 					//TODO: make org find its way to closest food source.
 					//variables in gene:
@@ -387,18 +389,23 @@ public class GridPanel extends JPanel implements Runnable
 					for (Organism org: organisms) {
 						Chromosome chrom = org.getChromosome();
 						for(int i = 0; i < chrom.size(); i++) {
-							chrom.getGene(i).makeStringArray();
+							Expr result = Eval.evaluation(
+									chrom.getGene(i).makeStringArray());
+							HashMap<String, Double> environment =
+								new HashMap<String, Double>();
+							Pair<Food, Double> foodDistPair =
+								findClosestFood(org);
+							environment.put("x", (double)foodDistPair.right());
+							environment.put("y", (double)foodDistPair.left().
+									numSurroundingObjects(5));
+							environment.put("z", (double)org.getHealth());
+							environment.put("w", (double)foodDistPair.
+									left().getFoodRemaining());
+							result.evaluate(environment);
 						}
+						
 					}
-					
-					for (HealthyFood h: healthyFoodSources) {
-						numSurrounding(h);
-					}
-					
-					for (PoisonousFood p: poisonousFoodSources) {
-						numSurrounding(p);
-					}
-				} else if (trialNum<trialsPerGen) {
+				} else if (trialNum < trialsPerGen) {
 					t.stop();
 					System.out.println("new trial!");
 					for(Organism o: organisms){
@@ -438,7 +445,7 @@ public class GridPanel extends JPanel implements Runnable
 
 			//TODO: Can organism differentiate bw pois and non
 			//pois?
-			private double findClosestFood(Organism org) {
+			private Pair<Food, Double> findClosestFood(Organism org) {
 				for(PoisonousFood p: poisonousFoodSources) {
 					p.getLocation().getX();
 					p.getLocation().getY();
@@ -447,7 +454,7 @@ public class GridPanel extends JPanel implements Runnable
 					h.getLocation().getX();
 					h.getLocation().getY();
 				}
-				return 0.0;
+				return null;
 			}
 			//TODO: make all objects on grid inherit from a
 			//gamePiece or whatever. Then make this method 
