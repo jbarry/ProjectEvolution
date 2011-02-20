@@ -60,8 +60,14 @@ public class Organism {
 	}
 	
 	public void newLocation(){
-		location = new Coordinate(r.nextInt(GridPanel.WIDTH + 1),
-				r.nextInt(GridPanel.HEIGHT + 1)); 
+		int x = r.nextInt(GridPanel.WIDTH);
+		int y = r.nextInt(GridPanel.HEIGHT);
+		while(!canSpawn(x, y)){
+			x = r.nextInt(GridPanel.WIDTH);
+			y = r.nextInt(GridPanel.HEIGHT);
+		}
+		location = new Coordinate(x, y);
+		
 	}
 
 	//------------------------------------------------------------------------------------
