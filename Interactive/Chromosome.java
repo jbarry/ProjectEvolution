@@ -22,6 +22,10 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 	public static final int EAT = 2;
 	
 	//Default ctor.
+	//Amount of health left
+	//Number of organisms around food
+	//distance to food
+	//Amount of food left in food source.
 	public Chromosome() {
 		chromosome = new LinkedList<Gene>();
 		terminals = new LinkedList<Character>();
@@ -30,10 +34,10 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 		terminals.add('/');
 		terminals.add('-');
 		terminals.add('+');
-		nonTerminals.add('a');
-		nonTerminals.add('b');
-		nonTerminals.add('c');
-		nonTerminals.add('d');
+		nonTerminals.add('x');
+		nonTerminals.add('y');
+		nonTerminals.add('z');
+		nonTerminals.add('w');
 		ran = new Random();
 		for(int i = 0; i < numGenes; i++){
 			LinkedList<Character> toAdd= new LinkedList<Character>();

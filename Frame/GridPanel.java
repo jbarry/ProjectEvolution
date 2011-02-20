@@ -367,33 +367,33 @@ public class GridPanel extends JPanel implements Runnable
 							}
 						}
 					}
-//					for(HealthyFood h: healthyFoodSources){
-//						//h.deplete();
-//					}
-//					for(PoisonousFood p: poisonousFoodSources){
-//						//p.deplete();
-//					}
-//					repaint();
-//					//Begin AI logic. ROUGH
-//					//TODO: make org find its way to closest food source.
-//					//variables in gene:
-//					//distance to closest food(maybe put in a certain range)
-//					//#opponents around food in food
-//					//amount left in food
-//					//amount of health left
-//					for(Organism org: organisms) {
-//						Chromosome chrom = org.getChromosome();
-//						//TODO:Maybe have symValue <=> symbol correspondence
-//						//in each Chrom's gene. Or maybe parent class.
+					for(HealthyFood h: healthyFoodSources){
+						//h.deplete();
+					}
+					for(PoisonousFood p: poisonousFoodSources){
+						//p.deplete();
+					}
+					repaint();
+					//Begin AI logic. ROUGH
+					//TODO: make org find its way to closest food source.
+					//variables in gene:
+					//distance to closest food(maybe put in a certain range)
+					//#opponents around food in food
+					//amount left in food
+					//amount of health left
+					for(Organism org: organisms) {
+						Chromosome chrom = org.getChromosome();
+						//TODO:Maybe have symValue <=> symbol correspondence
+						//in each Chrom's gene. Or maybe parent class.
 //						chrom.getGene(Chromosome.MOVEFOOD).setSymValue(
 //								chrom.symPos('x'), findClosestFood(org));
-//					}
-//					for(HealthyFood h: healthyFoodSources) {
-//						numSurrounding(h);
-//					}
-//					for(PoisonousFood p: poisonousFoodSources) {
-//						numSurrounding(p);
-//					}
+					}
+					for(HealthyFood h: healthyFoodSources) {
+						numSurrounding(h);
+					}
+					for(PoisonousFood p: poisonousFoodSources) {
+						numSurrounding(p);
+					}
 				}
 //				else if(trialNum<trialsPerGen){
 //					t.stop();

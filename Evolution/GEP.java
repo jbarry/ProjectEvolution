@@ -64,8 +64,14 @@ public class GEP {
 		}
 
 		printOrgList(orgList);
-		chromList = tournament(partnerSelect(orgList));
+		//test Gene/makeSymList().
+//		chromList = tournament(partnerSelect(orgList));
 //		chromList = makeChromList(orgList);
+//		for(Chromosome chrom: chromList) {
+//			for(int i = 0; i < chrom.size(); i ++) {
+//				out.println(chrom.getGene(i).makeSymList());
+//			}
+//		}
 //		LinkedList<Pair<Chromosome, Chromosome>> x = mateSelect(chromList);
 //		chromList.clear();
 //		for(int i = 0; i < x.size(); i++) {

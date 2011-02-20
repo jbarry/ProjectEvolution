@@ -29,9 +29,17 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 	public void setSym(int index, Character sym) {
 		symList.set(index, sym);
 	}
-	public void setSymValue(int index, double sym) {
-		symList.set(index, sym);
+	
+	public String makeSymList() {
+		String retString = "";
+		for(int i = 0; i < symList.size(); i++) {
+			retString = retString + symList.get(i);
+		}
+		return retString;
 	}
+//	public void setSymValue(int index, double sym) {
+//		symList.set(index, (char) sym);
+//	}
 
 	public void setGene(LinkedList<Character> aSymList) {
 		symList = aSymList;

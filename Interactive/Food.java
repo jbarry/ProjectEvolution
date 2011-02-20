@@ -21,7 +21,6 @@ public class Food {
 	//--constructors--
 	//------------------------------------------------------------------------------------
 	public Food(){
-<<<<<<< HEAD
 		//set location
 		r = new Random();
 		int x = r.nextInt(GridPanel.WIDTH);
@@ -39,13 +38,6 @@ public class Food {
 		setRange(width, height, false);
 		
 		foodRemaining=100.0;
-=======
-		this.r = new Random();
-		this.location=new Coordinate(r.nextInt(GridPanel.WIDTH + 1),
-				r.nextInt(GridPanel.HEIGHT + 1));
-		this.foodRemaining=100.0;
-		numSurr = 0;
->>>>>>> a20135a3f3b703efeeb971dde77794f4f0c8e326
 	}
 
 	public Food(int x, int y){
