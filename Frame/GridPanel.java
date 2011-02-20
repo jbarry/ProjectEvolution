@@ -35,11 +35,12 @@ public class GridPanel extends JPanel implements Runnable
 	private LinkedList<HealthyFood> healthyFoodSources;
 	private LinkedList<PoisonousFood> poisonousFoodSources;
 	private int lengthTimeStep=50;
-	private int lengthGeneration=lengthTimeStep*2000;
+	private int lengthGeneration=lengthTimeStep*2;
 	private int timePassed=0;
-	private int trialsPerGen=10;
-	private int trialNum=0;
-	private int generationNum=0;
+	private int trialsPerGen=2;
+	public int trialNum=1;
+	public int generationNum=1;
+	public int lastAvg=0;
 	private GEP g;
 	private javax.swing.Timer t;
 
@@ -377,7 +378,6 @@ public class GridPanel extends JPanel implements Runnable
 				}
 				else if(trialNum<trialsPerGen){
 					t.stop();
-					System.out.println("new trial!");
 					for(Organism o: organisms){
 						o.newLocation();
 					}
@@ -390,25 +390,33 @@ public class GridPanel extends JPanel implements Runnable
 						healthyFoodSources.add(h);
 						poisonousFoodSources.add(f);
 					}
+					GUI.genPanel.newTrial();
 					timePassed=0;
 					t.start();
 				}
 				else{
 					t.stop();
-					System.out.println("new generation!");
 					timePassed=0;
+					int sum = 0;
+					for(Organism o: organisms){
+						sum+=g.fitness(o);
+						o.newLocation();
+					}
+					lastAvg=sum/OptionsPanel.numOrganisms;
 					g.setOrgList(organisms);
 					organisms=g.newGeneration();
 					healthyFoodSources.clear();
 					poisonousFoodSources.clear();
+					
 					for(int i=0; i<OptionsPanel.numOrganisms/2; i++){
 						HealthyFood h = new HealthyFood();
 						PoisonousFood f = new PoisonousFood();
 						healthyFoodSources.add(h);
 						poisonousFoodSources.add(f);
 					}
-					trialNum=0;
+					trialNum=1;
 					generationNum++;
+					GUI.genPanel.newGeneration();
 					t.start();
 					repaint();
 				}

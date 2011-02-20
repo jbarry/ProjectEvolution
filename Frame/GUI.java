@@ -63,7 +63,7 @@ public class GUI {
 	private OptionsPanel optionsPanel;
 	private GridPanel    simulation;
 	private MonitorPanel monitorPanel;
-	private GenerationPanel genPanel;
+	public static GenerationPanel genPanel;
 	
 	//------------------------------------------------------------------------------------
 	//--constructors--
