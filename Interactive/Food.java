@@ -87,8 +87,8 @@ public class Food {
 	public double numSurroundingObjects(int scanRange){
 		double numObj = 0.0;
 		try{
-			for(int i=location.getX()-width/2-scanRange/2; i<=location.getX()+width/2+scanRange/2; i++){
-				for(int j=location.getY()-height/2-scanRange; j<=location.getY()+height/2+scanRange/2; j++){
+			for(int i=location.getX()-width/2-scanRange; i<=location.getX()+width/2+scanRange; i++){
+				for(int j=location.getY()-height/2-scanRange; j<=location.getY()+height/2+scanRange; j++){
 					//count all occurrences of 'false' in location map
 					if(!GridPanel.isValidLocation[i][j]){
 						numObj++;
