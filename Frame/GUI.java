@@ -131,7 +131,7 @@ public class GUI {
 		jframe.add(simulation);
 		
 		/**Create Options Panel*/
-		optionsPanel = new OptionsPanel(simulation);
+		optionsPanel = new OptionsPanel(simulation, this);
 		jframe.add(optionsPanel);
 		
 		/**Create Monitor Panel*/
@@ -158,9 +158,12 @@ public class GUI {
 		newSimulation.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				//initialize GridPanel.
-				getGridPanelData(e);
-				simulation.initialize();
-				simulation.start();
+				if(!getGridPanelData(e)){
+					pause.setEnabled(true);
+					
+					simulation.initialize();
+					simulation.start();
+				}
 			}
 		});
 		fileMenu.add(newSimulation);
@@ -173,7 +176,8 @@ public class GUI {
 			}
 		});
 		fileMenu.add(pause);
-
+		pause.setEnabled(false);
+		
 		//exit option
 		exitApplication = new JMenuItem("Exit");
 		exitApplication.addActionListener(new ActionListener(){
@@ -217,8 +221,9 @@ public class GUI {
 	 * 
 	 * @param e an ActionEvent instance
 	 */
-	private void getGridPanelData(ActionEvent e){
+	private boolean getGridPanelData(ActionEvent e){
 		//textbox for # organisms inquiry
+		boolean userCancel = true;
 		jframe.setAlwaysOnTop(false);
 		JTextField numOrganisms = new JTextField();
 		JPanel jP = new JPanel();
@@ -247,6 +252,7 @@ public class GUI {
 		}
 
 		if(result == JOptionPane.OK_OPTION){
+			userCancel = false;
 			try {
 				int x = Integer.parseInt(numOrganisms.getText());
 				if(x < 0){
@@ -266,6 +272,8 @@ public class GUI {
 				else{
 					//the number of organisms given via user-input.
 					OptionsPanel.numOrganisms = x;
+					optionsPanel.toggleJButtonPause(true);
+					pause.setEnabled(false);
 				}
 			} catch (NumberFormatException a) {
 				JOptionPane.showMessageDialog(jframe, 
@@ -277,6 +285,11 @@ public class GUI {
 		}
 		jframe.setAlwaysOnTop(true);
 		dialog.dispose();
+		return userCancel;
+	}
+	
+	public void enableJMenuItemPause(){
+		pause.setEnabled(true);
 	}
 	
 	private void confirmExit() {
@@ -288,7 +301,7 @@ public class GUI {
 
 		//Close if user confirmed
 		if (confirmed == JOptionPane.YES_OPTION)
-		{                            
+		{                           
 			//Close frame and exit program
 			jframe.dispose();
 			System.exit(0);
