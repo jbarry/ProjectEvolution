@@ -92,6 +92,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 		/** Pause/Resume Button */
 		pause = new JButton();
 		pause.setLayout(null);
+		pause.setEnabled(false);
 		pause.setText("Pause");
 		pause.setSize(90,20);
 		pause.setLocation(OptionsPanel.WIDTH/10, (OptionsPanel.HEIGHT/20) + 60);
@@ -104,6 +105,13 @@ public class OptionsPanel extends JPanel implements Runnable{
 			}	
 		};
 		pause.addActionListener(p);
+	}
+	
+	//------------------------------------------------------------------------------------
+	//--method called in GUI to handle pause button visibility--
+	//------------------------------------------------------------------------------------
+	public void enablePause(){
+		pause.setEnabled(true);
 	}
 	
 	//------------------------------------------------------------------------------------
