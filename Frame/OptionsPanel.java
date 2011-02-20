@@ -27,7 +27,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
-	public OptionsPanel(final GridPanel simulation){
+	public OptionsPanel(final GridPanel simulation, final GUI gui){
 		run();
 		
 		//initial JPanel settings
@@ -58,6 +58,8 @@ public class OptionsPanel extends JPanel implements Runnable{
 		        int key = keyEvent.getKeyCode();
 		        
 		        if (key == KeyEvent.VK_ENTER) {
+		        	toggleJButtonPause(true);
+		        	gui.enableJMenuItemPause();
 					try {
 						int x = Integer.parseInt(numOrgsTxtBox.getText());
 						if(x < 0){
@@ -110,8 +112,12 @@ public class OptionsPanel extends JPanel implements Runnable{
 	//------------------------------------------------------------------------------------
 	//--method called in GUI to handle pause button visibility--
 	//------------------------------------------------------------------------------------
-	public void enablePause(){
-		pause.setEnabled(true);
+	public void toggleJButtonPause(boolean toggle){
+		if(toggle == true){
+			pause.setEnabled(true);
+		}else{
+			pause.setEnabled(false);
+		}
 	}
 	
 	//------------------------------------------------------------------------------------
