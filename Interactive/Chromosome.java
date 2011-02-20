@@ -8,12 +8,8 @@ import java.util.LinkedList;
 import java.util.Collections;
 public class Chromosome extends Genetic implements Crossable<Chromosome> {
 
-	private List<Character> terminals;
-	private List<Character> nonTerminals;
 	private List<Gene> chromosome;
 	private Random ran;
-	private int numGenes=4;
-	private int lenGenes=4;
 	private int xPos;
 	private int yPos;
 	private int zPos;
@@ -26,34 +22,10 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 	//Number of organisms around food
 	//distance to food
 	//Amount of food left in food source.
-	public Chromosome() {
+	public Chromosome(int numGenes) {
 		chromosome = new LinkedList<Gene>();
-		terminals = new LinkedList<Character>();
-		nonTerminals = new LinkedList<Character>();
-		terminals.add('*');
-		terminals.add('/');
-		terminals.add('-');
-		terminals.add('+');
-		nonTerminals.add('x');
-		nonTerminals.add('y');
-		nonTerminals.add('z');
-		nonTerminals.add('w');
-		ran = new Random();
-		for(int i = 0; i < numGenes; i++){
-			LinkedList<Character> toAdd= new LinkedList<Character>();
-			for(int j = 0; j < lenGenes; j++){
-				if(ran.nextBoolean()){
-					Character term = terminals.get(
-							ran.nextInt(terminals.size()));
-					toAdd.add(term);
-					initPositions(term, j);
-				}
-				else{
-					toAdd.add(nonTerminals.get(ran.nextInt(nonTerminals.size())));
-				}
-			}
-			Gene gene = new Gene(toAdd);
-			chromosome.add(gene);
+		for (int i = 0; i < numGenes; i++) {
+			chromosome.add(new Gene(7));
 		}
 		
 	}
@@ -70,12 +42,6 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 	//positions.
 	public void redoPositions() {
 		
-	}
-	
-	public void initPositions(char term, int pos) {
-		if(term == 'x') xPos = pos;
-		if(term == 'y') yPos = pos;
-		if(term == 'z') zPos = pos;
 	}
 	
 	//For testing purposes of the GEP class.

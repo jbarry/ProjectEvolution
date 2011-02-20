@@ -395,42 +395,42 @@ public class GridPanel extends JPanel implements Runnable
 						numSurrounding(p);
 					}
 				}
-//				else if(trialNum<trialsPerGen){
-//					t.stop();
-//					System.out.println("new trial!");
-//					for(Organism o: organisms){
-//						o.newLocation();
-//					}
-//					trialNum++;
-//					healthyFoodSources.clear();
-//					poisonousFoodSources.clear();
-//					for(int i=0; i<OptionsPanel.numOrganisms/2; i++){
-//						HealthyFood h = new HealthyFood();
-//						PoisonousFood f = new PoisonousFood();
-//						healthyFoodSources.add(h);
-//						poisonousFoodSources.add(f);
-//					}
-//					timePassed=0;
-//					t.start();
-//				} else {
-//					t.stop();
-//					System.out.println("new generation!");
-//					timePassed=0;
-//					g.setOrgList(organisms);
-//					organisms=g.newGeneration();
-//					healthyFoodSources.clear();
-//					poisonousFoodSources.clear();
-//					for(int i=0; i<OptionsPanel.numOrganisms/2; i++){
-//						HealthyFood h = new HealthyFood();
-//						PoisonousFood f = new PoisonousFood();
-//						healthyFoodSources.add(h);
-//						poisonousFoodSources.add(f);
-//					}
-//					trialNum=0;
-//					generationNum++;
-//					t.start();
-//					repaint();
-//				}
+				else if(trialNum<trialsPerGen){
+					t.stop();
+					System.out.println("new trial!");
+					for(Organism o: organisms){
+						o.newLocation();
+					}
+					trialNum++;
+					healthyFoodSources.clear();
+					poisonousFoodSources.clear();
+					for(int i=0; i<OptionsPanel.numOrganisms/2; i++){
+						HealthyFood h = new HealthyFood();
+						PoisonousFood f = new PoisonousFood();
+						healthyFoodSources.add(h);
+						poisonousFoodSources.add(f);
+					}
+					timePassed=0;
+					t.start();
+				} else {
+					t.stop();
+					System.out.println("new generation!");
+					timePassed=0;
+					g.setOrgList(organisms);
+					organisms=g.newGeneration();
+					healthyFoodSources.clear();
+					poisonousFoodSources.clear();
+					for(int i=0; i<OptionsPanel.numOrganisms/2; i++){
+						HealthyFood h = new HealthyFood();
+						PoisonousFood f = new PoisonousFood();
+						healthyFoodSources.add(h);
+						poisonousFoodSources.add(f);
+					}
+					trialNum=0;
+					generationNum++;
+					t.start();
+					repaint();
+				}
 			}
 
 			//TODO: Can organism differentiate bw pois and non

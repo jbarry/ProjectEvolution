@@ -63,15 +63,15 @@ public class GEP {
 			orgList.get(i).setFitness(fitness(orgList.get(i)));
 		}
 
-		printOrgList(orgList);
+//		printOrgList(orgList);
 		//test Gene/makeSymList().
-//		chromList = tournament(partnerSelect(orgList));
-//		chromList = makeChromList(orgList);
-//		for(Chromosome chrom: chromList) {
-//			for(int i = 0; i < chrom.size(); i ++) {
-//				out.println(chrom.getGene(i).makeSymList());
-//			}
-//		}
+		chromList = tournament(partnerSelect(orgList));
+		chromList = makeChromList(orgList);
+		for(Chromosome chrom: chromList) {
+			for(int i = 0; i < chrom.size(); i ++) {
+				out.println(chrom.getGene(i).makeSymList());
+			}
+		}
 //		LinkedList<Pair<Chromosome, Chromosome>> x = mateSelect(chromList);
 //		chromList.clear();
 //		for(int i = 0; i < x.size(); i++) {
