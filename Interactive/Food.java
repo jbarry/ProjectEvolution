@@ -80,6 +80,34 @@ public class Food {
 		}
 	}
 	
+        /**
+	 * @param scanRange
+	 * @return number of surrounding objects, namely Food or Organism Instances
+	 */
+	public double numSurroundingObjects(int scanRange){
+		double numObj = 0.0;
+		try{
+			for(int i=location.getX()-width/2-scanRange/2; i<=location.getX()+width/2+scanRange/2; i++){
+				for(int j=location.getY()-height/2-scanRange; j<=location.getY()+height/2+scanRange/2; j++){
+					//count all occurrences of 'false' in location map
+					if(!GridPanel.isValidLocation[i][j]){
+						numObj++;
+					}
+				}
+			}
+			//make sure that scanning object was not included in scan.
+			if(numObj >= width*height){
+				numObj -= width*height; 
+			}
+		}
+		catch(ArrayIndexOutOfBoundsException e){
+			
+		}
+		//return a normalized value. Will count "partially" discovered organisms
+		//as a whole number, does not include "wrapped" scan.
+		return Math.ceil(numObj/(width*height));
+	}
+
 	/**
 	 * @param x - current x location if valid.
 	 * @param y - current y location if valid.
