@@ -84,9 +84,7 @@ public class Food {
 	 * @param scanRange
 	 * @return number of surrounding objects, namely Food or Organism Instances
 	 */
-	public double numSurroundingObjects(int scanRange){
-		temp = scanRange;
-		
+	public double numSurroundingObjects(int scanRange){	
 		double numObj = 0.0;
 		for(int i=location.getX()-width/2-scanRange; i<=location.getX()+width/2+scanRange; i++){
 			for(int j=location.getY()-height/2-scanRange; j<=location.getY()+height/2+scanRange; j++){
