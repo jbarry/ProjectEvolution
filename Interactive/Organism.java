@@ -60,6 +60,7 @@ public class Organism {
 	}
 	
 	public void newLocation(){
+		setRange(width, height, true);
 		int x = r.nextInt(GridPanel.WIDTH);
 		int y = r.nextInt(GridPanel.HEIGHT);
 		while(!canSpawn(x, y)){
@@ -67,7 +68,10 @@ public class Organism {
 			y = r.nextInt(GridPanel.HEIGHT);
 		}
 		location = new Coordinate(x, y);
-		
+		//set boundaries
+		setWrapAround(width, height);
+		setRange(width, height, false);
+
 	}
 
 	//------------------------------------------------------------------------------------
