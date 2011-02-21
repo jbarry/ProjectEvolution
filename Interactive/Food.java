@@ -16,7 +16,7 @@ public class Food {
 	private Coordinate location;
 	private double foodRemaining;
 	private Random r;
-
+	private int numSurr;
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
@@ -44,12 +44,14 @@ public class Food {
 		this.r = new Random();
 		this.location=new Coordinate(x,y);
 		this.foodRemaining=100.0;
+		numSurr = 0;
 	}
 
 	public Food(Coordinate aCoord){
 		this.r = new Random();
 		this.location=aCoord;
 		this.foodRemaining=100.0;
+		numSurr = 0;
 	}
 
 	//------------------------------------------------------------------------------------
@@ -80,34 +82,6 @@ public class Food {
 		}
 	}
 	
-        /**
-	 * @param scanRange
-	 * @return number of surrounding objects, namely Food or Organism Instances
-	 */
-	public double numSurroundingObjects(int scanRange){
-		double numObj = 0.0;
-		try{
-			for(int i=location.getX()-width/2-scanRange; i<=location.getX()+width/2+scanRange; i++){
-				for(int j=location.getY()-height/2-scanRange; j<=location.getY()+height/2+scanRange; j++){
-					//count all occurrences of 'false' in location map
-					if(!GridPanel.isValidLocation[i][j]){
-						numObj++;
-					}
-				}
-			}
-			//make sure that scanning object was not included in scan.
-			if(numObj >= width*height){
-				numObj -= width*height; 
-			}
-		}
-		catch(ArrayIndexOutOfBoundsException e){
-			
-		}
-		//return a normalized value. Will count "partially" discovered organisms
-		//as a whole number, does not include "wrapped" scan.
-		return Math.ceil(numObj/(width*height));
-	}
-
 	/**
 	 * @param x - current x location if valid.
 	 * @param y - current y location if valid.
@@ -196,5 +170,12 @@ public class Food {
 			+  "\nLocation: " + location;
 		return str;
 	}
+	
+	public int numSurround() {
+		return numSurr;
+	}
 
+	public double numSurroundingObjects(int i) {
+		return 0;
+	}
 }
