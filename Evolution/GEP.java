@@ -249,19 +249,7 @@ public class GEP {
 		return result;
 	}
 
-
-
-	public void twoPointCrossOver(
-			LinkedList <Pair<Chromosome, Chromosome>> generation, double prob) {
-		LinkedList <Pair<Chromosome, Chromosome>> pairList =
-			new LinkedList <Pair<Chromosome, Chromosome>>();
-		for(Pair<Chromosome, Chromosome> mates: pairList) {
-			if(ran.nextDouble() < prob) {
-				mates.left().crossOver(mates.right());
-			}
-		}
-	}
-
+	//TODO: remove print statements. Only for testing.
 	//Pairs up indiv from the chromosome list parameter and 
 	//makes them into Pair objects. Puts Pairs into a LinkedList.
 	public LinkedList <Pair<Chromosome, Chromosome>> mateSelect(

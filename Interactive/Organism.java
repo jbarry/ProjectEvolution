@@ -49,10 +49,10 @@ public class Organism {
 
 	//for testing purposes only.
 	//just removing the GridPanel call.
-	public Organism(boolean boo) {
+	public Organism(boolean boo, int aChromSize) {
 		health = 100.00;
 		r = new Random();
-		chromosome = new Chromosome(4);
+		chromosome = new Chromosome(aChromSize);
 		fitness = 0.0;
 	}
 	
