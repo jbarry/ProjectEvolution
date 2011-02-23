@@ -19,6 +19,7 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 	
 	//Default ctor.
 	public Chromosome(int numGenes) {
+		ran = new Random();
 		chromosome = new LinkedList<Gene>();
 		for (int i = 0; i < numGenes; i++)
 			chromosome.add(new Gene(7));

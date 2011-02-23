@@ -53,7 +53,7 @@ public class Organism {
 		health = 100.00;
 		r = new Random();
 		chromosome = new Chromosome(4);
-		fitness=0.0;
+		fitness = 0.0;
 	}
 	
 	//This ctor is for testing purposes.

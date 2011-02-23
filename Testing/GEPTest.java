@@ -14,7 +14,7 @@ public class GEPTest {
 	public static void main(String[] args) {
 		LinkedList <Organism> org = new LinkedList<Organism>();
 		Random r = new Random();
-		for(int i = 0; i < 8; i++) {
+		for(int i = 0; i < 4; i++) {
 			org.add(new Organism(true));
 		}
 		GEP gep = new GEP(org, 0.00, 1.00, 1.00, 1.00, 1.00);
