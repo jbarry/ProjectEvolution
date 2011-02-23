@@ -43,10 +43,19 @@ public class Organism {
 		setWrapAround(width, height);
 		setRange(width, height, false);
 		
-		chromosome = new Chromosome();
+		chromosome = new Chromosome(4);
 		fitness=0.0;
 	}
 
+	//for testing purposes only.
+	//just removing the GridPanel call.
+	public Organism(boolean boo) {
+		health = 100.00;
+		r = new Random();
+		chromosome = new Chromosome(4);
+		fitness=0.0;
+	}
+	
 	//This ctor is for testing purposes.
 	public Organism(double ahealth, Chromosome aChromosome) {
 		health = ahealth;

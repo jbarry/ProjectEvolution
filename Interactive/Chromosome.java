@@ -8,43 +8,36 @@ import java.util.LinkedList;
 import java.util.Collections;
 public class Chromosome extends Genetic implements Crossable<Chromosome> {
 
-	private List<Character> terminals;
-	private List<Character> nonTerminals;
 	private List<Gene> chromosome;
 	private Random ran;
-	private int numGenes=4;
-	private int lenGenes=4;
-
+	private int xPos;
+	private int yPos;
+	private int zPos;
+	public static final int MOVEFOOD = 0;
+	public static final int MOVERANDOM = 1;
+	public static final int EAT = 2;
+	
 	//Default ctor.
-	public Chromosome() {
+	public Chromosome(int numGenes) {
 		chromosome = new LinkedList<Gene>();
-		terminals = new LinkedList<Character>();
-		nonTerminals = new LinkedList<Character>();
-		terminals.add('*');
-		terminals.add('/');
-		terminals.add('-');
-		terminals.add('+');
-		nonTerminals.add('a');
-		nonTerminals.add('b');
-		nonTerminals.add('c');
-		nonTerminals.add('d');
-		ran = new Random();
-		for(int i=0;i<numGenes;i++){
-			LinkedList<Character> toAdd= new LinkedList<Character>();
-			for(int j=0;j<lenGenes;j++){
-				if(ran.nextInt(2)==0){
-					toAdd.add(terminals.get(ran.nextInt(terminals.size())));
-				}
-				else{
-					toAdd.add(nonTerminals.get(ran.nextInt(nonTerminals.size())));
-				}
-			}
-			Gene gene = new Gene(toAdd);
-			chromosome.add(gene);
-		}
-		
+		for (int i = 0; i < numGenes; i++)
+			chromosome.add(new Gene(7));
 	}
 
+	//TODO: find symbols position and update this class when found.
+	public int symPos(char symbol) {
+		if(symbol == 'x') return xPos;
+		if(symbol == 'y') return yPos;
+		if(symbol == 'z') return zPos;
+		return -1;
+	}
+	
+	//TODO: call after selection, etc to reinitialize variable
+	//positions.
+	public void redoPositions() {
+		
+	}
+	
 	//For testing purposes of the GEP class.
 	public Chromosome(LinkedList<Gene> aChrom) {
 		chromosome = aChrom;

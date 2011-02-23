@@ -195,5 +195,4 @@ public class Food {
 			+  "\nLocation: " + location;
 		return str;
 	}
-
 }
