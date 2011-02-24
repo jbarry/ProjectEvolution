@@ -230,6 +230,55 @@ public class OptionsPanel extends JPanel implements Runnable{
 		crossoverRateTxtBox.setDocument(new JTextFieldLimit(3));
 		add(crossoverRateTxtBox);
 		
+		/** MouseListener, handles ALL of the above textfields */
+		MouseListener inputMouseListener = new MouseListener(){
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+	        	if(numOrgsTxtBox.isFocusOwner()){
+					numOrgsLbl.setText("# Organisms (2-1000):");
+	        	}
+	        	else if(orgWidthTxtBox.isFocusOwner() 
+	        			|| orgHeightTxtBox.isFocusOwner()){
+		        	orgSizeLbl.setText("Organism Size: w x h");
+	        	}
+	        	else if(mutationRateTxtBox.isFocusOwner()){
+		        	mutationRateLbl.setText("Mutation Rate (%):");
+	        	}
+	        	else if(rotationRateTxtBox.isFocusOwner()){
+		        	rotationRateLbl.setText("Rotation Rate (%):");
+	        	}
+	        	else if(selectionRateTxtBox.isFocusOwner()){
+		        	selectionRateLbl.setText("Selection Rate (%):");
+	        	}
+	        	else if(crossoverRateTxtBox.isFocusOwner()){
+		        	crossoverRateLbl.setText("Crossover Rate (%):");
+	        	}
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {	
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {	
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+			}
+		};
+	    numOrgsTxtBox.addMouseListener(inputMouseListener);
+	    orgWidthTxtBox.addMouseListener(inputMouseListener);
+	    orgHeightTxtBox.addMouseListener(inputMouseListener);
+	    mutationRateTxtBox.addMouseListener(inputMouseListener);
+	    rotationRateTxtBox.addMouseListener(inputMouseListener);
+	    selectionRateTxtBox.addMouseListener(inputMouseListener);
+	    crossoverRateTxtBox.addMouseListener(inputMouseListener);
+	    
 		/** KeyListener, handles ALL of the above textfields */
 	    KeyListener inputKeyListener = new KeyListener() {
 			@Override
@@ -274,7 +323,6 @@ public class OptionsPanel extends JPanel implements Runnable{
 										crossoverRateTxtBox.setText("" 
 												+ simulation.getGEP().getOnePtProb()*100);
 									}
-									numOrgsLbl.setText("# Organisms (2-1000):");
 								}
 								else{
 									//just do it                     
@@ -282,7 +330,6 @@ public class OptionsPanel extends JPanel implements Runnable{
 						        	toggleEnabled(true);
 							        gui.enableJMenuItemPause();
 									simulation.initialize();
-									numOrgsLbl.setText("# Organisms (2-1000):");
 									simulation.start();
 									
 									//set labels for text fields
@@ -434,7 +481,6 @@ public class OptionsPanel extends JPanel implements Runnable{
 			public void keyTyped(KeyEvent arg0) {
 			}
 	    };
-	    
 	    numOrgsTxtBox.addKeyListener(inputKeyListener);
 	    orgWidthTxtBox.addKeyListener(inputKeyListener);
 	    orgHeightTxtBox.addKeyListener(inputKeyListener);
