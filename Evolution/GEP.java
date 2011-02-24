@@ -63,9 +63,18 @@ public class GEP {
 			orgList.get(i).setFitness(fitness(orgList.get(i)));
 		}
 
-		printOrgList(orgList);
-		chromList = tournament(partnerSelect(orgList));
+//		printOrgList(orgList);
+//		//test Gene/makeSymList().
+//		chromList = tournament(partnerSelect(orgList));
 //		chromList = makeChromList(orgList);
+//		for(Chromosome chrom: chromList) {
+//			for(int i = 0; i < chrom.size(); i ++) {
+//				ArrayList<String> strArray = chrom.getGene(i).makeStringArray();
+//				for(int j = 0; j < chrom.getGene(i).size(); j ++)
+//					out.print(strArray.get(j));
+//				out.println();
+//			}
+//		}
 //		LinkedList<Pair<Chromosome, Chromosome>> x = mateSelect(chromList);
 //		chromList.clear();
 //		for(int i = 0; i < x.size(); i++) {
@@ -228,6 +237,23 @@ public class GEP {
 	public LinkedList <Pair<Chromosome, Chromosome>> onePointCrossOver(double prob) {
 		LinkedList<Pair<Chromosome, Chromosome>> pairList =
 			mateSelect(chromList);
+		LinkedList<Chromosome> printList = 
+			new LinkedList<Chromosome>();
+		for (int i = 0; i < pairList.size(); i ++) {
+			printList.add(pairList.get(i).left());
+			printList.add(pairList.get(i).right());
+		}
+		for (int i = 0; i < printList.size(); i ++) {
+			Chromosome aChrom = printList.get(i);
+			out.println("Chromosome " + i);
+			for (int j = 0; j < aChrom.size(); j++) {
+				Gene aGene = aChrom.getGene(j);
+				for (int k = 0; k < aGene.size(); k++) {
+					out.print(aGene.getSym(k) + " ");
+				}
+				out.println();
+			}
+		}
 		LinkedList<Pair<Chromosome, Chromosome>> result =
 			new LinkedList <Pair<Chromosome, Chromosome>>();
 		for(Pair<Chromosome, Chromosome> mates: pairList) {
@@ -239,19 +265,7 @@ public class GEP {
 		return result;
 	}
 
-
-
-	public void twoPointCrossOver(
-			LinkedList <Pair<Chromosome, Chromosome>> generation, double prob) {
-		LinkedList <Pair<Chromosome, Chromosome>> pairList =
-			new LinkedList <Pair<Chromosome, Chromosome>>();
-		for(Pair<Chromosome, Chromosome> mates: pairList) {
-			if(ran.nextDouble() < prob) {
-				mates.left().crossOver(mates.right());
-			}
-		}
-	}
-
+	//TODO: remove print statements. Only for testing.
 	//Pairs up indiv from the chromosome list parameter and 
 	//makes them into Pair objects. Puts Pairs into a LinkedList.
 	public LinkedList <Pair<Chromosome, Chromosome>> mateSelect(
@@ -278,7 +292,7 @@ public class GEP {
 		}
 		return pairList; 
 	}
-	
+
 	/**
 	 *Pairs up indiv from the Organism Pair list parameter and 
 	 *makes them into Pair objects. Puts Pairs into a LinkedList.
@@ -337,7 +351,7 @@ public class GEP {
 			Chromosome chrom = list.get(i);
 			out.println("Chromosome" + i);
 			for(int j = 0; j < chrom.size(); j++) {
-				for(int k = 0; k < chrom.size(); k++) {
+				for(int k = 0; k < chrom.getGene(j).size(); k++) {
 					out.print(chrom.getGene(j).getSym(k).charValue() + " ");
 				}
 				out.println();

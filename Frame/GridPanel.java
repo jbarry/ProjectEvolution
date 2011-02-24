@@ -1,5 +1,7 @@
 package Frame;
 
+import Evaluation.Eval;
+import java.util.HashMap;
 import Evolution.GEP;
 import Interactive.*;
 
@@ -13,12 +15,13 @@ import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
+import Interactive.Pair;
 import javax.swing.Timer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
+import Evaluation.Expr;
 /**
  * This class will handle all of the simulation's display.
  */
@@ -32,7 +35,7 @@ public class GridPanel extends JPanel implements Runnable
 	public final static int HEIGHT = 400;
 
 	public static boolean[][] isValidLocation;
-	
+
 	private LinkedList<Organism> organisms;
 	private LinkedList<HealthyFood> healthyFoodSources;
 	private LinkedList<PoisonousFood> poisonousFoodSources;
@@ -44,6 +47,7 @@ public class GridPanel extends JPanel implements Runnable
 	public int generationNum=1;
 	public int lastAvg=0;
 	private GEP g;
+	private int numFoodSources;
 	private Timer t;
 
 	//------------------------------------------------------------------------------------
@@ -78,14 +82,14 @@ public class GridPanel extends JPanel implements Runnable
 	 */
 	public void initialize(){
 		timePassed=0;
-		
+		numFoodSources = 0;
 		isValidLocation = new boolean[GridPanel.WIDTH][GridPanel.HEIGHT];
 		for(int i=0; i<isValidLocation.length; i++){
 			for(int j=0; j<isValidLocation[i].length; j++){
 				isValidLocation[i][j] = true;
 			}
 		}
-		
+
 		organisms.clear();
 		for(int i=0; i<OptionsPanel.numOrganisms; i++){
 			Organism o = new Organism();
@@ -95,6 +99,7 @@ public class GridPanel extends JPanel implements Runnable
 		for(int i=0; i<OptionsPanel.numOrganisms/2; i++){
 			HealthyFood h = new HealthyFood();
 			healthyFoodSources.add(h);
+			numFoodSources++;
 		}
 		poisonousFoodSources.clear();
 		for(int i=0; i<OptionsPanel.numOrganisms/2; i++){
@@ -103,7 +108,7 @@ public class GridPanel extends JPanel implements Runnable
 		}
 		g= new GEP(organisms, 1,1,1,1,1);
 	}
-	
+
 	/**
 	 * Determines whether of not the passed Organism is next to a food source.
 	 *
@@ -185,7 +190,7 @@ public class GridPanel extends JPanel implements Runnable
 
 		return isNextToFood;
 	}
-	
+
 	//------------------------------------------------------------------------------------
 	//--Getters/Setters--
 	//------------------------------------------------------------------------------------
@@ -196,15 +201,15 @@ public class GridPanel extends JPanel implements Runnable
 	public GEP getGEP(){
 		return g;
 	}
-	
+
 	public Timer getTimer(){
 		return t;
 	}
-	
+
 	public int getCurrTimeStep(){
 		return lengthTimeStep;
 	}
-	
+
 	public void setTimeStep(int step){
 		lengthTimeStep = step;
 		t.setDelay(step);
@@ -310,9 +315,8 @@ public class GridPanel extends JPanel implements Runnable
 						}
 					}
 
-					if(!isHFood & !isPFood & !isOrg){
+					if(!isHFood & !isPFood & !isOrg)
 						MonitorPanel.simObjInfo.setText("No Object Selected");
-					}
 				}
 				catch(NullPointerException e){
 
@@ -359,21 +363,21 @@ public class GridPanel extends JPanel implements Runnable
 		organisms = new LinkedList<Organism>();
 		healthyFoodSources = new LinkedList<HealthyFood>();
 		poisonousFoodSources = new LinkedList<PoisonousFood>();
-		
+
 		//a timer and it's action event to call at every time t.
 		t = new javax.swing.Timer(lengthTimeStep, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(timePassed < lengthGeneration){
+				if(timePassed < lengthGeneration) {
 					/*begin game logic here:*/
 					timePassed+=lengthTimeStep;
-					//System.out.println(timePassed);
-					for(Organism org: organisms){
-						//if near food, eat it.
+					System.out.println(timePassed);
+					for(Organism org: organisms) {
+
 						if(organismIsNextToHealthyFood(org) || organismIsNextToPoisonousFood(org)){
 							//organism eats food
 						}
 						//otherwise keep moving.
-						else{
+						else {
 							//create new, random number 0-7 representing a movement.
 							Random r = new Random();
 							int movement = r.nextInt(8);
@@ -390,15 +394,45 @@ public class GridPanel extends JPanel implements Runnable
 							}
 						}
 					}
+
 					for(HealthyFood h: healthyFoodSources){
 						//h.deplete();
 					}
+
 					for(PoisonousFood p: poisonousFoodSources){
 						//p.deplete();
 					}
+
 					repaint();
-				}
-				else if(trialNum<trialsPerGen){
+
+					//Begin AI logic. ROUGH
+					//TODO: make org find its way to closest food source.
+					//variables in gene:
+					//distance to closest food(maybe put in a certain range)
+					//#opponents around food in food
+					//amount left in food
+					//amount of health left
+//					for (Organism org: organisms) {
+//						Chromosome chrom = org.getChromosome();
+//						//The first loop is for the food genes.
+//						//ie deciding which food source to go to.
+//						for(int i = 0; i < chrom.size(); i++) {
+//							Expr result = Eval.evaluation(
+//									chrom.getGene(i).makeStringArray());
+//							HashMap<String, Double> environment =
+//								new HashMap<String, Double>();
+//							Pair<Food, Double> foodDistPair =
+//								findClosestFood(org);
+//							environment.put("x", foodDistPair.right());
+//							environment.put("y", foodDistPair.left().
+//									numSurroundingObjects(5));
+//							environment.put("z", org.getHealth());
+//							environment.put("w", foodDistPair.
+//									left().getFoodRemaining());
+//							result.evaluate(environment);
+//						}
+//					}
+				} else if (trialNum < trialsPerGen) {
 					t.stop();
 					for(Organism o: organisms){
 						o.newLocation();
@@ -415,8 +449,7 @@ public class GridPanel extends JPanel implements Runnable
 					GUI.genPanel.newTrial();
 					timePassed=0;
 					t.start();
-				}
-				else{
+				} else {
 					t.stop();
 					timePassed=0;
 					int sum = 0;
@@ -429,7 +462,7 @@ public class GridPanel extends JPanel implements Runnable
 					organisms=g.newGeneration();
 					healthyFoodSources.clear();
 					poisonousFoodSources.clear();
-					
+
 					for(int i=0; i<OptionsPanel.numOrganisms/2; i++){
 						HealthyFood h = new HealthyFood();
 						PoisonousFood f = new PoisonousFood();
@@ -442,6 +475,31 @@ public class GridPanel extends JPanel implements Runnable
 					t.start();
 					repaint();
 				}
+			}
+
+			//TODO: Can organism differentiate bw pois and non
+			//pois?
+			private Pair<Food, Double> findClosestFood(Organism org) {
+				for(PoisonousFood p: poisonousFoodSources) {
+					p.getLocation().getX();
+					p.getLocation().getY();
+				}
+				for(HealthyFood h: healthyFoodSources) {
+					h.getLocation().getX();
+					h.getLocation().getY();
+				}
+				return null;
+			}
+			//TODO: make all objects on grid inherit from a
+			//gamePiece or whatever. Then make this method 
+			//available for any piece.
+			private void numSurrounding(Food h) {
+				// TODO Auto-generated method stub
+				int xPos = h.getLocation().getX();
+				int yPos = h.getLocation().getY();
+				//				if() {
+				//					
+				//				}
 			}
 		});
 	}
