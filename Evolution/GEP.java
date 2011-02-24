@@ -126,18 +126,34 @@ public class GEP {
 		return chromList;
 	}
 
+	public double getTournProb(){
+		return tournProb;
+	}
+	
 	public void setTournProb(double x){
 		tournProb=x;
 	}
-
+	
+	public double getMutProb(){
+		return mutProb;
+	}
+	
 	public void setMutProb(double x){
 		mutProb=x;
 	}
 
+	public double getRotProb(){
+		return rotProb;
+	}
+	
 	public void setRotProb(double x){
 		rotProb=x;
 	}
 
+	public double getOnePtProb(){
+		return onePtProb;
+	}
+	
 	public void setOnePtProb(double x){
 		onePtProb=x;
 	}

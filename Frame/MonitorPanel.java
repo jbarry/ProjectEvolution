@@ -67,7 +67,7 @@ public class MonitorPanel extends JPanel implements Runnable{
 		currMouseLoc.setText("");
 		add(currMouseLoc);
 		
-		t = new javax.swing.Timer(50, new ActionListener() {
+		t = new javax.swing.Timer(simulation.getTimer().getDelay(), new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(simulation.isPaused()){
 					simPause.setText("Paused");
