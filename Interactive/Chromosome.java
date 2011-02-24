@@ -63,7 +63,7 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 	
 	@Override
 	public Pair<Chromosome, Chromosome> crossOver(Chromosome other) {
-		//The point where the crossover will occur.
+		//Define the point where the crossover will occur.
 		int crossPoint = ran.nextInt(size());
 		while(crossPoint == 0) {
 			crossPoint = ran.nextInt(size());
@@ -80,8 +80,11 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 		//first part of other with the second part of this.
 		fstOther.addAll(secThis);
 		other.chromosome = fstOther;
+		//Call crossover on the genes at the crossPoint.
 		Pair<Gene, Gene> crossedGenes = 
 				getGene(crossPoint).crossOver(other.getGene(crossPoint));
+		//set the index of the crossed over chromosomes
+		//to the crossed over genes.
 		setGene(crossPoint, crossedGenes.left());
 		other.setGene(crossPoint, crossedGenes.right());
 		return new Pair<Chromosome, Chromosome>(this, other);

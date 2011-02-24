@@ -63,36 +63,36 @@ public class GEP {
 			orgList.get(i).setFitness(fitness(orgList.get(i)));
 		}
 
-		//		printOrgList(orgList);
-		//test Gene/makeSymList().
-		chromList = tournament(partnerSelect(orgList));
-		//		chromList = makeChromList(orgList);
-		//		for(Chromosome chrom: chromList) {
-		//			for(int i = 0; i < chrom.size(); i ++) {
-		//				ArrayList<String> strArray = chrom.getGene(i).makeStringArray();
-		//				for(int j = 0; j < chrom.getGene(i).size(); j ++)
-		//					out.print(strArray.get(j));
-		//				out.println();
-		//			}
-		//		}
-		//		LinkedList<Pair<Chromosome, Chromosome>> x = mateSelect(chromList);
-		//				chromList.clear();
-		//				for(int i = 0; i < x.size(); i++) {
-		//					chromList.add(x.get(i).right());
-		//					chromList.add(x.get(i).left());
-		//				}
-		//				printChromList(chromList);
-		//		rotation();
-		//		printChromList(chromList);
-		//		mutation();
-		//				printChromList(chromList);
-		LinkedList<Pair<Chromosome, Chromosome>> crossed = onePointCrossOver(onePtProb);
-		chromList.clear();
-		for(int i = 0; i < crossed.size(); i++) {
-			chromList.add(crossed.get(i).right());
-			chromList.add(crossed.get(i).left());
-		}
-		printChromList(chromList);
+//		printOrgList(orgList);
+//		//test Gene/makeSymList().
+//		chromList = tournament(partnerSelect(orgList));
+//		chromList = makeChromList(orgList);
+//		for(Chromosome chrom: chromList) {
+//			for(int i = 0; i < chrom.size(); i ++) {
+//				ArrayList<String> strArray = chrom.getGene(i).makeStringArray();
+//				for(int j = 0; j < chrom.getGene(i).size(); j ++)
+//					out.print(strArray.get(j));
+//				out.println();
+//			}
+//		}
+//		LinkedList<Pair<Chromosome, Chromosome>> x = mateSelect(chromList);
+//		chromList.clear();
+//		for(int i = 0; i < x.size(); i++) {
+//			chromList.add(x.get(i).right());
+//			chromList.add(x.get(i).left());
+//		}
+//		printChromList(chromList);
+//		rotation();
+//		printChromList(chromList);
+//		mutation();
+//		printChromList(chromList);
+//		LinkedList<Pair<Chromosome, Chromosome>> crossed = onePointCrossOver(onePtProb);
+//		chromList.clear();
+//		for(int i = 0; i < crossed.size(); i++) {
+//			chromList.add(crossed.get(i).right());
+//			chromList.add(crossed.get(i).left());
+//		}
+//		printChromList(chromList);
 	}
 
 	/**

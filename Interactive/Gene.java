@@ -92,16 +92,20 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 
 	@Override
 	public Pair<Gene<A>, Gene<A>> crossOver(Gene<A> other) {
+		//Define the point where the crossover will occur.
 		int crossPoint = ran.nextInt(size());
 		while(crossPoint == 0) {
 			crossPoint = ran.nextInt(size());
 		}
+		//Generate two sublists for each Gene.
+		//Splitting them into their respective halves.
 		List<Character> fstThis = subListCharCopy(0, crossPoint);
 		List<Character> secThis = subListCharCopy(crossPoint, size());
 		List<Character> fstOther = other.subListCharCopy(0, crossPoint);
 		List<Character> secOther = other.subListCharCopy(crossPoint, other.size());
 		fstThis.addAll(secOther);
 		fstOther.addAll(secThis);
+		//set the symbol lists to the new crossed over genes.
 		symList = fstThis;
 		other.symList = fstOther;
 		return new Pair<Gene<A>, Gene<A>>(this, other);

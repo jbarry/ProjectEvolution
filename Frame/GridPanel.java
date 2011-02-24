@@ -399,11 +399,11 @@ public class GridPanel extends JPanel implements Runnable
 								new HashMap<String, Double>();
 							Pair<Food, Double> foodDistPair =
 								findClosestFood(org);
-							environment.put("x", (double)foodDistPair.right());
-							environment.put("y", (double)foodDistPair.left().
+							environment.put("x", foodDistPair.right());
+							environment.put("y", foodDistPair.left().
 									numSurroundingObjects(5));
-							environment.put("z", (double)org.getHealth());
-							environment.put("w", (double)foodDistPair.
+							environment.put("z", org.getHealth());
+							environment.put("w", foodDistPair.
 									left().getFoodRemaining());
 							result.evaluate(environment);
 						}
