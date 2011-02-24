@@ -60,37 +60,6 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 		int changeGene = ran.nextInt(aGene.size());
 		aGene.setSym(changeGene, mutation);
 	}
-
-//	@Override
-//	public Pair<Chromosome, Chromosome> crossOver(Chromosome other) {
-//		//The point where the crossover will occur.
-//		int crossPoint = ran.nextInt(size());
-//		if(crossPoint == 0) crossPoint++;
-//		//Generate two sublists of the current chromosome
-//		//at the crossover point.
-//		//Sublist From beginning to crossPoint of this chromosome.
-//		List<Gene> child1 = subListGeneCopy(0, crossPoint);
-//		//Sublist from crossPoint to end of the partner chromosome.
-//		List<Gene> child2 = other.subListGeneCopy(crossPoint, other.size());
-//		//combine first part of this to second part of other.
-//		child1.addAll(child2);
-//		setChrom(child1);
-//		//second part of this.
-//		List<Gene> tempChild1 = subListGeneCopy(crossPoint, size());
-//		//first part of other.
-//		List<Gene> tempChild2 = other.subListGeneCopy(0, crossPoint);
-//		//combine first part of other to second part of this.
-//		tempChild2.addAll(tempChild1);
-//		other.setChrom(tempChild2);
-//		tempChild1 = child1;
-//		Pair<Gene, Gene> crossedGenes = 
-//				getGene(crossPoint).crossOver(other.getGene(crossPoint));
-//		tempChild1.set(crossPoint, crossedGenes.left());
-//		tempChild2.set(crossPoint, crossedGenes.right());
-//		chromosome = child1;
-//		other.chromosome = tempChild2;
-//		return new Pair<Chromosome, Chromosome>(this, other);
-//	}
 	
 	@Override
 	public Pair<Chromosome, Chromosome> crossOver(Chromosome other) {
