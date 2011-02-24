@@ -11,8 +11,8 @@ public class Organism {
 	//------------------------------------------------------------------------------------
 	//--globals--
 	//------------------------------------------------------------------------------------
-	public static final int width = 5;
-	public static final int height = 5;
+	public static int width = 5;
+	public static int height = 5;
 	
 	private double health;
 	private Coordinate location;
@@ -295,7 +295,7 @@ public class Organism {
 	 * @param y        y-size for rectangle
 	 * @param validity the value to mark the location map.
 	 */
-	private void setRange(int x, int y, boolean validity){
+	public void setRange(int x, int y, boolean validity){
 		for(int i=(location.getX()-(x/2)); i<=(location.getX()+(x/2)); i++){
 			for(int j=(location.getY()-(y/2)); j<=(location.getY()+(y/2)); j++){
 				try{

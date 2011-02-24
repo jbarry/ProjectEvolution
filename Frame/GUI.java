@@ -193,7 +193,12 @@ public class GUI {
 		about.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				JOptionPane.showMessageDialog(jframe, 
-						"Project Evolution v. 1.0", 
+						"Project Evolution v. 1.0\n\n"
+						+ "Written By:\n"
+						+ "Justin Barry, Dwight Bell, Ian Gardea, Devin Lam, and Chris Jackey\n\n"
+						+ "This program will simulate basic Social Darwinism amongst \n"
+						+ "organisms with the same initial conditions. Intelligence is \n"
+						+ "represented through a Robust Gene Expression Program.", 
 						"About...", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
@@ -210,6 +215,13 @@ public class GUI {
 				}
 		);
 	
+	}
+	
+	//------------------------------------------------------------------------------------
+	//--Getters/Setters--
+	//------------------------------------------------------------------------------------
+	public JFrame getContainer(){
+		return jframe;
 	}
 	
 	//------------------------------------------------------------------------------------
@@ -272,7 +284,7 @@ public class GUI {
 				else{
 					//the number of organisms given via user-input.
 					OptionsPanel.numOrganisms = x;
-					optionsPanel.toggleJButtonPause(true);
+					optionsPanel.toggleEnabled(true);
 					pause.setEnabled(false);
 				}
 			} catch (NumberFormatException a) {
