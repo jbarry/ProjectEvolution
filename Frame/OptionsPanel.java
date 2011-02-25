@@ -497,6 +497,14 @@ public class OptionsPanel extends JPanel implements Runnable{
 		        int key = keyEvent.getKeyCode();
 		        
 		        if (key == KeyEvent.VK_ENTER) {
+					//reset all labels
+					numOrgsLbl.setText("# Organisms (2-500):");
+					orgSizeLbl.setText("Organism Size: w x h");
+					mutationRateLbl.setText("Mutation Rate (%): ");
+					rotationRateLbl.setText("Rotation Rate (%): ");
+					selectionRateLbl.setText("Selection Rate (%): ");
+					crossoverRateLbl.setText("Crossover Rate (%): ");
+					
 		        	if(numOrgsTxtBox.isFocusOwner()){
 		        		//force click start button.
 		        		start.doClick();
