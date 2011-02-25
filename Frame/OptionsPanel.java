@@ -1,4 +1,5 @@
 package Frame;
+import Evolution.GEP;
 import Interactive.*;
 
 import java.awt.Color;
@@ -114,153 +115,182 @@ public class OptionsPanel extends JPanel implements Runnable{
 		ActionListener s = new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//Display confirm dialog
-				int confirmed =
-					JOptionPane.showConfirmDialog(gui.getContainer(),
-							"Begin a new simulation?", "Confirm",
-							JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-				//if user confirmed, or no other existing simulation.
-				if (confirmed == JOptionPane.YES_OPTION)
-				{         
-					//handle and check all parameters specified via user-input.
-					if(!numOrgsTxtBox.getText().equals("")){
-						try{
-							OptionsPanel.numOrganisms = Integer.parseInt(numOrgsTxtBox.getText());
-							start.setText("New");
-			        		toggleEnabled(true);
-				        	gui.enableJMenuItemPause();
-							simulation.initialize();
-							simulation.start();
-						}
-						catch(NumberFormatException e){
-							numOrgsLbl.setText("Invalid Entry");
-						}
-						catch(Exception e){
-							numOrgsLbl.setText("Unknown Error");
-						}
-					}
-					else{
-						JOptionPane.showMessageDialog(gui.getContainer(),
-								"No organism size was specified!", "Message",
-								JOptionPane.OK_OPTION);
-					}
-					if(!orgWidthTxtBox.getText().equals("") 
-							|| !orgHeightTxtBox.getText().equals("")){
-			        	try{
-			        		//if something was entered for width at least.
-			        		if(!orgWidthTxtBox.getText().equals("")){
-			        			//if input is not far too large
-					        	if(Integer.parseInt(orgWidthTxtBox.getText()) <= 20
-					        			&& Integer.parseInt(orgWidthTxtBox.getText()) > 0){
-					        		//if simulation is currently running.
-					        		if(simulation.getTimer().isRunning()){
-						        		//make organisms able to move if they are shrunk.
-							        	for(Organism o: simulation.getOrganisms()){
-							        		o.setRange(Organism.width, Organism.height, true);
-							        	}
-					        		}
-						        	
-						        	Organism.width = Integer.parseInt(orgWidthTxtBox.getText());
-						        	
-						        	//if enter was pressed, but height was not filled in.
-						        	if(!orgWidthTxtBox.getText().equals("") && orgHeightTxtBox.getText().equals("")){
-						        		//copy the width's input.
-						        		Organism.height = Integer.parseInt(orgWidthTxtBox.getText());
+				//reset all labels
+				numOrgsLbl.setText("# Organisms (2-500):");
+				orgSizeLbl.setText("Organism Size: w x h");
+				mutationRateLbl.setText("Mutation Rate (%): ");
+				rotationRateLbl.setText("Rotation Rate (%): ");
+				selectionRateLbl.setText("Selection Rate (%): ");
+				crossoverRateLbl.setText("Crossover Rate (%): ");
+				
+				//handle and check all parameters specified via user-input.
+				if(!orgWidthTxtBox.getText().equals("") 
+						|| !orgHeightTxtBox.getText().equals("")){
+		        	try{
+		        		//if something was entered for width at least.
+		        		if(!orgWidthTxtBox.getText().equals("")){
+		        			//if input is not too large
+				        	if(Integer.parseInt(orgWidthTxtBox.getText()) <= 20
+				        			&& Integer.parseInt(orgWidthTxtBox.getText()) > 0){
+				        		//if simulation is currently running.
+				        		if(simulation.getTimer().isRunning()){
+					        		//make organisms able to move if they are shrunk.
+						        	for(Organism o: simulation.getOrganisms()){
+						        		o.setRange(Organism.width, Organism.height, true);
 						        	}
-						        	else{
-						        		//proceed normally
-						        		Organism.height = Integer.parseInt(orgHeightTxtBox.getText());
-						        	}
+				        		}
+					        	
+					        	Organism.width = Integer.parseInt(orgWidthTxtBox.getText());
+					        	
+					        	//if enter was pressed, but height was not filled in.
+					        	if(!orgWidthTxtBox.getText().equals("") && orgHeightTxtBox.getText().equals("")){
+					        		//copy the width's input.
+					        		Organism.height = Integer.parseInt(orgWidthTxtBox.getText());
 					        	}
 					        	else{
-					        		orgSizeLbl.setText("Invalid! (1 <= x <= 20)");
+					        		//proceed normally
+					        		Organism.height = Integer.parseInt(orgHeightTxtBox.getText());
 					        	}
-			        		}
-			        		else{
-			        			orgSizeLbl.setText("Enter a Width!");
-			        		}
-			        	}
-			        	catch(NumberFormatException e){
-			        		orgSizeLbl.setText("Not a number!");
-			        	}
-			        	catch(Exception e){
-			        		orgSizeLbl.setText("Unknown Error!");
-			        	}
+				        	}
+				        	else{
+				        		orgSizeLbl.setText("Number not 1 <= x <= 20");
+				        	}
+		        		}
+		        		else{
+		        			orgSizeLbl.setText("Enter a Width!");
+		        		}
+		        	}
+		        	catch(NumberFormatException e){
+		        		//update label and prevent further action.
+		        		orgSizeLbl.setText("Not a number!");
+		        		return;
+		        	}
+		        	catch(Exception e){
+		        		orgSizeLbl.setText("Unknown Error!");
+		        		return;
+		        	}
+				}
+				if(!mutationRateTxtBox.getText().equals("")){
+		        	try{
+		        		if(Integer.parseInt(mutationRateTxtBox.getText()) >= 0 
+		        				&& Integer.parseInt(mutationRateTxtBox.getText()) <= 100){
+		        			GEP.mutProb =
+			        				(double) Integer.parseInt(mutationRateTxtBox.getText())/100;
+		        		}
+		        		else{
+		        			mutationRateLbl.setText("Number not 0 <= x <= 100");
+		        		}
+		        	}
+		        	catch(NumberFormatException e){
+		        		mutationRateLbl.setText("Not a number!");
+		        		return;
+		        	}
+		        	catch(Exception e){
+		        		mutationRateLbl.setText("Unknown Error!");
+		        		return;
+		        	}
+				}
+				if(!rotationRateTxtBox.getText().equals("")){
+		        	try{
+		        		if(Integer.parseInt(rotationRateTxtBox.getText()) >= 0 
+		        				&& Integer.parseInt(rotationRateTxtBox.getText()) <= 100){
+		        			GEP.rotProb =
+		        				(double) Integer.parseInt(rotationRateTxtBox.getText())/100;
+		        		}
+		        		else{
+		        			rotationRateLbl.setText("Number not 0 <= x <= 100");
+		        		}
+		        	}
+		        	catch(NumberFormatException e){
+		        		rotationRateLbl.setText("Not a number!");
+		        		return;
+		        	}
+		        	catch(Exception e){
+		        		rotationRateLbl.setText("Unknown Error!");
+		        		return;
+		        	}
+				}
+				if(!selectionRateTxtBox.getText().equals("")){
+		        	try{
+		        		if(Integer.parseInt(selectionRateTxtBox.getText()) >= 0 
+		        				&& Integer.parseInt(selectionRateTxtBox.getText()) <= 100){
+		        			GEP.tournProb =
+		        				(double) Integer.parseInt(selectionRateTxtBox.getText())/100;
+		        		}
+		        		else{
+		        			selectionRateLbl.setText("Number not 0 <= x <= 100");
+		        		}
+		        	}
+		        	catch(NumberFormatException e){
+		        		selectionRateLbl.setText("Not a number!");
+		        		return;
+		        	}
+		        	catch(Exception e){
+		        		selectionRateLbl.setText("Unknown Error!");
+		        		return;
+		        	}
+				}
+				if(!crossoverRateTxtBox.getText().equals("")){
+		        	try{
+		        		if(Integer.parseInt(crossoverRateTxtBox.getText()) >= 0 
+		        				&& Integer.parseInt(crossoverRateTxtBox.getText()) <= 100){
+		        			GEP.onePtProb =
+		        				(double) Integer.parseInt(crossoverRateTxtBox.getText())/100;
+		        			GEP.twoPtProb =
+		        				(double) Integer.parseInt(crossoverRateTxtBox.getText())/100;
+		        		}
+		        		else{
+		        			crossoverRateLbl.setText("Number not 0 <= x <= 100");
+		        		}
+		        	}
+		        	catch(NumberFormatException e){
+		        		crossoverRateLbl.setText("Not a number!");
+		        		return;
+		        	}
+		        	catch(Exception e){
+		        		crossoverRateLbl.setText("Unknown Error!");
+		        		return;
+		        	}
+				}     
+				//Since this field starts the simulation, it should be handled last.
+				if(!numOrgsTxtBox.getText().equals("")){
+					try{
+						if(Integer.parseInt(numOrgsTxtBox.getText()) <= 500
+								&& Integer.parseInt(numOrgsTxtBox.getText()) > 0){
+							//display confirm dialog.
+							int confirmed =
+								JOptionPane.showConfirmDialog(gui.getContainer(),
+										"Begin a new simulation?", "Confirm",
+										JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+							//if user confirmed, or no other existing simulation.
+							if (confirmed == JOptionPane.YES_OPTION)
+							{    
+								//everything checks out, start simulation.
+								OptionsPanel.numOrganisms = Integer.parseInt(numOrgsTxtBox.getText());
+								start.setText("New");
+				        		toggleEnabled(true);
+					        	gui.enableJMenuItemPause();
+								simulation.initialize();
+								simulation.start();
+							}
+						}
+						else{
+							numOrgsLbl.setText("Number not 2 <= x <= 500");
+						}
 					}
-					if(!mutationRateTxtBox.getText().equals("")){
-			        	try{
-			        		if(Integer.parseInt(mutationRateTxtBox.getText()) >= 0 
-			        				&& Integer.parseInt(mutationRateTxtBox.getText()) <= 100){
-				        		simulation.getGEP().setMutProb(
-				        				(double) Integer.parseInt(mutationRateTxtBox.getText())/100);
-			        		}
-			        		else{
-			        			mutationRateLbl.setText("Number not 0 <= x <= 100");
-			        		}
-			        	}
-			        	catch(NumberFormatException e){
-			        		mutationRateLbl.setText("Not a number!");
-			        	}
-			        	catch(Exception e){
-			        		mutationRateLbl.setText("Unknown Error!");
-			        	}
+					catch(NumberFormatException e){
+						numOrgsLbl.setText("Invalid Entry");
+						return;
 					}
-					if(!rotationRateTxtBox.getText().equals("")){
-			        	try{
-			        		if(Integer.parseInt(rotationRateTxtBox.getText()) >= 0 
-			        				&& Integer.parseInt(rotationRateTxtBox.getText()) <= 100){
-				        		simulation.getGEP().setRotProb(
-				        				(double) Integer.parseInt(rotationRateTxtBox.getText())/100);
-			        		}
-			        		else{
-			        			rotationRateLbl.setText("Number not 0 <= x <= 100");
-			        		}
-			        	}
-			        	catch(NumberFormatException e){
-			        		rotationRateLbl.setText("Not a number!");
-			        	}
-			        	catch(Exception e){
-			        		rotationRateLbl.setText("Unknown Error!");
-			        	}
+					catch(Exception e){
+						numOrgsLbl.setText("Unknown Error");
+						return;
 					}
-					if(!selectionRateTxtBox.getText().equals("")){
-			        	try{
-			        		if(Integer.parseInt(selectionRateTxtBox.getText()) >= 0 
-			        				&& Integer.parseInt(selectionRateTxtBox.getText()) <= 100){
-				        		simulation.getGEP().setTournProb(
-				        				(double) Integer.parseInt(selectionRateTxtBox.getText())/100);
-			        		}
-			        		else{
-			        			selectionRateLbl.setText("Number not 0 <= x <= 100");
-			        		}
-			        	}
-			        	catch(NumberFormatException e){
-			        		selectionRateLbl.setText("Not a number!");
-			        	}
-			        	catch(Exception e){
-			        		selectionRateLbl.setText("Unknown Error!");
-			        	}
-					}
-					if(!crossoverRateTxtBox.getText().equals("")){
-			        	try{
-			        		if(Integer.parseInt(crossoverRateTxtBox.getText()) >= 0 
-			        				&& Integer.parseInt(crossoverRateTxtBox.getText()) <= 100){
-				        		simulation.getGEP().setOnePtProb(
-				        				(double) Integer.parseInt(crossoverRateTxtBox.getText())/100);
-				        		simulation.getGEP().setTwoPtProb(
-				        				(double) Integer.parseInt(crossoverRateTxtBox.getText())/100);
-			        		}
-			        		else{
-			        			crossoverRateLbl.setText("Number not 0 <= x <= 100");
-			        		}
-			        	}
-			        	catch(NumberFormatException e){
-			        		crossoverRateLbl.setText("Not a number!");
-			        	}
-			        	catch(Exception e){
-			        		crossoverRateLbl.setText("Unknown Error!");
-			        	}
-					}
+				}
+				else{
+					JOptionPane.showMessageDialog(gui.getContainer(),
+							"No organism size was specified!", "Message",
+							JOptionPane.OK_OPTION);
 				}
 			}	
 		};
@@ -286,7 +316,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 		/** # Organisms */
 		numOrgsLbl = new JLabel();
 		numOrgsLbl.setLayout(null);
-		numOrgsLbl.setText("# Organisms (2-999):");
+		numOrgsLbl.setText("# Organisms (2-500):");
 		numOrgsLbl.setSize(150,20);
 		numOrgsLbl.setLocation(10, 60);
 		add(numOrgsLbl);
@@ -402,7 +432,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 	        	if(numOrgsTxtBox.isFocusOwner()){
-					numOrgsLbl.setText("# Organisms (2-999):");
+					numOrgsLbl.setText("# Organisms (2-500):");
 	        	}
 	        	else if(orgWidthTxtBox.isFocusOwner() 
 	        			|| orgHeightTxtBox.isFocusOwner()){
@@ -466,14 +496,12 @@ public class OptionsPanel extends JPanel implements Runnable{
 				        			//if input is not far too large
 						        	if(Integer.parseInt(orgWidthTxtBox.getText()) <= 20
 						        			&& Integer.parseInt(orgWidthTxtBox.getText()) > 0){
-						        		//if simulation is currently running.
-						        		if(simulation.getTimer().isRunning()){
-							        		//make organisms able to move if they are shrunk.
-								        	for(Organism o: simulation.getOrganisms()){
-								        		o.setRange(Organism.width, Organism.height, true);
-								        	}
-						        		}
-							        	
+						        		//make organisms able to move if they are shrunk.
+						        		//assumes simulation is running.
+							        	for(Organism o: simulation.getOrganisms()){
+							        		o.setRange(Organism.width, Organism.height, true);
+							        	}
+
 							        	Organism.width = Integer.parseInt(orgWidthTxtBox.getText());
 							        	
 							        	//if enter was pressed, but height was not filled in.

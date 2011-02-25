@@ -32,11 +32,11 @@ public class GEP {
 	private LinkedList<Chromosome> chromList;
 	private Random ran;
 
-	private double tournProb;
-	private double mutProb;
-	private double rotProb;
-	private double onePtProb;
-	private double twoPtProb;
+	public static double tournProb;
+	public static double mutProb;
+	public static double rotProb;
+	public static double onePtProb;
+	public static double twoPtProb;
 
 	//TODO: will have another way of inserting random mutations.
 	public GEP(LinkedList <Organism> anOrgList,
