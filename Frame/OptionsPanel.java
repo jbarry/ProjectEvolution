@@ -148,16 +148,25 @@ public class OptionsPanel extends JPanel implements Runnable{
 					        		Organism.height = Integer.parseInt(orgWidthTxtBox.getText());
 					        	}
 					        	else{
-					        		//proceed normally
-					        		Organism.height = Integer.parseInt(orgHeightTxtBox.getText());
+					        		//height was filled in
+					        		if(Integer.parseInt(orgHeightTxtBox.getText()) <= 20
+						        			&& Integer.parseInt(orgHeightTxtBox.getText()) > 0){
+					        			Organism.height = Integer.parseInt(orgHeightTxtBox.getText());
+					        		}
+					        		else{
+					        			orgSizeLbl.setText("Number not 1 <= x <= 20");
+					        			return;
+					        		}
 					        	}
 				        	}
 				        	else{
 				        		orgSizeLbl.setText("Number not 1 <= x <= 20");
+				        		return;
 				        	}
 		        		}
 		        		else{
 		        			orgSizeLbl.setText("Enter a Width!");
+		        			return;
 		        		}
 		        	}
 		        	catch(NumberFormatException e){
@@ -179,6 +188,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 		        		}
 		        		else{
 		        			mutationRateLbl.setText("Number not 0 <= x <= 100");
+		        			return;
 		        		}
 		        	}
 		        	catch(NumberFormatException e){
@@ -199,6 +209,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 		        		}
 		        		else{
 		        			rotationRateLbl.setText("Number not 0 <= x <= 100");
+		        			return;
 		        		}
 		        	}
 		        	catch(NumberFormatException e){
@@ -219,6 +230,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 		        		}
 		        		else{
 		        			selectionRateLbl.setText("Number not 0 <= x <= 100");
+		        			return;
 		        		}
 		        	}
 		        	catch(NumberFormatException e){
@@ -241,6 +253,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 		        		}
 		        		else{
 		        			crossoverRateLbl.setText("Number not 0 <= x <= 100");
+		        			return;
 		        		}
 		        	}
 		        	catch(NumberFormatException e){
@@ -276,6 +289,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 						}
 						else{
 							numOrgsLbl.setText("Number not 2 <= x <= 500");
+							return;
 						}
 					}
 					catch(NumberFormatException e){
