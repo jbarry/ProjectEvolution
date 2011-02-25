@@ -131,7 +131,7 @@ public class GUI {
 		jframe.add(simulation);
 		
 		/**Create Options Panel*/
-		optionsPanel = new OptionsPanel(simulation, this);
+		optionsPanel = new OptionsPanel(this, simulation);
 		jframe.add(optionsPanel);
 		
 		/**Create Monitor Panel*/

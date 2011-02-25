@@ -22,10 +22,7 @@ public class MonitorPanel extends JPanel implements Runnable{
 	
 	public static JTextArea simObjInfo;
 	public static JLabel currMouseLoc;
-	
-	private JLabel simPause;
-	
-	javax.swing.Timer t;
+	public static JLabel simStatus;
 	
 	//------------------------------------------------------------------------------------
 	//--constructors--
@@ -41,19 +38,19 @@ public class MonitorPanel extends JPanel implements Runnable{
 		setBorder(BorderFactory.createLineBorder(Color.black));
 		
 		/**Pause Notification*/
-		simPause = new JLabel();
-		simPause.setLayout(null);
-		simPause.setOpaque(false);
-		simPause.setLocation(0, 0); //upper right
-		simPause.setText("Running");
-		simPause.setSize(MonitorPanel.WIDTH, 20);
-		add(simPause);
+		simStatus = new JLabel();
+		simStatus.setLayout(null);
+		simStatus.setOpaque(false);
+		simStatus.setLocation(0, 0); //upper right
+		simStatus.setText("Running");
+		simStatus.setSize(MonitorPanel.WIDTH, 20);
+		add(simStatus);
 		
 		/**Organism Info Notification*/
 		simObjInfo = new JTextArea();
 		simObjInfo.setLayout(null);
 		simObjInfo.setOpaque(false);
-		simObjInfo.setLocation(0, simPause.getHeight());
+		simObjInfo.setLocation(0, simStatus.getHeight());
 		simObjInfo.setText("No Object Selected");
 		simObjInfo.setSize(MonitorPanel.WIDTH, 60);
 		add(simObjInfo);
@@ -66,38 +63,11 @@ public class MonitorPanel extends JPanel implements Runnable{
 		currMouseLoc.setLocation(0, MonitorPanel.HEIGHT-75);
 		currMouseLoc.setText("");
 		add(currMouseLoc);
-		
-		t = new javax.swing.Timer(simulation.getTimer().getDelay(), new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(simulation.isPaused()){
-					simPause.setText("Paused");
-				}
-				else{
-					simPause.setText("Running");
-				}
-				repaint();
-			}
-		});
-		
-		start();
 	}
 	
 	//------------------------------------------------------------------------------------
-	//--accessors and mutators--
+	//--overrides--
 	//------------------------------------------------------------------------------------
-	/**For the timer*/
-	public void start(){
-		t.start();
-	}
-	public void stop(){
-		t.stop();
-	}
-	public boolean isPaused(){
-		if(t.isRunning())
-			return false;
-		return true;
-	}
-
 	@Override
 	public void run() {
 	}

@@ -56,7 +56,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
-	public OptionsPanel(final GridPanel simulation, final GUI gui){
+	public OptionsPanel(final GUI gui, final GridPanel simulation){
 		run();
 		
 		/** initial JPanel settings */
@@ -114,37 +114,35 @@ public class OptionsPanel extends JPanel implements Runnable{
 		ActionListener s = new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				int confirmed = -1;
-				//check to see if simulation is running.
-				if(simulation.getTimer().isRunning()){
-					//Display confirm dialog
-					confirmed =
-						JOptionPane.showConfirmDialog(gui.getContainer(),
-								"Begin a new simulation?", "Confirm",
-								JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-				}
-				else{
-					//start simulation if a size was entered.
-					if(!numOrgsTxtBox.getText().equals("")){
-						OptionsPanel.numOrganisms = Integer.parseInt(numOrgsTxtBox.getText());
-						start.setText("New");
-						toggleEnabled(true);
-				        gui.enableJMenuItemPause();
-						simulation.initialize();
-						simulation.start();
-					}
-					else{
-						JOptionPane.showMessageDialog(gui.getContainer(),
-								"No organism size was specified!", "Message",
-								JOptionPane.OK_OPTION);
-					}
-				}
+				//Display confirm dialog
+				int confirmed =
+					JOptionPane.showConfirmDialog(gui.getContainer(),
+							"Begin a new simulation?", "Confirm",
+							JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 				//if user confirmed, or no other existing simulation.
 				if (confirmed == JOptionPane.YES_OPTION)
 				{         
 					//handle and check all parameters specified via user-input.
 					if(!numOrgsTxtBox.getText().equals("")){
-						OptionsPanel.numOrganisms = Integer.parseInt(numOrgsTxtBox.getText());
+						try{
+							OptionsPanel.numOrganisms = Integer.parseInt(numOrgsTxtBox.getText());
+							start.setText("New");
+			        		toggleEnabled(true);
+				        	gui.enableJMenuItemPause();
+							simulation.initialize();
+							simulation.start();
+						}
+						catch(NumberFormatException e){
+							numOrgsLbl.setText("Invalid Entry");
+						}
+						catch(Exception e){
+							numOrgsLbl.setText("Unknown Error");
+						}
+					}
+					else{
+						JOptionPane.showMessageDialog(gui.getContainer(),
+								"No organism size was specified!", "Message",
+								JOptionPane.OK_OPTION);
 					}
 					if(!orgWidthTxtBox.getText().equals("") 
 							|| !orgHeightTxtBox.getText().equals("")){
@@ -152,7 +150,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 			        		//if something was entered for width at least.
 			        		if(!orgWidthTxtBox.getText().equals("")){
 			        			//if input is not far too large
-					        	if(Integer.parseInt(orgWidthTxtBox.getText()) <= 100
+					        	if(Integer.parseInt(orgWidthTxtBox.getText()) <= 20
 					        			&& Integer.parseInt(orgWidthTxtBox.getText()) > 0){
 					        		//if simulation is currently running.
 					        		if(simulation.getTimer().isRunning()){
@@ -175,7 +173,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 						        	}
 					        	}
 					        	else{
-					        		orgSizeLbl.setText("Invalid! (1 <= x <= 100)");
+					        		orgSizeLbl.setText("Invalid! (1 <= x <= 20)");
 					        	}
 			        		}
 			        		else{
@@ -263,12 +261,6 @@ public class OptionsPanel extends JPanel implements Runnable{
 			        		crossoverRateLbl.setText("Unknown Error!");
 			        	}
 					}
-					
-					//finally, start simulation.
-	        		toggleEnabled(true);
-		        	gui.enableJMenuItemPause();
-					simulation.initialize();
-					simulation.start();
 				}
 			}	
 		};
@@ -294,7 +286,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 		/** # Organisms */
 		numOrgsLbl = new JLabel();
 		numOrgsLbl.setLayout(null);
-		numOrgsLbl.setText("# Organisms (2-1000):");
+		numOrgsLbl.setText("# Organisms (2-999):");
 		numOrgsLbl.setSize(150,20);
 		numOrgsLbl.setLocation(10, 60);
 		add(numOrgsLbl);
@@ -304,7 +296,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 		numOrgsTxtBox.setSize(50,20);
 		numOrgsTxtBox.setLocation(10, 80);
 		numOrgsTxtBox.setFocusable(true);
-		numOrgsTxtBox.setDocument(new JTextFieldLimit(4));
+		numOrgsTxtBox.setDocument(new JTextFieldLimit(3));
 		add(numOrgsTxtBox);
 		
 		/** Organism Size */
@@ -410,7 +402,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 	        	if(numOrgsTxtBox.isFocusOwner()){
-					numOrgsLbl.setText("# Organisms (2-1000):");
+					numOrgsLbl.setText("# Organisms (2-999):");
 	        	}
 	        	else if(orgWidthTxtBox.isFocusOwner() 
 	        			|| orgHeightTxtBox.isFocusOwner()){
@@ -462,153 +454,126 @@ public class OptionsPanel extends JPanel implements Runnable{
 		        
 		        if (key == KeyEvent.VK_ENTER) {
 		        	if(numOrgsTxtBox.isFocusOwner()){
-						try {
-							if(simulation.getTimer().isRunning()){
-								//Display confirm dialog
-								int confirmed =
-									JOptionPane.showConfirmDialog(gui.getContainer(),
-											"Begin a new simulation?", "Confirm",
-											JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-
-								//Start simulation if user confirmed
-								if (confirmed == JOptionPane.YES_OPTION)
-								{         
-									//the number of organisms given via user-input.
-									OptionsPanel.numOrganisms = Integer.parseInt(numOrgsTxtBox.getText());
-									toggleEnabled(true);
-						        	gui.enableJMenuItemPause();
-									simulation.initialize();
-									simulation.start();
-								}
-							}
-							else{
-								//first time                     
-								OptionsPanel.numOrganisms = Integer.parseInt(numOrgsTxtBox.getText());
-								start.setText("New");
-								toggleEnabled(true);
-							    gui.enableJMenuItemPause();
-								simulation.initialize();
-								simulation.start();
-							}
-						} catch (NumberFormatException a) {
-							numOrgsLbl.setText("Invalid Entry!");
-						}	
+		        		//force click start button.
+		        		start.doClick();
 		        	}
-		        	else if(orgWidthTxtBox.isFocusOwner() 
-		        			|| orgHeightTxtBox.isFocusOwner()){
-			        	try{
-			        		//if something was entered for width at least.
-			        		if(!orgWidthTxtBox.getText().equals("")){
-			        			//if input is not far too large
-					        	if(Integer.parseInt(orgWidthTxtBox.getText()) <= 100
-					        			&& Integer.parseInt(orgWidthTxtBox.getText()) > 0){
-					        		//if simulation is currently running.
-					        		if(simulation.getTimer().isRunning()){
-						        		//make organisms able to move if they are shrunk.
-							        	for(Organism o: simulation.getOrganisms()){
-							        		o.setRange(Organism.width, Organism.height, true);
+		        	if(simulation.getTimer().isRunning()){
+		        		if(orgWidthTxtBox.isFocusOwner() 
+			        			|| orgHeightTxtBox.isFocusOwner()){
+				        	try{
+				        		//if something was entered for width at least.
+				        		if(!orgWidthTxtBox.getText().equals("")){
+				        			//if input is not far too large
+						        	if(Integer.parseInt(orgWidthTxtBox.getText()) <= 20
+						        			&& Integer.parseInt(orgWidthTxtBox.getText()) > 0){
+						        		//if simulation is currently running.
+						        		if(simulation.getTimer().isRunning()){
+							        		//make organisms able to move if they are shrunk.
+								        	for(Organism o: simulation.getOrganisms()){
+								        		o.setRange(Organism.width, Organism.height, true);
+								        	}
+						        		}
+							        	
+							        	Organism.width = Integer.parseInt(orgWidthTxtBox.getText());
+							        	
+							        	//if enter was pressed, but height was not filled in.
+							        	if(!orgWidthTxtBox.getText().equals("") && orgHeightTxtBox.getText().equals("")){
+							        		//copy the width's input.
+							        		Organism.height = Integer.parseInt(orgWidthTxtBox.getText());
 							        	}
-					        		}
-						        	
-						        	Organism.width = Integer.parseInt(orgWidthTxtBox.getText());
-						        	
-						        	//if enter was pressed, but height was not filled in.
-						        	if(!orgWidthTxtBox.getText().equals("") && orgHeightTxtBox.getText().equals("")){
-						        		//copy the width's input.
-						        		Organism.height = Integer.parseInt(orgWidthTxtBox.getText());
+							        	else{
+							        		//proceed normally
+							        		Organism.height = Integer.parseInt(orgHeightTxtBox.getText());
+							        	}
 						        	}
 						        	else{
-						        		//proceed normally
-						        		Organism.height = Integer.parseInt(orgHeightTxtBox.getText());
+						        		orgSizeLbl.setText("Invalid! (1 <= x <= 20)");
 						        	}
-					        	}
-					        	else{
-					        		orgSizeLbl.setText("Invalid! (1 <= x <= 100)");
-					        	}
-			        		}
-			        		else{
-			        			orgSizeLbl.setText("Enter a Width!");
-			        		}
+				        		}
+				        		else{
+				        			orgSizeLbl.setText("Enter a Width!");
+				        		}
+				        	}
+				        	catch(NumberFormatException e){
+				        		orgSizeLbl.setText("Not a number!");
+				        	}
+				        	catch(Exception e){
+				        		orgSizeLbl.setText("Unknown Error!");
+				        	}
 			        	}
-			        	catch(NumberFormatException e){
-			        		orgSizeLbl.setText("Not a number!");
+			        	else if(mutationRateTxtBox.isFocusOwner()){
+				        	try{
+				        		if(Integer.parseInt(mutationRateTxtBox.getText()) >= 0 
+				        				&& Integer.parseInt(mutationRateTxtBox.getText()) <= 100){
+					        		simulation.getGEP().setMutProb(
+					        				(double) Integer.parseInt(mutationRateTxtBox.getText())/100);
+				        		}
+				        		else{
+				        			mutationRateLbl.setText("Number not 0 <= x <= 100");
+				        		}
+				        	}
+				        	catch(NumberFormatException e){
+				        		mutationRateLbl.setText("Not a number!");
+				        	}
+				        	catch(Exception e){
+				        		mutationRateLbl.setText("Unknown Error!");
+				        	}
 			        	}
-			        	catch(Exception e){
-			        		orgSizeLbl.setText("Unknown Error!");
+			        	else if(rotationRateTxtBox.isFocusOwner()){
+				        	try{
+				        		if(Integer.parseInt(rotationRateTxtBox.getText()) >= 0 
+				        				&& Integer.parseInt(rotationRateTxtBox.getText()) <= 100){
+					        		simulation.getGEP().setRotProb(
+					        				(double) Integer.parseInt(rotationRateTxtBox.getText())/100);
+				        		}
+				        		else{
+				        			rotationRateLbl.setText("Number not 0 <= x <= 100");
+				        		}
+				        	}
+				        	catch(NumberFormatException e){
+				        		rotationRateLbl.setText("Not a number!");
+				        	}
+				        	catch(Exception e){
+				        		rotationRateLbl.setText("Unknown Error!");
+				        	}
 			        	}
-		        	}
-		        	else if(mutationRateTxtBox.isFocusOwner()){
-			        	try{
-			        		if(Integer.parseInt(mutationRateTxtBox.getText()) >= 0 
-			        				&& Integer.parseInt(mutationRateTxtBox.getText()) <= 100){
-				        		simulation.getGEP().setMutProb(
-				        				(double) Integer.parseInt(mutationRateTxtBox.getText())/100);
-			        		}
-			        		else{
-			        			mutationRateLbl.setText("Number not 0 <= x <= 100");
-			        		}
+			        	else if(selectionRateTxtBox.isFocusOwner()){
+				        	try{
+				        		if(Integer.parseInt(selectionRateTxtBox.getText()) >= 0 
+				        				&& Integer.parseInt(selectionRateTxtBox.getText()) <= 100){
+					        		simulation.getGEP().setTournProb(
+					        				(double) Integer.parseInt(selectionRateTxtBox.getText())/100);
+				        		}
+				        		else{
+				        			selectionRateLbl.setText("Number not 0 <= x <= 100");
+				        		}
+				        	}
+				        	catch(NumberFormatException e){
+				        		selectionRateLbl.setText("Not a number!");
+				        	}
+				        	catch(Exception e){
+				        		selectionRateLbl.setText("Unknown Error!");
+				        	}
 			        	}
-			        	catch(NumberFormatException e){
-			        		mutationRateLbl.setText("Not a number!");
-			        	}
-			        	catch(Exception e){
-			        		mutationRateLbl.setText("Unknown Error!");
-			        	}
-		        	}
-		        	else if(rotationRateTxtBox.isFocusOwner()){
-			        	try{
-			        		if(Integer.parseInt(rotationRateTxtBox.getText()) >= 0 
-			        				&& Integer.parseInt(rotationRateTxtBox.getText()) <= 100){
-				        		simulation.getGEP().setRotProb(
-				        				(double) Integer.parseInt(rotationRateTxtBox.getText())/100);
-			        		}
-			        		else{
-			        			rotationRateLbl.setText("Number not 0 <= x <= 100");
-			        		}
-			        	}
-			        	catch(NumberFormatException e){
-			        		rotationRateLbl.setText("Not a number!");
-			        	}
-			        	catch(Exception e){
-			        		rotationRateLbl.setText("Unknown Error!");
-			        	}
-		        	}
-		        	else if(selectionRateTxtBox.isFocusOwner()){
-			        	try{
-			        		if(Integer.parseInt(selectionRateTxtBox.getText()) >= 0 
-			        				&& Integer.parseInt(selectionRateTxtBox.getText()) <= 100){
-				        		simulation.getGEP().setTournProb(
-				        				(double) Integer.parseInt(selectionRateTxtBox.getText())/100);
-			        		}
-			        		else{
-			        			selectionRateLbl.setText("Number not 0 <= x <= 100");
-			        		}
-			        	}
-			        	catch(NumberFormatException e){
-			        		selectionRateLbl.setText("Not a number!");
-			        	}
-			        	catch(Exception e){
-			        		selectionRateLbl.setText("Unknown Error!");
-			        	}
-		        	}
-		        	else if(crossoverRateTxtBox.isFocusOwner()){
-			        	try{
-			        		if(Integer.parseInt(crossoverRateTxtBox.getText()) >= 0 
-			        				&& Integer.parseInt(crossoverRateTxtBox.getText()) <= 100){
-				        		simulation.getGEP().setOnePtProb(
-				        				(double) Integer.parseInt(crossoverRateTxtBox.getText())/100);
-				        		simulation.getGEP().setTwoPtProb(
-				        				(double) Integer.parseInt(crossoverRateTxtBox.getText())/100);
-			        		}
-			        		else{
-			        			crossoverRateLbl.setText("Number not 0 <= x <= 100");
-			        		}
-			        	}
-			        	catch(NumberFormatException e){
-			        		crossoverRateLbl.setText("Not a number!");
-			        	}
-			        	catch(Exception e){
-			        		crossoverRateLbl.setText("Unknown Error!");
+			        	else if(crossoverRateTxtBox.isFocusOwner()){
+				        	try{
+				        		if(Integer.parseInt(crossoverRateTxtBox.getText()) >= 0 
+				        				&& Integer.parseInt(crossoverRateTxtBox.getText()) <= 100){
+					        		simulation.getGEP().setOnePtProb(
+					        				(double) Integer.parseInt(crossoverRateTxtBox.getText())/100);
+					        		simulation.getGEP().setTwoPtProb(
+					        				(double) Integer.parseInt(crossoverRateTxtBox.getText())/100);
+				        		}
+				        		else{
+				        			crossoverRateLbl.setText("Number not 0 <= x <= 100");
+				        		}
+				        	}
+				        	catch(NumberFormatException e){
+				        		crossoverRateLbl.setText("Not a number!");
+				        	}
+				        	catch(Exception e){
+				        		crossoverRateLbl.setText("Unknown Error!");
+				        	}
 			        	}
 		        	}
 		        }
@@ -730,10 +695,12 @@ public class OptionsPanel extends JPanel implements Runnable{
 		if(simulation.isPaused()){
 			simulation.start();
 			pause.setText("Pause");
+			MonitorPanel.simStatus.setText("Running");
 		}
 		else{
 			simulation.stop();
 			pause.setText("Resume");
+			MonitorPanel.simStatus.setText("Paused");
 		}
 	}
 	
