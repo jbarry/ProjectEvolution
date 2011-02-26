@@ -116,7 +116,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				//reset all labels
-				numOrgsLbl.setText("# Organisms (2-500):");
+				numOrgsLbl.setText("Population Size:");
 				orgSizeLbl.setText("Organism Size: w x h");
 				mutationRateLbl.setText("Mutation Rate (%): ");
 				rotationRateLbl.setText("Rotation Rate (%): ");
@@ -303,7 +303,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 				}
 				else{
 					JOptionPane.showMessageDialog(gui.getContainer(),
-							"No organism size was specified!", "Message",
+							"No population size was specified!", "Message",
 							JOptionPane.OK_OPTION);
 				}
 			}	
@@ -330,7 +330,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 		/** # Organisms */
 		numOrgsLbl = new JLabel();
 		numOrgsLbl.setLayout(null);
-		numOrgsLbl.setText("# Organisms (2-500):");
+		numOrgsLbl.setText("Population Size:");
 		numOrgsLbl.setSize(150,20);
 		numOrgsLbl.setLocation(10, 60);
 		add(numOrgsLbl);
@@ -446,7 +446,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 	        	if(numOrgsTxtBox.isFocusOwner()){
-					numOrgsLbl.setText("# Organisms (2-500):");
+					numOrgsLbl.setText("Population Size:");
 	        	}
 	        	else if(orgWidthTxtBox.isFocusOwner() 
 	        			|| orgHeightTxtBox.isFocusOwner()){
@@ -498,7 +498,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 		        
 		        if (key == KeyEvent.VK_ENTER) {
 					//reset all labels
-					numOrgsLbl.setText("# Organisms (2-500):");
+					numOrgsLbl.setText("Population Size:");
 					orgSizeLbl.setText("Organism Size: w x h");
 					mutationRateLbl.setText("Mutation Rate (%): ");
 					rotationRateLbl.setText("Rotation Rate (%): ");
@@ -532,12 +532,19 @@ public class OptionsPanel extends JPanel implements Runnable{
 							        		Organism.height = Integer.parseInt(orgWidthTxtBox.getText());
 							        	}
 							        	else{
-							        		//proceed normally
-							        		Organism.height = Integer.parseInt(orgHeightTxtBox.getText());
+							        		//height was filled in
+							        		if(Integer.parseInt(orgHeightTxtBox.getText()) <= 20
+								        			&& Integer.parseInt(orgHeightTxtBox.getText()) > 0){
+							        			Organism.height = Integer.parseInt(orgHeightTxtBox.getText());
+							        		}
+							        		else{
+							        			orgSizeLbl.setText("Number not 1 <= x <= 20");
+							        			return;
+							        		}
 							        	}
 						        	}
 						        	else{
-						        		orgSizeLbl.setText("Invalid! (1 <= x <= 20)");
+						        		orgSizeLbl.setText("Number not 1 <= x <= 20");
 						        	}
 				        		}
 				        		else{
