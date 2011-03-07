@@ -663,7 +663,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 		add(timeStepSelectionLbl);
 		
 	    timeStepSelectionSldr = new JSlider(JSlider.HORIZONTAL,
-                0, 600, simulation.getCurrTimeStep());
+                1, 600, simulation.getCurrTimeStep());
 	    timeStepSelectionSldr.setLayout(null);
 	    timeStepSelectionSldr.setEnabled(false);
 	    timeStepSelectionSldr.setSize(180,50);
