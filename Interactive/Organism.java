@@ -43,7 +43,7 @@ public class Organism {
 		setWrapAround(width, height);
 		setRange(width, height, false);
 		
-		chromosome = new Chromosome(4);
+		chromosome = new Chromosome(5);
 		fitness=0.0;
 	}
 

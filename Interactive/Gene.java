@@ -31,10 +31,10 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 		nonTerminals.add('/');
 		nonTerminals.add('-');
 		nonTerminals.add('+');
-		terminals.add('x');
-		terminals.add('y');
-		terminals.add('z');
-		terminals.add('w');
+		terminals.add('a');
+		terminals.add('b');
+		terminals.add('c');
+		terminals.add('d');
 		ran = new Random();
 		ArrayList<Integer> indexChoices = new ArrayList<Integer>();
 		Character[] finiteList = new Character[lenGenes];

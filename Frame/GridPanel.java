@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
 import Interactive.Pair;
@@ -33,6 +34,7 @@ public class GridPanel extends JPanel implements Runnable
 	//------------------------------------------------------------------------------------
 	public final static int WIDTH = 600;
 	public final static int HEIGHT = 400;
+	protected static final int sightRange = 100;
 
 	public static boolean[][] isValidLocation;
 
@@ -396,14 +398,14 @@ public class GridPanel extends JPanel implements Runnable
 					}
 
 					for(HealthyFood h: healthyFoodSources){
-						//h.deplete();
+						h.deplete();
 					}
 
 					for(PoisonousFood p: poisonousFoodSources){
-						//p.deplete();
+						p.deplete();
 					}
 
-					repaint();
+					
 
 					//Begin AI logic. ROUGH
 					//TODO: make org find its way to closest food source.
@@ -432,6 +434,73 @@ public class GridPanel extends JPanel implements Runnable
 //							result.evaluate(environment);
 //						}
 //					}
+					
+					/*Dwight's AI LOGIC
+					 * Should work pretty well, needs to be tested. EDIT: Mad slow.
+					 * Genes are set as North-South-East-West-Eat.
+					 * Each gene gets checked for however many food sources are in their sight range.
+					 *
+					Collections.shuffle(organisms);
+					for(Organism org: organisms){
+						if(org.getHealth() > 0){
+							Chromosome chrom = org.getChromosome();
+							ArrayList<Food> sight = new ArrayList<Food>();
+							ArrayList<Double> decisions = new ArrayList<Double>();
+							sight = getSight(org);
+							double orgX = org.getLocation().getX();
+							double orgY = org.getLocation().getY();
+							double health = org.getHealth();
+							for(int i = 0;i < chrom.size();i++){
+								Gene workingGene = chrom.getGene(i);
+								if(sight.size()>0){ //if there is something in org's field of vision.
+									double max =0;
+									for(int j = 0;j < sight.size(); j++){
+										HashMap<String, Double> environment = new HashMap<String, Double>();
+										Food f = sight.get(j);
+										double fX=f.getLocation().getX();
+										double fY=f.getLocation().getY();
+										double orgNear = f.numSurroundingObjects(5);
+										Expr result = Eval.evaluation(workingGene.makeStringArray());
+										environment.put("a", fX-orgX);
+										environment.put("b", orgY-fY);
+										environment.put("c", orgNear);
+										environment.put("d", health);
+										if(result.evaluate(environment) > max){
+											max = result.evaluate(environment);
+										}
+									}
+									decisions.add(max);
+								}
+								else{ //if there isn't anything in org's field of vision. These numbers need to be worked out.
+									Expr result = Eval.evaluation(workingGene.makeStringArray());
+									HashMap<String,Double> environment = new HashMap<String, Double>();
+									environment.put("a", 1000.0); // not sure what to pass
+									environment.put("b", 1000.0); // not sure what to pass
+									environment.put("c", 0.0);
+									environment.put("d", health);
+									decisions.add(result.evaluate(environment));
+								}
+							}
+							int decision = 0;
+							int best = Integer.MIN_VALUE;
+							for(int i = 0 ; i<decisions.size();i++){
+								if(decisions.get(i) > best){
+									best = i;
+								}
+							}
+							switch(best){
+							case 0: org.moveNorth(organisms); break;
+							case 1: org.moveSouth(organisms); break;
+							case 2: org.moveEast(organisms); break;
+							case 3: org.moveWest(organisms); break;
+							case 4: if(organismIsNextToHealthyFood(org) || organismIsNextToPoisonousFood(org));
+							}
+						}
+					}
+					//End AI LOGIC*/
+					repaint();
+					
+					
 				} else if (trialNum < trialsPerGen) {
 					t.stop();
 					for(Organism o: organisms){
@@ -476,6 +545,26 @@ public class GridPanel extends JPanel implements Runnable
 					repaint();
 				}
 			}
+
+			private ArrayList<Food> getSight(Organism org) {
+				ArrayList<Food> toReturn = new ArrayList<Food>();
+				Coordinate orgCoord = org.getLocation();
+				int orgX= orgCoord.getX();
+				int orgY= orgCoord.getY();
+				for(Food f : healthyFoodSources){
+					if(Math.abs(orgX-f.getLocation().getX()) <= sightRange || Math.abs(orgY-f.getLocation().getY()) <= sightRange ){
+						toReturn.add(f);
+					}
+				}
+				for(Food f : poisonousFoodSources){
+					if(Math.abs(orgX-f.getLocation().getX()) <= sightRange || Math.abs(orgY-f.getLocation().getY()) <= sightRange ){
+						toReturn.add(f);
+					}
+				}
+				
+				return toReturn;
+			}
+
 
 			//TODO: Can organism differentiate bw pois and non
 			//pois?
