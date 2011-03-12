@@ -127,7 +127,7 @@ public class GUI {
 		jframe.addMouseListener(frameMouseListener);
 		
 		/**Create Game Grid Panel*/
-		simulation = new GridPanel();
+		simulation = new GridPanel(this);
 		jframe.add(simulation);
 		
 		/**Create Options Panel*/
@@ -139,7 +139,7 @@ public class GUI {
 		jframe.add(monitorPanel);
 		
 		/**Create Generation Panel*/
-		genPanel = new GenerationPanel(simulation);
+		genPanel = new GenerationPanel(simulation, this);
 		jframe.add(genPanel);
 		
 		/**Create Menu*/
@@ -160,6 +160,7 @@ public class GUI {
 				//initialize GridPanel.
 				if(!getGridPanelData(e)){
 					pause.setEnabled(true);
+					genPanel.enableStopButton();
 					
 					simulation.initialize();
 					simulation.start();
@@ -300,8 +301,22 @@ public class GUI {
 		return userCancel;
 	}
 	
+	public void disableAllPauses(){
+		pause.setEnabled(false);
+		optionsPanel.disablePause();
+	}
+	
+	public void enableAllPauses(){
+		pause.setEnabled(true);
+		optionsPanel.enablePause();
+	}
+	
 	public void enableJMenuItemPause(){
 		pause.setEnabled(true);
+	}
+	
+	public void enableStopGenButton(){
+		genPanel.enableStopButton();
 	}
 	
 	private void confirmExit() {
