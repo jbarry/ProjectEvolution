@@ -35,7 +35,8 @@ public class GenerationPanel extends JPanel{
 	
 	private JLabel genTitle;
 	
-	private JTextArea currentGeneration;
+	public static JTextArea currentGeneration;
+	
 	private JTextArea pastGenerations;
 	private JTextArea pastGenStats;
 	

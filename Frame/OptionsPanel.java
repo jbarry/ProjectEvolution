@@ -281,6 +281,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 								//everything checks out, start simulation.
 								OptionsPanel.numOrganisms = Integer.parseInt(numOrgsTxtBox.getText());
 								start.setText("New");
+								//Make sure pause is set correctly.
 								MonitorPanel.simStatus.setText("Running");
 								pause.setText("Pause");
 								toggleEnabled(true);
