@@ -211,6 +211,15 @@ public class GenerationPanel extends JPanel{
 		return false;
 	}
 	
+	public void resetGenInformation(){
+		pastGenStats.setText("");
+		canStopTheSim = true;
+		stopGenButton.setEnabled(true);
+		stopTrialButton.setEnabled(true);
+		stopGenerationOrTrial.setText("Stop");
+		stopGenButton.setSelected(true);
+	}
+	
 	public void newTrial(){
 		currentGeneration.setText(" Current Generation: " + sim.generationNum);
 		currentGeneration.append("\n" + " Current Trial: " + sim.trialNum);
