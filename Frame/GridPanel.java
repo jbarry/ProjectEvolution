@@ -41,7 +41,7 @@ public class GridPanel extends JPanel
 	private LinkedList<Organism> organisms;
 	private LinkedList<HealthyFood> healthyFoodSources;
 	private LinkedList<PoisonousFood> poisonousFoodSources;
-	private int lengthTimeStep=50;
+	private int lengthTimeStep=100;
 	private int lengthGeneration=lengthTimeStep*100;
 	private int timePassed=0;
 	private int trialsPerGen=1;
@@ -184,25 +184,26 @@ public class GridPanel extends JPanel
 						if(timePassed < lengthGeneration) {
 							/*begin game logic here:*/
 							timePassed+=lengthTimeStep;
-							//							for(HealthyFood h: healthyFoodSources){
-							//								h.deplete();
-							//							}
-							//
-							//							for(PoisonousFood p: poisonousFoodSources){
-							//								p.deplete();
-							//							}
+							/*
+							for(HealthyFood h: healthyFoodSources){
+								h.deplete();
+							}
 
+							for(PoisonousFood p: poisonousFoodSources){
+								p.deplete();
+							}
+							*/
+							
 							//Dwight's AI LOGIC
 							// * Should work pretty well, needs to be tested. EDIT: Mad slow.
 							// * Genes are set as N-S-E-W-NE-NW-SE-SW-Eat.
 							// * Each gene gets checked for however many food sources are in their sight range.
-							// * TODO: Fitness function needs reworking. 
+							// * TODO: Fitness function needs reworking.
 							Collections.shuffle(organisms);
 							for(Organism org: organisms){
 								org.depleteHealth();
 								//Take sample of organism health for fitness.
-								//TODO: added (03.13) justin.
-								org.updateAvgHealth();
+								org.updateAvgHealth(); //TODO: added (03.13) justin.
 								if(org.getHealth() > 0){
 									Chromosome chrom = org.getChromosome();
 									ArrayList<Food> sight = new ArrayList<Food>();
@@ -477,11 +478,11 @@ public class GridPanel extends JPanel
 		int upperBoundary = org.getLocation().getY() - Food.height/2;
 
 		boolean isNextToFood = false;
-		for(HealthyFood foodList: healthyFoodSources){
-			int leftBoundary2 = foodList.getLocation().getX() - Organism.width/2 - 1;
-			int rightBoundary2 = foodList.getLocation().getX() + Organism.width/2 + 1;
-			int lowerBoundary2 = foodList.getLocation().getY() + Organism.height/2 + 1;
-			int upperBoundary2 = foodList.getLocation().getY() - Organism.height/2 - 1;
+		for(HealthyFood food: healthyFoodSources){
+			int leftBoundary2 = food.getLocation().getX() - Organism.width/2 - 1;
+			int rightBoundary2 = food.getLocation().getX() + Organism.width/2 + 1;
+			int lowerBoundary2 = food.getLocation().getY() + Organism.height/2 + 1;
+			int upperBoundary2 = food.getLocation().getY() - Organism.height/2 - 1;
 
 			if((leftBoundary >= leftBoundary2 && leftBoundary <= rightBoundary2 &&
 					((upperBoundary >= upperBoundary2 && upperBoundary <= lowerBoundary2) ||
@@ -492,10 +493,10 @@ public class GridPanel extends JPanel
 				/*
 				 * Organism is next to food
 				 */
-				org.eatFood(foodList);
-				if(foodList.getFoodRemaining() <= 0){
+				org.eatFood(food);
+				if(food.getFoodRemaining() <= 0){ //TODO: may not need this. GridPanel does this.
 					//Delete food source if it is depleted
-					healthyFoodSources.remove(foodList);
+					healthyFoodSources.remove(food);
 				}
 				isNextToFood = true;
 				break;

@@ -17,10 +17,11 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 	private List<Character> nonTerminals;
 	private int lenGenes;
 	//Possible variable meanings:
-	//x.Amount of health left
-	//y.Number of organisms around food
-	//z.distance to food
-	//w.Amount of food left in food source.
+	//Amount of health left.
+	//Number of organisms around food.
+	//distance to food.
+	//Amount of food left in food source.
+	//Rate at which health is decreasing.
 	public Gene(int aLenGenes) {
 		lenGenes = aLenGenes;
 		symList = new LinkedList<Character>();
