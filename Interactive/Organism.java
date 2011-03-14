@@ -283,11 +283,12 @@ public class Organism {
 		setRange(width, height, false);
 	}
 	
-	public void eatFood(Food f){
+	public void eatFood(Food f, int orgHealth){
 		f.deplete();
+		System.out.println("depleted!");
 		if(f instanceof HealthyFood){
-			if(health<7500 && health>7499){
-				health = 7500;
+			if(health < orgHealth && health > (orgHealth - 1)){
+				health = orgHealth;
 			}
 			else if(health<=99){
 				health += 1;
