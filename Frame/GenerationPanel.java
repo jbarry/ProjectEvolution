@@ -35,7 +35,8 @@ public class GenerationPanel extends JPanel{
 	
 	private JLabel genTitle;
 	
-	private JTextArea currentGeneration;
+	public static JTextArea currentGeneration;
+	
 	private JTextArea pastGenerations;
 	private JTextArea pastGenStats;
 	
@@ -208,6 +209,15 @@ public class GenerationPanel extends JPanel{
 			return true;
 		}
 		return false;
+	}
+	
+	public void resetGenInformation(){
+		pastGenStats.setText("");
+		canStopTheSim = true;
+		stopGenButton.setEnabled(true);
+		stopTrialButton.setEnabled(true);
+		stopGenerationOrTrial.setText("Stop");
+		stopGenButton.setSelected(true);
 	}
 	
 	public void newTrial(){
