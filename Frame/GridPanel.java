@@ -437,6 +437,11 @@ public class GridPanel extends JPanel
 	 * Sets the initial game state of the GridPanel
 	 */
 	public void initialize(){
+		//reset all generation info from previous simulations.
+		generationNum = 1;
+		trialNum = 1;
+		GUI.genPanel.resetGenInformation();
+		
 		timePassed=0;
 		numFoodSources = 0;
 		isValidLocation = new boolean[GridPanel.WIDTH][GridPanel.HEIGHT];
