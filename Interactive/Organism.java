@@ -26,7 +26,7 @@ public class Organism {
 	//--constructors--
 	//------------------------------------------------------------------------------------
 	public Organism() {
-		health = 100.00;
+		health = 7500.00;
 		
 		//location (x, y) is random between (0-width,0-height) exclusive
 		r = new Random();
@@ -43,14 +43,14 @@ public class Organism {
 		setWrapAround(width, height);
 		setRange(width, height, false);
 		
-		chromosome = new Chromosome(5);
+		chromosome = new Chromosome(9);
 		fitness=0.0;
 	}
 
 	//for testing purposes only.
 	//just removing the GridPanel call.
 	public Organism(boolean boo, int aChromSize) {
-		health = 100.00;
+		health = 7500.00;
 		r = new Random();
 		chromosome = new Chromosome(aChromSize);
 		fitness = 0.0;
@@ -63,7 +63,7 @@ public class Organism {
 	}
 
 	public Organism(Coordinate aLocation, Chromosome aChromosome) {
-		health = 100.0;
+		health = 7500.0;
 		location = aLocation;
 		chromosome = aChromosome;
 	}
@@ -252,8 +252,8 @@ public class Organism {
 	public void eatFood(Food f){
 		f.deplete();
 		if(f instanceof HealthyFood){
-			if(health<100 && health>99){
-				health = 100;
+			if(health<7500 && health>7499){
+				health = 7500;
 			}
 			else if(health<=99){
 				health += 1;

@@ -40,9 +40,9 @@ public class Eval{
 		// String expression = sc.nextLine();
 		// symlist.addAll(Arrays.asList(expression.split(" ")));
 
-		for (int i = 0; i < symList.size(); i++)
-			System.out.print(symList.get(i) + " ");
-		System.out.println();
+//		for (int i = 0; i < symList.size(); i++)
+//			System.out.print(symList.get(i) + " ");
+//		System.out.println();
 
 		Stack<Expr> stack = new Stack<Expr>();
 		String current;
@@ -68,10 +68,10 @@ public class Eval{
 						Expr left = stack.pop();
 						Expr right = stack.pop();
 						expr = new Add(left, right);
-						System.out.println("pushed Plus");
+//						System.out.println("pushed Plus");
 					} catch(Exception e) {
-						System.out.println("No operators for operand");
-						System.out.println(stack.size());
+//						System.out.println("No operators for operand");
+//						System.out.println(stack.size());
 						continue theLoop;
 					}
 				}
@@ -82,9 +82,9 @@ public class Eval{
 						Expr left = stack.pop();
 						Expr right = stack.pop();
 						expr = new Minus(left, right);
-						System.out.println("pushed Minus");
+//						System.out.println("pushed Minus");
 					} catch(Exception e) {
-						System.out.println("No operators for operand");
+//						System.out.println("No operators for operand");
 						continue theLoop;
 					}
 				}
@@ -95,9 +95,9 @@ public class Eval{
 						Expr left = stack.pop();
 						Expr right = stack.pop();
 						expr = new Mult(left, right);
-						System.out.println("pushed Mult");
+//						System.out.println("pushed Mult");
 					} catch(Exception e) {
-						System.out.println("No operators for operand");
+//						System.out.println("No operators for operand");
 						continue theLoop;
 					}
 				}
@@ -108,19 +108,19 @@ public class Eval{
 						Expr left = stack.pop();
 						Expr right = stack.pop();
 						expr = new Div(left, right);
-						System.out.println("pushed Div");
+//						System.out.println("pushed Div");
 					} catch(Exception e) {
-						System.out.println("No operators for operand");
+//						System.out.println("No operators for operand");
 						continue theLoop;
 					}
 				}
 			} else if (!isOp) {
 				expr = new Var(current);
-				System.out.println("pushed variable");
+//				System.out.println("pushed variable");
 			}
-			System.out.println(expr.toString());
+//			System.out.println(expr.toString());
 			stack.push(expr);//push the resulting expression back on the stack and loop.
-			System.out.println(stack.size());
+//			System.out.println(stack.size());
 		}
 
 		return stack.pop();

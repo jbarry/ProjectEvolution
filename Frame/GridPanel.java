@@ -42,9 +42,9 @@ public class GridPanel extends JPanel
 	private LinkedList<HealthyFood> healthyFoodSources;
 	private LinkedList<PoisonousFood> poisonousFoodSources;
 	private int lengthTimeStep=50;
-	private int lengthGeneration=lengthTimeStep*200;
+	private int lengthGeneration=lengthTimeStep*100;
 	private int timePassed=0;
-	private int trialsPerGen=2;
+	private int trialsPerGen=1;
 	public int trialNum=1;
 	public int generationNum=1;
 	public int lastAvg=0;
@@ -174,45 +174,48 @@ public class GridPanel extends JPanel
 				organisms = new LinkedList<Organism>();
 				healthyFoodSources = new LinkedList<HealthyFood>();
 				poisonousFoodSources = new LinkedList<PoisonousFood>();
-
+				
+				//TODO: deplete health
+				//fill in if not in sight range info.
+				//
 				//a timer and it's action event to call at every time t.
 				t = new javax.swing.Timer(lengthTimeStep, new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if(timePassed < lengthGeneration) {
 							/*begin game logic here:*/
 							timePassed+=lengthTimeStep;
-							System.out.println(timePassed);
-							for(Organism org: organisms) {
+////							System.out.println(timePassed);
+//							for(Organism org: organisms) {
+//
+//								if(organismIsNextToHealthyFood(org) || organismIsNextToPoisonousFood(org)){
+//									//organism eats food
+//								}
+//								//otherwise keep moving.
+//								else {
+//									//create new, random number 0-7 representing a movement.
+//									Random r = new Random();
+//									int movement = r.nextInt(8);
+//									//perform movement
+//									switch(movement){
+//									case 0: org.moveNorth(organisms); break;
+//									case 1: org.moveNorthEast(organisms); break;
+//									case 2: org.moveEast(organisms); break;
+//									case 3: org.moveSouthEast(organisms); break;
+//									case 4: org.moveSouth(organisms); break;
+//									case 5: org.moveSouthWest(organisms); break;
+//									case 6: org.moveWest(organisms); break;
+//									case 7: org.moveNorthWest(organisms); break;
+//									}
+//								}
+//							}
 
-								if(organismIsNextToHealthyFood(org) || organismIsNextToPoisonousFood(org)){
-									//organism eats food
-								}
-								//otherwise keep moving.
-								else {
-									//create new, random number 0-7 representing a movement.
-									Random r = new Random();
-									int movement = r.nextInt(8);
-									//perform movement
-									switch(movement){
-									case 0: org.moveNorth(organisms); break;
-									case 1: org.moveNorthEast(organisms); break;
-									case 2: org.moveEast(organisms); break;
-									case 3: org.moveSouthEast(organisms); break;
-									case 4: org.moveSouth(organisms); break;
-									case 5: org.moveSouthWest(organisms); break;
-									case 6: org.moveWest(organisms); break;
-									case 7: org.moveNorthWest(organisms); break;
-									}
-								}
-							}
-
-							for(HealthyFood h: healthyFoodSources){
-								h.deplete();
-							}
-
-							for(PoisonousFood p: poisonousFoodSources){
-								p.deplete();
-							}
+//							for(HealthyFood h: healthyFoodSources){
+//								h.deplete();
+//							}
+//
+//							for(PoisonousFood p: poisonousFoodSources){
+//								p.deplete();
+//							}
 
 
 							
@@ -244,13 +247,14 @@ public class GridPanel extends JPanel
 							//									}
 							//								}
 							
-							/*Dwight's AI LOGIC
-							 * Should work pretty well, needs to be tested. EDIT: Mad slow.
-							 * Genes are set as North-South-East-West-Eat.
-							 * Each gene gets checked for however many food sources are in their sight range.
-							 *
+//							Dwight's AI LOGIC
+//							 * Should work pretty well, needs to be tested. EDIT: Mad slow.
+//							 * Genes are set as N-S-E-W-NE-NW-SE-SW-Eat.
+//							 * Each gene gets checked for however many food sources are in their sight range.
+//							 * TODO: Fitness function needs reworking. 
 							Collections.shuffle(organisms);
 							for(Organism org: organisms){
+								org.setHealth((int) (org.getHealth()-1));
 								if(org.getHealth() > 0){
 									Chromosome chrom = org.getChromosome();
 									ArrayList<Food> sight = new ArrayList<Food>();
@@ -259,20 +263,20 @@ public class GridPanel extends JPanel
 									double orgX = org.getLocation().getX();
 									double orgY = org.getLocation().getY();
 									double health = org.getHealth();
-									for(int i = 0;i < chrom.size();i++){
+									for (int i = 0; i < chrom.size(); i++) {
 										Gene workingGene = chrom.getGene(i);
 										if(sight.size()>0){ //if there is something in org's field of vision.
 											double max =0;
 											for(int j = 0;j < sight.size(); j++){
 												HashMap<String, Double> environment = new HashMap<String, Double>();
 												Food f = sight.get(j);
-												double fX=f.getLocation().getX();
-												double fY=f.getLocation().getY();
-												double orgNear = f.numSurroundingObjects(5);
+												double foodX=f.getLocation().getX();
+												double foodY=f.getLocation().getY();
+												double orgNearFood = f.numSurroundingObjects(5);
 												Expr result = Eval.evaluation(workingGene.makeStringArray());
-												environment.put("a", fX-orgX);
-												environment.put("b", orgY-fY);
-												environment.put("c", orgNear);
+												environment.put("a", foodX-orgX);
+												environment.put("b", orgY-foodY);
+												environment.put("c", orgNearFood);
 												environment.put("d", health);
 												if(result.evaluate(environment) > max){
 													max = result.evaluate(environment);
@@ -280,33 +284,41 @@ public class GridPanel extends JPanel
 											}
 											decisions.add(max);
 										}
-										else{ //if there isn't anything in org's field of vision. These numbers need to be worked out.
+										//TODO: if there isn't anything in org's field of vision. 
+										//These numbers need to be worked out.
+										else { 
 											Expr result = Eval.evaluation(workingGene.makeStringArray());
 											HashMap<String,Double> environment = new HashMap<String, Double>();
-											environment.put("a", 1000.0); // not sure what to pass
-											environment.put("b", 1000.0); // not sure what to pass
+											environment.put("a", 10.0); // not sure what to pass
+											environment.put("b", 10.0); // not sure what to pass
 											environment.put("c", 0.0);
 											environment.put("d", health);
 											decisions.add(result.evaluate(environment));
 										}
 									}
 									int decision = 0;
-									int best = Integer.MIN_VALUE;
-									for(int i = 0 ; i<decisions.size();i++){
+									double best=decisions.get(0);
+									for(int i = 1 ; i<decisions.size();i++){
 										if(decisions.get(i) > best){
-											best = i;
+											decision = i;
+											best=decisions.get(i);
 										}
 									}
-									switch(best){
+									//System.out.println(decision);
+									switch(decision){
 									case 0: org.moveNorth(organisms); break;
 									case 1: org.moveSouth(organisms); break;
 									case 2: org.moveEast(organisms); break;
 									case 3: org.moveWest(organisms); break;
-									case 4: if(organismIsNextToHealthyFood(org) || organismIsNextToPoisonousFood(org));
+									case 4: org.moveNorthEast(organisms); break;
+									case 5: org.moveNorthWest(organisms); break;
+									case 6: org.moveSouthEast(organisms); break;
+									case 7: org.moveSouthWest(organisms); break;
+									case 8: if(organismIsNextToHealthyFood(org) || organismIsNextToPoisonousFood(org));
 									}
 								}
 							}
-							//End AI LOGIC*/
+							//End AI LOGIC
 							repaint();
 							
 							
@@ -314,6 +326,7 @@ public class GridPanel extends JPanel
 							t.stop();
 							for(Organism o: organisms){
 								o.newLocation();
+								o.setHealth(7500);
 							}
 							trialNum++;
 							healthyFoodSources.clear();
@@ -347,7 +360,9 @@ public class GridPanel extends JPanel
 							organisms=g.newGeneration();
 							healthyFoodSources.clear();
 							poisonousFoodSources.clear();
-
+							for(Organism o: organisms){
+								o.setHealth(7500);
+							}
 							for(int i=0; i<OptionsPanel.numOrganisms/2; i++){
 								HealthyFood h = new HealthyFood();
 								PoisonousFood f = new PoisonousFood();
@@ -377,12 +392,14 @@ public class GridPanel extends JPanel
 						int orgX= orgCoord.getX();
 						int orgY= orgCoord.getY();
 						for(Food f : healthyFoodSources){
-							if(Math.abs(orgX-f.getLocation().getX()) <= sightRange || Math.abs(orgY-f.getLocation().getY()) <= sightRange ){
+							if(Math.abs(orgX-f.getLocation().getX()) <= sightRange ||
+									Math.abs(orgY-f.getLocation().getY()) <= sightRange ){
 								toReturn.add(f);
 							}
 						}
 						for(Food f : poisonousFoodSources){
-							if(Math.abs(orgX-f.getLocation().getX()) <= sightRange || Math.abs(orgY-f.getLocation().getY()) <= sightRange ){
+							if(Math.abs(orgX-f.getLocation().getX()) <= sightRange ||
+									Math.abs(orgY-f.getLocation().getY()) <= sightRange ){
 								toReturn.add(f);
 							}
 						}
