@@ -254,15 +254,40 @@ public class GridPanel extends JPanel
 									}
 									//System.out.println(decision);
 									switch (decision) {
-									case 0: org.moveNorth(organisms); break;
-									case 1: org.moveSouth(organisms); break;
-									case 2: org.moveEast(organisms); break;
-									case 3: org.moveWest(organisms); break;
-									case 4: org.moveNorthEast(organisms); break;
-									case 5: org.moveNorthWest(organisms); break;
-									case 6: org.moveSouthEast(organisms); break;
-									case 7: org.moveSouthWest(organisms); break;
-									case 8: if(organismIsNextToHealthyFood(org) || organismIsNextToPoisonousFood(org));
+									case 0: 
+										org.moveNorth(organisms);
+										org.countStep();
+										break;
+									case 1: 
+										org.moveSouth(organisms);
+										org.countStep();
+										break;
+									case 2: 
+										org.moveEast(organisms); 
+										org.countStep();
+										break;
+									case 3: 
+										org.moveWest(organisms);
+										org.countStep();
+										break;
+									case 4: 
+										org.moveNorthEast(organisms);
+										org.countStep();
+										break;
+									case 5: 
+										org.moveNorthWest(organisms);
+										org.countStep();
+										break;
+									case 6: 
+										org.moveSouthEast(organisms);
+										org.countStep();
+										break;
+									case 7: 
+										org.moveSouthWest(organisms);
+										org.countStep();
+										break;
+									case 8: if(organismIsNextToHealthyFood(org)
+											|| organismIsNextToPoisonousFood(org));
 									}
 								}
 							}

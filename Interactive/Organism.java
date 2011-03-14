@@ -18,6 +18,7 @@ public class Organism {
 	private double avgHealth;
 	private double healthTot;
 	private int samples;
+	private int steps;
 	private Coordinate location;
 	private Chromosome chromosome;
 	//TODO: fitness instance variable.
@@ -33,6 +34,7 @@ public class Organism {
 		samples = 0;
 		avgHealth = 0;
 		healthTot = 0;
+		steps = 0;
 		//location (x, y) is random between (0-width,0-height) exclusive
 		r = new Random();
 		int x = r.nextInt(GridPanel.WIDTH);
@@ -139,6 +141,10 @@ public class Organism {
 	
 	public void calcAvgHealth() {
 		avgHealth = healthTot/samples;
+	}
+	
+	public void countStep() {
+		steps++;
 	}
 	//------------------------------------------------------------------------------------
 	//--accessors/mutators--
