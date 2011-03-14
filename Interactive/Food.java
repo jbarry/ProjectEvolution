@@ -20,7 +20,7 @@ public class Food {
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
-	public Food(){
+	public Food() {
 		//set location
 		r = new Random();
 		int x = r.nextInt(GridPanel.WIDTH);

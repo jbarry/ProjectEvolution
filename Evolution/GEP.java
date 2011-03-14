@@ -175,6 +175,13 @@ public class GEP {
 	 * @param org - a single organism to be assessed.
 	 * @return a double representing the evaluated fitness of the organism.
 	 */
+	//TODO: fitness function idea
+	//average health throughout the generation. ie., take
+	//samples of an org's health at time periods. Then take
+	//average.
+	//number of steps travelled. Essentially, org's that 
+	//have higher health with travelling short distances are more fit.
+	//
 	public double fitness(Organism org) {
 		return org.getHealth();
 	}

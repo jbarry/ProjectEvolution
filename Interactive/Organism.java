@@ -15,6 +15,9 @@ public class Organism {
 	public static int height = 5;
 	
 	private double health;
+	private double avgHealth;
+	private double healthTot;
+	private int samples;
 	private Coordinate location;
 	private Chromosome chromosome;
 	//TODO: fitness instance variable.
@@ -27,7 +30,9 @@ public class Organism {
 	//------------------------------------------------------------------------------------
 	public Organism() {
 		health = 7500.00;
-		
+		samples = 0;
+		avgHealth = 0;
+		healthTot = 0;
 		//location (x, y) is random between (0-width,0-height) exclusive
 		r = new Random();
 		int x = r.nextInt(GridPanel.WIDTH);
@@ -96,7 +101,7 @@ public class Organism {
 	}
 	
 	public void setChromosome(Chromosome aChrom){
-		chromosome=aChrom;
+		chromosome = aChrom;
 	}
 	
 	public double getFitness() {
@@ -104,7 +109,7 @@ public class Organism {
 	}
 
 	public void setFitness(double aFit) {
-		fitness=aFit;
+		fitness = aFit;
 	}
 
 	public double getHealth() {
@@ -112,10 +117,29 @@ public class Organism {
 	}
 	
 	public void setHealth(int aHealth) {
-		health=aHealth;
-		
+		health = aHealth;
 	}
 	
+	public void depleteHealth() {
+		health--;
+	}
+	
+	public void setAvgHealth(double aAvg) {
+		avgHealth = aAvg;
+	}
+	
+	public void updateAvgHealth() {
+		healthTot+=health;
+		samples++;
+	}
+	
+	public double getAvgHealth() {
+		return avgHealth;
+	}
+	
+	public void calcAvgHealth() {
+		avgHealth = healthTot/samples;
+	}
 	//------------------------------------------------------------------------------------
 	//--accessors/mutators--
 	//------------------------------------------------------------------------------------
