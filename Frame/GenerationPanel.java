@@ -126,7 +126,7 @@ public class GenerationPanel extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(!canStopTheSim){
-					gui.enableAllPauses();
+					gui.toggleAllPauses(true);
 				}
 				eventStopGenerationOrTrial(simulation);
 			}
