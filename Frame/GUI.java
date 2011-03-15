@@ -147,7 +147,7 @@ public class GUI {
 		jframe.addMouseListener(frameMouseListener);
 
 		/** Create Game Grid Panel */
-		simulation = new GridPanel();
+		simulation = new GridPanel(this);
 		jframe.add(simulation);
 
 		/** Create Options Panel */
