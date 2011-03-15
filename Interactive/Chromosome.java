@@ -10,11 +10,6 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 
 	private List<Gene> chromosome;
 	private Random ran;
-	private int xPos;
-	private int yPos;
-	private int zPos;
-	public static final int MOVEFOOD = 0;
-	public static final int MOVERANDOM = 1;
 	public static final int EAT = 2;
 	
 	//Default ctor.
@@ -23,20 +18,6 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 		chromosome = new LinkedList<Gene>();
 		for (int i = 0; i < numGenes; i++)
 			chromosome.add(new Gene(10));
-	}
-
-	//TODO: find symbols position and update this class when found.
-	public int symPos(char symbol) {
-		if(symbol == 'x') return xPos;
-		if(symbol == 'y') return yPos;
-		if(symbol == 'z') return zPos;
-		return -1;
-	}
-	
-	//TODO: call after selection, etc to reinitialize variable
-	//positions.
-	public void redoPositions() {
-		
 	}
 	
 	//For testing purposes of the GEP class.
