@@ -317,7 +317,7 @@ public class GridPanel extends JPanel
 							timePassed=0;
 							if(!GUI.genPanel.resumeHasNotBeenClicked() && !GUI.genPanel.genIsSelected()){
 								GUI.genPanel.enableResumeSimulation();
-								gui.disableAllPauses();
+								gui.toggleAllPauses(false);
 							}
 							else{
 								t.start();
@@ -353,7 +353,7 @@ public class GridPanel extends JPanel
 							GUI.genPanel.addGeneration();
 							if(!GUI.genPanel.resumeHasNotBeenClicked()){
 								GUI.genPanel.enableResumeSimulation();
-								gui.disableAllPauses();
+								gui.toggleAllPauses(false);
 							}
 							else{
 								t.start();
