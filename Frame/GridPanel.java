@@ -317,7 +317,7 @@ public class GridPanel extends JPanel
 							timePassed=0;
 							if(!GUI.genPanel.resumeHasNotBeenClicked() && !GUI.genPanel.genIsSelected()){
 								GUI.genPanel.enableResumeSimulation();
-								gui.disableAllPauses();
+								gui.toggleAllPauses(false);
 							}
 							else{
 								t.start();
@@ -353,7 +353,7 @@ public class GridPanel extends JPanel
 							GUI.genPanel.addGeneration();
 							if(!GUI.genPanel.resumeHasNotBeenClicked()){
 								GUI.genPanel.enableResumeSimulation();
-								gui.disableAllPauses();
+								gui.toggleAllPauses(false);
 							}
 							else{
 								t.start();
@@ -437,6 +437,11 @@ public class GridPanel extends JPanel
 	 * Sets the initial game state of the GridPanel
 	 */
 	public void initialize(){
+		//reset all generation info from previous simulations.
+		generationNum = 1;
+		trialNum = 1;
+		GUI.genPanel.resetGenInformation();
+		
 		timePassed=0;
 		numFoodSources = 0;
 		isValidLocation = new boolean[GridPanel.WIDTH][GridPanel.HEIGHT];
@@ -493,7 +498,7 @@ public class GridPanel extends JPanel
 				/*
 				 * Organism is next to food
 				 */
-				org.eatFood(food);
+				org.eatFood(food, 7500);
 				if(food.getFoodRemaining() <= 0){ //TODO: may not need this. GridPanel does this.
 					//Delete food source if it is depleted
 					healthyFoodSources.remove(food);
@@ -534,7 +539,7 @@ public class GridPanel extends JPanel
 				/*
 				 * Organism is next to food
 				 */
-				org.eatFood(foodList);
+				org.eatFood(foodList, 7500);
 				if(foodList.getFoodRemaining() <= 0){
 					//Delete food source if it is depleted
 					poisonousFoodSources.remove(foodList);

@@ -126,7 +126,7 @@ public class GenerationPanel extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(!canStopTheSim){
-					gui.enableAllPauses();
+					gui.toggleAllPauses(true);
 				}
 				eventStopGenerationOrTrial(simulation);
 			}
@@ -218,6 +218,9 @@ public class GenerationPanel extends JPanel{
 		stopTrialButton.setEnabled(true);
 		stopGenerationOrTrial.setText("Stop");
 		stopGenButton.setSelected(true);
+		
+		currentGeneration.setText("  Current Generation: " + sim.generationNum);
+		currentGeneration.append("\n" + "  Current Trial: " + sim.trialNum);
 	}
 	
 	public void newTrial(){
