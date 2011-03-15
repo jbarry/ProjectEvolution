@@ -15,6 +15,7 @@ public class Organism {
 	public static int height = 5;
 	
 	private double health;
+	private double maxHealth;
 	private double avgHealth;
 	private double healthTot;
 	private int samples;
@@ -31,6 +32,7 @@ public class Organism {
 	//------------------------------------------------------------------------------------
 	public Organism() {
 		health = 7500.00;
+		maxHealth = 7500.00;
 		samples = 0;
 		avgHealth = 0;
 		healthTot = 0;
@@ -56,6 +58,7 @@ public class Organism {
 
 	public Organism(double aHealth, int chromSize) {
 		health = aHealth;
+		maxHealth = aHealth;
 		chromosome = new Chromosome(chromSize);
 		samples = 0;
 		avgHealth = 0;
@@ -139,6 +142,10 @@ public class Organism {
 
 	public double getHealth() {
 		return health;
+	}
+	
+	public double getMaxHealth() {
+		return maxHealth;
 	}
 	
 	public void setHealth(int aHealth) {
@@ -306,7 +313,7 @@ public class Organism {
 		setRange(width, height, false);
 	}
 	
-	public void eatFood(Food f, int orgHealth){
+	public void eatFood(Food f, double orgHealth){
 		f.deplete();
 		System.out.println("depleted!");
 		if(f instanceof HealthyFood){

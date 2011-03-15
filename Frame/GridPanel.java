@@ -498,8 +498,8 @@ public class GridPanel extends JPanel
 				/*
 				 * Organism is next to food
 				 */
-				org.eatFood(food, 7500);
-				if(food.getFoodRemaining() <= 0){ //TODO: may not need this. GridPanel does this.
+				org.eatFood(food, org.getMaxHealth());
+				if(food.getFoodRemaining() <= 0){ //TODO: may not need this. GridPanel may handle this already.
 					//Delete food source if it is depleted
 					healthyFoodSources.remove(food);
 				}

@@ -59,6 +59,7 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 		}
 	}
 	
+	//Ctor that does not inform the init of the genes.
 	public Gene(boolean boo, int aLenGenes) {
 		lenGenes = aLenGenes;
 		symList = new LinkedList<Character>();
