@@ -353,15 +353,11 @@ public class GUI {
 		saveGenes.setEnabled(true);
 	}
 	
-	public void disableAllPauses(){
-		pause.setEnabled(false);
-		optionsPanel.disablePause();
+	public void toggleAllPauses(boolean b){
+		pause.setEnabled(b);
+		optionsPanel.togglePause(b);
 	}
-	
-	public void enableAllPauses(){
-		pause.setEnabled(true);
-		optionsPanel.enablePause();
-	}
+
 	
 	public void enableStopGenButton(){
 		genPanel.enableStopButton();
