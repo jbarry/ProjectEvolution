@@ -751,17 +751,10 @@ public class OptionsPanel extends JPanel implements Runnable{
 	}
 	
 	//------------------------------------------------------------------------------------
-	//--method called in GUI to disable pause button visibility--
+	//--method called in GUI to toggle pause button visibility--
 	//------------------------------------------------------------------------------------
-	public void disablePause(){
-		pause.setEnabled(false);
-	}
-	
-	//------------------------------------------------------------------------------------
-	//--method called in GUI to enable pause button visibility--
-	//------------------------------------------------------------------------------------
-	public void enablePause(){
-		pause.setEnabled(true);
+	public void togglePause(boolean b){
+		pause.setEnabled(b);
 	}
 	
 	//------------------------------------------------------------------------------------
