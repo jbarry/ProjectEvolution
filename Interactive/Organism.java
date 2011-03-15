@@ -54,6 +54,29 @@ public class Organism {
 		fitness=0.0;
 	}
 
+	public Organism(double aHealth, int chromSize) {
+		health = aHealth;
+		chromosome = new Chromosome(chromSize);
+		samples = 0;
+		avgHealth = 0;
+		healthTot = 0;
+		steps = 0;
+		fitness=0.0;
+		//location (x, y) is random between (0-width,0-height) exclusive
+		r = new Random();
+		int x = r.nextInt(GridPanel.WIDTH);
+		int y = r.nextInt(GridPanel.HEIGHT);
+		//check for collisions
+		while(!canSpawn(x, y)){
+			x = r.nextInt(GridPanel.WIDTH);
+			y = r.nextInt(GridPanel.HEIGHT);
+		}
+		location = new Coordinate(x, y);
+		//set boundaries
+		setWrapAround(width, height);
+		setRange(width, height, false);
+	}
+	
 	//for testing purposes only.
 	//just removing the GridPanel call.
 	public Organism(boolean boo, int aChromSize) {

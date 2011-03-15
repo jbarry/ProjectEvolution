@@ -1,11 +1,12 @@
 package Interactive;
 
 import java.lang.Character;
+import java.util.Collection;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.ArrayList;
-
+import java.util.Collections;
 import static java.lang.System.out;
 import static java.lang.System.err;
 
@@ -15,6 +16,7 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 	private Random ran;
 	private List<Character> terminals;
 	private List<Character> nonTerminals;
+	private List<Character> symbols;
 	private int lenGenes;
 	//Possible variable meanings:
 	//Amount of health left.
@@ -56,7 +58,27 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 			symList.add(finiteList[i]);
 		}
 	}
-
+	
+	public Gene(boolean boo, int aLenGenes) {
+		lenGenes = aLenGenes;
+		symList = new LinkedList<Character>();
+		ran = new Random();
+		symbols = new LinkedList<Character>();
+		symbols.add('*');
+		symbols.add('/');
+		symbols.add('-');
+		symbols.add('+');
+		symbols.add('a');
+		symbols.add('b');
+		symbols.add('c');
+		symbols.add('d');
+		Collections.shuffle(symbols);
+		ran = new Random();
+		for (int i = 0; i < aLenGenes; i++) {
+			symList.add(symbols.get(ran.nextInt(symList.size())));
+		}
+	}
+	
 	public Gene(LinkedList<Character> aSymList) {
 		symList = aSymList;
 		ran = new Random();

@@ -448,7 +448,7 @@ public class GridPanel extends JPanel
 
 		organisms.clear();
 		for(int i=0; i<OptionsPanel.numOrganisms; i++){
-			Organism o = new Organism();
+			Organism o = new Organism(7500.00, 9); //justin b (03.15).
 			organisms.add(o);
 		}
 		healthyFoodSources.clear();

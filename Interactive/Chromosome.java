@@ -22,7 +22,7 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 		ran = new Random();
 		chromosome = new LinkedList<Gene>();
 		for (int i = 0; i < numGenes; i++)
-			chromosome.add(new Gene(7));
+			chromosome.add(new Gene(10));
 	}
 
 	//TODO: find symbols position and update this class when found.
