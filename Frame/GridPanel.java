@@ -467,7 +467,7 @@ public class GridPanel extends JPanel
 			PoisonousFood p = new PoisonousFood();
 			poisonousFoodSources.add(p);
 		}
-		g= new GEP(organisms, 1,1,1,1,1);
+		g = new GEP(organisms, 1, 1, 1, 1, 1);
 	}
 
 	/**

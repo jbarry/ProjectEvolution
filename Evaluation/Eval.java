@@ -16,15 +16,13 @@ import java.util.Random;
 import java.util.Collections;
 import static java.lang.System.out;
 
-//TODO: Cases to account for:
-//symList with all operators.
-//symList with first index var and the rest operators.
 public class Eval{
 
 	public Eval() {
 
 	}
 
+	//Main used for testing.
 	public static void main(String[] args) {
 		ArrayList<String> symbols = new ArrayList<String>();
 		ArrayList<String> strL = new ArrayList<String>();
@@ -37,39 +35,6 @@ public class Eval{
 		symbols.add("/");
 		symbols.add("+");
 		symbols.add("+");
-
-//		strL.add("/");
-//		strL.add("x");
-//		strL.add("y");
-//		strL.add("/");
-//		strL.add("/");
-//		strL.add("/");
-//		strL.add("-");
-//		strL.add("x");
-//		strL.add("/");
-//		out.println(Eval.evaluation(strL).toString());
-//		strL.add("x");
-//		strL.add("/");
-//		strL.add("+");
-//		strL.add("/");
-//		strL.add("+");
-//		strL.add("/");
-//		strL.add("/");
-//		strL.add("/");
-//		strL.add("+");
-//		out.println(Eval.evaluation(strL).toString());
-		
-//		strL.add("x");
-//		strL.add("+");
-//		strL.add("/");
-//		strL.add("y");
-//		strL.add("+");
-//		strL.add("-");
-//		strL.add("/");
-//		strL.add("-");
-//		strL.add("-");
-//		out.println(Eval.evaluation(strL).toString());
-		
 		Collections.shuffle(symbols);
 		Random r = new Random();
 		for (int i = 0; i < 9; i++) {
@@ -84,14 +49,6 @@ public class Eval{
 
 	//this code takes a list of strings
 	public static Expr evaluation(ArrayList<String> symList) {
-		// Scanner sc = new Scanner(System.in);
-		// String expression = sc.nextLine();
-		// symlist.addAll(Arrays.asList(expression.split(" ")));
-
-//		for (int i = 0; i < symList.size(); i++)
-//			System.out.print(symList.get(i) + " ");
-//		System.out.println();
-
 		Stack<Expr> stack = new Stack<Expr>();
 		String current;
 		Expr expr = null;
@@ -108,7 +65,7 @@ public class Eval{
 		//If the symList contains only one var then return the variable as
 		//a Var Expr. Iterate through a clone of the list and remove
 		//all operators. Then check if the number of variables left is one.
-		ArrayList<String> variable = (ArrayList<String>)symList.clone();
+		ArrayList<String> variable = (ArrayList<String>) symList.clone();
 		loop: for (int i = 0; i < variable.size(); i++) {
 			if(variable.get(i).equals("+")) {
 				variable.remove(i);
@@ -137,13 +94,11 @@ public class Eval{
 		
 		//this is the evaluator for the postfix expression.
 		theLoop: while (!symList.isEmpty()) {
-//			out.println("symbol is " + symList.get(0));
 			current = symList.remove(0);//pop off first symbol.
 			boolean isOp = false;
 			if (current.equals("+")) {
 //				out.println("reached");
 				isOp = true;
-//				out.println(stack.size());
 				if(stack.size() > 1) {
 					try{
 						Expr left = stack.pop();
@@ -152,7 +107,6 @@ public class Eval{
 //						System.out.println("pushed Plus");
 					} catch(Exception e) {
 //						System.out.println("No operators for operand");
-//						System.out.println(stack.size());
 						continue theLoop;
 					}
 				}
@@ -203,40 +157,9 @@ public class Eval{
 			if (expr != null)
 				stack.push(expr);//push the resulting expression back on the stack and loop.
 			expr = null;
-//			System.out.println(stack.size());
 		}
 
 		return stack.pop();
-
-		//now the top of the stack has an expression object that is exactly the
-		//expression typed in from the command line.
-		// Expr result = stack.pop();
-		//
-		// //for some environment of variables, which I will hardcode.
-		// Map<String, Double> environment = new HashMap<String, Double>();
-		// environment.put("x", 10.0);
-		// environment.put("y", 1.0);
-		// //we can now evaluate the expression with this environment:
-		// System.out.println("with bindings: ");
-		// for (String key : environment.keySet()) {
-		// System.out.println(key + "-> " + environment.get(key));
-		// }
-		// System.out.print("will evaluate to: ");
-		// System.out.println(result.evaluate(environment));
-		// System.out.println();
-		//
-		// //second evaluation, to show that we can use many environments.
-		// environment = new HashMap<String, Double>();
-		// environment.put("x", 2.0);
-		// environment.put("y", -1.0);
-		// System.out.println("and with bindings: ");
-		// for (String key : environment.keySet()) {
-		// System.out.println(key + "-> " + environment.get(key));
-		// }
-		// System.out.print("will evaluate to: ");
-		// System.out.println(result.evaluate(environment));
-		// System.out.println("and the expr object can be printed with toString:");
-		// System.out.println(result.toString());
 	}
 }
 

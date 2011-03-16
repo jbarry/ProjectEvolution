@@ -22,7 +22,6 @@ public class Organism {
 	private int steps;
 	private Coordinate location;
 	private Chromosome chromosome;
-	//TODO: fitness instance variable.
 	// Organism should not have knowledge of its own fitness
 	private double fitness;
 	private Random r;
