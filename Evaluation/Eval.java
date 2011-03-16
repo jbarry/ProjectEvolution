@@ -38,12 +38,14 @@ public class Eval{
 		Collections.shuffle(symbols);
 		Random r = new Random();
 		for (int i = 0; i < 9; i++) {
+			out.print("To be evaluated ");
 			for (int j = 0; j < 9; j++) {
 				strL.add(symbols.get(r.nextInt(symbols.size())));
 				out.print(strL.get(j) + " ");
 			}
 			out.println();
-			out.println(Eval.evaluation(strL).toString());
+			out.println("Evaluation " + Eval.evaluation(strL).toString());
+			out.println();
 		}
 	}
 
