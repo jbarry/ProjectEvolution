@@ -51,6 +51,11 @@ public class Eval{
 
 	//this code takes a list of strings
 	public static Expr evaluation(ArrayList<String> symList) {
+//		out.print("To be evaluated: ");
+//		for (int i = 0; i < 9; i++) {
+//			out.print(symList.get(i));
+//		}
+//		out.println();
 		Stack<Expr> stack = new Stack<Expr>();
 		String current;
 		Expr expr = null;
@@ -160,7 +165,8 @@ public class Eval{
 				stack.push(expr);//push the resulting expression back on the stack and loop.
 			expr = null;
 		}
-
+		
+//		out.println("After eval: " + stack.peek() + "\n");
 		return stack.pop();
 	}
 }

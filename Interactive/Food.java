@@ -77,6 +77,7 @@ public class Food {
 	public void deplete(){
 		if(foodRemaining>0){
 			foodRemaining--;
+			System.out.println(foodRemaining);
 		}
 	}
 	
