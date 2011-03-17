@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import static java.lang.System.out;
 import static java.lang.System.err;
+import Evaluation.Eval;
+import Evaluation.Expr;
 
 public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene<A>> {
 
@@ -18,6 +20,8 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 	private List<Character> nonTerminals;
 	private List<Character> symbols;
 	private int lenGenes;
+	private Expr evaledList;
+	
 	//Possible variable meanings:
 	//Amount of health left.
 	//Number of organisms around food.
@@ -57,6 +61,7 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 		for(int i = 0; i < finiteList.length; i++) {
 			symList.add(finiteList[i]);
 		}
+		evaledList = Eval.evaluation(makeStringArray());
 	}
 	
 	//Ctor that does not inform the init of the genes.
@@ -112,6 +117,9 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 		symList.set(index, sym);
 	}
 
+	public Expr getEvaledList() {
+		return evaledList;
+	}
 	//TODO: Make the symList a String Array.
 	//no need to have two separate lists.
 	public ArrayList<String> makeStringArray() {

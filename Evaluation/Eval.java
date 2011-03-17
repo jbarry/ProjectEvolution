@@ -23,31 +23,31 @@ public class Eval{
 	}
 
 	//Main used for testing.
-	public static void main(String[] args) {
-		ArrayList<String> symbols = new ArrayList<String>();
-		ArrayList<String> strL = new ArrayList<String>();
-		symbols.add("/");
-		symbols.add("y");
-		symbols.add("x");
-		symbols.add("y");
-		symbols.add("-");
-		symbols.add("x");
-		symbols.add("/");
-		symbols.add("+");
-		symbols.add("+");
-		Collections.shuffle(symbols);
-		Random r = new Random();
-		for (int i = 0; i < 9; i++) {
-			out.print("To be evaluated ");
-			for (int j = 0; j < 9; j++) {
-				strL.add(symbols.get(r.nextInt(symbols.size())));
-				out.print(strL.get(j) + " ");
-			}
-			out.println();
-			out.println("Evaluation " + Eval.evaluation(strL).toString());
-			out.println();
-		}
-	}
+//	public static void main(String[] args) {
+//		ArrayList<String> symbols = new ArrayList<String>();
+//		ArrayList<String> strL = new ArrayList<String>();
+//		symbols.add("/");
+//		symbols.add("y");
+//		symbols.add("x");
+//		symbols.add("y");
+//		symbols.add("-");
+//		symbols.add("x");
+//		symbols.add("/");
+//		symbols.add("+");
+//		symbols.add("+");
+//		Collections.shuffle(symbols);
+//		Random r = new Random();
+//		for (int i = 0; i < 9; i++) {
+//			out.print("To be evaluated ");
+//			for (int j = 0; j < 9; j++) {
+//				strL.add(symbols.get(r.nextInt(symbols.size())));
+//				out.print(strL.get(j) + " ");
+//			}
+//			out.println();
+//			out.println("Evaluation " + Eval.evaluation(strL).toString());
+//			out.println();
+//		}
+//	}
 
 	//this code takes a list of strings
 	public static Expr evaluation(ArrayList<String> symList) {

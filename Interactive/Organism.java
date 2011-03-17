@@ -339,7 +339,7 @@ public class Organism {
 	
 	public void eatFood(Food f, double orgHealth){
 		f.deplete();
-		System.out.println("depleted!");
+//		System.out.println("depleted!");
 		if(f instanceof HealthyFood){
 			if(health < orgHealth && health > (orgHealth - 1)){
 				health = orgHealth;

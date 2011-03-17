@@ -222,7 +222,7 @@ public class GridPanel extends JPanel
 												double foodX=f.getLocation().getX();
 												double foodY=f.getLocation().getY();
 												double orgNearFood = f.numSurroundingObjects(5);
-												Expr result = Eval.evaluation(workingGene.makeStringArray());
+												Expr result = workingGene.getEvaledList();
 												environment.put("a", foodX-orgX);
 												environment.put("b", orgY-foodY);
 												environment.put("c", orgNearFood);
