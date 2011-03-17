@@ -6,21 +6,20 @@ import java.util.Random;
 import Frame.*;
 import Evolution.*;
 @SuppressWarnings("all")
-public class Food {
+public class Food extends Matter{
 	//------------------------------------------------------------------------------------
 	//--globals--
 	//------------------------------------------------------------------------------------
 	public static final int width = 5;
 	public static final int height = 5;
 	
-	private Coordinate location;
-	private double foodRemaining;
 	private Random r;
 
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
 	public Food() {
+		super();
 		//set location
 		r = new Random();
 		int x = r.nextInt(GridPanel.WIDTH);
@@ -37,19 +36,19 @@ public class Food {
 		setWrapAround(width, height);
 		setRange(width, height, false);
 		
-		foodRemaining=100.0;
+		health=100.0;
 	}
 
 	public Food(int x, int y){
 		this.r = new Random();
 		this.location=new Coordinate(x,y);
-		this.foodRemaining=100.0;
+		this.health=100.0;
 	}
 
 	public Food(Coordinate aCoord){
 		this.r = new Random();
 		this.location=aCoord;
-		this.foodRemaining=100.0;
+		this.health=100.0;
 	}
 
 	//------------------------------------------------------------------------------------
@@ -64,7 +63,7 @@ public class Food {
 	}
 	
 	public double getFoodRemaining(){
-		return foodRemaining;
+		return health;
 	}
 
 	public Coordinate getLocation(){
@@ -75,9 +74,9 @@ public class Food {
 	//--accessors/mutators--
 	//------------------------------------------------------------------------------------
 	public void deplete(){
-		if(foodRemaining>0){
-			foodRemaining--;
-			System.out.println(foodRemaining);
+		if(health>0){
+			health--;
+			System.out.println(health);
 		}
 	}
 	
@@ -85,6 +84,7 @@ public class Food {
 	 * @param scanRange
 	 * @return number of surrounding objects, namely Food or Organism Instances
 	 */
+	@Override
 	public double numSurroundingObjects(int scanRange){
 		double numObj = 0.0;
 		for(int i=location.getX()-width/2-scanRange; i<=location.getX()+width/2+scanRange; i++){

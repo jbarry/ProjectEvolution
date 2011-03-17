@@ -8,20 +8,17 @@ import java.util.ArrayList;
 
 import Frame.*;
 
-public class Organism {
+public class Organism extends Matter{
 	//------------------------------------------------------------------------------------
 	//--globals--
 	//------------------------------------------------------------------------------------
 	public static int width = 5;
 	public static int height = 5;
 	
-	private double health;
-	private double maxHealth;
 	private double avgHealth;
 	private double healthTot;
 	private int samples;
 	private int steps;
-	private Coordinate location;
 	private Chromosome chromosome;
 	// Organism should not have knowledge of its own fitness
 	private double fitness;
@@ -33,6 +30,7 @@ public class Organism {
 	//--constructors--
 	//------------------------------------------------------------------------------------
 	public Organism() {
+		super();
 		health = 7500.00;
 		maxHealth = 7500.00;
 		samples = 0;
@@ -447,6 +445,12 @@ public class Organism {
 			+  "\n Location: " + location
 			+  "\n Health: " + health;
 		return str;
+	}
+
+	@Override
+	public double numSurroundingObjects(int scanRange) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }	
 
