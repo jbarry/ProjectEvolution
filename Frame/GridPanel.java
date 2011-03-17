@@ -195,11 +195,11 @@ public class GridPanel extends JPanel
 							*/
 							
 							//Dwight's AI LOGIC
-							// * Should work pretty well, needs to be tested. EDIT: Mad slow.
-							// * Genes are set as N-S-E-W-NE-NW-SE-SW-Eat.
+							// * Should work pretty well, needs to be tested.
 							// * Each gene gets checked for however many food sources are in their sight range.
 							// * TODO: Fitness function needs reworking.
 							Collections.shuffle(organisms);
+							int orgIndex=0;
 							for(Organism org: organisms){
 								org.depleteHealth();
 								//Take sample of organism health for fitness.
@@ -253,44 +253,53 @@ public class GridPanel extends JPanel
 											best=decisions.get(i);
 										}
 									}
-									//System.out.println(decision);
+									// Genes are set as N-S-E-W-NE-NW-SE-SW-Eat.
 									switch (decision) {
 									case 0: 
 										org.moveNorth(organisms);
+										org.addAction("N", orgIndex);
 										org.countStep();
 										break;
 									case 1: 
 										org.moveSouth(organisms);
+										org.addAction("S", orgIndex);
 										org.countStep();
 										break;
 									case 2: 
 										org.moveEast(organisms); 
+										org.addAction("E", orgIndex);
 										org.countStep();
 										break;
 									case 3: 
 										org.moveWest(organisms);
+										org.addAction("W", orgIndex);
 										org.countStep();
 										break;
 									case 4: 
 										org.moveNorthEast(organisms);
+										org.addAction("NE", orgIndex);
 										org.countStep();
 										break;
 									case 5: 
 										org.moveNorthWest(organisms);
+										org.addAction("NW", orgIndex);
 										org.countStep();
 										break;
 									case 6: 
 										org.moveSouthEast(organisms);
+										org.addAction("SE", orgIndex);
 										org.countStep();
 										break;
 									case 7: 
 										org.moveSouthWest(organisms);
+										org.addAction("SW", orgIndex);
 										org.countStep();
 										break;
-									case 8: if(organismIsNextToHealthyFood(org)
-											|| organismIsNextToPoisonousFood(org));
+									case 8: if(organismIsNextToHealthyFood(org)|| organismIsNextToPoisonousFood(org)){};
+											org.addAction("F", orgIndex);
 									}
 								}
+								orgIndex++;
 							}
 							//End AI LOGIC
 							repaint();
@@ -340,6 +349,8 @@ public class GridPanel extends JPanel
 								//TODO: added (03.13) justin.
 								o.calcAvgHealth();
 								o.setHealth(7500);
+								o.addGeneration();
+								o.addStartingLocation();
 							}
 							for(int i=0; i<OptionsPanel.numOrganisms/2; i++){
 								HealthyFood h = new HealthyFood();
@@ -455,6 +466,7 @@ public class GridPanel extends JPanel
 		for(int i=0; i<OptionsPanel.numOrganisms; i++){
 			Organism o = new Organism(7500.00, 9); //justin b (03.15).
 			organisms.add(o);
+			o.addStartingLocation();
 		}
 		healthyFoodSources.clear();
 		for(int i=0; i<OptionsPanel.numOrganisms/2; i++){
@@ -550,6 +562,15 @@ public class GridPanel extends JPanel
 		}
 
 		return isNextToFood;
+	}
+	
+	/**
+	 * Preprocess generations
+	 * Essentially run the simulation without updating the graphics.
+	 */
+	
+	public void preProcess(int generations){
+		
 	}
 
 	//------------------------------------------------------------------------------------

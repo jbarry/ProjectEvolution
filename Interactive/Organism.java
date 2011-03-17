@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.ArrayList;
 
 import Frame.*;
 
@@ -25,6 +26,8 @@ public class Organism {
 	// Organism should not have knowledge of its own fitness
 	private double fitness;
 	private Random r;
+	private ArrayList<ArrayList<String>> ActionList;
+	private ArrayList<Coordinate> StartingLocation;
 
 	//------------------------------------------------------------------------------------
 	//--constructors--
@@ -53,6 +56,9 @@ public class Organism {
 		
 		chromosome = new Chromosome(9);
 		fitness=0.0;
+		ActionList= new ArrayList<ArrayList<String>>();
+		ActionList.add(new ArrayList<String>());
+		StartingLocation=new ArrayList<Coordinate>();
 	}
 
 	public Organism(double aHealth, int chromSize) {
@@ -77,6 +83,9 @@ public class Organism {
 		//set boundaries
 		setWrapAround(width, height);
 		setRange(width, height, false);
+		ActionList= new ArrayList<ArrayList<String>>();
+		ActionList.add(new ArrayList<String>());
+		StartingLocation=new ArrayList<Coordinate>();
 	}
 	
 	//for testing purposes only.
@@ -178,6 +187,22 @@ public class Organism {
 	
 	public int getNumSteps() {
 		return steps;
+	}
+	
+	public void addAction(String action,int index){
+		ActionList.get(ActionList.size()-1).add(action + " " + index);
+	}
+	
+	public void addGeneration(){
+		ActionList.add(new ArrayList<String>());
+	}
+	
+	public void addStartingLocation(){
+		StartingLocation.add(getLocation());
+	}
+	
+	public ArrayList<String> getActions(int generation){
+		return ActionList.get(generation);
 	}
 	//------------------------------------------------------------------------------------
 	//--accessors/mutators--
