@@ -7,7 +7,7 @@ public abstract class Matter {
 	protected double hlth;
 	protected double mxHlth;
 	protected int id;
-	protected int scnRng = 100;
+	protected int scnRng = 10;
 	
 	public Matter() {
 		
