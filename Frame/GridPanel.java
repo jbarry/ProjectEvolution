@@ -312,7 +312,7 @@ public class GridPanel extends JPanel
 							t.stop();
 							for(Organism o: organisms){
 								o.newLocation();
-								o.setHealth(100.0);
+								o.setHealth(o.getMaxHealth());
 								//TODO: added (03.13) justin.
 							}
 							trialNum++;
@@ -351,7 +351,7 @@ public class GridPanel extends JPanel
 							poisFood.clear();
 							for(Organism o: organisms){
 								//TODO: added (03.13) justin.
-								o.setHealth(100.0);
+								o.setHealth(o.getMaxHealth());
 								o.addGeneration();
 							}
 							for(int i = 0; i < OptionsPanel.numOrganisms/5; i++){
@@ -443,7 +443,7 @@ public class GridPanel extends JPanel
 			poisFood.add(p);
 		}
 		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
-		//preProcess(1000);
+		preProcess(1000);
 	}
 	
 	//------------------------------------------------------------------------------------
@@ -663,7 +663,7 @@ public class GridPanel extends JPanel
 			} else if (trialNum < trialsPerGen) {
 				for(Organism o: organisms){
 					o.newLocation();
-					o.setHealth(7500);
+					o.setHealth(o.getMaxHealth());
 					//TODO: added (03.13) justin.
 				}
 				trialNum++;
@@ -690,7 +690,7 @@ public class GridPanel extends JPanel
 				healthFd.clear();
 				poisFood.clear();
 				for(Organism o: organisms){
-					o.setHealth(7500);
+					o.setHealth(o.getMaxHealth());
 					o.addGeneration();
 				}
 				for(int i = 0; i < OptionsPanel.numOrganisms/5; i++){
