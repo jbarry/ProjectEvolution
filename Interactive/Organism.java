@@ -25,6 +25,7 @@ public class Organism extends Matter{
 	private Random r;
 	private ArrayList<ArrayList<String>> ActionList;
 	private ArrayList<Coordinate> StartingLocation;
+	private ArrayList<Chromosome> chromosomeHistory;
 
 	//------------------------------------------------------------------------------------
 	//--constructors--
@@ -55,6 +56,7 @@ public class Organism extends Matter{
 		ActionList= new ArrayList<ArrayList<String>>();
 		ActionList.add(new ArrayList<String>());
 		StartingLocation=new ArrayList<Coordinate>();
+		chromosomeHistory= new ArrayList<Chromosome>();
 	}
 
 	public Organism(double aHealth, int chromSize, int anId) {
@@ -81,6 +83,7 @@ public class Organism extends Matter{
 		ActionList= new ArrayList<ArrayList<String>>();
 		ActionList.add(new ArrayList<String>());
 		StartingLocation=new ArrayList<Coordinate>();
+		chromosomeHistory= new ArrayList<Chromosome>();
 	}
 	
 	//for testing purposes only.
@@ -191,10 +194,16 @@ public class Organism extends Matter{
 	
 	public void addGeneration(){
 		ActionList.add(new ArrayList<String>());
+		addStartingLocation();
+		chromosomeHistory.add(chromosome);
 	}
 	
 	public void addStartingLocation(){
 		StartingLocation.add(getLocation());
+	}
+	
+	public void addChromosome(){
+		chromosomeHistory.add(chromosome);
 	}
 	
 	public ArrayList<String> getActions(int generation){
