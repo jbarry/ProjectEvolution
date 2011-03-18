@@ -30,9 +30,7 @@ public class Organism extends Matter{
 	//--constructors--
 	//------------------------------------------------------------------------------------
 	public Organism() {
-		super();
-		health = 7500.00;
-		maxHealth = 7500.00;
+		super(7500.0);
 		samples = 0;
 		avgHealth = 0;
 		healthTot = 0;
@@ -59,9 +57,8 @@ public class Organism extends Matter{
 		StartingLocation=new ArrayList<Coordinate>();
 	}
 
-	public Organism(double aHealth, int chromSize) {
-		health = aHealth;
-		maxHealth = aHealth;
+	public Organism(double aHealth, int chromSize, int anId) {
+		super(aHealth, anId);
 		chromosome = new Chromosome(chromSize);
 		samples = 0;
 		avgHealth = 0;
@@ -151,7 +148,7 @@ public class Organism extends Matter{
 	}
 	
 	public double getMaxHealth() {
-		return maxHealth;
+		return mxHlth;
 	}
 	
 	public void setHealth(int aHealth) {
@@ -329,30 +326,50 @@ public class Organism extends Matter{
 				location.setY(location.getY() - 1);
 			}
 		}
-		catch(ArrayIndexOutOfBoundsException e){
-
-		}
+		catch(ArrayIndexOutOfBoundsException e){}
 		setRange(width, height, false);
 	}
 	
-	public void eatFood(Food f, double orgHealth){
-		f.deplete();
-//		System.out.println("depleted!");
-		if(f instanceof HealthyFood){
-			if(health < orgHealth && health > (orgHealth - 1)){
-				health = orgHealth;
-			}
-			else if(health<=99){
-				health += 1;
+	public ArrayList<Food> getSight(LinkedList<HealthyFood> healthFdSrc,
+			LinkedList<PoisonousFood> poisFoodSrc, int sightRange) {
+		ArrayList<Food> toReturn = new ArrayList<Food>();
+		Coordinate orgCoord = getLocation();
+		int orgX= orgCoord.getX();
+		int orgY= orgCoord.getY();
+		for(Food f : healthFdSrc) {
+			if(Math.abs(orgX - f.getLocation().getX()) <= sightRange ||
+					Math.abs(orgY - f.getLocation().getY()) <= sightRange ){
+				toReturn.add(f);
 			}
 		}
+		for(Food f : poisFoodSrc) {
+			if(Math.abs(orgX - f.getLocation().getX()) <= sightRange ||
+					Math.abs(orgY - f.getLocation().getY()) <= sightRange ){
+				toReturn.add(f);
+			}
+		}
+		return toReturn;
+	}
+	
+	public void eatFood(Food f, double fdVal){
+		f.deplete();
+		if(f instanceof HealthyFood){
+//			System.out.println("orgId: " + id);
+//			System.out.println("hlthy");
+//			System.out.println("orgHealth: " + health);
+//			System.out.println("FoodId: " + f.getId());
+			if(health + fdVal > mxHlth)
+				health = mxHlth;
+			else health+=5;
+		}
 		else if(f instanceof PoisonousFood){
-			if(health>0 && health<1){
-				health = 0;
-			}
-			else if(health>=1){
-				health -= 1;
-			}
+//			System.out.println("orgId: " + id);
+//			System.out.println("pois");
+//			System.out.println("orgHealth: " + health);
+//			System.out.println("FoodId: " + f.getId());
+			if(health - fdVal < 0)
+				health =0;
+			else health-=5;
 		}
 	}
 
