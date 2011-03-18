@@ -19,7 +19,7 @@ public class Food extends Matter{
 	//--constructors--
 	//------------------------------------------------------------------------------------
 	public Food() {
-		super();
+		super(100.0);
 		//set location
 		r = new Random();
 		int x = r.nextInt(GridPanel.WIDTH);
@@ -35,8 +35,28 @@ public class Food extends Matter{
 		//set boundaries
 		setWrapAround(width, height);
 		setRange(width, height, false);
-		
-		health=100.0;
+	}
+	
+	//------------------------------------------------------------------------------------
+	//--constructors--
+	//------------------------------------------------------------------------------------
+	public Food(double aMxHlth, int anId) {
+		super(aMxHlth, anId);
+		//set location
+		r = new Random();
+		int x = r.nextInt(GridPanel.WIDTH);
+		int y = r.nextInt(GridPanel.HEIGHT);
+
+		//check for collisions
+		while(!canSpawn(x, y)) {
+			x = r.nextInt(GridPanel.WIDTH);
+			y = r.nextInt(GridPanel.HEIGHT);
+		}
+		location = new Coordinate(x, y);
+
+		//set boundaries
+		setWrapAround(width, height);
+		setRange(width, height, false);
 	}
 
 	public Food(int x, int y){
@@ -70,13 +90,17 @@ public class Food extends Matter{
 		return location;
 	}
 
+	public int getId() {
+		return id;
+	}
 	//------------------------------------------------------------------------------------
 	//--accessors/mutators--
 	//------------------------------------------------------------------------------------
 	public void deplete(){
-		if(health>0){
+		if(health > 0){
 			health--;
-//			System.out.println(health);
+//			System.out.println("FdHlth: " + health);
+//			System.out.println();
 		}
 	}
 	
