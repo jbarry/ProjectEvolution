@@ -52,7 +52,7 @@ public class GEP {
 		rotProb = aRotProb;
 		onePtProb = aOnePtProb;
 		twoPtProb = aTwoPtProb;
-		//		TODO: handicap = aHandicap;
+//		TODO: handicap = aHandicap;
 		ran = new Random();
 
 		//Assess the fitness of each organism
@@ -183,9 +183,10 @@ public class GEP {
 	//have higher health with travelling short distances are more fit.
 	//
 	public double fitness(Organism org) {
+		if (org.getNumSteps() == 0) return 0;
 		double avgHealth = org.getHlthTot()/org.getSamples();
 		double fitness = avgHealth/org.getNumSteps();
-		out.println(fitness);
+//		out.println(fitness);
 		org.setFitness(fitness);
 		return fitness;
 	}

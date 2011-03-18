@@ -236,10 +236,10 @@ public class GenerationPanel extends JPanel{
 	}
 	
 	public void addGeneration(){
-		if(sim.generationNum<60 && pastGenStats.getText().equals("")){
+		if(sim.generationNum < 60 && pastGenStats.getText().equals("")){
 			pastGenStats.append(" Generation " + (sim.generationNum-1) + ": " + sim.lastAvg);
 		}
-		else if(sim.generationNum<60){
+		else if(sim.generationNum < 60){
 			pastGenStats.append("\n" + " Generation " + (sim.generationNum-1) + ": " + sim.lastAvg);
 		}
 	}

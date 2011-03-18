@@ -155,12 +155,13 @@ public class Organism extends Matter{
 		mxHlth = aMxHlth;
 	}
 	
-	public void setHealth(int aHealth) {
+	public void setHealth(double aHealth) {
 		hlth = aHealth;
 	}
 	
-	public void depleteHealth(double val) {
-		hlth-=val;
+	public void deplete(double val) {
+		if (hlth - val < 0) hlth = 0;
+		else hlth-=val;
 	}
 	
 	public void incHlthTot() {
@@ -360,16 +361,14 @@ public class Organism extends Matter{
 //			System.out.println("FoodId: " + f.getId());
 			if(hlth + fdVal > mxHlth)
 				hlth = mxHlth;
-			else hlth+=5;
+			else hlth+=fdVal;
 		}
 		else if(f instanceof PoisonousFood){
 //			System.out.println("orgId: " + id);
 //			System.out.println("pois");
 //			System.out.println("orgHealth: " + health);
 //			System.out.println("FoodId: " + f.getId());
-			if(hlth - fdVal < 0)
-				hlth =0;
-			else hlth-=5;
+			deplete(fdVal);
 		}
 	}
 

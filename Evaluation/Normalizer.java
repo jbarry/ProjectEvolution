@@ -22,6 +22,10 @@ public class Normalizer {
 //		for(int i = 1; i < 167; i++) {
 //			out.println(norm.normalize(i));
 //		}
+		if(7346278 < 754/0) {
+			out.println("y");
+		} 
+		if(340589 > 754/0) out.println("n");
 	}
 
 	private Pair<Double, Double> fromRange;

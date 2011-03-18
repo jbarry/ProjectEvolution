@@ -21,5 +21,6 @@ public abstract class Matter {
 		id = anId;
 	}
 	
+	
 	public abstract double numSurroundingObjects(int scanRange);
 }
