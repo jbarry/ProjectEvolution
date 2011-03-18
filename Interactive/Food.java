@@ -93,17 +93,7 @@ public class Food extends Matter{
 	public int getId() {
 		return id;
 	}
-	//------------------------------------------------------------------------------------
-	//--accessors/mutators--
-	//------------------------------------------------------------------------------------
-	public void deplete(){
-		if(hlth > 0){
-			hlth--;
-//			System.out.println("FdHlth: " + health);
-//			System.out.println();
-		}
-	}
-	
+		
         /**
 	 * @param scanRange
 	 * @return number of surrounding objects, namely Food or Organism Instances
