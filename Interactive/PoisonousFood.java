@@ -7,7 +7,9 @@ public class PoisonousFood extends Food{
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
-	public PoisonousFood(){}
+	public PoisonousFood(double aMxHlth, int anId){
+		super(aMxHlth, anId);
+	}
 
 	public PoisonousFood(int x, int y){
 		super(x,y);
