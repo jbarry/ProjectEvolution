@@ -353,7 +353,6 @@ public class GridPanel extends JPanel
 								//TODO: added (03.13) justin.
 								o.setHealth(100.0);
 								o.addGeneration();
-								o.addStartingLocation();
 							}
 							for(int i = 0; i < OptionsPanel.numOrganisms/2; i++){
 								HealthyFood h = new HealthyFood(100.0, i);
@@ -430,6 +429,7 @@ public class GridPanel extends JPanel
 			Organism o = new Organism(100.00, 9, i, 100); //justin b (03.15).
 			organisms.add(o);
 			o.addStartingLocation();
+			o.addChromosome();
 		}
 		healthFd.clear();
 		for(int i = 0; i < OptionsPanel.numOrganisms/2; i++){
@@ -692,7 +692,6 @@ public class GridPanel extends JPanel
 				for(Organism o: organisms){
 					o.setHealth(7500);
 					o.addGeneration();
-					o.addStartingLocation();
 				}
 				for(int i = 0; i < OptionsPanel.numOrganisms/2; i++){
 					HealthyFood h = new HealthyFood(100.0, i);
