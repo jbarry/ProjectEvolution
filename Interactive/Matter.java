@@ -7,6 +7,7 @@ public abstract class Matter {
 	protected double hlth;
 	protected double mxHlth;
 	protected int id;
+	protected int scnRng = 100;
 	
 	public Matter() {
 		
@@ -19,6 +20,12 @@ public abstract class Matter {
 	public Matter(double aMxHlth, int anId) {
 		hlth = mxHlth = aMxHlth;
 		id = anId;
+	}
+	
+	public Matter(double aMxHlth, int anId, int aScnRng) {
+		hlth = mxHlth = aMxHlth;
+		id = anId;
+		scnRng = aScnRng;
 	}
 	
 	public void deplete(double val) {

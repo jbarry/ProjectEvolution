@@ -37,7 +37,7 @@ public class GridPanel extends JPanel
 	//------------------------------------------------------------------------------------
 	public final static int WIDTH = 600;
 	public final static int HEIGHT = 400;
-	protected static final int sightRange = 100;
+	
 
 	public static boolean[][] isValidLocation;
 
@@ -205,11 +205,11 @@ public class GridPanel extends JPanel
 							for(Organism org: organisms){
 								org.deplete(1.5);
 								//Take sample of organism health for fitness.
-								org.incHlthTot(); //TODO: added (03.13) justin.
+								org.incHlthTot();
 								if(org.getHealth() > 0){
 									ArrayList<Food> sight = new ArrayList<Food>();
 									ArrayList<Double> chromResults = new ArrayList<Double>();
-									sight = org.getSight(healthFd, poisFood, sightRange);
+									sight = org.look(healthFd, poisFood);
 									double orgX = norm.normalize(
 											org.getLocation().getX());
 									double orgY = norm.normalize(
@@ -405,22 +405,6 @@ public class GridPanel extends JPanel
 		r.run();
 	}
 
-	//------------------------------------------------------------------------------------
-	//--accessors and mutators--
-	//------------------------------------------------------------------------------------
-	/**For the timer*/
-	public void start(){
-		t.start();
-	}
-	public void stop(){
-		t.stop();
-	}
-	public boolean isPaused(){
-		if(t.isRunning())
-			return false;
-		return true;
-	}
-
 	/**
 	 * Sets the initial game state of the GridPanel
 	 */
@@ -443,7 +427,7 @@ public class GridPanel extends JPanel
 
 		organisms.clear();
 		for(int i=0; i<OptionsPanel.numOrganisms; i++){
-			Organism o = new Organism(100.00, 9, i); //justin b (03.15).
+			Organism o = new Organism(100.00, 9, i, 100); //justin b (03.15).
 			organisms.add(o);
 			o.addStartingLocation();
 		}
@@ -459,7 +443,23 @@ public class GridPanel extends JPanel
 			poisFood.add(p);
 		}
 		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
-		preProcess(50);
+//		preProcess(50);
+	}
+	
+	//------------------------------------------------------------------------------------
+	//--accessors and mutators--
+	//------------------------------------------------------------------------------------
+	/**For the timer*/
+	public void start(){
+		t.start();
+	}
+	public void stop(){
+		t.stop();
+	}
+	public boolean isPaused(){
+		if(t.isRunning())
+			return false;
+		return true;
 	}
 
 	/**
@@ -564,7 +564,7 @@ public class GridPanel extends JPanel
 					if(org.getHealth() > 0){
 						ArrayList<Food> sight = new ArrayList<Food>();
 						ArrayList<Double> chromResults = new ArrayList<Double>();
-						sight = org.getSight(healthFd, poisFood, sightRange);
+						sight = org.look(healthFd, poisFood);
 						double orgX = norm.normalize(
 								org.getLocation().getX());
 						double orgY = norm.normalize(

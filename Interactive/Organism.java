@@ -57,8 +57,9 @@ public class Organism extends Matter{
 		StartingLocation=new ArrayList<Coordinate>();
 	}
 
-	public Organism(double aHealth, int chromSize, int anId) {
-		super(aHealth, anId);
+	public Organism(double aHealth, int chromSize,
+			int anId, int aScnRng) {
+		super(aHealth, anId, aScnRng);
 		chromosome = new Chromosome(chromSize);
 		samples = 0;
 		avgHealth = 0;
@@ -180,6 +181,13 @@ public class Organism extends Matter{
 		return samples;
 	}
 	
+	public int getScnRng() {
+		return scnRng;
+	}
+	
+	public void setScnRng(int aScnRng) {
+		scnRng = aScnRng;
+	}
 	public void addAction(String action,int index){
 		ActionList.get(ActionList.size()-1).add(action + " " + index);
 	}
@@ -195,9 +203,54 @@ public class Organism extends Matter{
 	public ArrayList<String> getActions(int generation){
 		return ActionList.get(generation);
 	}
-	//------------------------------------------------------------------------------------
-	//--accessors/mutators--
-	//------------------------------------------------------------------------------------
+	
+	@Override
+	public double numSurroundingObjects(int scanRange) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	public void eatFood(Food f, double fdVal){
+		f.deplete(fdVal);
+		if(f instanceof HealthyFood) {
+//			System.out.println("orgId: " + id);
+//			System.out.println("hlthy");
+//			System.out.println("orgHealth: " + health);
+//			System.out.println("FoodId: " + f.getId());
+			if(hlth + fdVal > mxHlth)
+				hlth = mxHlth;
+			else hlth+=fdVal;
+		}
+		else if(f instanceof PoisonousFood){
+//			System.out.println("orgId: " + id);
+//			System.out.println("pois");
+//			System.out.println("orgHealth: " + health);
+//			System.out.println("FoodId: " + f.getId());
+			deplete(fdVal);
+		}
+	}
+	
+	public ArrayList<Food> look(LinkedList<HealthyFood> healthFdSrc,
+			LinkedList<PoisonousFood> poisFoodSrc) {
+		ArrayList<Food> toReturn = new ArrayList<Food>();
+		Coordinate orgCoord = getLocation();
+		int orgX= orgCoord.getX();
+		int orgY= orgCoord.getY();
+		for(Food f : healthFdSrc) {
+			if(Math.abs(orgX - f.getLocation().getX()) <= scnRng ||
+					Math.abs(orgY - f.getLocation().getY()) <= scnRng ){
+				toReturn.add(f);
+			}
+		}
+		for(Food f : poisFoodSrc) {
+			if(Math.abs(orgX - f.getLocation().getX()) <= scnRng ||
+					Math.abs(orgY - f.getLocation().getY()) <= scnRng ){
+				toReturn.add(f);
+			}
+		}
+		return toReturn;
+	}
+	
 	public void moveNorth(LinkedList<Organism> organisms) {
 		//make old location available.
 		setRange(width, height, true);
@@ -326,47 +379,6 @@ public class Organism extends Matter{
 		setRange(width, height, false);
 	}
 	
-	public ArrayList<Food> getSight(LinkedList<HealthyFood> healthFdSrc,
-			LinkedList<PoisonousFood> poisFoodSrc, int sightRange) {
-		ArrayList<Food> toReturn = new ArrayList<Food>();
-		Coordinate orgCoord = getLocation();
-		int orgX= orgCoord.getX();
-		int orgY= orgCoord.getY();
-		for(Food f : healthFdSrc) {
-			if(Math.abs(orgX - f.getLocation().getX()) <= sightRange ||
-					Math.abs(orgY - f.getLocation().getY()) <= sightRange ){
-				toReturn.add(f);
-			}
-		}
-		for(Food f : poisFoodSrc) {
-			if(Math.abs(orgX - f.getLocation().getX()) <= sightRange ||
-					Math.abs(orgY - f.getLocation().getY()) <= sightRange ){
-				toReturn.add(f);
-			}
-		}
-		return toReturn;
-	}
-	
-	public void eatFood(Food f, double fdVal){
-		f.deplete(fdVal);
-		if(f instanceof HealthyFood) {
-//			System.out.println("orgId: " + id);
-//			System.out.println("hlthy");
-//			System.out.println("orgHealth: " + health);
-//			System.out.println("FoodId: " + f.getId());
-			if(hlth + fdVal > mxHlth)
-				hlth = mxHlth;
-			else hlth+=fdVal;
-		}
-		else if(f instanceof PoisonousFood){
-//			System.out.println("orgId: " + id);
-//			System.out.println("pois");
-//			System.out.println("orgHealth: " + health);
-//			System.out.println("FoodId: " + f.getId());
-			deplete(fdVal);
-		}
-	}
-
 	public void paint(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.fillRect((int)this.location.getX()-(width/2), 
@@ -456,12 +468,6 @@ public class Organism extends Matter{
 			+  "\n Location: " + location
 			+  "\n Health: " + hlth;
 		return str;
-	}
-
-	@Override
-	public double numSurroundingObjects(int scanRange) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 }	
 
