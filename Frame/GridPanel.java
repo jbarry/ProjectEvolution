@@ -202,9 +202,9 @@ public class GridPanel extends JPanel
 							Collections.shuffle(organisms);
 							int orgIndex = 0;
 							for(Organism org: organisms){
-								org.depleteHealth();
+								org.depleteHealth(5.0);
 								//Take sample of organism health for fitness.
-								org.updateAvgHealth(); //TODO: added (03.13) justin.
+								org.incHlthTot(); //TODO: added (03.13) justin.
 								if(org.getHealth() > 0){
 									ArrayList<Food> sight = new ArrayList<Food>();
 									ArrayList<Double> chromResults = new ArrayList<Double>();
@@ -220,7 +220,6 @@ public class GridPanel extends JPanel
 									for (int i = 0; i < chrom.size(); i++) {
 										Gene workingGene = chrom.getGene(i);
 										if (sight.size() > 0) { //if there is something in org's field of vision.
-//											double max = 0;
 											for(int j = 0; j < sight.size(); j++) {
 												HashMap<String, Double> environment =
 													new HashMap<String, Double>();
@@ -240,7 +239,6 @@ public class GridPanel extends JPanel
 												if(geneEval > bestEval.right())
 													bestEval = new Pair<Integer, Double> (i, geneEval);
 											}
-//											chromResults.add(chromResult);
 										}
 										//TODO: if there isn't anything in org's field of vision. 
 										//These numbers need to be worked out.
@@ -254,17 +252,8 @@ public class GridPanel extends JPanel
 											double geneEval = result.evaluate(environment);
 											if(geneEval > bestEval.right())
 												bestEval = new Pair<Integer, Double> (i, geneEval);
-//											chromResults.add(result.evaluate(environment));
 										}
 									}
-//									int decision = 0;
-//									double best = chromResults.get(0);
-//									for(int i = 1 ; i < chromResults.size(); i++) {
-//										if(chromResults.get(i) > best) {
-//											decision = i;
-//											best = chromResults.get(i);
-//										}
-//									}
 									// Genes are set as N-S-E-W-NE-NW-SE-SW-Eat.
 									switch (bestEval.left()) {
 									case 0: 
@@ -324,7 +313,6 @@ public class GridPanel extends JPanel
 								o.newLocation();
 								o.setHealth(7500);
 								//TODO: added (03.13) justin.
-								o.calcAvgHealth();
 							}
 							trialNum++;
 							healthFd.clear();
@@ -350,18 +338,17 @@ public class GridPanel extends JPanel
 							t.stop();
 							timePassed=0;
 							int sum = 0;
-							for(Organism o: organisms){
+							for(Organism o: organisms) {
 								sum+=g.fitness(o);
 								o.newLocation();
 							}
-							lastAvg=sum/OptionsPanel.numOrganisms;
+							lastAvg = sum/OptionsPanel.numOrganisms;
 							g.setOrgList(organisms);
 							organisms=g.newGeneration();
 							healthFd.clear();
 							poisFood.clear();
 							for(Organism o: organisms){
 								//TODO: added (03.13) justin.
-								o.calcAvgHealth();
 								o.setHealth(7500);
 								o.addGeneration();
 								o.addStartingLocation();

@@ -4,7 +4,7 @@ import Frame.Coordinate;
 
 public abstract class Matter {
 	protected Coordinate location;
-	protected double health;
+	protected double hlth;
 	protected double mxHlth;
 	protected int id;
 	
@@ -13,11 +13,11 @@ public abstract class Matter {
 	}
 	
 	public Matter(double aMxHlth) {
-		health = mxHlth = aMxHlth;
+		hlth = mxHlth = aMxHlth;
 	}
 	
 	public Matter(double aMxHlth, int anId) {
-		health = mxHlth = aMxHlth;
+		hlth = mxHlth = aMxHlth;
 		id = anId;
 	}
 	

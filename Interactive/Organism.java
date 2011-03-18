@@ -16,7 +16,7 @@ public class Organism extends Matter{
 	public static int height = 5;
 	
 	private double avgHealth;
-	private double healthTot;
+	private double hlthTot;
 	private int samples;
 	private int steps;
 	private Chromosome chromosome;
@@ -33,7 +33,7 @@ public class Organism extends Matter{
 		super(7500.0);
 		samples = 0;
 		avgHealth = 0;
-		healthTot = 0;
+		hlthTot = 0;
 		steps = 0;
 		//location (x, y) is random between (0-width,0-height) exclusive
 		r = new Random();
@@ -62,9 +62,9 @@ public class Organism extends Matter{
 		chromosome = new Chromosome(chromSize);
 		samples = 0;
 		avgHealth = 0;
-		healthTot = 0;
+		hlthTot = 0;
 		steps = 0;
-		fitness=0.0;
+		fitness = 0.0;
 		//location (x, y) is random between (0-width,0-height) exclusive
 		r = new Random();
 		int x = r.nextInt(GridPanel.WIDTH);
@@ -86,7 +86,7 @@ public class Organism extends Matter{
 	//for testing purposes only.
 	//just removing the GridPanel call.
 	public Organism(boolean boo, int aChromSize) {
-		health = 7500.00;
+		hlth = 7500.00;
 		r = new Random();
 		chromosome = new Chromosome(aChromSize);
 		fitness = 0.0;
@@ -94,12 +94,12 @@ public class Organism extends Matter{
 	
 	//This ctor is for testing purposes.
 	public Organism(double ahealth, Chromosome aChromosome) {
-		health = ahealth;
+		hlth = ahealth;
 		chromosome = aChromosome;
 	}
 
 	public Organism(Coordinate aLocation, Chromosome aChromosome) {
-		health = 7500.0;
+		hlth = 7500.0;
 		location = aLocation;
 		chromosome = aChromosome;
 	}
@@ -144,36 +144,32 @@ public class Organism extends Matter{
 	}
 
 	public double getHealth() {
-		return health;
+		return hlth;
 	}
 	
 	public double getMaxHealth() {
 		return mxHlth;
 	}
 	
+	public void setMxHlth(double aMxHlth) {
+		mxHlth = aMxHlth;
+	}
+	
 	public void setHealth(int aHealth) {
-		health = aHealth;
+		hlth = aHealth;
 	}
 	
-	public void depleteHealth() {
-		health--;
+	public void depleteHealth(double val) {
+		hlth-=val;
 	}
 	
-	public void setAvgHealth(double aAvg) {
-		avgHealth = aAvg;
-	}
-	
-	public void updateAvgHealth() {
-		healthTot+=health;
+	public void incHlthTot() {
+		hlthTot+=hlth;
 		samples++;
 	}
 	
-	public double getAvgHealth() {
-		return avgHealth;
-	}
-	
-	public void calcAvgHealth() {
-		avgHealth = healthTot/samples;
+	public double getHlthTot() {
+		return hlthTot;
 	}
 	
 	public void countStep() {
@@ -182,6 +178,10 @@ public class Organism extends Matter{
 	
 	public int getNumSteps() {
 		return steps;
+	}
+	
+	public int getSamples() {
+		return samples;
 	}
 	
 	public void addAction(String action,int index){
@@ -353,23 +353,23 @@ public class Organism extends Matter{
 	
 	public void eatFood(Food f, double fdVal){
 		f.deplete();
-		if(f instanceof HealthyFood){
+		if(f instanceof HealthyFood) {
 //			System.out.println("orgId: " + id);
 //			System.out.println("hlthy");
 //			System.out.println("orgHealth: " + health);
 //			System.out.println("FoodId: " + f.getId());
-			if(health + fdVal > mxHlth)
-				health = mxHlth;
-			else health+=5;
+			if(hlth + fdVal > mxHlth)
+				hlth = mxHlth;
+			else hlth+=5;
 		}
 		else if(f instanceof PoisonousFood){
 //			System.out.println("orgId: " + id);
 //			System.out.println("pois");
 //			System.out.println("orgHealth: " + health);
 //			System.out.println("FoodId: " + f.getId());
-			if(health - fdVal < 0)
-				health =0;
-			else health-=5;
+			if(hlth - fdVal < 0)
+				hlth =0;
+			else hlth-=5;
 		}
 	}
 
@@ -460,7 +460,7 @@ public class Organism extends Matter{
 		String str = "";
 		str += " I am an Organism. Fear me."
 			+  "\n Location: " + location
-			+  "\n Health: " + health;
+			+  "\n Health: " + hlth;
 		return str;
 	}
 

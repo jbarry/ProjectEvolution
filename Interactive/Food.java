@@ -62,13 +62,13 @@ public class Food extends Matter{
 	public Food(int x, int y){
 		this.r = new Random();
 		this.location=new Coordinate(x,y);
-		this.health=100.0;
+		this.hlth=100.0;
 	}
 
 	public Food(Coordinate aCoord){
 		this.r = new Random();
 		this.location=aCoord;
-		this.health=100.0;
+		this.hlth=100.0;
 	}
 
 	//------------------------------------------------------------------------------------
@@ -83,7 +83,7 @@ public class Food extends Matter{
 	}
 	
 	public double getFoodRemaining(){
-		return health;
+		return hlth;
 	}
 
 	public Coordinate getLocation(){
@@ -97,8 +97,8 @@ public class Food extends Matter{
 	//--accessors/mutators--
 	//------------------------------------------------------------------------------------
 	public void deplete(){
-		if(health > 0){
-			health--;
+		if(hlth > 0){
+			hlth--;
 //			System.out.println("FdHlth: " + health);
 //			System.out.println();
 		}
