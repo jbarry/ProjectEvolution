@@ -162,11 +162,6 @@ public class Organism extends Matter{
 		hlth = aHealth;
 	}
 	
-	public void deplete(double val) {
-		if (hlth - val < 0) hlth = 0;
-		else hlth-=val;
-	}
-	
 	public void incHlthTot() {
 		hlthTot+=hlth;
 		samples++;
@@ -362,7 +357,7 @@ public class Organism extends Matter{
 	}
 	
 	public void eatFood(Food f, double fdVal){
-		f.deplete();
+		f.deplete(fdVal);
 		if(f instanceof HealthyFood) {
 //			System.out.println("orgId: " + id);
 //			System.out.println("hlthy");

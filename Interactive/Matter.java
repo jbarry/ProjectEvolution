@@ -21,6 +21,10 @@ public abstract class Matter {
 		id = anId;
 	}
 	
+	public void deplete(double val) {
+		if (hlth - val < 0) hlth = 0;
+		else hlth-=val;
+	}
 	
 	public abstract double numSurroundingObjects(int scanRange);
 }
