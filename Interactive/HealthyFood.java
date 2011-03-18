@@ -7,7 +7,9 @@ public class HealthyFood extends Food {
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
-	public HealthyFood(){}
+	public HealthyFood(double aMxHlth, int anId){
+		super(aMxHlth, anId);
+	}
 
 	public HealthyFood(int x, int y){
 		super(x,y);
