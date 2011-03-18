@@ -1,6 +1,9 @@
 package Frame;
 
+import static java.lang.System.out;
 import Evaluation.Eval;
+import Evaluation.Normalizer;
+
 import java.util.HashMap;
 import Evolution.GEP;
 import Interactive.*;
@@ -51,7 +54,7 @@ public class GridPanel extends JPanel
 	private GEP g;
 	private int numFoodSources;
 	private Timer t;
-
+	private Normalizer norm;
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
@@ -102,7 +105,7 @@ public class GridPanel extends JPanel
 							}
 
 							for(HealthyFood r: healthyFoodSources){
-								if(mouseLocation.approxEquals(r.getLocation(),Food.width/2)){
+								if(mouseLocation.approxEquals(r.getLocation(), Food.width/2)){
 									//food found
 									isHFood = true;
 									MonitorPanel.simObjInfo.setText(r.toString());
@@ -114,7 +117,7 @@ public class GridPanel extends JPanel
 								}
 							}
 							for(PoisonousFood r: poisonousFoodSources){
-								if(mouseLocation.approxEquals(r.getLocation(),Food.width/2)){
+								if(mouseLocation.approxEquals(r.getLocation(), Food.width/2)){
 									//food found
 									isPFood = true;
 									MonitorPanel.simObjInfo.setText(r.toString());
@@ -192,8 +195,8 @@ public class GridPanel extends JPanel
 							for(PoisonousFood p: poisonousFoodSources){
 								p.deplete();
 							}
-							*/
-							
+							 */
+
 							//Dwight's AI LOGIC
 							// * Should work pretty well, needs to be tested.
 							// * Each gene gets checked for however many food sources are in their sight range.
@@ -209,24 +212,30 @@ public class GridPanel extends JPanel
 									ArrayList<Food> sight = new ArrayList<Food>();
 									ArrayList<Double> decisions = new ArrayList<Double>();
 									sight = getSight(org);
-									double orgX = org.getLocation().getX();
-									double orgY = org.getLocation().getY();
+									double orgX = norm.normalize(
+											org.getLocation().getX());
+									double orgY = norm.normalize(
+											org.getLocation().getY());
 									double health = org.getHealth();
 									for (int i = 0; i < chrom.size(); i++) {
 										Gene workingGene = chrom.getGene(i);
 										if (sight.size() > 0) { //if there is something in org's field of vision.
 											double max =0;
 											for(int j = 0;j < sight.size(); j++){
-												HashMap<String, Double> environment = new HashMap<String, Double>();
+												HashMap<String, Double> environment =
+													new HashMap<String, Double>();
 												Food f = sight.get(j);
-												double foodX=f.getLocation().getX();
-												double foodY=f.getLocation().getY();
-												double orgNearFood = f.numSurroundingObjects(5);
+												double foodX = norm.normalize(
+														f.getLocation().getX());
+												double foodY = norm.normalize(
+														f.getLocation().getY());
+												double orgNearFood = norm.normalize(
+														f.numSurroundingObjects(5));
 												Expr result = workingGene.getEvaledList();
 												environment.put("a", foodX-orgX);
 												environment.put("b", orgY-foodY);
 												environment.put("c", orgNearFood);
-												environment.put("d", health);
+												environment.put("d", norm.normalize(health));
 												if(result.evaluate(environment) > max){
 													max = result.evaluate(environment);
 												}
@@ -296,7 +305,7 @@ public class GridPanel extends JPanel
 										org.countStep();
 										break;
 									case 8: if(organismIsNextToHealthyFood(org)|| organismIsNextToPoisonousFood(org)){};
-											org.addAction("F", orgIndex);
+									org.addAction("F", orgIndex);
 									}
 								}
 								orgIndex++;
@@ -452,9 +461,12 @@ public class GridPanel extends JPanel
 		generationNum = 1;
 		trialNum = 1;
 		GUI.genPanel.resetGenInformation();
-		
+
 		timePassed=0;
 		numFoodSources = 0;
+		norm = new Normalizer(
+				new Pair<Double, Double> (1.0, 10000.0),
+				new Pair<Double, Double> (1.0, 50.0));
 		isValidLocation = new boolean[GridPanel.WIDTH][GridPanel.HEIGHT];
 		for(int i=0; i<isValidLocation.length; i++){
 			for(int j=0; j<isValidLocation[i].length; j++){
@@ -563,14 +575,14 @@ public class GridPanel extends JPanel
 
 		return isNextToFood;
 	}
-	
+
 	/**
 	 * Preprocess generations
 	 * Essentially run the simulation without updating the graphics.
 	 */
-	
+
 	public void preProcess(int generations){
-		
+
 	}
 
 	//------------------------------------------------------------------------------------

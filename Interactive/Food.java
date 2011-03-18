@@ -76,7 +76,7 @@ public class Food extends Matter{
 	public void deplete(){
 		if(health>0){
 			health--;
-			System.out.println(health);
+//			System.out.println(health);
 		}
 	}
 	
