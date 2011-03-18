@@ -45,7 +45,7 @@ public class GridPanel extends JPanel
 	private LinkedList<HealthyFood> healthFd;
 	private LinkedList<PoisonousFood> poisFood;
 	private int lengthTimeStep = 100;
-	private int lengthGeneration = lengthTimeStep*50;
+	private int lengthGeneration = lengthTimeStep*100;
 	private int timePassed = 0;
 	private int trialsPerGen = 1;
 	public int trialNum = 1;
@@ -246,10 +246,10 @@ public class GridPanel extends JPanel
 										else {
 											Expr result = Eval.evaluation(workingGene.makeStringArray());
 											HashMap<String,Double> environment = new HashMap<String, Double>();
-											environment.put("a", 10.0); // not sure what to pass
-											environment.put("b", 10.0); // not sure what to pass
-											environment.put("c", 0.0);
-											environment.put("d", health);
+											environment.put("a", norm.normalize(10.0)); // not sure what to pass
+											environment.put("b", norm.normalize(10.0)); // not sure what to pass
+											environment.put("c", norm.normalize(0.0));
+											environment.put("d", norm.normalize(health));
 											double geneEval = result.evaluate(environment);
 											if(geneEval > bestEval.right())
 												bestEval = new Pair<Integer, Double> (i, geneEval);
@@ -318,7 +318,7 @@ public class GridPanel extends JPanel
 							trialNum++;
 							healthFd.clear();
 							poisFood.clear();
-							for(int i=0; i<OptionsPanel.numOrganisms/2; i++){
+							for(int i=0; i<OptionsPanel.numOrganisms/5; i++){
 								HealthyFood h = new HealthyFood(100.0, i);
 								PoisonousFood f = new PoisonousFood(100.0, i);
 								healthFd.add(h);
@@ -355,7 +355,7 @@ public class GridPanel extends JPanel
 								o.addGeneration();
 								o.addStartingLocation();
 							}
-							for(int i = 0; i < OptionsPanel.numOrganisms/2; i++){
+							for(int i = 0; i < OptionsPanel.numOrganisms/5; i++){
 								HealthyFood h = new HealthyFood(100.0, i);
 								PoisonousFood f = new PoisonousFood(100.0, i);
 								healthFd.add(h);
@@ -427,23 +427,23 @@ public class GridPanel extends JPanel
 
 		organisms.clear();
 		for(int i=0; i<OptionsPanel.numOrganisms; i++){
-			Organism o = new Organism(100.00, 9, i, 100); //justin b (03.15).
+			Organism o = new Organism(1000.00, 9, i, 100); //justin b (03.15).
 			organisms.add(o);
 			o.addStartingLocation();
 		}
 		healthFd.clear();
-		for(int i = 0; i < OptionsPanel.numOrganisms/2; i++){
+		for(int i = 0; i < OptionsPanel.numOrganisms/5; i++){
 			HealthyFood h = new HealthyFood(100.0, i);
 			healthFd.add(h);
 			numFoodSources++;
 		}
 		poisFood.clear();
-		for(int i = 0; i < OptionsPanel.numOrganisms/2; i++){
+		for(int i = 0; i < OptionsPanel.numOrganisms/5; i++){
 			PoisonousFood p = new PoisonousFood(100.0, i);
 			poisFood.add(p);
 		}
 		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
-//		preProcess(50);
+		//preProcess(1000);
 	}
 	
 	//------------------------------------------------------------------------------------
@@ -602,10 +602,10 @@ public class GridPanel extends JPanel
 							else {
 								Expr result = Eval.evaluation(workingGene.makeStringArray());
 								HashMap<String,Double> environment = new HashMap<String, Double>();
-								environment.put("a", 10.0); // not sure what to pass
-								environment.put("b", 10.0); // not sure what to pass
-								environment.put("c", 0.0);
-								environment.put("d", health);
+								environment.put("a", norm.normalize(10.0)); // not sure what to pass
+								environment.put("b", norm.normalize(10.0)); // not sure what to pass
+								environment.put("c", norm.normalize(0.0));
+								environment.put("d", norm.normalize(health));
 								double geneEval = result.evaluate(environment);
 								if(geneEval > bestEval.right())
 									bestEval = new Pair<Integer, Double> (i, geneEval);
@@ -669,7 +669,7 @@ public class GridPanel extends JPanel
 				trialNum++;
 				healthFd.clear();
 				poisFood.clear();
-				for(int i=0; i<OptionsPanel.numOrganisms/2; i++){
+				for(int i=0; i<OptionsPanel.numOrganisms/5; i++){
 					HealthyFood h = new HealthyFood(100.0, i);
 					PoisonousFood f = new PoisonousFood(100.0, i);
 					healthFd.add(h);
@@ -694,7 +694,7 @@ public class GridPanel extends JPanel
 					o.addGeneration();
 					o.addStartingLocation();
 				}
-				for(int i = 0; i < OptionsPanel.numOrganisms/2; i++){
+				for(int i = 0; i < OptionsPanel.numOrganisms/5; i++){
 					HealthyFood h = new HealthyFood(100.0, i);
 					PoisonousFood f = new PoisonousFood(100.0, i);
 					healthFd.add(h);
