@@ -1,14 +1,12 @@
 package Interactive;
 
 import java.lang.Character;
-import java.util.Collection;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.Collections;
 import static java.lang.System.out;
-import static java.lang.System.err;
 import Evaluation.Eval;
 import Evaluation.Expr;
 
@@ -45,9 +43,8 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 		ran = new Random();
 		ArrayList<Integer> indexChoices = new ArrayList<Integer>();
 		Character[] finiteList = new Character[lenGenes];
-		for (int i = 0; i < lenGenes; i++) {
+		for (int i = 0; i < lenGenes; i++)
 			indexChoices.add(i);
-		}
 		for(int i = 0; i < terminals.size(); i++) {
 			int nextRan = ran.nextInt(indexChoices.size());
 			finiteList[indexChoices.remove(nextRan)]
@@ -58,9 +55,8 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 			finiteList[indexChoices.remove(nextRan)]
 			           = nonTerminals.get(ran.nextInt(nonTerminals.size()));
 		}
-		for(int i = 0; i < finiteList.length; i++) {
+		for(int i = 0; i < finiteList.length; i++)
 			symList.add(finiteList[i]);
-		}
 		evaledList = Eval.evaluation(makeStringArray());
 	}
 	
@@ -137,9 +133,8 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 	public Pair<Gene<A>, Gene<A>> crossOver(Gene<A> other) {
 		//Define the point where the crossover will occur.
 		int crossPoint = ran.nextInt(size());
-		while(crossPoint == 0) {
+		while (crossPoint == 0)
 			crossPoint = ran.nextInt(size());
-		}
 		//Generate two sublists for each Gene.
 		//Splitting them into their respective halves.
 		List<Character> fstThis = subListCharCopy(0, crossPoint);
@@ -154,11 +149,11 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 		return new Pair<Gene<A>, Gene<A>>(this, other);
 	}
 
-	private List<Character> subListChar(int x, int y) {
+	public List<Character> subListChar(int x, int y) {
 		return symList.subList(x, y);
 	}
 	
-	private void printSymList(List<Character> aSymList) {
+	public void printSymList(List<Character> aSymList) {
 		for(int i = 0; i < aSymList.size(); i++) {
 			out.print(aSymList.get(i).charValue());
 		}

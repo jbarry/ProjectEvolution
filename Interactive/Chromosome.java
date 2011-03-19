@@ -42,32 +42,12 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 		aGene.setSym(changeGene, mutation);
 	}
 	
-	@Override
 	public Pair<Chromosome, Chromosome> crossOver(Chromosome other) {
-		//Define the point where the crossover will occur.
-		int crossPoint = ran.nextInt(size());
-		while(crossPoint == 0) {
-			crossPoint = ran.nextInt(size());
+		for (int i = 0; i < chromosome.size(); i++) {
+			Pair<Gene, Gene> genePair = getGene(i).crossOver(other.getGene(i));
+			setGene(i, genePair.left());
+			other.setGene(i, genePair.right());
 		}
-		//Generate two sublists for each chromosome.
-		//Splitting them into their respective halves.
-		List<Gene> fstThis = subListGeneCopy(0, crossPoint);
-		List<Gene> secThis = subListGeneCopy(crossPoint, size());
-		List<Gene> fstOther = other.subListGeneCopy(0,  crossPoint);
-		List<Gene> secOther = other.subListGeneCopy(crossPoint, other.size());
-		//combine first part of this to second part of other.
-		fstThis.addAll(secOther);
-		chromosome = fstThis;
-		//first part of other with the second part of this.
-		fstOther.addAll(secThis);
-		other.chromosome = fstOther;
-		//Call crossover on the genes at the crossPoint.
-		Pair<Gene, Gene> crossedGenes = 
-				getGene(crossPoint).crossOver(other.getGene(crossPoint));
-		//set the index of the crossed over chromosomes
-		//to the crossed over genes.
-		setGene(crossPoint, crossedGenes.left());
-		other.setGene(crossPoint, crossedGenes.right());
 		return new Pair<Chromosome, Chromosome>(this, other);
 	}
 	
@@ -81,22 +61,25 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 	private LinkedList<Gene> subListGeneCopy(int x, int y) {
 		LinkedList<Gene> sListCop = new LinkedList<Gene>();
 		for(int i = x; i < y; i++) {
-			sListCop.add(chromosome.get(i));
+			sListCop.add(getGene(i));
 		}
 		return sListCop;
 	}
 	
-	private void setGene(int index, Gene aGene) {
+	public void setGene(int index, Gene aGene) {
 		chromosome.set(index, aGene);
 	}
+	
+	public Gene getGene(int index) {
+		return (Gene) chromosome.get(index);
+	}
+	
 	public void setChrom(List<Gene> aChrom) {
 		chromosome = aChrom;
 	}
+	
 	public List<Gene> subListGene(int x, int y) {
 		return chromosome.subList(x, y);
-	}
-	public Gene getGene(int index) {
-		return (Gene) chromosome.get(index);
 	}
 
 	public int size() {

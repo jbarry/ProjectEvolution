@@ -60,20 +60,24 @@ public class GEP {
 		//organism with the most amount of health left
 		//receives the highest fitness.
 		for(int i = 0; i < orgList.size(); i++) {
-			orgList.get(i).setFitness(fitness(orgList.get(i)));
+			orgList.get(i).setFitness(orgList.get(i).getFitness());
 		}
 
 //		printOrgList(orgList);
 //		//test Gene/makeSymList().
 //		chromList = tournament(partnerSelect(orgList));
-//		chromList = makeChromList(orgList);
-//		for(Chromosome chrom: chromList) {
-//			for(int i = 0; i < chrom.size(); i ++) {
-//				ArrayList<String> strArray = chrom.getGene(i).makeStringArray();
-//				for(int j = 0; j < chrom.getGene(i).size(); j ++)
-//					out.print(strArray.get(j));
+		chromList = makeChromList(orgList);
+//		for(int i = 0; i < chromList.size(); i ++) {
+//			Chromosome chrom = chromList.get(i);
+//			out.println("Chromosome: " + i);
+//			for(int j = 0; j < chrom.size(); j ++) {
+//				ArrayList<String> strArray = chrom.getGene(j).makeStringArray();
+//				for(int k = 0; k < chrom.getGene(j).size(); k ++) {
+//					out.print(strArray.get(k) + " ");
+//				}
 //				out.println();
 //			}
+//			out.println();
 //		}
 //		LinkedList<Pair<Chromosome, Chromosome>> x = mateSelect(chromList);
 //		chromList.clear();
@@ -86,13 +90,13 @@ public class GEP {
 //		printChromList(chromList);
 //		mutation();
 //		printChromList(chromList);
-//		LinkedList<Pair<Chromosome, Chromosome>> crossed = onePointCrossOver(onePtProb);
-//		chromList.clear();
-//		for(int i = 0; i < crossed.size(); i++) {
-//			chromList.add(crossed.get(i).right());
-//			chromList.add(crossed.get(i).left());
-//		}
-//		printChromList(chromList);
+		LinkedList<Pair<Chromosome, Chromosome>> crossed = onePointCrossOver(onePtProb);
+		chromList.clear();
+		for(int i = 0; i < crossed.size(); i++) {
+			chromList.add(crossed.get(i).right());
+			chromList.add(crossed.get(i).left());
+		}
+		printChromList(chromList);
 	}
 
 	/**
@@ -270,7 +274,7 @@ public class GEP {
 			new LinkedList <Pair<Chromosome, Chromosome>>();
 		for(Pair<Chromosome, Chromosome> mates: pairList) {
 			if(ran.nextDouble() < prob) {
-				result.add(mates.left().crossOver(mates.right()));
+				result.add(mates.left().crossOver2(mates.right()));
 			}
 		}
 		//TODO: correct the return.

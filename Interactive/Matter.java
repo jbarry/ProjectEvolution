@@ -7,7 +7,7 @@ public abstract class Matter {
 	protected double hlth;
 	protected double mxHlth;
 	protected int id;
-	protected int scnRng = 10;
+	protected int scnRng;
 	
 	public Matter() {
 		
@@ -15,11 +15,13 @@ public abstract class Matter {
 	
 	public Matter(double aMxHlth) {
 		hlth = mxHlth = aMxHlth;
+		scnRng = 10;
 	}
 	
 	public Matter(double aMxHlth, int anId) {
 		hlth = mxHlth = aMxHlth;
 		id = anId;
+		scnRng = 10;
 	}
 	
 	public Matter(double aMxHlth, int anId, int aScnRng) {

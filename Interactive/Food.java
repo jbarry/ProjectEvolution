@@ -191,8 +191,7 @@ public class Food extends Matter{
 		}
 	}
 	
-	public void paint(Graphics g, boolean isDepleted)
-	{
+	public void paint(Graphics g, boolean isDepleted) {
 		g.setColor(Color.BLUE);
 		if(!isDepleted){
 			g.fillRect((int)this.location.getX()-(width/2), 
@@ -202,7 +201,7 @@ public class Food extends Matter{
 	}
 
 	/**
-	 * @return a String representation of the Object.
+	 * @return a String representation of the Object.v
 	 */
 	public String toString(){
 		String str = "";
