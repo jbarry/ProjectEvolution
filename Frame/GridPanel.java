@@ -337,7 +337,7 @@ public class GridPanel extends JPanel
 							}
 						} else {
 							t.stop();
-							timePassed=0;
+							timePassed = 0;
 							double sum = 0;
 							for(Organism o: organisms) {
 								sum+=g.fitness(o);
@@ -346,29 +346,25 @@ public class GridPanel extends JPanel
 							}
 							lastAvg = sum/OptionsPanel.numOrganisms;
 							g.setOrgList(organisms);
-							organisms=g.newGeneration();
+							organisms = g.newGeneration();
 							healthFd.clear();
 							poisFood.clear();
-							for(Organism o: organisms){
-								//TODO: added (03.13) justin.
+							for(Organism o: organisms)
 								o.setHealth(o.getMaxHealth());
-								//o.addGeneration();
-							}
-							for(int i = 0; i < OptionsPanel.numOrganisms/5; i++){
+							for(int i = 0; i < OptionsPanel.numOrganisms/5; i++) {
 								HealthyFood h = new HealthyFood(100.0, i);
 								PoisonousFood f = new PoisonousFood(100.0, i);
 								healthFd.add(h);
 								poisFood.add(f);
 							}
-							trialNum=1;
+							trialNum = 1;
 							generationNum++;
 
 							GUI.genPanel.addGeneration();
-							if(!GUI.genPanel.resumeHasNotBeenClicked()){
+							if(!GUI.genPanel.resumeHasNotBeenClicked()) {
 								GUI.genPanel.enableResumeSimulation();
 								gui.toggleAllPauses(false);
-							}
-							else{
+							} else {
 								t.start();
 								GUI.genPanel.newGeneration();
 								repaint();
