@@ -45,7 +45,7 @@ public class GridPanel extends JPanel
 	private LinkedList<HealthyFood> healthFd;
 	private LinkedList<PoisonousFood> poisFood;
 	private int lengthTimeStep = 100;
-	private int lengthGeneration = lengthTimeStep*10;
+	private int lengthGeneration = lengthTimeStep*100;
 	private int timePassed = 0;
 	private int trialsPerGen = 1;
 	public int trialNum = 1;
@@ -342,7 +342,7 @@ public class GridPanel extends JPanel
 							for(Organism o: organisms) {
 								sum+=g.fitness(o);
 								o.newLocation();
-								out.println(o.getFitness());
+//								out.println(o.getFitness());
 							}
 							lastAvg = sum/OptionsPanel.numOrganisms;
 							g.setOrgList(organisms);

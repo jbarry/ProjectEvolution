@@ -47,6 +47,7 @@ public class GEP {
 			double aTwoPtProb) {
 
 		orgList = anOrgList;
+		chromList = new LinkedList<Chromosome>();
 		tournProb = aTournProb;
 		mutProb = aMutProb;
 		rotProb = aRotProb;
@@ -76,8 +77,9 @@ public class GEP {
 		tournament(partnerSelect(orgList));
 		rotation();
 		mutation();
-//		onePointCrossOver();
-//		onePointCrossOver();
+		onePointCrossOver();
+		out.println("orgList size: " + orgList.size() + 
+				"\nchromList size: " + chromList.size() + "\n");
 		for(int i = 0; i < orgList.size(); i++)
 			orgList.get(i).setChromosome(chromList.get(i));
 		return orgList;
@@ -184,12 +186,20 @@ public class GEP {
 			if(ran.nextDouble() < onePtProb) {
 				Pair<Chromosome, Chromosome> crossed = 
 					pairList.get(i).left().crossOver(pairList.get(i).right());
-				chromList.add(crossed.left());
-				chromList.add(crossed.right());
 			}
 		}
+		makeChrmListFrmPair(pairList);
 	}
 
+	private void makeChrmListFrmPair(
+			LinkedList<Pair<Chromosome, Chromosome>> chromPair
+			) {
+		chromList.clear();
+		for (int i = 0; i < chromPair.size(); i++) {
+			chromList.add(chromPair.get(i).left());
+			chromList.add(chromPair.get(i).right());			
+		}
+	}
 	//TODO: remove print statements. Only for testing.
 	//Pairs up indiv from the chromosome list parameter and 
 	//makes them into Pair objects. Puts Pairs into a LinkedList.

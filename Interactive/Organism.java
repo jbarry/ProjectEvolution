@@ -123,95 +123,6 @@ public class Organism extends Matter{
 
 	}
 
-	//------------------------------------------------------------------------------------
-	//--getters/setters--
-	//------------------------------------------------------------------------------------
-	
-	public Coordinate getLocation() {
-		return location;
-	}
-
-	public Chromosome getChromosome() {
-		return chromosome;
-	}
-	
-	public void setChromosome(Chromosome aChrom){
-		chromosome = aChrom;
-	}
-	
-	public double getFitness() {
-		return fitness;
-	}
-
-	public void setFitness(double aFit) {
-		fitness = aFit;
-	}
-
-	public double getHealth() {
-		return hlth;
-	}
-	
-	public double getMaxHealth() {
-		return mxHlth;
-	}
-	
-	public void setMxHlth(double aMxHlth) {
-		mxHlth = aMxHlth;
-	}
-	
-	public void setHealth(double aHealth) {
-		hlth = aHealth;
-	}
-	
-	public void incHlthTot() {
-		hlthTot+=hlth;
-		samples++;
-	}
-	
-	public double getHlthTot() {
-		return hlthTot;
-	}
-	
-	public void countStep() {
-		steps++;
-	}
-	
-	public int getNumSteps() {
-		return steps;
-	}
-	
-	public int getSamples() {
-		return samples;
-	}
-	
-	public int getScnRng() {
-		return scnRng;
-	}
-	
-	public void setScnRng(int aScnRng) {
-		scnRng = aScnRng;
-	}
-	public void addAction(String action,int index){
-		ActionList.get(ActionList.size()-1).add(action + " " + index);
-	}
-	
-	public void addGeneration(){
-		ActionList.add(new ArrayList<String>());
-		addStartingLocation();
-		chromosomeHistory.add(chromosome);
-	}
-	
-	public void addStartingLocation(){
-		StartingLocation.add(getLocation());
-	}
-	
-	public void addChromosome(){
-		chromosomeHistory.add(chromosome);
-	}
-	
-	public ArrayList<String> getActions(int generation){
-		return ActionList.get(generation);
-	}
 	
 	@Override
 	public double numSurroundingObjects(int scanRange) {
@@ -222,19 +133,19 @@ public class Organism extends Matter{
 	public void eatFood(Food f, double fdVal){
 		f.deplete(fdVal);
 		if(f instanceof HealthyFood) {
-//			System.out.println("orgId: " + id);
-//			System.out.println("hlthy");
-//			System.out.println("orgHealth: " + health);
-//			System.out.println("FoodId: " + f.getId());
+			System.out.println("orgId: " + id);
+			System.out.println("hlthy");
+			System.out.println("orgHealth: " + hlth);
+			System.out.println("FoodId: " + f.getId());
 			if(hlth + fdVal > mxHlth)
 				hlth = mxHlth;
 			else hlth+=fdVal;
 		}
 		else if(f instanceof PoisonousFood){
-//			System.out.println("orgId: " + id);
-//			System.out.println("pois");
-//			System.out.println("orgHealth: " + health);
-//			System.out.println("FoodId: " + f.getId());
+			System.out.println("orgId: " + id);
+			System.out.println("pois");
+			System.out.println("orgHealth: " + hlth);
+			System.out.println("FoodId: " + f.getId());
 			deplete(fdVal);
 		}
 	}
@@ -477,6 +388,96 @@ public class Organism extends Matter{
 			+  "\n Location: " + location
 			+  "\n Health: " + hlth;
 		return str;
+	}
+	
+	//------------------------------------------------------------------------------------
+	//--getters/setters--
+	//------------------------------------------------------------------------------------
+	
+	public Coordinate getLocation() {
+		return location;
+	}
+
+	public Chromosome getChromosome() {
+		return chromosome;
+	}
+	
+	public void setChromosome(Chromosome aChrom){
+		chromosome = aChrom;
+	}
+	
+	public double getFitness() {
+		return fitness;
+	}
+
+	public void setFitness(double aFit) {
+		fitness = aFit;
+	}
+
+	public double getHealth() {
+		return hlth;
+	}
+	
+	public double getMaxHealth() {
+		return mxHlth;
+	}
+	
+	public void setMxHlth(double aMxHlth) {
+		mxHlth = aMxHlth;
+	}
+	
+	public void setHealth(double aHealth) {
+		hlth = aHealth;
+	}
+	
+	public void incHlthTot() {
+		hlthTot+=hlth;
+		samples++;
+	}
+	
+	public double getHlthTot() {
+		return hlthTot;
+	}
+	
+	public void countStep() {
+		steps++;
+	}
+	
+	public int getNumSteps() {
+		return steps;
+	}
+	
+	public int getSamples() {
+		return samples;
+	}
+	
+	public int getScnRng() {
+		return scnRng;
+	}
+	
+	public void setScnRng(int aScnRng) {
+		scnRng = aScnRng;
+	}
+	public void addAction(String action,int index){
+		ActionList.get(ActionList.size()-1).add(action + " " + index);
+	}
+	
+	public void addGeneration(){
+		ActionList.add(new ArrayList<String>());
+		addStartingLocation();
+		chromosomeHistory.add(chromosome);
+	}
+	
+	public void addStartingLocation(){
+		StartingLocation.add(getLocation());
+	}
+	
+	public void addChromosome(){
+		chromosomeHistory.add(chromosome);
+	}
+	
+	public ArrayList<String> getActions(int generation){
+		return ActionList.get(generation);
 	}
 }	
 
