@@ -439,7 +439,7 @@ public class GridPanel extends JPanel
 			poisFood.add(p);
 		}
 		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
-		preProcess(10000);
+//		preProcess(10000);
 	}
 	
 	//------------------------------------------------------------------------------------
