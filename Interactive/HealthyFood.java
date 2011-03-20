@@ -11,6 +11,10 @@ public class HealthyFood extends Food {
 		super(aMxHlth, anId);
 	}
 
+	public HealthyFood(double aMxHlth, int anId, int aScanRange){
+		super(aMxHlth, anId, aScanRange);
+	}
+	
 	public HealthyFood(int x, int y){
 		super(x,y);
 	}
@@ -24,7 +28,7 @@ public class HealthyFood extends Food {
 		String str = "";
 		str += " I am food. Eat me."
 			+ "\n Location: " + getLocation()
-			+ "\n Remaining Food: " + getFoodRemaining();
+			+ "\n Remaining Food: " + getHealth();
 		return str;		
 	}
 

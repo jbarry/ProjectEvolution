@@ -10,6 +10,10 @@ public class PoisonousFood extends Food{
 	public PoisonousFood(double aMxHlth, int anId){
 		super(aMxHlth, anId);
 	}
+	
+	public PoisonousFood(double aMxHlth, int anId, int aScanRange){
+		super(aMxHlth, anId, aScanRange);
+	}
 
 	public PoisonousFood(int x, int y){
 		super(x,y);
@@ -24,7 +28,7 @@ public class PoisonousFood extends Food{
 		String str = "";
 		str += " I am poisonous food. Don't eat me."
 			+ "\n Location: " + getLocation()
-			+ "\n Remaining Poison: " + getFoodRemaining();
+			+ "\n Remaining Poison: " + getHealth();
 		return str;		
 	}
 

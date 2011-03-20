@@ -17,7 +17,6 @@ public class Organism extends Matter{
 	private int samples;
 	private int steps;
 	private Chromosome chromosome;
-	// Organism should not have knowledge of its own fitness
 	private double fitness;
 	private Random r;
 	private ArrayList<ArrayList<String>> ActionList;
@@ -116,8 +115,8 @@ public class Organism extends Matter{
 			LinkedList<PoisonousFood> poisFoodSrc) {
 		ArrayList<Food> toReturn = new ArrayList<Food>();
 		Coordinate orgCoord = getLocation();
-		int orgX= orgCoord.getX();
-		int orgY= orgCoord.getY();
+		int orgX = orgCoord.getX();
+		int orgY = orgCoord.getY();
 		for(Food f : healthFdSrc) {
 			if(Math.abs(orgX - f.getLocation().getX()) <= scanRange ||
 					Math.abs(orgY - f.getLocation().getY()) <= scanRange ){
@@ -287,9 +286,9 @@ public class Organism extends Matter{
 	//--getters/setters--
 	//------------------------------------------------------------------------------------
 	
-	public Coordinate getLocation() {
-		return location;
-	}
+//	public Coordinate getLocation() {
+//		return location;
+//	}
 
 	public Chromosome getChromosome() {
 		return chromosome;
@@ -299,29 +298,29 @@ public class Organism extends Matter{
 		chromosome = aChrom;
 	}
 	
-	public double getFitness() {
-		return fitness;
-	}
-
-	public void setFitness(double aFit) {
-		fitness = aFit;
-	}
-
-	public double getHealth() {
-		return hlth;
-	}
+//	public double getFitness() {
+//		return fitness;
+//	}
+//
+//	public void setFitness(double aFit) {
+//		fitness = aFit;
+//	}
+//
+//	public double getHealth() {
+//		return hlth;
+//	}
+//	
+//	public double getMaxHealth() {
+//		return mxHlth;
+//	}
 	
-	public double getMaxHealth() {
-		return mxHlth;
-	}
-	
-	public void setMxHlth(double aMxHlth) {
-		mxHlth = aMxHlth;
-	}
-	
-	public void setHealth(double aHealth) {
-		hlth = aHealth;
-	}
+//	public void setMxHlth(double aMxHlth) {
+//		mxHlth = aMxHlth;
+//	}
+//	
+//	public void setHealth(double aHealth) {
+//		hlth = aHealth;
+//	}
 	
 	public void incHlthTot() {
 		hlthTot+=hlth;
@@ -344,13 +343,14 @@ public class Organism extends Matter{
 		return samples;
 	}
 	
-	public int getScnRng() {
-		return scanRange;
-	}
+//	public int getScnRng() {
+//		return scanRange;
+//	}
+//	
+//	public void setScnRng(int aScnRng) {
+//		scanRange = aScnRng;
+//	}
 	
-	public void setScnRng(int aScnRng) {
-		scanRange = aScnRng;
-	}
 	public void addAction(String action,int index){
 		ActionList.get(ActionList.size()-1).add(action + " " + index);
 	}

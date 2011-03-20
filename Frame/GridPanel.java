@@ -39,7 +39,7 @@ public class GridPanel extends JPanel
 	public final static int HEIGHT = 400;
 	
 
-	public static boolean[][] isValidLocation;
+//	public static boolean[][] isValidLocation;
 	public static Pair<Integer, Character>[][] locationMap;
 
 	private LinkedList<Organism> organisms;
@@ -231,7 +231,7 @@ public class GridPanel extends JPanel
 												double foodY = norm.normalize(
 														f.getLocation().getY());
 												double orgNearFood = norm.normalize(
-														f.numSurroundingObjects(2));
+														f.numSurroundingObjects());
 												Expr result = workingGene.getEvaledList();
 												environment.put("a", foodX-orgX);
 												environment.put("b", orgY-foodY);
@@ -320,8 +320,8 @@ public class GridPanel extends JPanel
 							healthFd.clear();
 							poisFood.clear();
 							for(int i=0; i<OptionsPanel.numOrganisms/5; i++){
-								HealthyFood h = new HealthyFood(100.0, i);
-								PoisonousFood f = new PoisonousFood(100.0, i);
+								HealthyFood h = new HealthyFood(100.0, i, 2);
+								PoisonousFood f = new PoisonousFood(100.0, i, 2);
 								healthFd.add(h);
 								poisFood.add(f);
 							}
@@ -353,8 +353,8 @@ public class GridPanel extends JPanel
 							for(Organism o: organisms)
 								o.setHealth(o.getMaxHealth());
 							for(int i = 0; i < OptionsPanel.numOrganisms/5; i++) {
-								HealthyFood h = new HealthyFood(100.0, i);
-								PoisonousFood f = new PoisonousFood(100.0, i);
+								HealthyFood h = new HealthyFood(100.0, i, 2);
+								PoisonousFood f = new PoisonousFood(100.0, i, 2);
 								healthFd.add(h);
 								poisFood.add(f);
 							}
@@ -432,12 +432,7 @@ public class GridPanel extends JPanel
 		norm = new Normalizer(
 				new Pair<Double, Double> (1.0, 10000.0),
 				new Pair<Double, Double> (1.0, 50.0));
-		isValidLocation = new boolean[GridPanel.WIDTH][GridPanel.HEIGHT];
-		for(int i = 0; i < isValidLocation.length; i++){
-			for(int j = 0; j < isValidLocation[i].length; j++)
-				isValidLocation[i][j] = true;
-		}
-
+		
 		organisms.clear();
 		for(int i = 0; i < OptionsPanel.numOrganisms; i++){
 			Organism o = new Organism(500.00, 9, i, 100); //justin b (03.15).
@@ -447,13 +442,13 @@ public class GridPanel extends JPanel
 		}
 		healthFd.clear();
 		for(int i = 0; i < OptionsPanel.numOrganisms/5; i++){
-			HealthyFood h = new HealthyFood(100.0, i);
+			HealthyFood h = new HealthyFood(100.0, i, 2);
 			healthFd.add(h);
 			numFoodSources++;
 		}
 		poisFood.clear();
 		for(int i = 0; i < OptionsPanel.numOrganisms/5; i++){
-			PoisonousFood p = new PoisonousFood(100.0, i);
+			PoisonousFood p = new PoisonousFood(100.0, i, 2);
 			poisFood.add(p);
 		}
 		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
@@ -505,7 +500,7 @@ public class GridPanel extends JPanel
 				 * Organism is next to food
 				 */
 				org.eatFood(food, 5);
-				if(food.getFoodRemaining() <= 0){ //TODO: may not need this. GridPanel may handle this already.
+				if(food.getHealth() <= 0){ //TODO: may not need this. GridPanel may handle this already.
 					//Delete food source if it is depleted
 					healthFd.remove(food);
 				}
@@ -546,7 +541,7 @@ public class GridPanel extends JPanel
 				 * Organism is next to food
 				 */
 				org.eatFood(foodList, 2);
-				if(foodList.getFoodRemaining() <= 0){
+				if(foodList.getHealth() <= 0){
 					//Delete food source if it is depleted
 					poisFood.remove(foodList);
 				}
@@ -598,7 +593,7 @@ public class GridPanel extends JPanel
 									double foodY = norm.normalize(
 											f.getLocation().getY());
 									double orgNearFood = norm.normalize(
-											f.numSurroundingObjects(2));
+											f.numSurroundingObjects());
 									Expr result = workingGene.getEvaledList();
 									environment.put("a", foodX-orgX);
 									environment.put("b", orgY-foodY);
@@ -683,8 +678,8 @@ public class GridPanel extends JPanel
 				healthFd.clear();
 				poisFood.clear();
 				for(int i=0; i<OptionsPanel.numOrganisms/5; i++){
-					HealthyFood h = new HealthyFood(100.0, i);
-					PoisonousFood f = new PoisonousFood(100.0, i);
+					HealthyFood h = new HealthyFood(100.0, i, 2);
+					PoisonousFood f = new PoisonousFood(100.0, i, 2);
 					healthFd.add(h);
 					poisFood.add(f);
 				}
@@ -707,8 +702,8 @@ public class GridPanel extends JPanel
 					//o.addGeneration();
 				}
 				for(int i = 0; i < OptionsPanel.numOrganisms/5; i++){
-					HealthyFood h = new HealthyFood(100.0, i);
-					PoisonousFood f = new PoisonousFood(100.0, i);
+					HealthyFood h = new HealthyFood(100.0, i, 2);
+					PoisonousFood f = new PoisonousFood(100.0, i, 2);
 					healthFd.add(h);
 					poisFood.add(f);
 				}
@@ -763,7 +758,7 @@ public class GridPanel extends JPanel
 			org.paint(g);
 		}
 		for(HealthyFood h: healthFd){
-			if(h.getFoodRemaining()>0){
+			if(h.getHealth()>0){
 				h.paint(g, false);
 			}
 			else{
@@ -771,7 +766,7 @@ public class GridPanel extends JPanel
 			}
 		}
 		for(PoisonousFood p: poisFood){
-			if(p.getFoodRemaining()>0){
+			if(p.getHealth()>0){
 				p.paint(g, false);
 			}
 			else{

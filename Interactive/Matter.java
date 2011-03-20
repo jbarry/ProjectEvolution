@@ -13,73 +13,35 @@ public abstract class Matter {
 	protected int id;
 	protected int scanRange;
 	protected Random r;
-	
+	protected double fitness;
 	public static int width = 5;
 	public static int height = 5;
 	
 	public Matter() {
-		//set location
 		r = new Random();
-		int x = r.nextInt(GridPanel.WIDTH);
-		int y = r.nextInt(GridPanel.HEIGHT);
-
-		//check for collisions
-		while(!canSpawn(x, y)) {
-			x = r.nextInt(GridPanel.WIDTH);
-			y = r.nextInt(GridPanel.HEIGHT);
-		}
-		location = new Coordinate(x, y);
-
-		//set boundaries
-		setWrapAround(width, height);
-		setRange(width, height, 'f');
 	}
 	
 	public Matter(double aMxHlth) {
 		hlth = mxHlth = aMxHlth;
 		scanRange = 10;
-		//set location
-		r = new Random();
-		int x = r.nextInt(GridPanel.WIDTH);
-		int y = r.nextInt(GridPanel.HEIGHT);
-
-		//check for collisions
-		while(!canSpawn(x, y)) {
-			x = r.nextInt(GridPanel.WIDTH);
-			y = r.nextInt(GridPanel.HEIGHT);
-		}
-		location = new Coordinate(x, y);
-
-		//set boundaries
-		setWrapAround(width, height);
-		setRange(width, height, 'f');
+		place();
 	}
 	
 	public Matter(double aMxHlth, int anId) {
 		hlth = mxHlth = aMxHlth;
 		id = anId;
 		scanRange = 10;
-		//set location
-		r = new Random();
-		int x = r.nextInt(GridPanel.WIDTH);
-		int y = r.nextInt(GridPanel.HEIGHT);
-
-		//check for collisions
-		while(!canSpawn(x, y)) {
-			x = r.nextInt(GridPanel.WIDTH);
-			y = r.nextInt(GridPanel.HEIGHT);
-		}
-		location = new Coordinate(x, y);
-
-		//set boundaries
-		setWrapAround(width, height);
-		setRange(width, height, 'f');
+		place();
 	}
 	
 	public Matter(double aMxHlth, int anId, int aScnRng) {
 		hlth = mxHlth = aMxHlth;
 		id = anId;
 		scanRange = aScnRng;
+		place();
+	}
+	
+	private void place() {
 		//set location
 		r = new Random();
 		int x = r.nextInt(GridPanel.WIDTH);
@@ -106,7 +68,7 @@ public abstract class Matter {
 	 * @param scanRange
 	 * @return number of surrounding objects, namely Food or Organism Instances
 	 */
-	public double numSurroundingObjects(){
+	public double numSurroundingObjects() {
 		double numObj = 0.0;
 		for(int i=location.getX()-width/2-scanRange; i<=location.getX()+width/2+scanRange; i++){
 			for(int j=location.getY()-height/2-scanRange; j<=location.getY()+height/2+scanRange; j++){
@@ -227,5 +189,43 @@ public abstract class Matter {
 				location.setY(GridPanel.HEIGHT - (height/2));
 		}
 	}
+	
+	public int getScnRng() {
+		return scanRange;
+	}
+	
+	public void setScnRng(int aScnRng) {
+		scanRange = aScnRng;
+	}
 
+	public void setMxHlth(double aMxHlth) {
+		mxHlth = aMxHlth;
+	}
+	
+	public void setHealth(double aHealth) {
+		hlth = aHealth;
+	}
+	public double getFitness() {
+		return fitness;
+	}
+
+	public void setFitness(double aFit) {
+		fitness = aFit;
+	}
+
+	public double getHealth() {
+		return hlth;
+	}
+	
+	public double getMaxHealth() {
+		return mxHlth;
+	}
+	
+	public Coordinate getLocation() {
+		return location;
+	}
+	
+	public int getId() {
+		return id;
+	}
 }
