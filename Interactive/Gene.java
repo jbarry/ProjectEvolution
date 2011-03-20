@@ -66,6 +66,7 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 		symList = new LinkedList<Character>();
 		ran = new Random();
 		symbols = new LinkedList<Character>();
+		terminals = new LinkedList<Character>();
 		symbols.add('*');
 		symbols.add('/');
 		symbols.add('-');
@@ -81,7 +82,7 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 		Collections.shuffle(symbols);
 		ran = new Random();
 		for (int i = 0; i < aLenGenes; i++) 
-			symList.add(symbols.get(ran.nextInt(symList.size())));
+			symList.add(symbols.get(ran.nextInt(symbols.size())));
 		//Ensure that there is always at least one variable
 		//in the Gene.
 		int variable = 0;
@@ -90,6 +91,7 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 		if (variable == 0) 
 			symList.set(ran.nextInt(symList.size()),
 				terminals.get(ran.nextInt(terminals.size())));
+		evaledList = Eval.evaluation(makeStringArray());
 	}
 	
 	public Gene(LinkedList<Character> aSymList) {
@@ -180,8 +182,10 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 	}
 
 	public void mutate() {
-		setSym(ran.nextInt(size()),
-				symbols.get(ran.nextInt(symbols.size())));
+		int size1 = ran.nextInt(size());
+		int size2 = ran.nextInt(symbols.size());
+		char mut = symbols.get(size2);
+		setSym(size1 , mut);
 	}
 }
 

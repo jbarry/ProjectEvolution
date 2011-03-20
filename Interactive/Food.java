@@ -31,7 +31,7 @@ public class Food extends Matter{
 		super(aMxHlth, anId, type);
 	}
 
-	public Food(int x, int y){
+	public Food(int x, int y) {
 		location = new Coordinate(x,y);
 		hlth = 100.0;
 	}

@@ -1,4 +1,5 @@
 package Interactive;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -25,12 +26,14 @@ public abstract class Matter {
 
 	public Matter(double aMxHlth, char type) {
 		hlth = mxHlth = aMxHlth;
+		r = new Random();
 		place(type);
 	}
 
 	public Matter(double aMxHlth, int anId, char type) {
 		hlth = mxHlth = aMxHlth;
 		id = anId;
+		r = new Random();
 		place(type);
 	}
 
@@ -42,7 +45,6 @@ public abstract class Matter {
 
 	public void place(char type) {
 		//set location
-		r = new Random();
 		int x = r.nextInt(GridPanel.WIDTH);
 		int y = r.nextInt(GridPanel.HEIGHT);
 

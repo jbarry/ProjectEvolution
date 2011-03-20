@@ -18,8 +18,7 @@ public class Organism extends Matter{
 	private int steps;
 	private Chromosome chromosome;
 	private double fitness;
-	protected int scanRange;
-	private Random r;
+	private int scanRange;
 	private ArrayList<ArrayList<String>> ActionList;
 	private ArrayList<Coordinate> StartingLocation;
 	private ArrayList<Chromosome> chromosomeHistory;
@@ -28,27 +27,27 @@ public class Organism extends Matter{
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
-	// public Organism() {
-	// super(7500.0);
-	// samples = 0;
-	// avgHealth = 0;
-	// hlthTot = 0;
-	// steps = 0;
-	// chromosome = new Chromosome(9);
-	// fitness = 0.0;
-	// ActionList = new ArrayList<ArrayList<String>>();
-	// ActionList.add(new ArrayList<String>());
-	// StartingLocation = new ArrayList<Coordinate>();
-	// chromosomeHistory = new ArrayList<Chromosome>();
-	// }
+//	public Organism() {
+//		super(7500.0);
+//		samples = 0;
+//		avgHealth = 0;
+//		hlthTot = 0;
+//		steps = 0;
+//		chromosome = new Chromosome(9);
+//		fitness = 0.0;
+//		ActionList = new ArrayList<ArrayList<String>>();
+//		ActionList.add(new ArrayList<String>());
+//		StartingLocation = new ArrayList<Coordinate>();
+//		chromosomeHistory = new ArrayList<Chromosome>();
+//	}
 
-	public Organism(double aHealth, int chromSize,
-			int anId, int aScnRng) {
+	public Organism(double aHealth, int chromSize, int anId, int aScanRange) {
 		super(aHealth, anId, 'o');
 		chromosome = new Chromosome(chromSize);
 		samples = 0;
 		avgHealth = 0;
 		hlthTot = 0;
+		scanRange = aScanRange;
 		steps = 0;
 		fitness = 0.0;
 		ActionList= new ArrayList<ArrayList<String>>();
@@ -56,7 +55,7 @@ public class Organism extends Matter{
 		StartingLocation=new ArrayList<Coordinate>();
 		chromosomeHistory= new ArrayList<Chromosome>();
 	}
-
+	
 	//for testing purposes only.
 	//just removing the GridPanel call.
 	public Organism(boolean boo, int aChromSize) {
@@ -65,7 +64,7 @@ public class Organism extends Matter{
 		chromosome = new Chromosome(aChromSize);
 		fitness = 0.0;
 	}
-
+	
 	//This ctor is for testing purposes.
 	public Organism(double ahealth, Chromosome aChromosome) {
 		hlth = ahealth;
@@ -77,8 +76,8 @@ public class Organism extends Matter{
 		location = aLocation;
 		chromosome = aChromosome;
 	}
-
-	public void newLocation(){
+	
+	public void newLocation() {
 		setRange(width, height, 'w');
 		System.out.println(GridPanel.WIDTH);
 		int x = r.nextInt(GridPanel.WIDTH);
@@ -92,25 +91,25 @@ public class Organism extends Matter{
 		setWrapAround(width, height);
 		setRange(width, height, 'o');
 	}
-
+	
 	public void eatFood(Food f, double fdVal){
 		f.deplete(fdVal);
 		if(f instanceof HealthyFood) {
-			// System.out.println("orgId: " + id);
-			// System.out.println("hlthy");
-			// System.out.println("orgHealth: " + hlth);
-			// System.out.println("FoodId: " + f.getId());
+//			System.out.println("orgId: " + id);
+//			System.out.println("hlthy");
+//			System.out.println("orgHealth: " + hlth);
+//			System.out.println("FoodId: " + f.getId());
 			incHlth(fdVal);
 		}
 		else if(f instanceof PoisonousFood){
-			// System.out.println("orgId: " + id);
-			// System.out.println("pois");
-			// System.out.println("orgHealth: " + hlth);
-			// System.out.println("FoodId: " + f.getId());
+//			System.out.println("orgId: " + id);
+//			System.out.println("pois");
+//			System.out.println("orgHealth: " + hlth);
+//			System.out.println("FoodId: " + f.getId());
 			deplete(fdVal);
 		}
 	}
-
+	
 	public ArrayList<Food> look(LinkedList<HealthyFood> healthFdSrc,
 			LinkedList<PoisonousFood> poisFoodSrc) {
 		ArrayList<Food> toReturn = new ArrayList<Food>();
@@ -131,12 +130,12 @@ public class Organism extends Matter{
 		}
 		return toReturn;
 	}
-
+	
 	public void moveNorth(LinkedList<Organism> organisms) {
 		//make old location available.
 		setRange(width, height, 'w');
 		setWrapAround(width, height);
-
+		
 		//if the next move is available.
 		try{
 			if(canSpawn(location.getX(), location.getY() - 1)){
@@ -145,7 +144,7 @@ public class Organism extends Matter{
 			}
 		}
 		catch(ArrayIndexOutOfBoundsException e){
-
+			
 		}
 		//make current location unavailable
 		setRange(width, height, 'o');
@@ -161,7 +160,7 @@ public class Organism extends Matter{
 			}
 		}
 		catch(ArrayIndexOutOfBoundsException e){
-
+		
 		}
 		setRange(width, height, 'o');
 	}
@@ -179,8 +178,8 @@ public class Organism extends Matter{
 			}
 		}
 		catch(ArrayIndexOutOfBoundsException e){
-
-		}
+		
+		}	
 		setRange(width, height, 'o');
 	}
 
@@ -198,7 +197,7 @@ public class Organism extends Matter{
 			}
 		}
 		catch(ArrayIndexOutOfBoundsException e){
-
+			
 		}
 		setRange(width, height, 'o');
 	}
@@ -212,7 +211,7 @@ public class Organism extends Matter{
 			}
 		}
 		catch(ArrayIndexOutOfBoundsException e){
-
+			
 		}
 		setRange(width, height, 'o');
 
@@ -228,7 +227,7 @@ public class Organism extends Matter{
 			}
 		}
 		catch(ArrayIndexOutOfBoundsException e){
-
+			
 		}
 		setRange(width, height, 'o');
 	}
@@ -242,7 +241,7 @@ public class Organism extends Matter{
 			}
 		}
 		catch(ArrayIndexOutOfBoundsException e){
-
+			
 		}
 		setRange(width, height, 'o');
 	}
@@ -259,14 +258,14 @@ public class Organism extends Matter{
 		catch(ArrayIndexOutOfBoundsException e){}
 		setRange(width, height, 'o');
 	}
-
+	
 	public void paint(Graphics g) {
 		g.setColor(Color.BLACK);
-		g.fillRect((int)this.location.getX()-(width/2),
-				(int)this.location.getY()-(height/2),
-				width, height);
+		g.fillRect((int)this.location.getX()-(width/2), 
+				   (int)this.location.getY()-(height/2), 
+				   width, height);
 	}
-
+	
 	//------------------------------------------------------------------------------------
 	//--overloaded functions--
 	//------------------------------------------------------------------------------------
@@ -277,63 +276,63 @@ public class Organism extends Matter{
 	public String toString(){
 		String str = "";
 		str += " I am an Organism. Fear me."
-			+ "\n Location: " + location
-			+ "\n Health: " + hlth;
+			+  "\n Location: " + location
+			+  "\n Health: " + hlth;
 		return str;
 	}
-
+	
 	//------------------------------------------------------------------------------------
 	//--getters/setters--
 	//------------------------------------------------------------------------------------
-
+	
 	public Chromosome getChromosome() {
 		return chromosome;
 	}
-
+	
 	public void setChromosome(Chromosome aChrom){
 		chromosome = aChrom;
 	}
-
+	
 	public void incHlthTot() {
 		hlthTot+=hlth;
 		samples++;
 	}
-
+	
 	public double getHlthTot() {
 		return hlthTot;
 	}
-
+	
 	public void countStep() {
 		steps++;
 	}
-
+	
 	public int getNumSteps() {
 		return steps;
 	}
-
+	
 	public int getSamples() {
 		return samples;
 	}
-
+	
 	public void addAction(String action,int index){
 		ActionList.get(ActionList.size()-1).add(action + " " + index);
 	}
-
+	
 	public void addGeneration(){
 		ActionList.add(new ArrayList<String>());
 		addStartingLocation();
 		chromosomeHistory.add(chromosome);
 	}
-
+	
 	public void addStartingLocation(){
 		StartingLocation.add(getLocation());
 	}
-
+	
 	public void addChromosome(){
 		chromosomeHistory.add(chromosome);
 	}
-
+	
 	public ArrayList<String> getActions(int generation){
 		return ActionList.get(generation);
 	}
-} 
+}	

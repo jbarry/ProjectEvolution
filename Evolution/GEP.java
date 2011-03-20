@@ -56,7 +56,7 @@ public class GEP {
 //		TODO: handicap = aHandicap;
 		ran = new Random();
 
-//		testing.
+		//testing.
 //		makeChromList();
 //		onePointCrossOver();
 //		printChromList();
