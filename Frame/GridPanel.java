@@ -45,6 +45,7 @@ public class GridPanel extends JPanel
 	private LinkedList<Organism> organisms;
 	private LinkedList<HealthyFood> healthFd;
 	private LinkedList<PoisonousFood> poisFood;
+	private ArrayList<Integer> shuffleIds;
 	private int lengthTimeStep = 100;
 	private int lengthGeneration = lengthTimeStep*300;
 	private int timePassed = 0;
@@ -183,9 +184,10 @@ public class GridPanel extends JPanel
 					public void actionPerformed(ActionEvent e) {
 						if(timePassed < lengthGeneration) {
 							timePassed+=lengthTimeStep;
-							Collections.shuffle(organisms);
+							Collections.shuffle(shuffleIds);
 							int orgIndex = 0;
-							for(Organism org: organisms){
+							for(Integer integ: shuffleIds){
+								Organism org = organisms.get(integ);
 								org.deplete(1.5);
 								//Take sample of organism health for fitness.
 								org.incHlthTot();
@@ -378,7 +380,7 @@ public class GridPanel extends JPanel
 		ran = new Random();
 		timePassed=0;
 		numFoodSources = 0;
-		
+		shuffleIds = new ArrayList<Integer>();
 		/*
 		 * location map will consist of:
 		 * 	key: current instance number of object
@@ -403,6 +405,7 @@ public class GridPanel extends JPanel
 		organisms.clear();
 		for(int i = 0; i < OptionsPanel.numOrganisms; i++){
 			Organism o = new Organism(500.00, 9, i, 100); //justin b (03.15).
+			shuffleIds.add(i);
 			organisms.add(o);
 			o.addStartingLocation();
 			o.addChromosome();

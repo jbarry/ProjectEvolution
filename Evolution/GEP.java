@@ -57,9 +57,9 @@ public class GEP {
 		ran = new Random();
 
 		//testing.
-		makeChromList();
-		onePointCrossOver();
-		printChromList();
+//		makeChromList();
+//		onePointCrossOver();
+//		printChromList();
 	}
 
 	/**
@@ -162,21 +162,21 @@ public class GEP {
 			mateSelect();
 		LinkedList<Chromosome> printList = 
 			new LinkedList<Chromosome>();
-		for (int i = 0; i < pairList.size(); i ++) {
-			printList.add(pairList.get(i).left());
-			printList.add(pairList.get(i).right());
-		}
-		for (int i = 0; i < printList.size(); i ++) {
-			Chromosome aChrom = printList.get(i);
-			out.println("Chromosome " + i);
-			for (int j = 0; j < aChrom.size(); j++) {
-				Gene aGene = aChrom.getGene(j);
-				for (int k = 0; k < aGene.size(); k++) {
-					out.print(aGene.getSym(k) + " ");
-				}
-				out.println();
-			}
-		}
+//		for (int i = 0; i < pairList.size(); i ++) {
+//			printList.add(pairList.get(i).left());
+//			printList.add(pairList.get(i).right());
+//		}
+//		for (int i = 0; i < printList.size(); i ++) {
+//			Chromosome aChrom = printList.get(i);
+//			out.println("Chromosome " + i);
+//			for (int j = 0; j < aChrom.size(); j++) {
+//				Gene aGene = aChrom.getGene(j);
+//				for (int k = 0; k < aGene.size(); k++) {
+//					out.print(aGene.getSym(k) + " ");
+//				}
+//				out.println();
+//			}
+//		}
 		chromList.clear();
 		for(int i = 0; i < pairList.size(); i++) {
 			if(ran.nextDouble() < onePtProb) {
