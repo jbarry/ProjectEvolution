@@ -18,37 +18,40 @@ public class Organism extends Matter{
 	private int steps;
 	private Chromosome chromosome;
 	private double fitness;
+	private int eatRange;
 	private Random r;
 	private ArrayList<ArrayList<String>> ActionList;
 	private ArrayList<Coordinate> StartingLocation;
 	private ArrayList<Chromosome> chromosomeHistory;
-
+	public static int width = 5;
+	public static int height = 5;
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
-	public Organism() {
-		super(7500.0);
-		samples = 0;
-		avgHealth = 0;
-		hlthTot = 0;
-		steps = 0;
-		chromosome = new Chromosome(9);
-		fitness=0.0;
-		ActionList= new ArrayList<ArrayList<String>>();
-		ActionList.add(new ArrayList<String>());
-		StartingLocation=new ArrayList<Coordinate>();
-		chromosomeHistory= new ArrayList<Chromosome>();
-	}
+//	public Organism() {
+//		super(7500.0);
+//		samples = 0;
+//		avgHealth = 0;
+//		hlthTot = 0;
+//		steps = 0;
+//		chromosome = new Chromosome(9);
+//		fitness = 0.0;
+//		ActionList = new ArrayList<ArrayList<String>>();
+//		ActionList.add(new ArrayList<String>());
+//		StartingLocation = new ArrayList<Coordinate>();
+//		chromosomeHistory = new ArrayList<Chromosome>();
+//	}
 
 	public Organism(double aHealth, int chromSize,
-			int anId, int aScnRng) {
-		super(aHealth, anId, aScnRng);
+			int anId, int aScnRng, int aEatRange) {
+		super(aHealth, anId, aScnRng, 'o');
 		chromosome = new Chromosome(chromSize);
 		samples = 0;
 		avgHealth = 0;
 		hlthTot = 0;
 		steps = 0;
 		fitness = 0.0;
+		eatRange = aEatRange;
 		ActionList= new ArrayList<ArrayList<String>>();
 		ActionList.add(new ArrayList<String>());
 		StartingLocation=new ArrayList<Coordinate>();
@@ -88,25 +91,22 @@ public class Organism extends Matter{
 		//set boundaries
 		setWrapAround(width, height);
 		setRange(width, height, 'o');
-
 	}
 	
 	public void eatFood(Food f, double fdVal){
 		f.deplete(fdVal);
 		if(f instanceof HealthyFood) {
-			System.out.println("orgId: " + id);
-			System.out.println("hlthy");
-			System.out.println("orgHealth: " + hlth);
-			System.out.println("FoodId: " + f.getId());
-			if(hlth + fdVal > mxHlth)
-				hlth = mxHlth;
-			else hlth+=fdVal;
+//			System.out.println("orgId: " + id);
+//			System.out.println("hlthy");
+//			System.out.println("orgHealth: " + hlth);
+//			System.out.println("FoodId: " + f.getId());
+			incHlth(fdVal);
 		}
 		else if(f instanceof PoisonousFood){
-			System.out.println("orgId: " + id);
-			System.out.println("pois");
-			System.out.println("orgHealth: " + hlth);
-			System.out.println("FoodId: " + f.getId());
+//			System.out.println("orgId: " + id);
+//			System.out.println("pois");
+//			System.out.println("orgHealth: " + hlth);
+//			System.out.println("FoodId: " + f.getId());
 			deplete(fdVal);
 		}
 	}
@@ -286,10 +286,6 @@ public class Organism extends Matter{
 	//--getters/setters--
 	//------------------------------------------------------------------------------------
 	
-//	public Coordinate getLocation() {
-//		return location;
-//	}
-
 	public Chromosome getChromosome() {
 		return chromosome;
 	}
@@ -297,30 +293,6 @@ public class Organism extends Matter{
 	public void setChromosome(Chromosome aChrom){
 		chromosome = aChrom;
 	}
-	
-//	public double getFitness() {
-//		return fitness;
-//	}
-//
-//	public void setFitness(double aFit) {
-//		fitness = aFit;
-//	}
-//
-//	public double getHealth() {
-//		return hlth;
-//	}
-//	
-//	public double getMaxHealth() {
-//		return mxHlth;
-//	}
-	
-//	public void setMxHlth(double aMxHlth) {
-//		mxHlth = aMxHlth;
-//	}
-//	
-//	public void setHealth(double aHealth) {
-//		hlth = aHealth;
-//	}
 	
 	public void incHlthTot() {
 		hlthTot+=hlth;
@@ -342,14 +314,6 @@ public class Organism extends Matter{
 	public int getSamples() {
 		return samples;
 	}
-	
-//	public int getScnRng() {
-//		return scanRange;
-//	}
-//	
-//	public void setScnRng(int aScnRng) {
-//		scanRange = aScnRng;
-//	}
 	
 	public void addAction(String action,int index){
 		ActionList.get(ActionList.size()-1).add(action + " " + index);

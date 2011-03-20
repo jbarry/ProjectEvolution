@@ -46,7 +46,7 @@ public class GridPanel extends JPanel
 	private LinkedList<HealthyFood> healthFd;
 	private LinkedList<PoisonousFood> poisFood;
 	private int lengthTimeStep = 100;
-	private int lengthGeneration = lengthTimeStep*200;
+	private int lengthGeneration = lengthTimeStep*1200;
 	private int timePassed = 0;
 	private int trialsPerGen = 1;
 	public int trialNum = 1;
@@ -57,6 +57,7 @@ public class GridPanel extends JPanel
 	private Timer t;
 	private Normalizer norm;
 	private int numPreProcessedGenerations = 0;
+	private Random ran;
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
@@ -298,9 +299,18 @@ public class GridPanel extends JPanel
 										//org.addAction("SW", orgIndex);
 										org.countStep();
 										break;
-									case 8: if(organismIsNextToHealthyFood(org)||
-											organismIsNextToPoisonousFood(org)){};
-											//org.addAction("F", orgIndex);
+									case 8: 
+										ArrayList<Integer> surrndngHlthyFd = 
+											org.getSurroundingObjects('h');
+										ArrayList<Integer> surrndngPoisFd = 
+											org.getSurroundingObjects('p');
+										if (surrndngHlthyFd.size() != 0) {
+											org.eatFood(healthFd.get(
+													ran.nextInt(surrndngHlthyFd.size())), 5.0);
+										} else if (surrndngPoisFd.size() != 0) {
+											org.eatFood(poisFood.get(
+													ran.nextInt(surrndngPoisFd.size())), 5.0);
+										}
 									}
 								}
 								orgIndex++;
@@ -409,7 +419,7 @@ public class GridPanel extends JPanel
 		generationNum = 1;
 		trialNum = 1;
 		GUI.genPanel.resetGenInformation();
-
+		ran = new Random();
 		timePassed=0;
 		numFoodSources = 0;
 		
@@ -419,7 +429,8 @@ public class GridPanel extends JPanel
 		 *  value:
 		 * 		'w' for white space or available.
 		 * 		'o' for organism.
-		 * 		'f' for food.
+		 * 		'h' for healthy food.
+		 * 		'p' for poisonous food.
 		 */
 		locationMap = new Pair[GridPanel.WIDTH][GridPanel.HEIGHT];
 		for(int i = 0; i < locationMap.length; i++){
@@ -435,7 +446,7 @@ public class GridPanel extends JPanel
 		
 		organisms.clear();
 		for(int i = 0; i < OptionsPanel.numOrganisms; i++){
-			Organism o = new Organism(500.00, 9, i, 100); //justin b (03.15).
+			Organism o = new Organism(500.00, 9, i, 100, 7); //justin b (03.15).
 			organisms.add(o);
 			o.addStartingLocation();
 			o.addChromosome();
@@ -455,22 +466,6 @@ public class GridPanel extends JPanel
 //		preProcess(10000);
 	}
 	
-	//------------------------------------------------------------------------------------
-	//--accessors and mutators--
-	//------------------------------------------------------------------------------------
-	/**For the timer*/
-	public void start(){
-		t.start();
-	}
-	public void stop(){
-		t.stop();
-	}
-	public boolean isPaused(){
-		if(t.isRunning())
-			return false;
-		return true;
-	}
-
 	/**
 	 * Determines whether of not the passed Organism is next to a food source.
 	 *
@@ -738,6 +733,18 @@ public class GridPanel extends JPanel
 	public void setTimeStep(int step){
 		lengthTimeStep = step;
 		t.setDelay(step);
+	}
+	
+	public void start(){
+		t.start();
+	}
+	public void stop(){
+		t.stop();
+	}
+	public boolean isPaused(){
+		if(t.isRunning())
+			return false;
+		return true;
 	}
 	//------------------------------------------------------------------------------------
 	//--Override Functions--

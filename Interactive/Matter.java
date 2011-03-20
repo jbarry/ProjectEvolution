@@ -1,6 +1,10 @@
 package Interactive;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import Frame.Coordinate;
 import Frame.GridPanel;
@@ -21,27 +25,27 @@ public abstract class Matter {
 		r = new Random();
 	}
 	
-	public Matter(double aMxHlth) {
+	public Matter(double aMxHlth, char type) {
 		hlth = mxHlth = aMxHlth;
 		scanRange = 10;
-		place();
+		place(type);
 	}
 	
-	public Matter(double aMxHlth, int anId) {
+	public Matter(double aMxHlth, int anId, char type) {
 		hlth = mxHlth = aMxHlth;
 		id = anId;
 		scanRange = 10;
-		place();
+		place(type);
 	}
 	
-	public Matter(double aMxHlth, int anId, int aScnRng) {
+	public Matter(double aMxHlth, int anId, int aScnRng, char type) {
 		hlth = mxHlth = aMxHlth;
 		id = anId;
 		scanRange = aScnRng;
-		place();
+		place(type);
 	}
 	
-	private void place() {
+	public void place(char type) {
 		//set location
 		r = new Random();
 		int x = r.nextInt(GridPanel.WIDTH);
@@ -56,7 +60,7 @@ public abstract class Matter {
 
 		//set boundaries
 		setWrapAround(width, height);
-		setRange(width, height, 'f');
+		setRange(width, height, type);
 	}
 	
 	public void deplete(double val) {
@@ -74,8 +78,9 @@ public abstract class Matter {
 			for(int j=location.getY()-height/2-scanRange; j<=location.getY()+height/2+scanRange; j++){
 				try{	
 					//count all occurrences of objects in location map
-					if(GridPanel.locationMap[i][j].snd == 'f' 
-						|| GridPanel.locationMap[i][j].snd == 'o'){
+					if(GridPanel.locationMap[i][j].snd == 'f' ||
+							GridPanel.locationMap[i][j].snd == 'h' ||
+							GridPanel.locationMap[i][j].snd == 'o') {
 						numObj++;
 					}
 				}
@@ -94,17 +99,17 @@ public abstract class Matter {
 	
 	 /**
 	 * @param scanRange
-	 * @return number of surrounding objects, namely Food or Organism Instances
+	 * @param type
+	 * @return a list of id numbers of the surrounding objects of choice.
 	 */
-	public double getSurroundingObjects(){
-		double numObj = 0.0;
+	public ArrayList<Integer> getSurroundingObjects(char type) {
+		Set<Integer> objectIds = new HashSet<Integer>();
 		for(int i=location.getX()-width/2-scanRange; i<=location.getX()+width/2+scanRange; i++){
 			for(int j=location.getY()-height/2-scanRange; j<=location.getY()+height/2+scanRange; j++){
 				try{	
 					//count all occurrences of objects in location map
-					if(GridPanel.locationMap[i][j].snd == 'f' 
-						|| GridPanel.locationMap[i][j].snd == 'o'){
-						numObj++;
+					if(GridPanel.locationMap[i][j].snd == type){
+						objectIds.add(GridPanel.locationMap[i][j].fst);
 					}
 				}
 				catch(ArrayIndexOutOfBoundsException e){
@@ -112,12 +117,11 @@ public abstract class Matter {
 			}
 		}
 		//make sure that scanning object was not included in scan.
-		if(numObj >= width*height){
-			numObj -= width*height; 
-		}
-		//return a normalized value. Will count "partially" discovered organisms
-		//as a whole number, does not include "wrapped" scan.
-		return Math.ceil(numObj/(width*height));
+		//TODO: will do this outside of class. In GridPanel probably.
+//		if(numObj >= width*height){
+//			numObj -= width*height; 
+//		}
+		return new ArrayList<Integer>(objectIds);
 	}
 	
 	/**
@@ -213,6 +217,12 @@ public abstract class Matter {
 		fitness = aFit;
 	}
 
+	public void incHlth(double val) {
+		if(hlth + val > mxHlth)
+			hlth = mxHlth;
+		else hlth+=val;
+	}
+	
 	public double getHealth() {
 		return hlth;
 	}

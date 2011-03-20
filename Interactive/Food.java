@@ -16,19 +16,19 @@ public class Food extends Matter{
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
-	public Food() {
-		super(100.0);
-	}
+//	public Food() {
+//		super(100.0);
+//	}
 	
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
-	public Food(double aMxHlth, int anId) {
-		super(aMxHlth, anId);
-	}
+//	public Food(double aMxHlth, int anId) {
+//		super(aMxHlth, anId);
+//	}
 	
-	public Food(double aMxHlth, int anId, int aScanRange) {
-		super(aMxHlth, anId, aScanRange);
+	public Food(double aMxHlth, int anId, int aScanRange, char type) {
+		super(aMxHlth, anId, aScanRange, type);
 	}
 
 	public Food(int x, int y){
