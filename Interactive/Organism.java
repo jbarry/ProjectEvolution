@@ -12,8 +12,8 @@ public class Organism extends Matter{
 	//------------------------------------------------------------------------------------
 	//--globals--
 	//------------------------------------------------------------------------------------
-	public static int width = 5;
-	public static int height = 5;
+//	public static int width = 5;
+//	public static int height = 5;
 //	private Integer instanceCount;
 	private double avgHealth;
 	private double hlthTot;
@@ -124,11 +124,11 @@ public class Organism extends Matter{
 	}
 
 	
-	@Override
-	public double numSurroundingObjects(int scanRange) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+//	@Override
+//	public double numSurroundingObjects(int scanRange) {
+//		// TODO Auto-generated method stub
+//		return 0;
+//	}
 	
 	public void eatFood(Food f, double fdVal){
 		f.deplete(fdVal);
