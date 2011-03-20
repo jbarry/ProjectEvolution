@@ -36,10 +36,8 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 		}
 	}
 
-	public void mutate(int gene, Character mutation) {
-		Gene aGene = (Gene)chromosome.get(gene);
-		int changeGene = ran.nextInt(aGene.size());
-		aGene.setSym(changeGene, mutation);
+	public void mutate() {
+		getGene(ran.nextInt(size())).mutate();
 	}
 	
 	public Pair<Chromosome, Chromosome> crossOver(Chromosome other) {
