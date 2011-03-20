@@ -183,9 +183,11 @@ public class GridPanel extends JPanel
 					public void actionPerformed(ActionEvent e) {
 						if(timePassed < lengthGeneration) {
 							timePassed+=lengthTimeStep;
-							Collections.shuffle(organisms);
+							LinkedList<Organism> orgCopy = new LinkedList<Organism>();
+							orgCopy=(LinkedList<Organism>) organisms.clone();
+							Collections.shuffle(orgCopy);
 							int orgIndex = 0;
-							for(Organism org: organisms){
+							for(Organism org: orgCopy){
 								org.deplete(1.5);
 								//Take sample of organism health for fitness.
 								org.incHlthTot();
@@ -199,9 +201,11 @@ public class GridPanel extends JPanel
 											org.getLocation().getY());
 									double health = org.getHealth();
 									Chromosome chrom = org.getChromosome();
-									Pair<Integer, Double> bestEval =
+									Pair<Integer, Double> bestEval1 =
 										new Pair<Integer, Double> (0, 0.0);
-									for (int i = 0; i < chrom.size(); i++) {
+									Pair<Integer, Double> bestEval2 =
+										new Pair<Integer, Double> (1, 0.0);
+									for (int i = 2; i < chrom.size(); i++) {
 										Gene workingGene = chrom.getGene(i);
 										//if there is something in org's field of vision.
 										if (sight.size() > 0) {
@@ -221,8 +225,14 @@ public class GridPanel extends JPanel
 												environment.put("c", orgNearFood);
 												environment.put("d", norm.normalize(health));
 												double geneEval = result.evaluate(environment);
-												if(geneEval > bestEval.right())
-													bestEval = new Pair<Integer, Double> (i, geneEval);
+												if(geneEval > bestEval1.right() && bestEval1.right() <= bestEval2.right()){
+													bestEval1.setRight(geneEval);
+													bestEval1.setLeft(i);
+												}
+												else if(geneEval > bestEval2.right()){
+													bestEval2.setRight(geneEval);
+													bestEval2.setLeft(i);
+												}
 											}
 										}
 										//TODO: if there isn't anything in org's field of vision. 
@@ -235,12 +245,72 @@ public class GridPanel extends JPanel
 											environment.put("c", norm.normalize(0.0));
 											environment.put("d", norm.normalize(health));
 											double geneEval = result.evaluate(environment);
-											if(geneEval > bestEval.right())
-												bestEval = new Pair<Integer, Double> (i, geneEval);
+											if(geneEval > bestEval1.right() && bestEval1.right() < bestEval2.right()){
+												bestEval1.setRight(geneEval);
+												bestEval1.setLeft(i);
+											}
+											else if( geneEval > bestEval2.right()){
+												bestEval2.setRight(geneEval);
+												bestEval2.setLeft(i);
+											}
 										}
 									}
 									// Genes are set as N-S-E-W-NE-NW-SE-SW-Eat.
-									switch (bestEval.left()) {
+									switch (bestEval1.left()) {
+									case 0: 
+										org.moveNorth(organisms);
+										//org.addAction("N", orgIndex);
+										org.countStep();
+										break;
+									case 1: 
+										org.moveSouth(organisms);
+										//org.addAction("S", orgIndex);
+										org.countStep();
+										break;
+									case 2: 
+										org.moveEast(organisms); 
+										//org.addAction("E", orgIndex);
+										org.countStep();
+										break;
+									case 3: 
+										org.moveWest(organisms);
+										//org.addAction("W", orgIndex);
+										org.countStep();
+										break;
+									case 4: 
+										org.moveNorthEast(organisms);
+										//org.addAction("NE", orgIndex);
+										org.countStep();
+										break;
+									case 5: 
+										org.moveNorthWest(organisms);
+										//org.addAction("NW", orgIndex);
+										org.countStep();
+										break;
+									case 6: 
+										org.moveSouthEast(organisms);
+										//org.addAction("SE", orgIndex);
+										org.countStep();
+										break;
+									case 7: 
+										org.moveSouthWest(organisms);
+										//org.addAction("SW", orgIndex);
+										org.countStep();
+										break;
+									case 8: 
+										ArrayList<Integer> surrndngHlthyFd = 
+											org.getSurroundingObjects('h', 5);
+										ArrayList<Integer> surrndngPoisFd = 
+											org.getSurroundingObjects('p', 5);
+										if (surrndngHlthyFd.size() != 0) {
+											org.eatFood(healthFd.get(
+													ran.nextInt(surrndngHlthyFd.size())), 5.0);
+										} else if (surrndngPoisFd.size() != 0) {
+											org.eatFood(poisFood.get(
+													ran.nextInt(surrndngPoisFd.size())), 5.0);
+										}
+									}
+									switch (bestEval2.left()) {
 									case 0: 
 										org.moveNorth(organisms);
 										//org.addAction("N", orgIndex);
@@ -331,7 +401,7 @@ public class GridPanel extends JPanel
 							for(Organism o: organisms) {
 								sum+=g.fitness(o);
 								o.newLocation();
-								out.println(o.getFitness());
+//								out.println(o.getFitness());
 							}
 							lastAvg = sum/OptionsPanel.numOrganisms;
 							g.setOrgList(organisms);
@@ -419,7 +489,7 @@ public class GridPanel extends JPanel
 			poisFood.add(p);
 		}
 		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
-//		preProcess(20);
+		preProcess(0);
 	}
 	
 	/**
@@ -459,6 +529,7 @@ public class GridPanel extends JPanel
 				break;
 			}
 		}
+
 		return isNextToFood;
 	}
 
@@ -499,6 +570,7 @@ public class GridPanel extends JPanel
 				break;
 			}
 		}
+
 		return isNextToFood;
 	}
 
@@ -510,12 +582,14 @@ public class GridPanel extends JPanel
 	public void preProcess(int generations){
 		for(numPreProcessedGenerations=0; numPreProcessedGenerations < generations; numPreProcessedGenerations++){
 			System.out.println("Processing Generation " + numPreProcessedGenerations);
-			if(timePassed < lengthGeneration) {
+			while(timePassed < lengthGeneration) {
 				/*begin game logic here:*/
 				timePassed+=lengthTimeStep;
-				Collections.shuffle(organisms);
+				LinkedList<Organism> orgCopy = new LinkedList<Organism>();
+				orgCopy=(LinkedList<Organism>) organisms.clone();
+				Collections.shuffle(orgCopy);
 				int orgIndex = 0;
-				for(Organism org: organisms){
+				for(Organism org: orgCopy){
 					org.deplete(5.0);
 					//Take sample of organism health for fitness.
 					org.incHlthTot();
@@ -528,9 +602,11 @@ public class GridPanel extends JPanel
 								org.getLocation().getY());
 						double health = org.getHealth();
 						Chromosome chrom = org.getChromosome();
-						Pair<Integer, Double> bestEval =
+						Pair<Integer, Double> bestEval1 =
 							new Pair<Integer, Double> (0, 0.0);
-						for (int i = 0; i < chrom.size(); i++) {
+						Pair<Integer, Double> bestEval2 =
+							new Pair<Integer, Double> (1, 0.0);
+						for (int i = 2; i < chrom.size(); i++) {
 							Gene workingGene = chrom.getGene(i);
 							//if there is something in org's field of vision.
 							if (sight.size() > 0) {
@@ -550,8 +626,14 @@ public class GridPanel extends JPanel
 									environment.put("c", orgNearFood);
 									environment.put("d", norm.normalize(health));
 									double geneEval = result.evaluate(environment);
-									if(geneEval > bestEval.right())
-										bestEval = new Pair<Integer, Double> (i, geneEval);
+									if(geneEval > bestEval1.right() && bestEval1.right() < bestEval2.right()){
+										bestEval1.setLeft(i);
+										bestEval1.setRight(geneEval);
+									}
+									else if(geneEval>bestEval2.right()){
+										bestEval2.setLeft(i);
+										bestEval2.setRight(geneEval);
+									}
 								}
 								sight.clear();
 							}
@@ -565,12 +647,72 @@ public class GridPanel extends JPanel
 								environment.put("c", norm.normalize(0.0));
 								environment.put("d", norm.normalize(health));
 								double geneEval = result.evaluate(environment);
-								if(geneEval > bestEval.right())
-									bestEval = new Pair<Integer, Double> (i, geneEval);
+								if(geneEval > bestEval1.right() && bestEval1.right() < bestEval2.right()){
+									bestEval1.setLeft(i);
+									bestEval1.setRight(geneEval);
+								}
+								else if(geneEval > bestEval2.right()){
+									bestEval2.setLeft(i);
+									bestEval2.setRight(geneEval);
+								}
 							}
 						}
 						// Genes are set as N-S-E-W-NE-NW-SE-SW-Eat.
-						switch (bestEval.left()) {
+						switch (bestEval1.left()) {
+						case 0: 
+							org.moveNorth(organisms);
+							//org.addAction("N", orgIndex);
+							org.countStep();
+							break;
+						case 1: 
+							org.moveSouth(organisms);
+							//org.addAction("S", orgIndex);
+							org.countStep();
+							break;
+						case 2: 
+							org.moveEast(organisms); 
+							//org.addAction("E", orgIndex);
+							org.countStep();
+							break;
+						case 3: 
+							org.moveWest(organisms);
+							//org.addAction("W", orgIndex);
+							org.countStep();
+							break;
+						case 4: 
+							org.moveNorthEast(organisms);
+							//org.addAction("NE", orgIndex);
+							org.countStep();
+							break;
+						case 5: 
+							org.moveNorthWest(organisms);
+							//org.addAction("NW", orgIndex);
+							org.countStep();
+							break;
+						case 6: 
+							org.moveSouthEast(organisms);
+							//org.addAction("SE", orgIndex);
+							org.countStep();
+							break;
+						case 7: 
+							org.moveSouthWest(organisms);
+							//org.addAction("SW", orgIndex);
+							org.countStep();
+							break;
+						case 8: 
+							ArrayList<Integer> surrndngHlthyFd = 
+								org.getSurroundingObjects('h', 5);
+							ArrayList<Integer> surrndngPoisFd = 
+								org.getSurroundingObjects('p', 5);
+							if (surrndngHlthyFd.size() != 0) {
+								org.eatFood(healthFd.get(
+										ran.nextInt(surrndngHlthyFd.size())), 5.0);
+							} else if (surrndngPoisFd.size() != 0) {
+								org.eatFood(poisFood.get(
+										ran.nextInt(surrndngPoisFd.size())), 5.0);
+							}
+						}
+						switch (bestEval2.left()) {
 						case 0: 
 							org.moveNorth(organisms);
 							//org.addAction("N", orgIndex);
@@ -627,7 +769,8 @@ public class GridPanel extends JPanel
 					}
 					orgIndex++;
 				}
-			} else if (trialNum < trialsPerGen) {
+			} 
+			if (trialNum < trialsPerGen) {
 				for(Organism o: organisms){
 					o.newLocation();
 					o.setHealth(o.getMaxHealth());
@@ -648,8 +791,6 @@ public class GridPanel extends JPanel
 				int sum = 0;
 				for(Organism o: organisms) {
 					sum+=g.fitness(o);
-					out.println(o.getFitness());
-					out.println("anything");
 					o.newLocation();
 				}
 				lastAvg = sum/OptionsPanel.numOrganisms;
