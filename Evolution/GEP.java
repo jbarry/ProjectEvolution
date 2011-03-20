@@ -150,12 +150,9 @@ public class GEP {
 	 * @param mutation
 	 */
 	public void mutation() {
-		Character mutation = new Character('a'); 
 		for(Chromosome chrom: chromList) {
-			if(ran.nextDouble() < mutProb) {
-				int gene = ran.nextInt((chrom.size()));
-				chrom.mutate(gene, mutation);
-			}
+			if(ran.nextDouble() < mutProb)
+				chrom.mutate();
 		}
 	}
 

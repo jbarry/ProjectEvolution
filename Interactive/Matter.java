@@ -10,7 +10,7 @@ import Frame.Coordinate;
 import Frame.GridPanel;
 
 public abstract class Matter {
-	
+
 	protected Coordinate location;
 	protected double hlth;
 	protected double mxHlth;
@@ -20,31 +20,31 @@ public abstract class Matter {
 	protected double fitness;
 	public static int width = 5;
 	public static int height = 5;
-	
+
 	public Matter() {
 		r = new Random();
 	}
-	
+
 	public Matter(double aMxHlth, char type) {
 		hlth = mxHlth = aMxHlth;
 		scanRange = 10;
 		place(type);
 	}
-	
+
 	public Matter(double aMxHlth, int anId, char type) {
 		hlth = mxHlth = aMxHlth;
 		id = anId;
 		scanRange = 10;
 		place(type);
 	}
-	
+
 	public Matter(double aMxHlth, int anId, int aScnRng, char type) {
 		hlth = mxHlth = aMxHlth;
 		id = anId;
 		scanRange = aScnRng;
 		place(type);
 	}
-	
+
 	public void place(char type) {
 		//set location
 		r = new Random();
@@ -62,13 +62,13 @@ public abstract class Matter {
 		setWrapAround(width, height);
 		setRange(width, height, type);
 	}
-	
+
 	public void deplete(double val) {
 		if (hlth - val < 0) hlth = 0;
 		else hlth-=val;
 	}
-	
-	 /**
+
+	/**
 	 * @param scanRange
 	 * @return number of surrounding objects, namely Food or Organism Instances
 	 */
@@ -96,8 +96,8 @@ public abstract class Matter {
 		//as a whole number, does not include "wrapped" scan.
 		return Math.ceil(numObj/(width*height));
 	}
-	
-	 /**
+
+	/**
 	 * @param scanRange
 	 * @param type
 	 * @return a list of id numbers of the surrounding objects of choice.
@@ -118,12 +118,12 @@ public abstract class Matter {
 		}
 		//make sure that scanning object was not included in scan.
 		//TODO: will do this outside of class. In GridPanel probably.
-//		if(numObj >= width*height){
-//			numObj -= width*height; 
-//		}
+		//		if(numObj >= width*height){
+		//			numObj -= width*height; 
+		//		}
 		return new ArrayList<Integer>(objectIds);
 	}
-	
+
 	/**
 	 * @param x - current x location if valid.
 	 * @param y - current y location if valid.
@@ -138,13 +138,13 @@ public abstract class Matter {
 					}
 				}
 				catch(ArrayIndexOutOfBoundsException e){
-					
+
 				}
 			}
 		}
 		return true;
 	}
-	
+
 	/**
 	 * This method will modify the boolean location map and account for wrapping.
 	 * 
@@ -153,19 +153,19 @@ public abstract class Matter {
 	 * @param validity the value to mark the location map.
 	 */
 	public void setRange(int x, int y, Character value){
-			for(int i=(location.getX()-(x/2)); i<=(location.getX()+(x/2)); i++){
-				for(int j=(location.getY()-(y/2)); j<=(location.getY()+(y/2)); j++){
-					try{
-						GridPanel.locationMap[i][j].fst = id;
-						GridPanel.locationMap[i][j].snd = value;
-					}
-					catch(ArrayIndexOutOfBoundsException e){
-						
-					}
+		for(int i=(location.getX()-(x/2)); i<=(location.getX()+(x/2)); i++){
+			for(int j=(location.getY()-(y/2)); j<=(location.getY()+(y/2)); j++){
+				try{
+					GridPanel.locationMap[i][j].fst = id;
+					GridPanel.locationMap[i][j].snd = value;
+				}
+				catch(ArrayIndexOutOfBoundsException e){
+
 				}
 			}
+		}
 	}
-	
+
 	/**
 	 * Handles objects that stray off of the GridPanel and wraps their location.
 	 * @param rightLeftBound   - right and left boundary to trigger wrap
@@ -193,11 +193,11 @@ public abstract class Matter {
 				location.setY(GridPanel.HEIGHT - (height/2));
 		}
 	}
-	
+
 	public int getScnRng() {
 		return scanRange;
 	}
-	
+
 	public void setScnRng(int aScnRng) {
 		scanRange = aScnRng;
 	}
@@ -205,7 +205,7 @@ public abstract class Matter {
 	public void setMxHlth(double aMxHlth) {
 		mxHlth = aMxHlth;
 	}
-	
+
 	public void setHealth(double aHealth) {
 		hlth = aHealth;
 	}
@@ -222,19 +222,19 @@ public abstract class Matter {
 			hlth = mxHlth;
 		else hlth+=val;
 	}
-	
+
 	public double getHealth() {
 		return hlth;
 	}
-	
+
 	public double getMaxHealth() {
 		return mxHlth;
 	}
-	
+
 	public Coordinate getLocation() {
 		return location;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
