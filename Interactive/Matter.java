@@ -37,12 +37,6 @@ public abstract class Matter {
 		place(type);
 	}
 
-//	public Matter(double aMxHlth, int anId, int aScnRng, char type) {
-//		hlth = mxHlth = aMxHlth;
-//		id = anId;
-//		place(type);
-//	}
-
 	public void place(char type) {
 		//set location
 		int x = r.nextInt(GridPanel.WIDTH);
@@ -127,7 +121,7 @@ public abstract class Matter {
 	 * @return true if organism can spawn at given location.
 	 */
 	protected boolean canSpawn(int x, int y){
-		for(int i=x-width/2; i<=x+width/2; i++){
+		for(int i = x-width/2; i <= x+width/2; i++){
 			for(int j=y-height/2; j<=y+height/2; j++){
 				try{
 					if(GridPanel.locationMap[i][j].snd != 'w'){
@@ -135,7 +129,7 @@ public abstract class Matter {
 					}
 				}
 				catch(ArrayIndexOutOfBoundsException e){
-
+					
 				}
 			}
 		}
@@ -157,7 +151,6 @@ public abstract class Matter {
 					GridPanel.locationMap[i][j].snd = value;
 				}
 				catch(ArrayIndexOutOfBoundsException e){
-
 				}
 			}
 		}

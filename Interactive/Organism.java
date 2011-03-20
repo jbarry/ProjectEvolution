@@ -79,7 +79,6 @@ public class Organism extends Matter{
 	
 	public void newLocation() {
 		setRange(width, height, 'w');
-		System.out.println(GridPanel.WIDTH);
 		int x = r.nextInt(GridPanel.WIDTH);
 		int y = r.nextInt(GridPanel.HEIGHT);
 		while(!canSpawn(x, y)){

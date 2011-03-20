@@ -331,7 +331,7 @@ public class GridPanel extends JPanel
 							for(Organism o: organisms) {
 								sum+=g.fitness(o);
 								o.newLocation();
-//								out.println(o.getFitness());
+								out.println(o.getFitness());
 							}
 							lastAvg = sum/OptionsPanel.numOrganisms;
 							g.setOrgList(organisms);
@@ -419,7 +419,7 @@ public class GridPanel extends JPanel
 			poisFood.add(p);
 		}
 		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
-		preProcess(100);
+//		preProcess(20);
 	}
 	
 	/**
@@ -459,7 +459,6 @@ public class GridPanel extends JPanel
 				break;
 			}
 		}
-
 		return isNextToFood;
 	}
 
@@ -500,7 +499,6 @@ public class GridPanel extends JPanel
 				break;
 			}
 		}
-
 		return isNextToFood;
 	}
 
@@ -650,6 +648,8 @@ public class GridPanel extends JPanel
 				int sum = 0;
 				for(Organism o: organisms) {
 					sum+=g.fitness(o);
+					out.println(o.getFitness());
+					out.println("anything");
 					o.newLocation();
 				}
 				lastAvg = sum/OptionsPanel.numOrganisms;
