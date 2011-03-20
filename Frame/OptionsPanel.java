@@ -136,7 +136,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 				        		if(simulation.getTimer().isRunning()){
 					        		//make organisms able to move if they are shrunk.
 						        	for(Organism o: simulation.getOrganisms()){
-						        		o.setRange(Organism.width, Organism.height, 'w');
+						        		o.setRange(Organism.width, Organism.height, true);
 						        	}
 				        		}
 					        	
@@ -526,7 +526,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 						        		//make organisms able to move if they are shrunk.
 						        		//assumes simulation is running.
 							        	for(Organism o: simulation.getOrganisms()){
-							        		o.setRange(Organism.width, Organism.height, 'o');
+							        		o.setRange(Organism.width, Organism.height, true);
 							        	}
 
 							        	Organism.width = Integer.parseInt(orgWidthTxtBox.getText());
