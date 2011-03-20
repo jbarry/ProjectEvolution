@@ -46,7 +46,7 @@ public class GridPanel extends JPanel
 	private LinkedList<HealthyFood> healthFd;
 	private LinkedList<PoisonousFood> poisFood;
 	private int lengthTimeStep = 100;
-	private int lengthGeneration = lengthTimeStep*1200;
+	private int lengthGeneration = lengthTimeStep*10;
 	private int timePassed = 0;
 	private int trialsPerGen = 1;
 	public int trialNum = 1;
@@ -232,7 +232,7 @@ public class GridPanel extends JPanel
 												double foodY = norm.normalize(
 														f.getLocation().getY());
 												double orgNearFood = norm.normalize(
-														f.numSurroundingObjects());
+														f.numSurroundingObjects(5));
 												Expr result = workingGene.getEvaledList();
 												environment.put("a", foodX-orgX);
 												environment.put("b", orgY-foodY);
@@ -301,9 +301,9 @@ public class GridPanel extends JPanel
 										break;
 									case 8: 
 										ArrayList<Integer> surrndngHlthyFd = 
-											org.getSurroundingObjects('h');
+											org.getSurroundingObjects('h', 5);
 										ArrayList<Integer> surrndngPoisFd = 
-											org.getSurroundingObjects('p');
+											org.getSurroundingObjects('p', 5);
 										if (surrndngHlthyFd.size() != 0) {
 											org.eatFood(healthFd.get(
 													ran.nextInt(surrndngHlthyFd.size())), 5.0);
@@ -446,7 +446,7 @@ public class GridPanel extends JPanel
 		
 		organisms.clear();
 		for(int i = 0; i < OptionsPanel.numOrganisms; i++){
-			Organism o = new Organism(500.00, 9, i, 100, 7); //justin b (03.15).
+			Organism o = new Organism(500.00, 9, i, 100); //justin b (03.15).
 			organisms.add(o);
 			o.addStartingLocation();
 			o.addChromosome();
@@ -463,7 +463,7 @@ public class GridPanel extends JPanel
 			poisFood.add(p);
 		}
 		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
-//		preProcess(10000);
+		preProcess(10);
 	}
 	
 	/**
@@ -588,7 +588,7 @@ public class GridPanel extends JPanel
 									double foodY = norm.normalize(
 											f.getLocation().getY());
 									double orgNearFood = norm.normalize(
-											f.numSurroundingObjects());
+											f.numSurroundingObjects(5));
 									Expr result = workingGene.getEvaledList();
 									environment.put("a", foodX-orgX);
 									environment.put("b", orgY-foodY);

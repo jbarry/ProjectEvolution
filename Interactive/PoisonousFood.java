@@ -12,7 +12,7 @@ public class PoisonousFood extends Food{
 //	}
 	
 	public PoisonousFood(double aMxHlth, int anId, int aScanRange){
-		super(aMxHlth, anId, aScanRange, 'p');
+		super(aMxHlth, anId, 'p');
 	}
 
 	public PoisonousFood(int x, int y){

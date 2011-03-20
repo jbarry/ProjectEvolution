@@ -15,7 +15,6 @@ public abstract class Matter {
 	protected double hlth;
 	protected double mxHlth;
 	protected int id;
-	protected int scanRange;
 	protected Random r;
 	protected double fitness;
 	public static int width = 5;
@@ -27,23 +26,20 @@ public abstract class Matter {
 
 	public Matter(double aMxHlth, char type) {
 		hlth = mxHlth = aMxHlth;
-		scanRange = 10;
 		place(type);
 	}
 
 	public Matter(double aMxHlth, int anId, char type) {
 		hlth = mxHlth = aMxHlth;
 		id = anId;
-		scanRange = 10;
 		place(type);
 	}
 
-	public Matter(double aMxHlth, int anId, int aScnRng, char type) {
-		hlth = mxHlth = aMxHlth;
-		id = anId;
-		scanRange = aScnRng;
-		place(type);
-	}
+//	public Matter(double aMxHlth, int anId, int aScnRng, char type) {
+//		hlth = mxHlth = aMxHlth;
+//		id = anId;
+//		place(type);
+//	}
 
 	public void place(char type) {
 		//set location
@@ -72,7 +68,7 @@ public abstract class Matter {
 	 * @param scanRange
 	 * @return number of surrounding objects, namely Food or Organism Instances
 	 */
-	public double numSurroundingObjects() {
+	public double numSurroundingObjects(int scanRange) {
 		double numObj = 0.0;
 		for(int i=location.getX()-width/2-scanRange; i<=location.getX()+width/2+scanRange; i++){
 			for(int j=location.getY()-height/2-scanRange; j<=location.getY()+height/2+scanRange; j++){
@@ -102,7 +98,7 @@ public abstract class Matter {
 	 * @param type
 	 * @return a list of id numbers of the surrounding objects of choice.
 	 */
-	public ArrayList<Integer> getSurroundingObjects(char type) {
+	public ArrayList<Integer> getSurroundingObjects(char type, int scanRange) {
 		Set<Integer> objectIds = new HashSet<Integer>();
 		for(int i=location.getX()-width/2-scanRange; i<=location.getX()+width/2+scanRange; i++){
 			for(int j=location.getY()-height/2-scanRange; j<=location.getY()+height/2+scanRange; j++){
@@ -192,14 +188,6 @@ public abstract class Matter {
 			if(canSpawn(location.getX(), GridPanel.HEIGHT - (height/2)))
 				location.setY(GridPanel.HEIGHT - (height/2));
 		}
-	}
-
-	public int getScnRng() {
-		return scanRange;
-	}
-
-	public void setScnRng(int aScnRng) {
-		scanRange = aScnRng;
 	}
 
 	public void setMxHlth(double aMxHlth) {

@@ -56,7 +56,7 @@ public class GEP {
 //		TODO: handicap = aHandicap;
 		ran = new Random();
 
-		//testing.
+//		testing.
 //		makeChromList();
 //		onePointCrossOver();
 //		printChromList();
@@ -156,11 +156,9 @@ public class GEP {
 		}
 	}
 
-
-
 	public void onePointCrossOver() {
 		LinkedList<Pair<Chromosome, Chromosome>> pairList =
-			mateSelect(chromList);
+			mateSelect();
 //		LinkedList<Chromosome> printList = 
 //			new LinkedList<Chromosome>();
 //		for (int i = 0; i < pairList.size(); i ++) {
@@ -197,23 +195,23 @@ public class GEP {
 			chromList.add(chromPair.get(i).right());			
 		}
 	}
+	
 	//TODO: remove print statements. Only for testing.
 	//Pairs up indiv from the chromosome list parameter and 
 	//makes them into Pair objects. Puts Pairs into a LinkedList.
-	private LinkedList <Pair<Chromosome, Chromosome>> mateSelect(
-			LinkedList<Chromosome> generation) {
+	private LinkedList <Pair<Chromosome, Chromosome>> mateSelect() {
 		LinkedList<Pair<Chromosome, Chromosome>> pairList =
 			new LinkedList<Pair<Chromosome, Chromosome>>();
 		LinkedList<Chromosome> competitors = 
-			(LinkedList<Chromosome>) generation.clone();
+			(LinkedList<Chromosome>) chromList.clone();
 		while(!competitors.isEmpty()) {
 			Chromosome chrom = competitors.remove(0);
 			int mate;
 			Chromosome partner;
 			if(competitors.size() == 0) {
-				mate = ran.nextInt(generation.size());
-				generation.remove(chrom);
-				partner = generation.get(mate);
+				mate = ran.nextInt(chromList.size());
+				chromList.remove(chrom);
+				partner = chromList.get(mate);
 			} else {
 				mate = ran.nextInt(competitors.size());
 				partner = competitors.remove(mate);
@@ -259,8 +257,8 @@ public class GEP {
 	 * that is passed to it.
 	 * @param list
 	 */
-	public void printOrgList(LinkedList<Organism> list) {
-		for(int i = 0; i < list.size(); i++) {
+	public void printOrgList() {
+		for(int i = 0; i < orgList.size(); i++) {
 			out.println("Chromosome " + i);
 			Chromosome chromOne = orgList.get(i).getChromosome();
 			for(int j = 0; j < chromOne.size(); j++) {
@@ -303,7 +301,7 @@ public class GEP {
 	}
 	
 	public void setTournProb(double x){
-		tournProb=x;
+		tournProb = x;
 	}
 	
 	public double getMutProb(){
@@ -311,7 +309,7 @@ public class GEP {
 	}
 	
 	public void setMutProb(double x){
-		mutProb=x;
+		mutProb = x;
 	}
 
 	public double getRotProb(){
@@ -319,7 +317,7 @@ public class GEP {
 	}
 	
 	public void setRotProb(double x){
-		rotProb=x;
+		rotProb = x;
 	}
 
 	public double getOnePtProb(){
@@ -327,19 +325,19 @@ public class GEP {
 	}
 	
 	public void setOnePtProb(double x){
-		onePtProb=x;
+		onePtProb = x;
 	}
 
 	public void setTwoPtProb(double x){
-		twoPtProb=x;
+		twoPtProb = x;
 	}
 
 	public void setChromList(LinkedList<Chromosome> aChromList){
-		chromList=aChromList;
+		chromList = aChromList;
 	}
 
 	public void setOrgList(LinkedList<Organism> anOrgList){
-		orgList=anOrgList;
+		orgList = anOrgList;
 	}
 
 	//Used for debugging. Prints the line number.

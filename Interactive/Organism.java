@@ -18,7 +18,7 @@ public class Organism extends Matter{
 	private int steps;
 	private Chromosome chromosome;
 	private double fitness;
-	private int eatRange;
+	protected int scanRange;
 	private Random r;
 	private ArrayList<ArrayList<String>> ActionList;
 	private ArrayList<Coordinate> StartingLocation;
@@ -43,15 +43,14 @@ public class Organism extends Matter{
 //	}
 
 	public Organism(double aHealth, int chromSize,
-			int anId, int aScnRng, int aEatRange) {
-		super(aHealth, anId, aScnRng, 'o');
+			int anId, int aScnRng) {
+		super(aHealth, anId, 'o');
 		chromosome = new Chromosome(chromSize);
 		samples = 0;
 		avgHealth = 0;
 		hlthTot = 0;
 		steps = 0;
 		fitness = 0.0;
-		eatRange = aEatRange;
 		ActionList= new ArrayList<ArrayList<String>>();
 		ActionList.add(new ArrayList<String>());
 		StartingLocation=new ArrayList<Coordinate>();
@@ -81,6 +80,7 @@ public class Organism extends Matter{
 	
 	public void newLocation(){
 		setRange(width, height, 'w');
+		System.out.println(GridPanel.WIDTH);
 		int x = r.nextInt(GridPanel.WIDTH);
 		int y = r.nextInt(GridPanel.HEIGHT);
 		while(!canSpawn(x, y)){

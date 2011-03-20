@@ -27,8 +27,8 @@ public class Food extends Matter{
 //		super(aMxHlth, anId);
 //	}
 	
-	public Food(double aMxHlth, int anId, int aScanRange, char type) {
-		super(aMxHlth, anId, aScanRange, type);
+	public Food(double aMxHlth, int anId, char type) {
+		super(aMxHlth, anId, type);
 	}
 
 	public Food(int x, int y){

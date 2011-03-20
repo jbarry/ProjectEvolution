@@ -12,7 +12,7 @@ public class HealthyFood extends Food {
 //	}
 
 	public HealthyFood(double aMxHlth, int anId, int aScanRange){
-		super(aMxHlth, anId, aScanRange, 'h');
+		super(aMxHlth, anId, 'h');
 	}
 	
 	public HealthyFood(int x, int y){
