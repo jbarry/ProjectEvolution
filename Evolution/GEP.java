@@ -78,8 +78,8 @@ public class GEP {
 		rotation();
 		mutation();
 		onePointCrossOver();
-		out.println("orgList size: " + orgList.size() + 
-				"\nchromList size: " + chromList.size() + "\n");
+//		out.println("orgList size: " + orgList.size() + 
+//				"\nchromList size: " + chromList.size() + "\n");
 		for(int i = 0; i < orgList.size(); i++)
 			orgList.get(i).setChromosome(chromList.get(i));
 		return orgList;
