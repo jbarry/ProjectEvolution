@@ -40,6 +40,7 @@ public class GridPanel extends JPanel
 	
 
 	public static boolean[][] isValidLocation;
+	public static Pair<Integer, Character>[][] locationMap;
 
 	private LinkedList<Organism> organisms;
 	private LinkedList<HealthyFood> healthFd;
@@ -325,7 +326,7 @@ public class GridPanel extends JPanel
 								poisFood.add(f);
 							}
 
-							timePassed=0;
+							timePassed = 0;
 							if(!GUI.genPanel.resumeHasNotBeenClicked() &&
 									!GUI.genPanel.genIsSelected()){
 								GUI.genPanel.enableResumeSimulation();
@@ -411,6 +412,23 @@ public class GridPanel extends JPanel
 
 		timePassed=0;
 		numFoodSources = 0;
+		
+		/*
+		 * location map will consist of:
+		 * 	key: current instance number of object
+		 *  value:
+		 * 		'w' for white space or available.
+		 * 		'o' for organism.
+		 * 		'f' for food.
+		 */
+		locationMap = new Pair[GridPanel.WIDTH][GridPanel.HEIGHT];
+		for(int i = 0; i < locationMap.length; i++){
+			for(int j=0; j<locationMap[i].length; j++){
+				//mark available
+				locationMap[i][j] = new Pair<Integer, Character>(0, 'w');
+			}
+		}
+		
 		norm = new Normalizer(
 				new Pair<Double, Double> (1.0, 10000.0),
 				new Pair<Double, Double> (1.0, 50.0));
@@ -421,7 +439,7 @@ public class GridPanel extends JPanel
 		}
 
 		organisms.clear();
-		for(int i=0; i<OptionsPanel.numOrganisms; i++){
+		for(int i = 0; i < OptionsPanel.numOrganisms; i++){
 			Organism o = new Organism(500.00, 9, i, 100); //justin b (03.15).
 			organisms.add(o);
 			o.addStartingLocation();
@@ -681,7 +699,7 @@ public class GridPanel extends JPanel
 				}
 				lastAvg = sum/OptionsPanel.numOrganisms;
 				g.setOrgList(organisms);
-				organisms=g.newGeneration();
+				organisms = g.newGeneration();
 				healthFd.clear();
 				poisFood.clear();
 				for(Organism o: organisms){

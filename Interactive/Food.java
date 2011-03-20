@@ -12,7 +12,7 @@ public class Food extends Matter{
 	//------------------------------------------------------------------------------------
 	public static final int width = 5;
 	public static final int height = 5;
-	
+//	protected Integer instanceCount; //tracks # instances
 	private Random r;
 
 	//------------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ public class Food extends Matter{
 
 		//set boundaries
 		setWrapAround(width, height);
-		setRange(width, height, false);
+		setRange(width, height, 'f');
 	}
 	
 	//------------------------------------------------------------------------------------
@@ -56,7 +56,7 @@ public class Food extends Matter{
 
 		//set boundaries
 		setWrapAround(width, height);
-		setRange(width, height, false);
+		setRange(width, height, 'f');
 	}
 
 	public Food(int x, int y){
@@ -71,41 +71,18 @@ public class Food extends Matter{
 		this.hlth=100.0;
 	}
 
-	//------------------------------------------------------------------------------------
-	//--getters/setters--
-	//------------------------------------------------------------------------------------
-	public int getWidth() {
-		return width;
-	}
-
-	public int getHeight() {
-		return height;
-	}
-	
-	public double getFoodRemaining(){
-		return hlth;
-	}
-
-	public Coordinate getLocation(){
-		return location;
-	}
-
-	public int getId() {
-		return id;
-	}
-		
-        /**
+	 /**
 	 * @param scanRange
 	 * @return number of surrounding objects, namely Food or Organism Instances
 	 */
-	@Override
 	public double numSurroundingObjects(int scanRange){
 		double numObj = 0.0;
 		for(int i=location.getX()-width/2-scanRange; i<=location.getX()+width/2+scanRange; i++){
 			for(int j=location.getY()-height/2-scanRange; j<=location.getY()+height/2+scanRange; j++){
 				try{	
-					//count all occurrences of 'false' in location map
-					if(!GridPanel.isValidLocation[i][j]){
+					//count all occurrences of objects in location map
+					if(GridPanel.locationMap[i][j].snd == 'f' 
+						|| GridPanel.locationMap[i][j].snd == 'o'){
 						numObj++;
 					}
 				}
@@ -122,6 +99,7 @@ public class Food extends Matter{
 		return Math.ceil(numObj/(width*height));
 	}
 
+
 	/**
 	 * @param x - current x location if valid.
 	 * @param y - current y location if valid.
@@ -131,7 +109,7 @@ public class Food extends Matter{
 		for(int i=x-width/2; i<=x+width/2; i++){
 			for(int j=y-height/2; j<=y+height/2; j++){
 				try{
-					if(!GridPanel.isValidLocation[i][j]){
+					if(GridPanel.locationMap[i][j].snd != 'w'){
 						return false;
 					}
 				}
@@ -150,14 +128,21 @@ public class Food extends Matter{
 	 * @param y        y-size for rectangle
 	 * @param validity the value to mark the location map.
 	 */
-	private void setRange(int x, int y, boolean validity){
-		for(int i=(location.getX()-(x/2)); i<=(location.getX()+(x/2)); i++){
-			for(int j=(location.getY()-(y/2)); j<=(location.getY()+(y/2)); j++){
-				try{
-					GridPanel.isValidLocation[i][j] = validity;
-				}
-				catch(ArrayIndexOutOfBoundsException e){
-					
+	private void setRange(int x, int y, char value){
+		//check to see if a valid entry was given.
+		if(value != 'f' && value != 'w'){
+			value = 'w';
+		}
+		else{
+			for(int i=(location.getX()-(x/2)); i<=(location.getX()+(x/2)); i++){
+				for(int j=(location.getY()-(y/2)); j<=(location.getY()+(y/2)); j++){
+					try{
+						GridPanel.locationMap[i][j].fst = id;
+						GridPanel.locationMap[i][j].snd = value;
+					}
+					catch(ArrayIndexOutOfBoundsException e){
+						
+					}
 				}
 			}
 		}
@@ -208,5 +193,28 @@ public class Food extends Matter{
 		str += "I am foooooood. Eat me."
 			+  "\nLocation: " + location;
 		return str;
+	}
+	
+	//------------------------------------------------------------------------------------
+	//--getters/setters--
+	//------------------------------------------------------------------------------------
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+	
+	public double getFoodRemaining(){
+		return hlth;
+	}
+
+	public Coordinate getLocation(){
+		return location;
+	}
+
+	public int getId() {
+		return id;
 	}
 }
