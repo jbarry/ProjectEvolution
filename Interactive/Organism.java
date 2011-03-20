@@ -12,9 +12,6 @@ public class Organism extends Matter{
 	//------------------------------------------------------------------------------------
 	//--globals--
 	//------------------------------------------------------------------------------------
-//	public static int width = 5;
-//	public static int height = 5;
-//	private Integer instanceCount;
 	private double avgHealth;
 	private double hlthTot;
 	private int samples;
@@ -36,21 +33,6 @@ public class Organism extends Matter{
 		avgHealth = 0;
 		hlthTot = 0;
 		steps = 0;
-		//location (x, y) is random between (0-width,0-height) exclusive
-//		r = new Random();
-//		int x = r.nextInt(GridPanel.WIDTH);
-//		int y = r.nextInt(GridPanel.HEIGHT);
-//		//check for collisions
-//		while(!canSpawn(x, y)){
-//			x = r.nextInt(GridPanel.WIDTH);
-//			y = r.nextInt(GridPanel.HEIGHT);
-//		}
-//		location = new Coordinate(x, y);
-//		
-//		//set boundaries
-//		setWrapAround(width, height);
-//		setRange(width, height, 'o');
-		
 		chromosome = new Chromosome(9);
 		fitness=0.0;
 		ActionList= new ArrayList<ArrayList<String>>();
@@ -68,19 +50,6 @@ public class Organism extends Matter{
 		hlthTot = 0;
 		steps = 0;
 		fitness = 0.0;
-		//location (x, y) is random between (0-width,0-height) exclusive
-//		r = new Random();
-//		int x = r.nextInt(GridPanel.WIDTH);
-//		int y = r.nextInt(GridPanel.HEIGHT);
-//		//check for collisions
-//		while(!canSpawn(x, y)){
-//			x = r.nextInt(GridPanel.WIDTH);
-//			y = r.nextInt(GridPanel.HEIGHT);
-//		}
-//		location = new Coordinate(x, y);
-//		//set boundaries
-//		setWrapAround(width, height);
-//		setRange(width, height, 'o');
 		ActionList= new ArrayList<ArrayList<String>>();
 		ActionList.add(new ArrayList<String>());
 		StartingLocation=new ArrayList<Coordinate>();
@@ -122,13 +91,6 @@ public class Organism extends Matter{
 		setRange(width, height, 'o');
 
 	}
-
-	
-//	@Override
-//	public double numSurroundingObjects(int scanRange) {
-//		// TODO Auto-generated method stub
-//		return 0;
-//	}
 	
 	public void eatFood(Food f, double fdVal){
 		f.deplete(fdVal);
@@ -157,14 +119,14 @@ public class Organism extends Matter{
 		int orgX= orgCoord.getX();
 		int orgY= orgCoord.getY();
 		for(Food f : healthFdSrc) {
-			if(Math.abs(orgX - f.getLocation().getX()) <= scnRng ||
-					Math.abs(orgY - f.getLocation().getY()) <= scnRng ){
+			if(Math.abs(orgX - f.getLocation().getX()) <= scanRange ||
+					Math.abs(orgY - f.getLocation().getY()) <= scanRange ){
 				toReturn.add(f);
 			}
 		}
 		for(Food f : poisFoodSrc) {
-			if(Math.abs(orgX - f.getLocation().getX()) <= scnRng ||
-					Math.abs(orgY - f.getLocation().getY()) <= scnRng ){
+			if(Math.abs(orgX - f.getLocation().getX()) <= scanRange ||
+					Math.abs(orgY - f.getLocation().getY()) <= scanRange ){
 				toReturn.add(f);
 			}
 		}
@@ -306,82 +268,6 @@ public class Organism extends Matter{
 				   width, height);
 	}
 	
-//	/**
-//	 * @param x - current x location if valid.
-//	 * @param y - current y location if valid.
-//	 * @return true if organism can spawn at given location.
-//	 */
-//	private boolean canSpawn(int x, int y){
-//		for(int i=x-width/2; i<=x+width/2; i++){
-//			for(int j=y-height/2; j<=y+height/2; j++){
-//				try{
-//					if(GridPanel.locationMap[i][j].snd != 'w'){
-//						return false;
-//					}
-//				}
-//				catch(ArrayIndexOutOfBoundsException e){
-//					
-//				}
-//			}
-//		}
-//		return true;
-//	}
-	
-//	/**
-//	 * This method will modify the boolean location map and account for wrapping.
-//	 * 
-//	 * @param x        x-size for rectangle
-//	 * @param y        y-size for rectangle
-//	 * @param validity the value to mark the location map.
-//	 */
-//	public void setRange(int x, int y, Character value){
-//		//check to see if a valid entry was given.
-//		if(value != 'o' && value != 'w'){
-//			value = 'w';
-//		}
-//		else{
-//			for(int i=(location.getX()-(x/2)); i<=(location.getX()+(x/2)); i++){
-//				for(int j=(location.getY()-(y/2)); j<=(location.getY()+(y/2)); j++){
-//					try{
-//						GridPanel.locationMap[i][j].fst = id;
-//						GridPanel.locationMap[i][j].snd = value;
-//					}
-//					catch(ArrayIndexOutOfBoundsException e){
-//						
-//					}
-//				}
-//			}
-//		}
-//	}
-	
-//	/**
-//	 * Handles objects that stray off of the GridPanel and wraps their location.
-//	 * @param rightLeftBound   - right and left boundary to trigger wrap
-//	 * @param topBottomBound   - top and bottom boundary to trigger wrap
-//	 */
-//	private void setWrapAround(int rightLeftBound, int topBottomBound){
-//		if(location.getX() + (rightLeftBound/2) >= GridPanel.WIDTH){
-//			//right
-//			if(canSpawn(width/2+1, location.getY()))
-//				location.setX((width/2)+1);
-//		}
-//		if(location.getX() - (rightLeftBound/2) <= 0){
-//			//left
-//			if(canSpawn(GridPanel.WIDTH - (width/2), location.getY()))
-//				location.setX(GridPanel.WIDTH - (width/2));
-//		}
-//		if(location.getY() + (topBottomBound/2) >= GridPanel.HEIGHT){
-//			//bottom
-//			if(canSpawn(location.getX(), height/2 + 1))
-//				location.setY(height/2 + 1);
-//		}
-//		if(location.getY() - (topBottomBound/2) <= 0){
-//			//top
-//			if(canSpawn(location.getX(), GridPanel.HEIGHT - (height/2)))
-//				location.setY(GridPanel.HEIGHT - (height/2));
-//		}
-//	}
-
 	//------------------------------------------------------------------------------------
 	//--overloaded functions--
 	//------------------------------------------------------------------------------------
@@ -459,11 +345,11 @@ public class Organism extends Matter{
 	}
 	
 	public int getScnRng() {
-		return scnRng;
+		return scanRange;
 	}
 	
 	public void setScnRng(int aScnRng) {
-		scnRng = aScnRng;
+		scanRange = aScnRng;
 	}
 	public void addAction(String action,int index){
 		ActionList.get(ActionList.size()-1).add(action + " " + index);
