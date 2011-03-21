@@ -7,12 +7,8 @@ public class PoisonousFood extends Food{
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
-//	public PoisonousFood(double aMxHlth, int anId){
-//		super(aMxHlth, anId);
-//	}
-	
-	public PoisonousFood(double aMxHlth, int anId, int aScanRange){
-		super(aMxHlth, anId, 'p');
+	public PoisonousFood(double aMxHlth, int anId){
+		super(aMxHlth, anId);
 	}
 
 	public PoisonousFood(int x, int y){
@@ -28,7 +24,7 @@ public class PoisonousFood extends Food{
 		String str = "";
 		str += " I am poisonous food. Don't eat me."
 			+ "\n Location: " + getLocation()
-			+ "\n Remaining Poison: " + getHealth();
+			+ "\n Remaining Poison: " + getFoodRemaining();
 		return str;		
 	}
 

@@ -178,10 +178,5 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 	public void queue(Character e) {
 		symList.add(e);
 	}
-
-	public void mutate() {
-		setSym(ran.nextInt(size()),
-				symbols.get(ran.nextInt(symbols.size())));
-	}
 }
 

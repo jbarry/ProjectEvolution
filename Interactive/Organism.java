@@ -12,45 +12,75 @@ public class Organism extends Matter{
 	//------------------------------------------------------------------------------------
 	//--globals--
 	//------------------------------------------------------------------------------------
+	public static int width = 5;
+	public static int height = 5;
+	
 	private double avgHealth;
 	private double hlthTot;
 	private int samples;
 	private int steps;
 	private Chromosome chromosome;
+	// Organism should not have knowledge of its own fitness
 	private double fitness;
-	protected int scanRange;
 	private Random r;
 	private ArrayList<ArrayList<String>> ActionList;
 	private ArrayList<Coordinate> StartingLocation;
 	private ArrayList<Chromosome> chromosomeHistory;
-	public static int width = 5;
-	public static int height = 5;
+
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
-//	public Organism() {
-//		super(7500.0);
-//		samples = 0;
-//		avgHealth = 0;
-//		hlthTot = 0;
-//		steps = 0;
-//		chromosome = new Chromosome(9);
-//		fitness = 0.0;
-//		ActionList = new ArrayList<ArrayList<String>>();
-//		ActionList.add(new ArrayList<String>());
-//		StartingLocation = new ArrayList<Coordinate>();
-//		chromosomeHistory = new ArrayList<Chromosome>();
-//	}
+	public Organism() {
+		super(7500.0);
+		samples = 0;
+		avgHealth = 0;
+		hlthTot = 0;
+		steps = 0;
+		//location (x, y) is random between (0-width,0-height) exclusive
+		r = new Random();
+		int x = r.nextInt(GridPanel.WIDTH);
+		int y = r.nextInt(GridPanel.HEIGHT);
+		//check for collisions
+		while(!canSpawn(x, y)){
+			x = r.nextInt(GridPanel.WIDTH);
+			y = r.nextInt(GridPanel.HEIGHT);
+		}
+		location = new Coordinate(x, y);
+		
+		//set boundaries
+		setWrapAround(width, height);
+		setRange(width, height, false);
+		
+		chromosome = new Chromosome(9);
+		fitness=0.0;
+		ActionList= new ArrayList<ArrayList<String>>();
+		ActionList.add(new ArrayList<String>());
+		StartingLocation=new ArrayList<Coordinate>();
+		chromosomeHistory= new ArrayList<Chromosome>();
+	}
 
 	public Organism(double aHealth, int chromSize,
 			int anId, int aScnRng) {
-		super(aHealth, anId, 'o');
+		super(aHealth, anId, aScnRng);
 		chromosome = new Chromosome(chromSize);
 		samples = 0;
 		avgHealth = 0;
 		hlthTot = 0;
 		steps = 0;
 		fitness = 0.0;
+		//location (x, y) is random between (0-width,0-height) exclusive
+		r = new Random();
+		int x = r.nextInt(GridPanel.WIDTH);
+		int y = r.nextInt(GridPanel.HEIGHT);
+		//check for collisions
+		while(!canSpawn(x, y)){
+			x = r.nextInt(GridPanel.WIDTH);
+			y = r.nextInt(GridPanel.HEIGHT);
+		}
+		location = new Coordinate(x, y);
+		//set boundaries
+		setWrapAround(width, height);
+		setRange(width, height, false);
 		ActionList= new ArrayList<ArrayList<String>>();
 		ActionList.add(new ArrayList<String>());
 		StartingLocation=new ArrayList<Coordinate>();
@@ -79,8 +109,7 @@ public class Organism extends Matter{
 	}
 	
 	public void newLocation(){
-		setRange(width, height, 'w');
-		System.out.println(GridPanel.WIDTH);
+		setRange(width, height, true);
 		int x = r.nextInt(GridPanel.WIDTH);
 		int y = r.nextInt(GridPanel.HEIGHT);
 		while(!canSpawn(x, y)){
@@ -90,23 +119,33 @@ public class Organism extends Matter{
 		location = new Coordinate(x, y);
 		//set boundaries
 		setWrapAround(width, height);
-		setRange(width, height, 'o');
+		setRange(width, height, false);
+
+	}
+
+	
+	@Override
+	public double numSurroundingObjects(int scanRange) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 	public void eatFood(Food f, double fdVal){
 		f.deplete(fdVal);
 		if(f instanceof HealthyFood) {
-//			System.out.println("orgId: " + id);
-//			System.out.println("hlthy");
-//			System.out.println("orgHealth: " + hlth);
-//			System.out.println("FoodId: " + f.getId());
-			incHlth(fdVal);
+			System.out.println("orgId: " + id);
+			System.out.println("hlthy");
+			System.out.println("orgHealth: " + hlth);
+			System.out.println("FoodId: " + f.getId());
+			if(hlth + fdVal > mxHlth)
+				hlth = mxHlth;
+			else hlth+=fdVal;
 		}
 		else if(f instanceof PoisonousFood){
-//			System.out.println("orgId: " + id);
-//			System.out.println("pois");
-//			System.out.println("orgHealth: " + hlth);
-//			System.out.println("FoodId: " + f.getId());
+			System.out.println("orgId: " + id);
+			System.out.println("pois");
+			System.out.println("orgHealth: " + hlth);
+			System.out.println("FoodId: " + f.getId());
 			deplete(fdVal);
 		}
 	}
@@ -115,17 +154,17 @@ public class Organism extends Matter{
 			LinkedList<PoisonousFood> poisFoodSrc) {
 		ArrayList<Food> toReturn = new ArrayList<Food>();
 		Coordinate orgCoord = getLocation();
-		int orgX = orgCoord.getX();
-		int orgY = orgCoord.getY();
+		int orgX= orgCoord.getX();
+		int orgY= orgCoord.getY();
 		for(Food f : healthFdSrc) {
-			if(Math.abs(orgX - f.getLocation().getX()) <= scanRange ||
-					Math.abs(orgY - f.getLocation().getY()) <= scanRange ){
+			if(Math.abs(orgX - f.getLocation().getX()) <= scnRng ||
+					Math.abs(orgY - f.getLocation().getY()) <= scnRng ){
 				toReturn.add(f);
 			}
 		}
 		for(Food f : poisFoodSrc) {
-			if(Math.abs(orgX - f.getLocation().getX()) <= scanRange ||
-					Math.abs(orgY - f.getLocation().getY()) <= scanRange ){
+			if(Math.abs(orgX - f.getLocation().getX()) <= scnRng ||
+					Math.abs(orgY - f.getLocation().getY()) <= scnRng ){
 				toReturn.add(f);
 			}
 		}
@@ -134,7 +173,7 @@ public class Organism extends Matter{
 	
 	public void moveNorth(LinkedList<Organism> organisms) {
 		//make old location available.
-		setRange(width, height, 'w');
+		setRange(width, height, true);
 		setWrapAround(width, height);
 		
 		//if the next move is available.
@@ -148,11 +187,11 @@ public class Organism extends Matter{
 			
 		}
 		//make current location unavailable
-		setRange(width, height, 'o');
+		setRange(width, height, false);
 	}
 
 	public void moveNorthEast(LinkedList<Organism> organisms) {
-		setRange(width, height, 'w');
+		setRange(width, height, true);
 		setWrapAround(width, height);
 		try{
 			if(canSpawn(location.getX() + 1, location.getY() - 1)){
@@ -163,11 +202,11 @@ public class Organism extends Matter{
 		catch(ArrayIndexOutOfBoundsException e){
 		
 		}
-		setRange(width, height, 'o');
+		setRange(width, height, false);
 	}
 
 	public void moveEast(LinkedList<Organism> organisms) {
-		setRange(width, height, 'w');
+		setRange(width, height, true);
 		setWrapAround(width, height);
 		try{
 			if(location.getX() + 1 + width/2 >= GridPanel.WIDTH){
@@ -181,11 +220,11 @@ public class Organism extends Matter{
 		catch(ArrayIndexOutOfBoundsException e){
 		
 		}	
-		setRange(width, height, 'o');
+		setRange(width, height, false);
 	}
 
 	public void moveSouthEast(LinkedList<Organism> organisms) {
-		setRange(width, height, 'w');
+		setRange(width, height, true);
 		setWrapAround(width, height);
 		try{
 			if(location.getY() + 1 + height/2>= GridPanel.HEIGHT){
@@ -200,11 +239,11 @@ public class Organism extends Matter{
 		catch(ArrayIndexOutOfBoundsException e){
 			
 		}
-		setRange(width, height, 'o');
+		setRange(width, height, false);
 	}
 
 	public void moveSouth(LinkedList<Organism> organisms) {
-		setRange(width, height, 'w');
+		setRange(width, height, true);
 		setWrapAround(width, height);
 		try{
 			if(canSpawn(location.getX(), location.getY() + 1)){
@@ -214,12 +253,12 @@ public class Organism extends Matter{
 		catch(ArrayIndexOutOfBoundsException e){
 			
 		}
-		setRange(width, height, 'o');
+		setRange(width, height, false);
 
 	}
 
 	public void moveSouthWest(LinkedList<Organism> organisms) {
-		setRange(width, height, 'w');
+		setRange(width, height, true);
 		setWrapAround(width, height);
 		try{
 			if(canSpawn(location.getX() - 1, location.getY() + 1)){
@@ -230,11 +269,11 @@ public class Organism extends Matter{
 		catch(ArrayIndexOutOfBoundsException e){
 			
 		}
-		setRange(width, height, 'o');
+		setRange(width, height, false);
 	}
 
 	public void moveWest(LinkedList<Organism> organisms) {
-		setRange(width, height, 'w');
+		setRange(width, height, true);
 		setWrapAround(width, height);
 		try{
 			if(canSpawn(location.getX() - 1, location.getY())){
@@ -244,11 +283,11 @@ public class Organism extends Matter{
 		catch(ArrayIndexOutOfBoundsException e){
 			
 		}
-		setRange(width, height, 'o');
+		setRange(width, height, false);
 	}
 
 	public void moveNorthWest(LinkedList<Organism> organisms) {
-		setRange(width, height, 'w');
+		setRange(width, height, true);
 		setWrapAround(width, height);
 		try{
 			if(canSpawn(location.getX() - 1, location.getY() - 1)){
@@ -257,7 +296,7 @@ public class Organism extends Matter{
 			}
 		}
 		catch(ArrayIndexOutOfBoundsException e){}
-		setRange(width, height, 'o');
+		setRange(width, height, false);
 	}
 	
 	public void paint(Graphics g) {
@@ -267,6 +306,75 @@ public class Organism extends Matter{
 				   width, height);
 	}
 	
+	/**
+	 * @param x - current x location if valid.
+	 * @param y - current y location if valid.
+	 * @return true if organism can spawn at given location.
+	 */
+	private boolean canSpawn(int x, int y){
+		for(int i=x-width/2; i<=x+width/2; i++){
+			for(int j=y-height/2; j<=y+height/2; j++){
+				try{
+					if(!GridPanel.isValidLocation[i][j]){
+						return false;
+					}
+				}
+				catch(ArrayIndexOutOfBoundsException e){
+					
+				}
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * This method will modify the boolean location map and account for wrapping.
+	 * 
+	 * @param x        x-size for rectangle
+	 * @param y        y-size for rectangle
+	 * @param validity the value to mark the location map.
+	 */
+	public void setRange(int x, int y, boolean validity){
+		for(int i=(location.getX()-(x/2)); i<=(location.getX()+(x/2)); i++){
+			for(int j=(location.getY()-(y/2)); j<=(location.getY()+(y/2)); j++){
+				try{
+					GridPanel.isValidLocation[i][j] = validity;
+				}
+				catch(ArrayIndexOutOfBoundsException e){
+					
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Handles objects that stray off of the GridPanel and wraps their location.
+	 * @param rightLeftBound   - right and left boundary to trigger wrap
+	 * @param topBottomBound   - top and bottom boundary to trigger wrap
+	 */
+	private void setWrapAround(int rightLeftBound, int topBottomBound){
+		if(location.getX() + (rightLeftBound/2) >= GridPanel.WIDTH){
+			//right
+			if(canSpawn(width/2+1, location.getY()))
+				location.setX((width/2)+1);
+		}
+		if(location.getX() - (rightLeftBound/2) <= 0){
+			//left
+			if(canSpawn(GridPanel.WIDTH - (width/2), location.getY()))
+				location.setX(GridPanel.WIDTH - (width/2));
+		}
+		if(location.getY() + (topBottomBound/2) >= GridPanel.HEIGHT){
+			//bottom
+			if(canSpawn(location.getX(), height/2 + 1))
+				location.setY(height/2 + 1);
+		}
+		if(location.getY() - (topBottomBound/2) <= 0){
+			//top
+			if(canSpawn(location.getX(), GridPanel.HEIGHT - (height/2)))
+				location.setY(GridPanel.HEIGHT - (height/2));
+		}
+	}
+
 	//------------------------------------------------------------------------------------
 	//--overloaded functions--
 	//------------------------------------------------------------------------------------
@@ -286,12 +394,40 @@ public class Organism extends Matter{
 	//--getters/setters--
 	//------------------------------------------------------------------------------------
 	
+	public Coordinate getLocation() {
+		return location;
+	}
+
 	public Chromosome getChromosome() {
 		return chromosome;
 	}
 	
 	public void setChromosome(Chromosome aChrom){
 		chromosome = aChrom;
+	}
+	
+	public double getFitness() {
+		return fitness;
+	}
+
+	public void setFitness(double aFit) {
+		fitness = aFit;
+	}
+
+	public double getHealth() {
+		return hlth;
+	}
+	
+	public double getMaxHealth() {
+		return mxHlth;
+	}
+	
+	public void setMxHlth(double aMxHlth) {
+		mxHlth = aMxHlth;
+	}
+	
+	public void setHealth(double aHealth) {
+		hlth = aHealth;
 	}
 	
 	public void incHlthTot() {
@@ -315,6 +451,13 @@ public class Organism extends Matter{
 		return samples;
 	}
 	
+	public int getScnRng() {
+		return scnRng;
+	}
+	
+	public void setScnRng(int aScnRng) {
+		scnRng = aScnRng;
+	}
 	public void addAction(String action,int index){
 		ActionList.get(ActionList.size()-1).add(action + " " + index);
 	}
@@ -337,3 +480,4 @@ public class Organism extends Matter{
 		return ActionList.get(generation);
 	}
 }	
+
