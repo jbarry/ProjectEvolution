@@ -36,6 +36,12 @@ public class Food extends Matter{
 		hlth = 100.0;
 	}
 
+	//testing.
+	public Food(Coordinate coord, boolean w) {
+		location = coord;
+		hlth = 100.0;
+	}
+	
 	public Food(Coordinate aCoord){
 		location = aCoord;
 		hlth = 100.0;

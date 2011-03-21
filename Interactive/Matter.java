@@ -100,6 +100,7 @@ public abstract class Matter {
 				try{	
 					//count all occurrences of objects in location map
 					if(GridPanel.locationMap[i][j].snd == type){
+						System.out.println("id: " + GridPanel.locationMap[i][j].fst);
 						objectIds.add(GridPanel.locationMap[i][j].fst);
 					}
 				}

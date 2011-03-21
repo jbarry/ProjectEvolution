@@ -19,6 +19,13 @@ public class HealthyFood extends Food {
 		super(x,y);
 	}
 
+	//testing.
+	public HealthyFood(Coordinate aCoord, int anId, boolean w){
+		super(aCoord, true);
+		id = anId;
+		setRange(width, height, 'h');
+	}
+	
 	public HealthyFood(Coordinate aCoord){
 		super(aCoord);
 	}

@@ -27,19 +27,6 @@ public class Organism extends Matter{
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
-//	public Organism() {
-//		super(7500.0);
-//		samples = 0;
-//		avgHealth = 0;
-//		hlthTot = 0;
-//		steps = 0;
-//		chromosome = new Chromosome(9);
-//		fitness = 0.0;
-//		ActionList = new ArrayList<ArrayList<String>>();
-//		ActionList.add(new ArrayList<String>());
-//		StartingLocation = new ArrayList<Coordinate>();
-//		chromosomeHistory = new ArrayList<Chromosome>();
-//	}
 
 	public Organism(double aHealth, int chromSize, int anId, int aScanRange) {
 		super(aHealth, anId, 'o');
@@ -77,6 +64,25 @@ public class Organism extends Matter{
 		chromosome = aChromosome;
 	}
 	
+	//testing only.
+	public Organism(Coordinate aLocation, int aScanRange, int anId, boolean w) {
+		chromosome = new Chromosome(9);
+		samples = 0;
+		avgHealth = 0;
+		hlthTot = 0;
+		scanRange = aScanRange;
+		steps = 0;
+		id = anId;
+		fitness = 0.0;
+		ActionList= new ArrayList<ArrayList<String>>();
+		ActionList.add(new ArrayList<String>());
+		StartingLocation=new ArrayList<Coordinate>();
+		chromosomeHistory= new ArrayList<Chromosome>();
+		hlth = 7500.0;
+		location = aLocation;
+		setRange(width, height, 'o');
+	}
+	
 	public void newLocation() {
 		setRange(width, height, 'w');
 		int x = r.nextInt(GridPanel.WIDTH);
@@ -94,17 +100,17 @@ public class Organism extends Matter{
 	public void eatFood(Food f, double fdVal){
 		f.deplete(fdVal);
 		if(f instanceof HealthyFood) {
-//			System.out.println("orgId: " + id);
-//			System.out.println("hlthy");
-//			System.out.println("orgHealth: " + hlth);
-//			System.out.println("FoodId: " + f.getId());
+			System.out.println("orgId: " + id);
+			System.out.println("hlthy");
+			System.out.println("orgHealth: " + hlth);
+			System.out.println("FoodId: " + f.getId());
 			incHlth(fdVal);
 		}
 		else if(f instanceof PoisonousFood){
-//			System.out.println("orgId: " + id);
-//			System.out.println("pois");
-//			System.out.println("orgHealth: " + hlth);
-//			System.out.println("FoodId: " + f.getId());
+			System.out.println("orgId: " + id);
+			System.out.println("pois");
+			System.out.println("orgHealth: " + hlth);
+			System.out.println("FoodId: " + f.getId());
 			deplete(fdVal);
 		}
 	}

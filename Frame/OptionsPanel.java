@@ -289,6 +289,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 				        		gui.enableJMenuItemSaveGenes();
 					        	gui.enableJMenuItemPause();
 								simulation.initialize();
+					        	//simulation.initialize2();
 								simulation.start();
 							}
 						}
@@ -303,6 +304,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 					}
 					catch(Exception e){
 						numOrgsLbl.setText("Unknown Error");
+						e.printStackTrace();
 						return;
 					}
 				}
