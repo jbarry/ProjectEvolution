@@ -185,6 +185,7 @@ public class GUI {
 					loadGenes.setEnabled(true);
 					simulation.initialize();
 					simulation.start();
+					
 				}
 			}
 		});

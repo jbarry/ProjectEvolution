@@ -136,7 +136,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 				        		if(simulation.getTimer().isRunning()){
 					        		//make organisms able to move if they are shrunk.
 						        	for(Organism o: simulation.getOrganisms()){
-						        		o.setRange(Organism.width, Organism.height, true);
+						        		o.setRange(Organism.width, Organism.height, 'w');
 						        	}
 				        		}
 					        	
@@ -289,6 +289,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 				        		gui.enableJMenuItemSaveGenes();
 					        	gui.enableJMenuItemPause();
 								simulation.initialize();
+					        	//simulation.initialize2();
 								simulation.start();
 							}
 						}
@@ -303,6 +304,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 					}
 					catch(Exception e){
 						numOrgsLbl.setText("Unknown Error");
+						e.printStackTrace();
 						return;
 					}
 				}
@@ -526,7 +528,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 						        		//make organisms able to move if they are shrunk.
 						        		//assumes simulation is running.
 							        	for(Organism o: simulation.getOrganisms()){
-							        		o.setRange(Organism.width, Organism.height, true);
+							        		o.setRange(Organism.width, Organism.height, 'o');
 							        	}
 
 							        	Organism.width = Integer.parseInt(orgWidthTxtBox.getText());
