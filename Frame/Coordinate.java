@@ -6,6 +6,7 @@ public class Coordinate {
 	//------------------------------------------------------------------------------------
 	private int x;
 	private int y;
+	private double priority;
 	
 	//------------------------------------------------------------------------------------
 	//--constructors--
@@ -17,15 +18,16 @@ public class Coordinate {
 	public Coordinate(int x, int y){
 		this.x = x;
 		this.y = y;
+		priority = 0;
 	}
 	
 	//------------------------------------------------------------------------------------
 	//--getters/setters--
 	//------------------------------------------------------------------------------------
-	public int getX(){
+	public int getX() {
 		return x;
 	}
-	public int getY(){
+	public int getY() {
 		return y;
 	}
 	public void setX(int x){
@@ -51,6 +53,13 @@ public class Coordinate {
 		}
 	}
 	
+	public double getPriority() {
+		return priority;
+	}
+	
+	public void setPriority(double aPriority) {
+		priority = aPriority;
+	}
 	/** Checks to see if a coordinate is roughly equal to another given a step var.
 	 * 
 	 * @param o the object to be compared
