@@ -1,10 +1,9 @@
 package Searching;
 
 import java.util.ArrayList;
-
-import javax.xml.soap.Node;
-
 import Frame.Coordinate;
+import Frame.Node;
+
 import static java.lang.System.out;
 public class AStar {
 	
@@ -28,7 +27,13 @@ public class AStar {
 		coord2.setX(4);
 		coord2.setY(6);
 		out.println(a.distance(coord1, coord2));
-//		out.println("node x: " + ((Coordinate) nd).getX());
+		Node nd = (Node) coord1.spawnNode(0);
+		out.println("node x: " + nd.getX());
+		out.println("node x: " + nd.getY());
+		nd.setX(13);
+		nd.setY(14);
+		out.println("node x: " + nd.getX());
+		out.println("node x: " + nd.getY());
 	}
 	
 	public Coordinate search(Coordinate start, Coordinate end) {
@@ -37,7 +42,7 @@ public class AStar {
 		//for each surrounding position.
 		//assign priority.
 		Node nd = (Node) start.spawnNode(0);
-		((Coordinate) nd).getX();
+		nd.getX();
 //		start.setPriority(distance(start, end));
 //		openList.add();// could make own priority queue data type.
 		while (openList.size() != 0) {

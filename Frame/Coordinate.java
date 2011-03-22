@@ -7,8 +7,8 @@ public class Coordinate {
 	//------------------------------------------------------------------------------------
 	//--globals--
 	//------------------------------------------------------------------------------------
-	private int x;
-	private int y;
+	protected int x;
+	protected int y;
 	
 	//------------------------------------------------------------------------------------
 	//--constructors--
@@ -100,30 +100,5 @@ public class Coordinate {
 	
 	public Node spawnNode(int aPriority) {
 		return new Node(aPriority, this);
-	}
-	
-	class Node extends Coordinate implements Comparator<Node>{
-		private double priority;
-		
-		public Node(int aPriority, Coordinate c){
-			super(c);
-			priority = aPriority;
-		}
-		public double getPriority() {
-			return priority;
-		}
-		
-		public void setPriority(double aPriority) {
-			priority = aPriority;
-		}
-		@Override 
-		public int compare(Node fst, Node sec) {
-			if (fst.getPriority() > sec.getPriority())
-				return 1;
-			else if(fst.getPriority() == sec.getPriority())
-				return 0;
-			else
-				return -1;
-		}
 	}
 }
