@@ -98,7 +98,7 @@ public class Coordinate {
 		return "(" + x + ", " + y + ")";
 	}
 	
-	public Node spawnNode(int aPriority) {
+	public Node spawnNode(double aPriority) {
 		return new Node(aPriority, this);
 	}
 }

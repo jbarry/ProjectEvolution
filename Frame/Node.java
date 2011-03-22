@@ -1,12 +1,19 @@
 package Frame;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
-public class Node extends Coordinate implements Comparator<Node>{
+import Interactive.Organism;
+
+public class Node extends Coordinate implements Comparable<Node>{
 		private double priority;
 		
-		public Node(int aPriority, Coordinate c){
+		public Node(double aPriority, Coordinate c){
 			super(c);
+			priority = aPriority;
+		}
+		public Node(int x, int y, double aPriority){
+			super(new Coordinate(x, y));
 			priority = aPriority;
 		}
 		public double getPriority() {
@@ -16,16 +23,6 @@ public class Node extends Coordinate implements Comparator<Node>{
 		public void setPriority(double aPriority) {
 			priority = aPriority;
 		}
-		@Override 
-		public int compare(Node fst, Node sec) {
-			if (fst.getPriority() > sec.getPriority())
-				return 1;
-			else if(fst.getPriority() == sec.getPriority())
-				return 0;
-			else
-				return -1;
-		}
-		
 		@Override
 		public int getX() {
 			return x;
@@ -57,5 +54,26 @@ public class Node extends Coordinate implements Comparator<Node>{
 			else{
 				this.y = y;
 			}
+		}
+		
+		//This compareTo accounts for only two cases;
+		//case 1: Nodes are equal -> return 0.
+		//case 2: Nodes are not equal -> return -1.
+		@Override
+		public int compareTo(Node other) {
+			if (x == other.getX() && y == other.getY())
+				return 0;
+			else return -1;
+		}
+		
+		public ArrayList<Coordinate> getAdjacent() {
+			ArrayList<Coordinate> adj = new ArrayList<Coordinate>();
+			adj.add(new Coordinate(x - Organism.WIDTH, y - Organism.HEIGHT));
+			return new ArrayList<Coordinate>();
+		}
+		
+		public boolean hasObstacle() {
+			
+			return false;
 		}
 	}

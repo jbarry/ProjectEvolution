@@ -22,8 +22,8 @@ public class Organism extends Matter{
 	private ArrayList<ArrayList<String>> ActionList;
 	private ArrayList<Coordinate> StartingLocation;
 	private ArrayList<Chromosome> chromosomeHistory;
-	public static int width = 5;
-	public static int height = 5;
+	public static int WIDTH = 5;
+	public static int HEIGHT = 5;
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------

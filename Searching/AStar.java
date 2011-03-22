@@ -1,16 +1,16 @@
 package Searching;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+
 import Frame.Coordinate;
 import Frame.Node;
+import Searching.StarQueue;
 
 import static java.lang.System.out;
+
 public class AStar {
-	
-	public AStar() {
-		
-	}
-	
+
 	public static void main(String[] args) {
 		AStar a = new AStar();
 		Coordinate coord1 = new Coordinate();
@@ -35,44 +35,64 @@ public class AStar {
 		out.println("node x: " + nd.getX());
 		out.println("node x: " + nd.getY());
 	}
-	
-	public Coordinate search(Coordinate start, Coordinate end) {
-		ArrayList<Coordinate> openList = new ArrayList<Coordinate>();
-		//open list priority should be organized based on shortest distance.
+
+	public static Coordinate search(Coordinate start, Coordinate end) {
+		//openList is a priority queue organized based
+		//on shortest distance to end node.
+		StarQueue<Coordinate> openList = new StarQueue<Coordinate>(0);
+		HashSet<Node> closedSet = new HashSet<Node>();
+		Node endNode = (Node) end.spawnNode(0);
 		//for each surrounding position.
-		//assign priority.
-		Node nd = (Node) start.spawnNode(0);
-		nd.getX();
-//		start.setPriority(distance(start, end));
-//		openList.add();// could make own priority queue data type.
+		//assign priority, then add to queue.
+		openList.add((Node) start.spawnNode(distance(start, end)));
 		while (openList.size() != 0) {
-			//open list = node with lowest cost.
-			// if(current node = goal node)
-				//path complete
-			//else
-				//move current node to the closed list
-				//examine each node adjacent to the current node
-				//for each adjacent node
-					//if it isn't on the open list
-					//and isn't on the closed list
-					//and it isn't an obstacle
-					//move it to open list.
+			Node current = (Node) openList.remove();
+			if (current.compareTo(endNode) == 0) {
+
+			} else {
+				closedSet.add(current);
+				for (Coordinate c: current.getAdjacent()) {
+					Node nd = (Node) c.spawnNode(distance(c, end));
+					if(!openList.contains(nd) && !closedSet.contains(nd) &&
+							!nd.hasObstacle())
+						openList.add(nd);
+				}
+			}
 		}
 		return new Coordinate();
 	}
-	
+
+	public static Coordinate search2(Coordinate start, Coordinate end) {
+		//openList is a priority queue organized based
+		//on shortest distance to end node.
+		StarQueue<Coordinate> openList = new StarQueue<Coordinate>(0);
+		Node endNode = (Node) end.spawnNode(0);
+		//for each surrounding position.
+		//assign priority, then add to queue.
+		Node current = (Node) start.spawnNode(distance(start, end));
+		for (Coordinate c: current.getAdjacent()) {
+			Node nd = (Node) c.spawnNode(distance(c, end));
+			if(nd.compareTo(endNode) == 0)
+				return start;
+			else if(!nd.hasObstacle())
+				openList.add(nd);
+			return new Coordinate();
+		}
+		return start;
+	}
+
 	/**
 	 * Calculates the priority of a given coordinate start o
 	 * the coordinate end. Priority is based on the distance of
 	 * a straight line between the two points.
-	 * @param start
+	 * @param current
 	 * @param end
 	 * @return
 	 */
 	//TODO: make private.
-	public double distance(Coordinate start, Coordinate end) {
-		double x1 = start.getX();
-		double y1 = start.getY();
+	public static double distance(Coordinate current, Coordinate end) {
+		double x1 = current.getX();
+		double y1 = current.getY();
 		double x2 = end.getX();
 		double y2 = end.getY();
 		return Math.sqrt(Math.pow((x2 - x1), 2) +
