@@ -70,9 +70,9 @@ public abstract class Matter implements getSurroundingObjects{
 			for(int j=location.getY()-height/2-scanRange; j<=location.getY()+height/2+scanRange; j++){
 				try{	
 					//count all occurrences of objects in location map
-					if(GridPanel.locationMap[i][j].snd == 'f' ||
-							GridPanel.locationMap[i][j].snd == 'h' ||
-							GridPanel.locationMap[i][j].snd == 'o') {
+					if(GridPanel.locationMap[i][j].getSnd() == 'p' ||
+							GridPanel.locationMap[i][j].getSnd() == 'h' ||
+							GridPanel.locationMap[i][j].getSnd() == 'o') {
 						numObj++;
 					}
 				}
@@ -101,8 +101,8 @@ public abstract class Matter implements getSurroundingObjects{
 			for(int j=location.getY()-height/2-scanRange; j<=location.getY()+height/2+scanRange; j++){
 				try{	
 					//count all occurrences of objects in location map
-					if(GridPanel.locationMap[i][j].snd == type){
-						objectIds.add(GridPanel.locationMap[i][j].fst);
+					if(GridPanel.locationMap[i][j].getSnd() == type){
+						objectIds.add(GridPanel.locationMap[i][j].getFst());
 					}
 				}
 				catch(ArrayIndexOutOfBoundsException e){
@@ -126,7 +126,7 @@ public abstract class Matter implements getSurroundingObjects{
 		for(int i = x-width/2; i <= x+width/2; i++){
 			for(int j=y-height/2; j<=y+height/2; j++){
 				try{
-					if(GridPanel.locationMap[i][j].snd != 'w'){
+					if(GridPanel.locationMap[i][j].getSnd() != 'w'){
 						return false;
 					}
 				}
@@ -149,8 +149,8 @@ public abstract class Matter implements getSurroundingObjects{
 		for(int i=(location.getX()-(x/2)); i<=(location.getX()+(x/2)); i++){
 			for(int j=(location.getY()-(y/2)); j<=(location.getY()+(y/2)); j++){
 				try{
-					GridPanel.locationMap[i][j].fst = id;
-					GridPanel.locationMap[i][j].snd = value;
+					GridPanel.locationMap[i][j].setLeft(id);
+					GridPanel.locationMap[i][j].setRight(value);
 				}
 				catch(ArrayIndexOutOfBoundsException e){
 				}

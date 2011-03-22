@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import Frame.getSurroundingObjects;
 import Interactive.Organism;
+import Searching.AStar;
 
 public class Node extends Coordinate implements Comparable<Node>{
 		private double priority;
@@ -75,34 +76,5 @@ public class Node extends Coordinate implements Comparable<Node>{
 		public boolean hasObstacle() {
 			//TODO
 			return false;
-		}
-		
-		public ArrayList<Coordinate> getMoves() {
-			ArrayList<Coordinate> adj = new ArrayList<Coordinate>();
-			Coordinate W = new Coordinate(x - Organism.WIDTH, y - Organism.HEIGHT);
-			if (!W.hasObstacle())
-					adj.add(W);
-			Coordinate NW = new Coordinate(x - Organism.WIDTH, y - Organism.HEIGHT);
-			if (!NW.hasObstacle())
-					adj.add(NW);
-			Coordinate N = new Coordinate(x - Organism.WIDTH, y - Organism.HEIGHT);
-			if (!N.hasObstacle())
-					adj.add(N);
-			Coordinate NE = new Coordinate(x - Organism.WIDTH, y - Organism.HEIGHT);
-			if (!NE.hasObstacle())
-					adj.add(NE);
-			Coordinate E = new Coordinate(x - Organism.WIDTH, y - Organism.HEIGHT);
-			if (!E.hasObstacle())
-					adj.add(E);
-			Coordinate SE = new Coordinate(x - Organism.WIDTH, y - Organism.HEIGHT);
-			if (!SE.hasObstacle())
-					adj.add(SE);
-			Coordinate S = new Coordinate(x - Organism.WIDTH, y - Organism.HEIGHT);
-			if (!S.hasObstacle())
-					adj.add(S);
-			Coordinate SW = new Coordinate(x - Organism.WIDTH, y - Organism.HEIGHT);
-			if (!SW.hasObstacle())
-					adj.add(SW);
-			return new ArrayList<Coordinate>();
 		}
 	}
