@@ -70,7 +70,7 @@ public class AStar {
 		//for each surrounding position.
 		//assign priority, then add to queue.
 		Node current = (Node) start.spawnNode(distance(start, end));
-		for (Coordinate c: current.getAdjacent()) {
+		for (Coordinate c: current.getMoves()) {
 			Node nd = (Node) c.spawnNode(distance(c, end));
 			if(nd.compareTo(endNode) == 0)
 				return start;

@@ -8,8 +8,9 @@ import java.util.Set;
 
 import Frame.Coordinate;
 import Frame.GridPanel;
+import Frame.getSurroundingObjects;
 
-public abstract class Matter {
+public abstract class Matter implements getSurroundingObjects{
 
 	protected Coordinate location;
 	protected double hlth;
@@ -93,6 +94,7 @@ public abstract class Matter {
 	 * @param type
 	 * @return a list of id numbers of the surrounding objects of choice.
 	 */
+	@Override
 	public ArrayList<Integer> getSurroundingObjects(char type, int scanRange) {
 		Set<Integer> objectIds = new HashSet<Integer>();
 		for(int i=location.getX()-width/2-scanRange; i<=location.getX()+width/2+scanRange; i++){

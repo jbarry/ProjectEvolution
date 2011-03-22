@@ -1,9 +1,12 @@
 package Frame;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 
 @SuppressWarnings("all")
-public class Coordinate {
+public class Coordinate implements getSurroundingObjects{
 	//------------------------------------------------------------------------------------
 	//--globals--
 	//------------------------------------------------------------------------------------
@@ -77,6 +80,7 @@ public class Coordinate {
 	    }
 	    return false;
 	}
+	
 	//------------------------------------------------------------------------------------
 	//--overloaded functions--
 	//------------------------------------------------------------------------------------
@@ -100,5 +104,34 @@ public class Coordinate {
 	
 	public Node spawnNode(double aPriority) {
 		return new Node(aPriority, this);
+	}
+	
+	public boolean hasObstacle() {
+		if(getSurroundingObjects().size() != 0) {
+			return true;
+		}
+		return false;
+	}
+	@Override
+	public ArrayList<Integer> getSurroundingObjects(char type, int scanRange) {
+		Set<Integer> objectIds = new HashSet<Integer>();
+		for(int i=location.getX()-width/2-scanRange; i<=location.getX()+width/2+scanRange; i++){
+			for(int j=location.getY()-height/2-scanRange; j<=location.getY()+height/2+scanRange; j++){
+				try{	
+					//count all occurrences of objects in location map
+					if(GridPanel.locationMap[i][j].snd == type){
+						objectIds.add(GridPanel.locationMap[i][j].fst);
+					}
+				}
+				catch(ArrayIndexOutOfBoundsException e){
+				}
+			}
+		}
+		//make sure that scanning object was not included in scan.
+		//TODO: will do this outside of class. In GridPanel probably.
+		//		if(numObj >= width*height){
+		//			numObj -= width*height; 
+		//		}
+		return new ArrayList<Integer>(objectIds);
 	}
 }
