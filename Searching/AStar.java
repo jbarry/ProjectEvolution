@@ -2,6 +2,8 @@ package Searching;
 
 import java.util.ArrayList;
 
+import javax.xml.soap.Node;
+
 import Frame.Coordinate;
 import static java.lang.System.out;
 public class AStar {
@@ -26,6 +28,7 @@ public class AStar {
 		coord2.setX(4);
 		coord2.setY(6);
 		out.println(a.distance(coord1, coord2));
+//		out.println("node x: " + ((Coordinate) nd).getX());
 	}
 	
 	public Coordinate search(Coordinate start, Coordinate end) {
@@ -33,7 +36,9 @@ public class AStar {
 		//open list priority should be organized based on shortest distance.
 		//for each surrounding position.
 		//assign priority.
-		start.setPriority(distance(start, end));
+		Node nd = (Node) start.spawnNode(0);
+		((Coordinate) nd).getX();
+//		start.setPriority(distance(start, end));
 //		openList.add();// could make own priority queue data type.
 		while (openList.size() != 0) {
 			//open list = node with lowest cost.

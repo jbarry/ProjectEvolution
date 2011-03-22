@@ -1,4 +1,7 @@
 package Frame;
+
+import java.util.Comparator;
+
 @SuppressWarnings("all")
 public class Coordinate {
 	//------------------------------------------------------------------------------------
@@ -6,7 +9,6 @@ public class Coordinate {
 	//------------------------------------------------------------------------------------
 	private int x;
 	private int y;
-	private double priority;
 	
 	//------------------------------------------------------------------------------------
 	//--constructors--
@@ -18,7 +20,10 @@ public class Coordinate {
 	public Coordinate(int x, int y){
 		this.x = x;
 		this.y = y;
-		priority = 0;
+	}
+	public Coordinate(Coordinate c) {
+		x = c.getX();
+		y = c.getY();
 	}
 	
 	//------------------------------------------------------------------------------------
@@ -53,13 +58,6 @@ public class Coordinate {
 		}
 	}
 	
-	public double getPriority() {
-		return priority;
-	}
-	
-	public void setPriority(double aPriority) {
-		priority = aPriority;
-	}
 	/** Checks to see if a coordinate is roughly equal to another given a step var.
 	 * 
 	 * @param o the object to be compared
@@ -98,5 +96,34 @@ public class Coordinate {
 	 */
 	public String toString(){
 		return "(" + x + ", " + y + ")";
+	}
+	
+	public Node spawnNode(int aPriority) {
+		return new Node(aPriority, this);
+	}
+	
+	class Node extends Coordinate implements Comparator<Node>{
+		private double priority;
+		
+		public Node(int aPriority, Coordinate c){
+			super(c);
+			priority = aPriority;
+		}
+		public double getPriority() {
+			return priority;
+		}
+		
+		public void setPriority(double aPriority) {
+			priority = aPriority;
+		}
+		@Override 
+		public int compare(Node fst, Node sec) {
+			if (fst.getPriority() > sec.getPriority())
+				return 1;
+			else if(fst.getPriority() == sec.getPriority())
+				return 0;
+			else
+				return -1;
+		}
 	}
 }
