@@ -25,12 +25,12 @@ public class AStar {
 		coord2.setY(5);
 		//Test getPriority method.
 		//Test case where distance should be zero.
-		out.println(a.distance(coord1, coord2));
+		out.println(a.distance(coord1.getX(), coord1.getY(), coord2.getX(), coord2.getY()));
 		coord1.setX(2);
 		coord1.setY(5);
 		coord2.setX(4);
 		coord2.setY(6);
-		out.println(a.distance(coord1, coord2));
+		out.println(a.distance(coord1.getX(), coord1.getY(), coord2.getX(), coord2.getY()));
 		Node nd = (Node) coord1.spawnNode(0);
 		out.println("node x: " + nd.getX());
 		out.println("node x: " + nd.getY());
@@ -48,7 +48,8 @@ public class AStar {
 		Node endNode = (Node) end.spawnNode(0);
 		//for each surrounding position.
 		//assign priority, then add to queue.
-		openList.add((Node) start.spawnNode(distance(start, end)));
+		openList.add((Node) start.spawnNode(
+				distance(start.getX(), start.getY(), end.getX(), end.getY())));
 		while (openList.size() != 0) {
 			Node current = (Node) openList.remove();
 			if (current.compareTo(endNode) == 0) {
@@ -56,7 +57,8 @@ public class AStar {
 			} else {
 				closedSet.add(current);
 				for (Coordinate c: current.getAdjacent()) {
-					Node nd = (Node) c.spawnNode(distance(c, end));
+					Node nd = (Node) c.spawnNode(
+							distance(c.getX(), c.getY(), end.getX(), end.getY()));
 					if(!openList.contains(nd) && !closedSet.contains(nd) &&
 							!nd.hasObstacle())
 						openList.add(nd);
@@ -73,17 +75,12 @@ public class AStar {
 		Node endNode = (Node) end.spawnNode(0);
 		//for each surrounding position.
 		//assign priority, then add to queue.
-		Node current = (Node) start.spawnNode(distance(start, end));
-		ArrayList<Nodes> adjacent =
-			adjacentNodes(current.getX(), current.getY());
+		Node current = (Node) start.spawnNode(
+				distance(start.getX(), start.getY(), end.getX(), end.getY()));
+		StarQueue<Node> adjacent =
+			adjacentNodes(current.getX(), current.getY(), endNode);
 		if(adjacent != null) {
-			for (Nodes nd: adjacent) {
-				if(nd.compareTo(endNode) == 0)
-					return start;
-				else if(!nd.hasObstacle())
-					openList.add(nd);
-				return new Coordinate();
-			}
+			return adjacent.remove();
 		}
 		return start;
 	}
@@ -92,8 +89,8 @@ public class AStar {
 	 * Only adds the adjacent nodes that don't have obstacles in them.
 	 * @return
 	 */
-	public ArrayList<Node> adjacentNodes(int x, int y, Node end) {
-		ArrayList<Node> adj = new ArrayList<Node>();
+	public StarQueue<Node> adjacentNodes(int x, int y, Node end) {
+		StarQueue<Node> adj = new StarQueue<Node>(0);
 		int moveWidth = (2*Organism.WIDTH);
 		int moveHeight = (2*Organism.HEIGHT);
 		int ex = end.getX();
