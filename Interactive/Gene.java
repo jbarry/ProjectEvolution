@@ -118,6 +118,10 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 	public Expr getEvaledList() {
 		return evaledList;
 	}
+	
+	public void updateEvaledList(){
+		evaledList=Eval.evaluation(makeStringArray());
+	}
 	//TODO: Make the symList a String Array.
 	//no need to have two separate lists.
 	public ArrayList<String> makeStringArray() {
@@ -188,4 +192,3 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 		setSym(size1 , mut);
 	}
 }
-
