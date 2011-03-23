@@ -187,5 +187,9 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 		char mut = symbols.get(size2);
 		setSym(size1 , mut);
 	}
+	
+	public void updateEvaledList(){
+		evaledList=Eval.evaluation(makeStringArray());
+		}
 }
 

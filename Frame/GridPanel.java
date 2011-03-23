@@ -1,6 +1,7 @@
 package Frame;
 
 import static java.lang.System.out;
+
 import Evaluation.Eval;
 import Evaluation.Normalizer;
 
@@ -40,26 +41,25 @@ public class GridPanel extends JPanel
 	public final static int HEIGHT = 400;
 
 
-	//	public static boolean[][] isValidLocation;
 	public static Pair<Integer, Character>[][] locationMap;
-
-	private LinkedList<Organism> organisms;
-	private LinkedList<HealthyFood> healthFd;
-	private LinkedList<PoisonousFood> poisFood;
-	private ArrayList<Integer> shuffleIds;
-	private int lengthTimeStep = 100;
-	private int lengthGeneration = lengthTimeStep*300;
-	private int timePassed = 0;
-	private int trialsPerGen = 1;
+	ArrayList<ArrayList<Integer>> availPositions;
+	protected LinkedList<Organism> organisms;
+	protected LinkedList<HealthyFood> healthFd;
+	protected LinkedList<PoisonousFood> poisFood;
+	protected ArrayList<Integer> shuffleIds;
+	protected int lengthTimeStep = 100;
+	protected int lengthGeneration = lengthTimeStep*300;
+	protected int timePassed = 0;
+	protected int trialsPerGen = 1;
 	public int trialNum = 1;
 	public int generationNum = 1;
 	public double lastAvg = 0;
-	private GEP g;
-	private int numFoodSources;
-	private Timer t;
-	private Normalizer norm;
-	private int numPreProcessedGenerations = 0;
-	private Random ran;
+	protected GEP g;
+	protected int numFoodSources;
+	protected Timer t;
+	protected Normalizer norm;
+	protected int numPreProcessedGenerations = 0;
+	protected Random ran;
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
@@ -97,7 +97,7 @@ public class GridPanel extends JPanel
 
 							//check mouse location vs. all organism's locations.
 							for(Organism o: organisms) {
-								if(mouseLocation.approxEquals(o.getLocation(), Organism.width/2)) {
+								if(mouseLocation.approxEquals(o.getLocation(), Organism.WIDTH/2)) {
 									//organism found
 									isOrg = true;
 									MonitorPanel.simObjInfo.setText(o.toString());
@@ -109,7 +109,7 @@ public class GridPanel extends JPanel
 							}
 
 							for(HealthyFood r: healthFd) {
-								if(mouseLocation.approxEquals(r.getLocation(), Food.width/2)){
+								if(mouseLocation.approxEquals(r.getLocation(), Food.WIDTH/2)){
 									//food found
 									isHFood = true;
 									MonitorPanel.simObjInfo.setText(r.toString());
@@ -120,7 +120,7 @@ public class GridPanel extends JPanel
 								}
 							}
 							for(PoisonousFood r: poisFood) {
-								if(mouseLocation.approxEquals(r.getLocation(), Food.width/2)){
+								if(mouseLocation.approxEquals(r.getLocation(), Food.WIDTH/2)){
 									//food found
 									isPFood = true;
 									MonitorPanel.simObjInfo.setText(r.toString());
@@ -210,12 +210,9 @@ public class GridPanel extends JPanel
 		 * 		'p' for poisonous food.
 		 */
 		locationMap = new Pair[GridPanel.WIDTH][GridPanel.HEIGHT];
-		for(int i = 0; i < locationMap.length; i++){
-			for(int j=0; j<locationMap[i].length; j++){
-				//mark available
-				locationMap[i][j] = new Pair<Integer, Character>(0, 'w');
-			}
-		}
+		availPositions = new ArrayList<ArrayList<Integer>>();
+		clearLocations();
+		
 
 		norm = new Normalizer(
 				new Pair<Double, Double> (1.0, 10000.0),
@@ -243,62 +240,7 @@ public class GridPanel extends JPanel
 		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
 		//		preProcess(20);
 	}
-	
-	/**
-	 * Sets the initial game state of the GridPanel
-	 */
-	public void initialize2(){
-		//reset all generation info from previous simulations.
-		generationNum = 1;
-		trialNum = 1;
-		GUI.genPanel.resetGenInformation();
-		ran = new Random();
-		timePassed = 0;
-		numFoodSources = 0;
-		shuffleIds = new ArrayList<Integer>();
-		/*
-		 * location map will consist of:
-		 * 	key: current instance number of object
-		 *  value:
-		 * 		'w' for white space or available.
-		 * 		'o' for organism.
-		 * 		'h' for healthy food.
-		 * 		'p' for poisonous food.
-		 */
-		locationMap = new Pair[GridPanel.WIDTH][GridPanel.HEIGHT];
-		for(int i = 0; i < locationMap.length; i++){
-			for(int j=0; j<locationMap[i].length; j++){
-				//mark available
-				locationMap[i][j] = new Pair<Integer, Character>(0, 'w');
-			}
-		}
 
-		norm = new Normalizer(
-				new Pair<Double, Double> (1.0, 10000.0),
-				new Pair<Double, Double> (1.0, 50.0));
-
-		organisms.clear();
-		organisms.add(new Organism(new Coordinate(200, 300), 20, 1, true));
-		healthFd.add(new HealthyFood(new Coordinate(210, 310), 5, true));
-		healthFd.add(new HealthyFood(new Coordinate(210, 300), 6, true));
-		healthFd.add(new HealthyFood(new Coordinate(200, 290), 7, true));
-		healthFd.add(new HealthyFood(new Coordinate(190, 310), 8, true));
-		healthFd.add(new HealthyFood(new Coordinate(190, 290), 9, true));
-		numFoodSources++;
-		numFoodSources++;
-		numFoodSources++;
-		numFoodSources++;
-		numFoodSources++;
-		Organism o = organisms.get(0);
-		o.addStartingLocation();
-		o.addChromosome();
-		List<Integer> ids = o.getSurroundingObjects('h', 40);
-		for(int i = 0; i < ids.size(); i++) {
-			out.println(ids.get(i));
-		}
-//		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
-	}
-	
 	class TimerListener implements ActionListener {
 
 		GUI gui;
@@ -318,11 +260,10 @@ public class GridPanel extends JPanel
 					//Take sample of organism health for fitness.
 					org.incHlthTot();
 					if(org.getHealth() > 0){
-						ArrayList<Integer> sightHlthy =
+						ArrayList<Integer> healthyFdSeen =
 							org.getSurroundingObjects('h', 60);
-						ArrayList<Integer> sightPois =
+						ArrayList<Integer> poisFdSeen =
 							org.getSurroundingObjects('p', 60);
-						sightHlthy.addAll(sightPois);
 						double orgX = norm.normalize(
 								org.getLocation().getX());
 						double orgY = norm.normalize(
@@ -334,11 +275,31 @@ public class GridPanel extends JPanel
 						for (int i = 0; i < chrom.size(); i++) {
 							Gene workingGene = chrom.getGene(i);
 							//if there is something in org's field of vision.
-							if (sight.size() > 0) {
-								for(int j = 0; j < sight.size(); j++) {
+							if (healthyFdSeen.size() > 0) {
+								for(int j = 0; j < healthyFdSeen.size(); j++) {
 									HashMap<String, Double> environment =
 										new HashMap<String, Double>();
-									Food f = sight.get(j);
+									Food f = healthFd.get(healthyFdSeen.get(j));
+									double foodX = norm.normalize(
+											f.getLocation().getX());
+									double foodY = norm.normalize(
+											f.getLocation().getY());
+									double orgNearFood = norm.normalize(
+											f.numSurroundingObjects(5));
+									Expr result = workingGene.getEvaledList();
+									environment.put("a", foodX-orgX);
+									environment.put("b", orgY-foodY);
+									environment.put("c", orgNearFood);
+									environment.put("d", norm.normalize(health));
+									double geneEval = result.evaluate(environment);
+									if(geneEval > bestEval.right())
+										bestEval = new Pair<Integer, Double> (i, geneEval);
+								}
+							} else if (poisFdSeen.size() > 0) {
+								for(int j = 0; j < poisFdSeen.size(); j++) {
+									HashMap<String, Double> environment =
+										new HashMap<String, Double>();
+									Food f = healthFd.get(poisFdSeen.get(j));
 									double foodX = norm.normalize(
 											f.getLocation().getX());
 									double foodY = norm.normalize(
@@ -369,72 +330,7 @@ public class GridPanel extends JPanel
 									bestEval = new Pair<Integer, Double> (i, geneEval);
 							}
 						}
-						// Genes are set as N-S-E-W-NE-NW-SE-SW-Eat.
-						switch (bestEval.left()) {
-						case 0: 
-							org.moveNorth(organisms);
-							//org.addAction("N", orgIndex);
-							org.countStep();
-							break;
-						case 1: 
-							org.moveSouth(organisms);
-							//org.addAction("S", orgIndex);
-							org.countStep();
-							break;
-						case 2: 
-							org.moveEast(organisms); 
-							//org.addAction("E", orgIndex);
-							org.countStep();
-							break;
-						case 3: 
-							org.moveWest(organisms);
-							//org.addAction("W", orgIndex);
-							org.countStep();
-							break;
-						case 4: 
-							org.moveNorthEast(organisms);
-							//org.addAction("NE", orgIndex);
-							org.countStep();
-							break;
-						case 5: 
-							org.moveNorthWest(organisms);
-							//org.addAction("NW", orgIndex);
-							org.countStep();
-							break;
-						case 6: 
-							org.moveSouthEast(organisms);
-							//org.addAction("SE", orgIndex);
-							org.countStep();
-							break;
-						case 7: 
-							org.moveSouthWest(organisms);
-							//org.addAction("SW", orgIndex);
-							org.countStep();
-							break;
-						case 8: 
-							ArrayList<Integer> surrndngHlthyFd =
-								org.getSurroundingObjects('h', 5);
-							ArrayList<Integer> surrndngPoisFd = 
-								org.getSurroundingObjects('p', 5);
-							if (surrndngHlthyFd.size() != 0) {
-								out.println("Id: "  + org.getId());
-								Coordinate pos = org.getLocation();
-								out.println("Pos: ("  + pos.getX() +
-										", " + pos.getY()  + ")");
-//								for (int i = 0; i < surrndngHlthyFd.size(); i++) {
-//									healthFd.get(
-//									out.print
-//								}
-								org.eatFood(healthFd.get(
-										ran.nextInt(surrndngHlthyFd.size())), 5.0);
-							} else if (surrndngPoisFd.size() != 0) {
-								for (int i = 0; i < surrndngPoisFd.size(); i++) {
-									
-								}
-								org.eatFood(poisFood.get(
-										ran.nextInt(surrndngPoisFd.size())), 5.0);
-							}
-						}
+						doAction(org, bestEval);
 					}
 					orgIndex++;
 				}
@@ -501,8 +397,75 @@ public class GridPanel extends JPanel
 				}
 			}
 		}
+		
+		private void doAction(Organism org, Pair<Integer, Double> bestEval) {
+			// Genes are set as N-S-E-W-NE-NW-SE-SW-Eat.
+			switch (bestEval.left()) {
+			case 0: 
+				org.moveNorth(organisms);
+				//org.addAction("N", orgIndex);
+				org.countStep();
+				break;
+			case 1: 
+				org.moveSouth(organisms);
+				//org.addAction("S", orgIndex);
+				org.countStep();
+				break;
+			case 2: 
+				org.moveEast(organisms); 
+				//org.addAction("E", orgIndex);
+				org.countStep();
+				break;
+			case 3: 
+				org.moveWest(organisms);
+				//org.addAction("W", orgIndex);
+				org.countStep();
+				break;
+			case 4: 
+				org.moveNorthEast(organisms);
+				//org.addAction("NE", orgIndex);
+				org.countStep();
+				break;
+			case 5: 
+				org.moveNorthWest(organisms);
+				//org.addAction("NW", orgIndex);
+				org.countStep();
+				break;
+			case 6: 
+				org.moveSouthEast(organisms);
+				//org.addAction("SE", orgIndex);
+				org.countStep();
+				break;
+			case 7: 
+				org.moveSouthWest(organisms);
+				//org.addAction("SW", orgIndex);
+				org.countStep();
+				break;
+			case 8: //eat
+				ArrayList<Integer> surrndngHlthyFd =
+					org.getSurroundingObjects('h', 5);
+				ArrayList<Integer> surrndngPoisFd = 
+					org.getSurroundingObjects('p', 5);
+				if (surrndngHlthyFd.size() != 0)
+					org.eatFood(healthFd.get(
+							ran.nextInt(surrndngHlthyFd.size())), 5.0);
+				else if (surrndngPoisFd.size() != 0)
+					org.eatFood(poisFood.get(
+							ran.nextInt(surrndngPoisFd.size())), 5.0);
+			}
+		}
 	}
 
+	public void clearLocations() {
+		for(int i = 0; i < locationMap.length; i++){
+			for(int j=0; j<locationMap[i].length; j++){
+				//mark available
+				locationMap[i][j] = new Pair<Integer, Character>(0, 'w');
+			}
+		}
+		//availPositions
+	}
+	
 	/**
 	 * Preprocess generations
 	 * Essentially run the simulation without updating the graphics.

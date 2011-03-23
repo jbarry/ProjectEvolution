@@ -7,10 +7,6 @@ public class HealthyFood extends Food {
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
-//	public HealthyFood(double aMxHlth, int anId){
-//		super(aMxHlth, anId);
-//	}
-
 	public HealthyFood(double aMxHlth, int anId, int aScanRange){
 		super(aMxHlth, anId, 'h');
 	}
@@ -19,13 +15,6 @@ public class HealthyFood extends Food {
 		super(x,y);
 	}
 
-	//testing.
-	public HealthyFood(Coordinate aCoord, int anId, boolean w){
-		super(aCoord, true);
-		id = anId;
-		setRange(width, height, 'h');
-	}
-	
 	public HealthyFood(Coordinate aCoord){
 		super(aCoord);
 	}
@@ -48,5 +37,10 @@ public class HealthyFood extends Food {
 					   (int)this.getLocation().getY()-(getHeight()/2), 
 					   getWidth(), getHeight());
 		}
+	}
+
+	@Override
+	public void eaten(double val) {
+		incHlth(val);
 	}
 }

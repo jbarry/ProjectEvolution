@@ -1,12 +1,24 @@
 package Frame;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.HashMap;
+
+import Interactive.Food;
+import Interactive.Organism;
+import Interactive.Matter;
+import Interactive.Pair;
+import java.util.Collections;
 @SuppressWarnings("all")
 public class Coordinate {
 	//------------------------------------------------------------------------------------
 	//--globals--
 	//------------------------------------------------------------------------------------
-	private int x;
-	private int y;
-	
+	protected int x;
+	protected int y;
+
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
@@ -18,14 +30,18 @@ public class Coordinate {
 		this.x = x;
 		this.y = y;
 	}
-	
+	public Coordinate(Coordinate c) {
+		x = c.getX();
+		y = c.getY();
+	}
+
 	//------------------------------------------------------------------------------------
 	//--getters/setters--
 	//------------------------------------------------------------------------------------
-	public int getX(){
+	public int getX() {
 		return x;
 	}
-	public int getY(){
+	public int getY() {
 		return y;
 	}
 	public void setX(int x){
@@ -50,7 +66,7 @@ public class Coordinate {
 			this.y = y;
 		}
 	}
-	
+
 	/** Checks to see if a coordinate is roughly equal to another given a step var.
 	 * 
 	 * @param o the object to be compared
@@ -58,36 +74,41 @@ public class Coordinate {
 	 * @return true if equal, false otherwise
 	 */
 	public boolean approxEquals(Object o, int step){
-	    if (o instanceof Coordinate) {
-	        Coordinate c = (Coordinate) o;
-	        if (this.getX() < c.getX() + step &
-	        		this.getX() > c.getX() - step){
-	        	if(this.getY() < c.getY() + step &
-	        		this.getY() > c.getY() - step){
-	        		return true;
-	        	}
-	        }
-	    }
-	    return false;
+		if (o instanceof Coordinate) {
+			Coordinate c = (Coordinate) o;
+			if (this.getX() < c.getX() + step &
+					this.getX() > c.getX() - step){
+				if(this.getY() < c.getY() + step &
+						this.getY() > c.getY() - step){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
+
 	//------------------------------------------------------------------------------------
 	//--overloaded functions--
 	//------------------------------------------------------------------------------------
 	@Override 
 	public boolean equals(Object o){
-	    if (o instanceof Coordinate) {
-	        Coordinate c = (Coordinate) o;
-	        if (this.getX() == c.getX()
-	        		& this.getY() == c.getY()){
-	        	return true;
-	        }
-	    }
-	    return false;
+		if (o instanceof Coordinate) {
+			Coordinate c = (Coordinate) o;
+			if (this.getX() == c.getX()
+					& this.getY() == c.getY()){
+				return true;
+			}
+		}
+		return false;
 	}
 	/**
 	 * @return a String representation of the Object.
 	 */
 	public String toString(){
 		return "(" + x + ", " + y + ")";
+	}
+
+	public Node spawnNode(double aPriority) {
+		return new Node(aPriority, this);
 	}
 }

@@ -127,7 +127,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 				if(!orgWidthTxtBox.getText().equals("") 
 						|| !orgHeightTxtBox.getText().equals("")){
 		        	try{
-		        		//if something was entered for width at least.
+		        		//if something was entered for WIDTH at least.
 		        		if(!orgWidthTxtBox.getText().equals("")){
 		        			//if input is not too large
 				        	if(Integer.parseInt(orgWidthTxtBox.getText()) <= 20
@@ -136,22 +136,22 @@ public class OptionsPanel extends JPanel implements Runnable{
 				        		if(simulation.getTimer().isRunning()){
 					        		//make organisms able to move if they are shrunk.
 						        	for(Organism o: simulation.getOrganisms()){
-						        		o.setRange(Organism.width, Organism.height, 'w');
+						        		o.setRange(Organism.WIDTH, Organism.HEIGHT, 'w');
 						        	}
 				        		}
 					        	
-					        	Organism.width = Integer.parseInt(orgWidthTxtBox.getText());
+					        	Organism.WIDTH = Integer.parseInt(orgWidthTxtBox.getText());
 					        	
-					        	//if enter was pressed, but height was not filled in.
+					        	//if enter was pressed, but HEIGHT was not filled in.
 					        	if(!orgWidthTxtBox.getText().equals("") && orgHeightTxtBox.getText().equals("")){
-					        		//copy the width's input.
-					        		Organism.height = Integer.parseInt(orgWidthTxtBox.getText());
+					        		//copy the WIDTH's input.
+					        		Organism.HEIGHT = Integer.parseInt(orgWidthTxtBox.getText());
 					        	}
 					        	else{
-					        		//height was filled in
+					        		//HEIGHT was filled in
 					        		if(Integer.parseInt(orgHeightTxtBox.getText()) <= 20
 						        			&& Integer.parseInt(orgHeightTxtBox.getText()) > 0){
-					        			Organism.height = Integer.parseInt(orgHeightTxtBox.getText());
+					        			Organism.HEIGHT = Integer.parseInt(orgHeightTxtBox.getText());
 					        		}
 					        		else{
 					        			orgSizeLbl.setText("Number not 1 <= x <= 20");
@@ -520,7 +520,7 @@ public class OptionsPanel extends JPanel implements Runnable{
 		        		if(orgWidthTxtBox.isFocusOwner() 
 			        			|| orgHeightTxtBox.isFocusOwner()){
 				        	try{
-				        		//if something was entered for width at least.
+				        		//if something was entered for WIDTH at least.
 				        		if(!orgWidthTxtBox.getText().equals("")){
 				        			//if input is not far too large
 						        	if(Integer.parseInt(orgWidthTxtBox.getText()) <= 20
@@ -528,21 +528,21 @@ public class OptionsPanel extends JPanel implements Runnable{
 						        		//make organisms able to move if they are shrunk.
 						        		//assumes simulation is running.
 							        	for(Organism o: simulation.getOrganisms()){
-							        		o.setRange(Organism.width, Organism.height, 'o');
+							        		o.setRange(Organism.WIDTH, Organism.HEIGHT, 'o');
 							        	}
 
-							        	Organism.width = Integer.parseInt(orgWidthTxtBox.getText());
+							        	Organism.WIDTH = Integer.parseInt(orgWidthTxtBox.getText());
 							        	
-							        	//if enter was pressed, but height was not filled in.
+							        	//if enter was pressed, but HEIGHT was not filled in.
 							        	if(!orgWidthTxtBox.getText().equals("") && orgHeightTxtBox.getText().equals("")){
-							        		//copy the width's input.
-							        		Organism.height = Integer.parseInt(orgWidthTxtBox.getText());
+							        		//copy the WIDTH's input.
+							        		Organism.HEIGHT = Integer.parseInt(orgWidthTxtBox.getText());
 							        	}
 							        	else{
-							        		//height was filled in
+							        		//HEIGHT was filled in
 							        		if(Integer.parseInt(orgHeightTxtBox.getText()) <= 20
 								        			&& Integer.parseInt(orgHeightTxtBox.getText()) > 0){
-							        			Organism.height = Integer.parseInt(orgHeightTxtBox.getText());
+							        			Organism.HEIGHT = Integer.parseInt(orgHeightTxtBox.getText());
 							        		}
 							        		else{
 							        			orgSizeLbl.setText("Number not 1 <= x <= 20");

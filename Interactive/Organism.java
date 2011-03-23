@@ -22,8 +22,8 @@ public class Organism extends Matter{
 	private ArrayList<ArrayList<String>> ActionList;
 	private ArrayList<Coordinate> StartingLocation;
 	private ArrayList<Chromosome> chromosomeHistory;
-	public static int width = 5;
-	public static int height = 5;
+	public static int WIDTH = 5;
+	public static int HEIGHT = 5;
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
@@ -64,27 +64,8 @@ public class Organism extends Matter{
 		chromosome = aChromosome;
 	}
 	
-	//testing only.
-	public Organism(Coordinate aLocation, int aScanRange, int anId, boolean w) {
-		chromosome = new Chromosome(9);
-		samples = 0;
-		avgHealth = 0;
-		hlthTot = 0;
-		scanRange = aScanRange;
-		steps = 0;
-		id = anId;
-		fitness = 0.0;
-		ActionList= new ArrayList<ArrayList<String>>();
-		ActionList.add(new ArrayList<String>());
-		StartingLocation=new ArrayList<Coordinate>();
-		chromosomeHistory= new ArrayList<Chromosome>();
-		hlth = 7500.0;
-		location = aLocation;
-		setRange(width, height, 'o');
-	}
-	
 	public void newLocation() {
-		setRange(width, height, 'w');
+		setRange(WIDTH, HEIGHT, 'w');
 		int x = r.nextInt(GridPanel.WIDTH);
 		int y = r.nextInt(GridPanel.HEIGHT);
 		while(!canSpawn(x, y)){
@@ -93,24 +74,24 @@ public class Organism extends Matter{
 		}
 		location = new Coordinate(x, y);
 		//set boundaries
-		setWrapAround(width, height);
-		setRange(width, height, 'o');
+		setWrapAround(WIDTH, HEIGHT);
+		setRange(WIDTH, HEIGHT, 'o');
 	}
 	
 	public void eatFood(Food f, double fdVal){
 		f.deplete(fdVal);
 		if(f instanceof HealthyFood) {
-			System.out.println("orgId: " + id);
-			System.out.println("hlthy");
-			System.out.println("orgHealth: " + hlth);
-			System.out.println("FoodId: " + f.getId());
+//			System.out.println("orgId: " + id);
+//			System.out.println("hlthy");
+//			System.out.println("orgHealth: " + hlth);
+//			System.out.println("FoodId: " + f.getId());
 			incHlth(fdVal);
 		}
 		else if(f instanceof PoisonousFood){
-			System.out.println("orgId: " + id);
-			System.out.println("pois");
-			System.out.println("orgHealth: " + hlth);
-			System.out.println("FoodId: " + f.getId());
+//			System.out.println("orgId: " + id);
+//			System.out.println("pois");
+//			System.out.println("orgHealth: " + hlth);
+//			System.out.println("FoodId: " + f.getId());
 			deplete(fdVal);
 		}
 	}
@@ -138,8 +119,8 @@ public class Organism extends Matter{
 	
 	public void moveNorth(LinkedList<Organism> organisms) {
 		//make old location available.
-		setRange(width, height, 'w');
-		setWrapAround(width, height);
+		setRange(WIDTH, HEIGHT, 'w');
+		setWrapAround(WIDTH, HEIGHT);
 		
 		//if the next move is available.
 		try{
@@ -152,12 +133,12 @@ public class Organism extends Matter{
 			
 		}
 		//make current location unavailable
-		setRange(width, height, 'o');
+		setRange(WIDTH, HEIGHT, 'o');
 	}
 
 	public void moveNorthEast(LinkedList<Organism> organisms) {
-		setRange(width, height, 'w');
-		setWrapAround(width, height);
+		setRange(WIDTH, HEIGHT, 'w');
+		setWrapAround(WIDTH, HEIGHT);
 		try{
 			if(canSpawn(location.getX() + 1, location.getY() - 1)){
 				location.setX(location.getX() + 1);
@@ -167,16 +148,16 @@ public class Organism extends Matter{
 		catch(ArrayIndexOutOfBoundsException e){
 		
 		}
-		setRange(width, height, 'o');
+		setRange(WIDTH, HEIGHT, 'o');
 	}
 
 	public void moveEast(LinkedList<Organism> organisms) {
-		setRange(width, height, 'w');
-		setWrapAround(width, height);
+		setRange(WIDTH, HEIGHT, 'w');
+		setWrapAround(WIDTH, HEIGHT);
 		try{
-			if(location.getX() + 1 + width/2 >= GridPanel.WIDTH){
-				if(canSpawn(width/2, location.getY()))
-					location.setX(width/2);
+			if(location.getX() + 1 + WIDTH/2 >= GridPanel.WIDTH){
+				if(canSpawn(WIDTH/2, location.getY()))
+					location.setX(WIDTH/2);
 			}
 			if(canSpawn(location.getX() + 1, location.getY())){
 				location.setX(location.getX() + 1);
@@ -185,16 +166,16 @@ public class Organism extends Matter{
 		catch(ArrayIndexOutOfBoundsException e){
 		
 		}	
-		setRange(width, height, 'o');
+		setRange(WIDTH, HEIGHT, 'o');
 	}
 
 	public void moveSouthEast(LinkedList<Organism> organisms) {
-		setRange(width, height, 'w');
-		setWrapAround(width, height);
+		setRange(WIDTH, HEIGHT, 'w');
+		setWrapAround(WIDTH, HEIGHT);
 		try{
-			if(location.getY() + 1 + height/2>= GridPanel.HEIGHT){
-				if(canSpawn(location.getX(), height/2))
-					location.setY(height/2);
+			if(location.getY() + 1 + HEIGHT/2>= GridPanel.HEIGHT){
+				if(canSpawn(location.getX(), HEIGHT/2))
+					location.setY(HEIGHT/2);
 			}
 			if(canSpawn(location.getX() + 1, location.getY() + 1)){
 				location.setX(location.getX() + 1);
@@ -204,12 +185,12 @@ public class Organism extends Matter{
 		catch(ArrayIndexOutOfBoundsException e){
 			
 		}
-		setRange(width, height, 'o');
+		setRange(WIDTH, HEIGHT, 'o');
 	}
 
 	public void moveSouth(LinkedList<Organism> organisms) {
-		setRange(width, height, 'w');
-		setWrapAround(width, height);
+		setRange(WIDTH, HEIGHT, 'w');
+		setWrapAround(WIDTH, HEIGHT);
 		try{
 			if(canSpawn(location.getX(), location.getY() + 1)){
 				location.setY(location.getY() + 1);
@@ -218,13 +199,13 @@ public class Organism extends Matter{
 		catch(ArrayIndexOutOfBoundsException e){
 			
 		}
-		setRange(width, height, 'o');
+		setRange(WIDTH, HEIGHT, 'o');
 
 	}
 
 	public void moveSouthWest(LinkedList<Organism> organisms) {
-		setRange(width, height, 'w');
-		setWrapAround(width, height);
+		setRange(WIDTH, HEIGHT, 'w');
+		setWrapAround(WIDTH, HEIGHT);
 		try{
 			if(canSpawn(location.getX() - 1, location.getY() + 1)){
 				location.setX(location.getX() - 1);
@@ -234,12 +215,12 @@ public class Organism extends Matter{
 		catch(ArrayIndexOutOfBoundsException e){
 			
 		}
-		setRange(width, height, 'o');
+		setRange(WIDTH, HEIGHT, 'o');
 	}
 
 	public void moveWest(LinkedList<Organism> organisms) {
-		setRange(width, height, 'w');
-		setWrapAround(width, height);
+		setRange(WIDTH, HEIGHT, 'w');
+		setWrapAround(WIDTH, HEIGHT);
 		try{
 			if(canSpawn(location.getX() - 1, location.getY())){
 				location.setX(location.getX() - 1);
@@ -248,12 +229,12 @@ public class Organism extends Matter{
 		catch(ArrayIndexOutOfBoundsException e){
 			
 		}
-		setRange(width, height, 'o');
+		setRange(WIDTH, HEIGHT, 'o');
 	}
 
 	public void moveNorthWest(LinkedList<Organism> organisms) {
-		setRange(width, height, 'w');
-		setWrapAround(width, height);
+		setRange(WIDTH, HEIGHT, 'w');
+		setWrapAround(WIDTH, HEIGHT);
 		try{
 			if(canSpawn(location.getX() - 1, location.getY() - 1)){
 				location.setX(location.getX() - 1);
@@ -261,14 +242,14 @@ public class Organism extends Matter{
 			}
 		}
 		catch(ArrayIndexOutOfBoundsException e){}
-		setRange(width, height, 'o');
+		setRange(WIDTH, HEIGHT, 'o');
 	}
 	
 	public void paint(Graphics g) {
 		g.setColor(Color.BLACK);
-		g.fillRect((int)this.location.getX()-(width/2), 
-				   (int)this.location.getY()-(height/2), 
-				   width, height);
+		g.fillRect((int)this.location.getX()-(WIDTH/2), 
+				   (int)this.location.getY()-(HEIGHT/2), 
+				   WIDTH, HEIGHT);
 	}
 	
 	//------------------------------------------------------------------------------------
@@ -317,6 +298,16 @@ public class Organism extends Matter{
 	
 	public int getSamples() {
 		return samples;
+	}
+	
+	@Override
+	public int getHeight() {
+		return Organism.HEIGHT;
+	}
+	
+	@Override
+	public int getWidth() {
+		return Organism.WIDTH;
 	}
 	
 	public void addAction(String action,int index){
