@@ -43,23 +43,23 @@ public class GridPanel extends JPanel
 	//	public static boolean[][] isValidLocation;
 	public static Pair<Integer, Character>[][] locationMap;
 
-	private LinkedList<Organism> organisms;
-	private LinkedList<HealthyFood> healthFd;
-	private LinkedList<PoisonousFood> poisFood;
-	private ArrayList<Integer> shuffleIds;
-	private int lengthTimeStep = 100;
-	private int lengthGeneration = lengthTimeStep*300;
-	private int timePassed = 0;
-	private int trialsPerGen = 1;
+	protected LinkedList<Organism> organisms;
+	protected LinkedList<HealthyFood> healthFd;
+	protected LinkedList<PoisonousFood> poisFood;
+	protected ArrayList<Integer> shuffleIds;
+	protected int lengthTimeStep = 100;
+	protected int lengthGeneration = lengthTimeStep*300;
+	protected int timePassed = 0;
+	protected int trialsPerGen = 1;
 	public int trialNum = 1;
 	public int generationNum = 1;
 	public double lastAvg = 0;
-	private GEP g;
-	private int numFoodSources;
-	private Timer t;
-	private Normalizer norm;
-	private int numPreProcessedGenerations = 0;
-	private Random ran;
+	protected GEP g;
+	protected int numFoodSources;
+	protected Timer t;
+	protected Normalizer norm;
+	protected int numPreProcessedGenerations = 0;
+	protected Random ran;
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
