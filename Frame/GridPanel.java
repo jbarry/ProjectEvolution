@@ -215,7 +215,6 @@ public class GridPanel extends JPanel
 		availablePositions = new String[GridPanel.WIDTH][GridPanel.HEIGHT];
 		choosePos = new ArrayList<ArrayList<Integer>>();
 		clearLocations();
-
 		norm = new Normalizer(
 				new Pair<Double, Double> (1.0, 10000.0),
 				new Pair<Double, Double> (1.0, 50.0));
