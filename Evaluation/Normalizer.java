@@ -16,64 +16,57 @@ public class Normalizer {
 //					new Pair<Double, Double> (1.0, 167.0), 
 //					new Pair<Double, Double> (1.0, 53.0), i));
 //		}
-//		Normalizer norm = new Normalizer
-//		(new Pair<Double, Double> (1.0, 167.0),
-//				new Pair<Double, Double> (1.0, 53.0));
-//		for(int i = 1; i < 167; i++) {
+//		Normalizer norm = new Normalizer(-600.0, 600.0, -50.0, 50.0);
+//		for(int i = -600; i <= 600; i++)
 //			out.println(norm.normalize(i));
-//		}
-		if(7346278 < 754/0) {
-			out.println("y");
-		} 
-		if(340589 > 754/0) out.println("n");
+//		if(7346278 < 754/0) {
+//			out.println("y");
+//		} 
+//		if(340589 > 754/0) out.println("n");
 	}
 
-	private Pair<Double, Double> fromRange;
-	private Pair<Double, Double> toRange;
+	private double from1;
+	private double to1;
+	private double from2;
+	private double to2;
 	private double preCalc;
 	
 	public Normalizer() {
-		fromRange = null;
-		toRange = null;
+		from1 = 0.0;
+		to1 = 0.0;
+		from2 = 0.0;
+		to2 = 0.0;
 	}
-	public Normalizer(Pair<Double, Double> aFromRange,
-			Pair<Double, Double> aToRange) {
-		fromRange = aFromRange;
-		toRange = aToRange;
-		double a = fromRange.left();
-		double b = fromRange.right();
-		double c = toRange.left();
-		double d = toRange.right();
+	public Normalizer(double a, double b,
+			double c, double d) {
 		preCalc = (d-c)/(b-a);
 	}
 
-	public static Double normalize(Pair<Double, Double> aFromRange,
-			Pair<Double, Double> aToRange, double x) {
-		double a = aFromRange.left();
-		double b = aFromRange.right();
-		double c = aToRange.left();
-		double d = aToRange.right();
+	public static Double normalize(
+			double a, double b,
+			double c, double d, double x) {
 		return 1 + (x-a)*(d-c)/(b-a);
 	}
 
 	public Double normalize(double x) {
-		double a = fromRange.left();
-		return 1 + (x-a)*preCalc;
+		return 1 + (x-from1)*preCalc;
 	}
 
-	public void setFromRange(Pair<Double, Double> aFromRange) {
-		fromRange = aFromRange;
+	public void setFromRange(double a, double b) {
+		from1 = a;
+		to1 = b;
 	}
 
 	public Pair<Double, Double> getFromRange() {
-		return fromRange;
+		return new Pair<Double, Double>(from1, to1);
 	}
 
-	public void setToRange(Pair<Double, Double> aToRange) {
-		toRange = aToRange;
+	public void setToRange(double c, double d) {
+		from2 = c;
+		to2 = d;
 	}
 
 	public Pair<Double, Double> getToRange() {
-		return toRange;
+		return new Pair<Double, Double>(from2, to2);
 	}
 }

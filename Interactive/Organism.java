@@ -102,27 +102,6 @@ public class Organism extends Matter{
 		}
 	}
 	
-	public ArrayList<Food> look(LinkedList<HealthyFood> healthFdSrc,
-			LinkedList<PoisonousFood> poisFoodSrc) {
-		ArrayList<Food> toReturn = new ArrayList<Food>();
-		Coordinate orgCoord = getLocation();
-		int orgX = orgCoord.getX();
-		int orgY = orgCoord.getY();
-		for(Food f : healthFdSrc) {
-			if(Math.abs(orgX - f.getLocation().getX()) <= scanRange ||
-					Math.abs(orgY - f.getLocation().getY()) <= scanRange ){
-				toReturn.add(f);
-			}
-		}
-		for(Food f : poisFoodSrc) {
-			if(Math.abs(orgX - f.getLocation().getX()) <= scanRange ||
-					Math.abs(orgY - f.getLocation().getY()) <= scanRange ){
-				toReturn.add(f);
-			}
-		}
-		return toReturn;
-	}
-	
 	public void moveNorth(LinkedList<Organism> organisms) {
 		//make old location available.
 		setRange(WIDTH, HEIGHT, 'w');

@@ -212,13 +212,11 @@ public class GridPanel extends JPanel
 		locationMap = new Pair[GridPanel.WIDTH][GridPanel.HEIGHT];
 //		availablePositions = new String[GridPanel.WIDTH][GridPanel.HEIGHT];
 		clearLocations();
-		norm = new Normalizer(
-				new Pair<Double, Double> (1.0, 10000.0),
-				new Pair<Double, Double> (1.0, 50.0));
+		norm = new Normalizer(-600.0, 600.0, -50.0, 50.0);
 
 		organisms.clear();
 		for(int i = 0; i < OptionsPanel.numOrganisms; i++){
-			Organism o = new Organism(500.00, 9, i, 100); //justin b (03.15).
+			Organism o = new Organism(100.0, 9, i, 100); //justin b (03.15).
 			shuffleIds.add(i);
 			organisms.add(o);
 			o.addStartingLocation();
@@ -254,7 +252,11 @@ public class GridPanel extends JPanel
 				int orgIndex = 0;
 				for(Integer integ: shuffleIds){
 					Organism org = organisms.get(integ);
-					org.deplete(1.5);
+//					org.deplete(org.getMaxHealth()/lengthGeneration);
+					org.deplete(0.3);
+//					out.println("max: " + org.getMaxHealth() + "\nlen gen: " +
+//							lengthGeneration + 
+//							"\ndec by: " + org.getMaxHealth()/lengthGeneration);
 					//Take sample of organism health for fitness.
 					org.incHlthTot();
 					if(org.getHealth() > 0){
@@ -324,7 +326,7 @@ public class GridPanel extends JPanel
 									bestEval = new Pair<Integer, Double> (i, geneEval);
 							}
 						}
-						doAction(org, bestEval);
+						doAction(org, bestEval, sight);
 					}
 					orgIndex++;
 				}
@@ -393,7 +395,9 @@ public class GridPanel extends JPanel
 			}
 		}
 		
-		private void doAction(Organism org, Pair<Integer, Double> bestEval) {
+		private void doAction(Organism org, Pair<Integer, Double> bestEval,
+				ArrayList<Food> sight) {
+//			System.out.println("Org ID: " + org.getId() + " Action 1: " + bestEval.left()  + " numObj in Sight:" + sight.size());
 			// Genes are set as N-S-E-W-NE-NW-SE-SW-Eat.
 			switch (bestEval.left()) {
 			case 0: 
@@ -476,12 +480,19 @@ public class GridPanel extends JPanel
 				Collections.shuffle(orgCopy);
 				int orgIndex = 0;
 				for(Organism org: orgCopy){
-					org.deplete(5.0);
+					org.deplete(org.getMaxHealth()/lengthGeneration);
 					//Take sample of organism health for fitness.
 					org.incHlthTot();
 					if(org.getHealth() > 0){
+						ArrayList<Integer> sightIds =
+							org.getSurroundingObjects('h', 20);
 						ArrayList<Food> sight = new ArrayList<Food>();
-						sight = org.look(healthFd, poisFood);
+						for (Integer id: sightIds)
+							sight.add(healthFd.get(id));
+						sightIds.clear();
+						sightIds.addAll(org.getSurroundingObjects('p', 20));
+						for (Integer id: sightIds)
+							sight.add(poisFood.get(id));
 						double orgX = norm.normalize(
 								org.getLocation().getX());
 						double orgY = norm.normalize(
@@ -490,10 +501,6 @@ public class GridPanel extends JPanel
 						Chromosome chrom = org.getChromosome();
 						Pair<Integer, Double> bestEval =
 							new Pair<Integer, Double> (0, 0.0);
-//						Pair<Integer, Double> bestEval1 =
-//							new Pair<Integer, Double> (0, 0.0);
-//						Pair<Integer, Double> bestEval2 =
-//							new Pair<Integer, Double> (1, 0.0);
 						for (int i = 2; i < chrom.size(); i++) {
 							Gene workingGene = chrom.getGene(i);
 							//if there is something in org's field of vision.
