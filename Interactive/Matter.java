@@ -98,10 +98,12 @@ public abstract class Matter implements getSurroundingObjects{
 		return new ArrayList<Integer>(objectIds);
 	}
 	
-	private void place(char type) {
+	private boolean place(char type) {
 		//set location
-		int x = r.nextInt(GridPanel.WIDTH);
-		int y = r.nextInt(GridPanel.HEIGHT);
+		if(GridPanel.choosePos.size() == 0)
+			return false; //TODO: account for boolean.
+		int x = r.nextInt(GridPanel.choosePos.size());
+		int y = r.nextInt(GridPanel.choosePos.get(0).size());
 
 		//check for collisions
 		while(!canSpawn(x, y)) {
@@ -113,6 +115,7 @@ public abstract class Matter implements getSurroundingObjects{
 		//set boundaries
 		setWrapAround(getWidth(), getHeight());
 		setRange(getWidth(), getHeight(), type);
+		return true;
 	}
 
 	/**

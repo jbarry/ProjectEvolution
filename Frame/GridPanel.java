@@ -42,7 +42,8 @@ public class GridPanel extends JPanel
 
 
 	public static Pair<Integer, Character>[][] locationMap;
-	ArrayList<ArrayList<Integer>> availPositions;
+	public static ArrayList<ArrayList<Integer>> choosePos;
+	private String[][] availablePositions;
 	protected LinkedList<Organism> organisms;
 	protected LinkedList<HealthyFood> healthFd;
 	protected LinkedList<PoisonousFood> poisFood;
@@ -200,6 +201,7 @@ public class GridPanel extends JPanel
 		timePassed = 0;
 		numFoodSources = 0;
 		shuffleIds = new ArrayList<Integer>();
+		
 		/*
 		 * location map will consist of:
 		 * 	key: current instance number of object
@@ -210,9 +212,9 @@ public class GridPanel extends JPanel
 		 * 		'p' for poisonous food.
 		 */
 		locationMap = new Pair[GridPanel.WIDTH][GridPanel.HEIGHT];
-		availPositions = new ArrayList<ArrayList<Integer>>();
+		availablePositions = new String[GridPanel.WIDTH][GridPanel.HEIGHT];
+		choosePos = new ArrayList<ArrayList<Integer>>();
 		clearLocations();
-		
 
 		norm = new Normalizer(
 				new Pair<Double, Double> (1.0, 10000.0),
@@ -457,13 +459,17 @@ public class GridPanel extends JPanel
 	}
 
 	public void clearLocations() {
-		for(int i = 0; i < locationMap.length; i++){
+		choosePos.clear();
+			
+		for(int i = 0; i < locationMap.length; i++) {
+			choosePos.add(new ArrayList<Integer>());
 			for(int j=0; j<locationMap[i].length; j++){
 				//mark available
 				locationMap[i][j] = new Pair<Integer, Character>(0, 'w');
+				availablePositions[i][j] = "w";
+				choosePos.get(i).add(j);
 			}
 		}
-		//availPositions
 	}
 	
 	/**
