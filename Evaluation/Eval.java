@@ -172,6 +172,14 @@ public class Eval{
 			else break;
 		} 	
 //		out.println("After eval: " + stack.peek() + "\n");
+		while(stack.peek().toString().length() < 2){
+			if(stack.size() > 1){
+				stack.pop();
+			}
+			else{
+				break;
+			}
+		}
 		return stack.pop();
 	}
 }

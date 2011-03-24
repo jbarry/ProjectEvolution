@@ -10,8 +10,8 @@ public abstract class Food extends Matter{
 	//------------------------------------------------------------------------------------
 	//--globals--
 	//------------------------------------------------------------------------------------
-	public static final int width = 5;
-	public static final int height = 5;
+	public static final int WIDTH = 5;
+	public static final int HEIGHT = 5;
 
 	//------------------------------------------------------------------------------------
 	//--constructors--
@@ -52,9 +52,9 @@ public abstract class Food extends Matter{
 	public void paint(Graphics g, boolean isDepleted) {
 		g.setColor(Color.BLUE);
 		if(!isDepleted){
-			g.fillRect((int)this.location.getX()-(width/2), 
-					   (int)this.location.getY()-(height/2), 
-					   width, height);
+			g.fillRect((int)this.location.getX()-(WIDTH/2), 
+					   (int)this.location.getY()-(HEIGHT/2), 
+					   WIDTH, HEIGHT);
 		}
 	}
 
@@ -71,11 +71,13 @@ public abstract class Food extends Matter{
 	//------------------------------------------------------------------------------------
 	//--getters/setters--
 	//------------------------------------------------------------------------------------
-	public int getWidth() {
-		return width;
-	}
-
+	@Override
 	public int getHeight() {
-		return height;
+		return Food.HEIGHT;
+	}
+	
+	@Override
+	public int getWidth() {
+		return Food.WIDTH;
 	}
 }

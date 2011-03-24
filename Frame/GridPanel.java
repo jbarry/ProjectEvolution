@@ -1,6 +1,7 @@
 package Frame;
 
 import static java.lang.System.out;
+
 import Evaluation.Eval;
 import Evaluation.Normalizer;
 
@@ -40,9 +41,9 @@ public class GridPanel extends JPanel
 	public final static int HEIGHT = 400;
 
 
-	//	public static boolean[][] isValidLocation;
 	public static Pair<Integer, Character>[][] locationMap;
-
+	public static ArrayList<ArrayList<Integer>> choosePos;
+	private String[][] availablePositions;
 	protected LinkedList<Organism> organisms;
 	protected LinkedList<HealthyFood> healthFd;
 	protected LinkedList<PoisonousFood> poisFood;
@@ -97,7 +98,7 @@ public class GridPanel extends JPanel
 
 							//check mouse location vs. all organism's locations.
 							for(Organism o: organisms) {
-								if(mouseLocation.approxEquals(o.getLocation(), Organism.width/2)) {
+								if(mouseLocation.approxEquals(o.getLocation(), Organism.WIDTH/2)) {
 									//organism found
 									isOrg = true;
 									MonitorPanel.simObjInfo.setText(o.toString());
@@ -109,7 +110,7 @@ public class GridPanel extends JPanel
 							}
 
 							for(HealthyFood r: healthFd) {
-								if(mouseLocation.approxEquals(r.getLocation(), Food.width/2)){
+								if(mouseLocation.approxEquals(r.getLocation(), Food.WIDTH/2)){
 									//food found
 									isHFood = true;
 									MonitorPanel.simObjInfo.setText(r.toString());
@@ -120,7 +121,7 @@ public class GridPanel extends JPanel
 								}
 							}
 							for(PoisonousFood r: poisFood) {
-								if(mouseLocation.approxEquals(r.getLocation(), Food.width/2)){
+								if(mouseLocation.approxEquals(r.getLocation(), Food.WIDTH/2)){
 									//food found
 									isPFood = true;
 									MonitorPanel.simObjInfo.setText(r.toString());
@@ -200,6 +201,7 @@ public class GridPanel extends JPanel
 		timePassed = 0;
 		numFoodSources = 0;
 		shuffleIds = new ArrayList<Integer>();
+		
 		/*
 		 * location map will consist of:
 		 * 	key: current instance number of object
@@ -210,13 +212,9 @@ public class GridPanel extends JPanel
 		 * 		'p' for poisonous food.
 		 */
 		locationMap = new Pair[GridPanel.WIDTH][GridPanel.HEIGHT];
-		for(int i = 0; i < locationMap.length; i++){
-			for(int j=0; j<locationMap[i].length; j++){
-				//mark available
-				locationMap[i][j] = new Pair<Integer, Character>(0, 'w');
-			}
-		}
-
+		availablePositions = new String[GridPanel.WIDTH][GridPanel.HEIGHT];
+		choosePos = new ArrayList<ArrayList<Integer>>();
+		clearLocations();
 		norm = new Normalizer(
 				new Pair<Double, Double> (1.0, 10000.0),
 				new Pair<Double, Double> (1.0, 50.0));
@@ -459,6 +457,20 @@ public class GridPanel extends JPanel
 		}
 	}
 
+	public void clearLocations() {
+		choosePos.clear();
+			
+		for(int i = 0; i < locationMap.length; i++) {
+			choosePos.add(new ArrayList<Integer>());
+			for(int j=0; j<locationMap[i].length; j++){
+				//mark available
+				locationMap[i][j] = new Pair<Integer, Character>(0, 'w');
+				availablePositions[i][j] = "w";
+				choosePos.get(i).add(j);
+			}
+		}
+	}
+	
 	/**
 	 * Preprocess generations
 	 * Essentially run the simulation without updating the graphics.
