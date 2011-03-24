@@ -78,6 +78,7 @@ public class GEP {
 		rotation();
 		mutation();
 		onePointCrossOver();
+		onePointCrossOver();
 		for(Chromosome chrom: chromList)
 			for(Gene gene: chrom.subListGene(0, chrom.size()))
 				gene.updateEvaledList();

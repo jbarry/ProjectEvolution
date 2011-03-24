@@ -1,5 +1,7 @@
 package Interactive;
 
+import static java.lang.System.out;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -62,9 +64,8 @@ public abstract class Matter implements getSurroundingObjects{
 			}
 		}
 		//make sure that scanning object was not included in scan.
-		if(numObj >= getWidth()*getHeight()){
+		if(numObj >= getWidth()*getHeight())
 			numObj -= getWidth()*getHeight(); 
-		}
 		//return a normalized value. Will count "partially" discovered organisms
 		//as a whole number, does not include "wrapped" scan.
 		return Math.ceil(numObj/(getWidth()*getHeight()));
@@ -90,20 +91,13 @@ public abstract class Matter implements getSurroundingObjects{
 				}
 			}
 		}
-		//make sure that scanning object was not included in scan.
-		//TODO: will do this outside of class. In GridPanel probably.
-		//		if(numObj >= getWidth()*getHeight()){
-		//			numObj -= getWidth()*getHeight(); 
-		//		}
 		return new ArrayList<Integer>(objectIds);
 	}
 	
-	private boolean place(char type) {
+	private void place(char type) {
 		//set location
-		if(GridPanel.choosePos.size() == 0)
-			return false; //TODO: account for boolean.
-		int x = r.nextInt(GridPanel.choosePos.size());
-		int y = r.nextInt(GridPanel.choosePos.get(0).size());
+		int x = r.nextInt(GridPanel.WIDTH);
+		int y = r.nextInt(GridPanel.HEIGHT);
 
 		//check for collisions
 		while(!canSpawn(x, y)) {
@@ -115,7 +109,6 @@ public abstract class Matter implements getSurroundingObjects{
 		//set boundaries
 		setWrapAround(getWidth(), getHeight());
 		setRange(getWidth(), getHeight(), type);
-		return true;
 	}
 
 	/**
