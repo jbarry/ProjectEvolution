@@ -39,7 +39,7 @@ public class Eval{
 //		Random r = new Random();
 //		for (int i = 0; i < 9; i++) {
 //			out.print("To be evaluated ");
-//			for (int j = 0; j < 9; j++) {
+//			for (int j = 0; j < 30; j++) {
 //				strL.add(symbols.get(r.nextInt(symbols.size())));
 //				out.print(strL.get(j) + " ");
 //			}
@@ -166,6 +166,11 @@ public class Eval{
 			expr = null;
 		}
 		
+		while(stack.peek().toString().length() < 2){
+			if(stack.size() > 1)
+				stack.pop();
+			else break;
+		} 	
 //		out.println("After eval: " + stack.peek() + "\n");
 		return stack.pop();
 	}

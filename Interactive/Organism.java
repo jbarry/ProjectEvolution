@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 import Frame.*;
 
@@ -24,6 +25,9 @@ public class Organism extends Matter{
 	private ArrayList<Chromosome> chromosomeHistory;
 	public static int WIDTH = 5;
 	public static int HEIGHT = 5;
+	//TODO: what is this?
+	private TreeSet<Integer> healthyFood;
+	private TreeSet<Integer> poisonFood;
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
@@ -41,6 +45,8 @@ public class Organism extends Matter{
 		ActionList.add(new ArrayList<String>());
 		StartingLocation=new ArrayList<Coordinate>();
 		chromosomeHistory= new ArrayList<Chromosome>();
+		healthyFood = new TreeSet<Integer>();
+		poisonFood = new TreeSet<Integer>(); 
 	}
 	
 	//for testing purposes only.
@@ -320,5 +326,14 @@ public class Organism extends Matter{
 	
 	public ArrayList<String> getActions(int generation){
 		return ActionList.get(generation);
+	}
+	
+	//TODO: add dwight.
+	public int getHealthyFoodSize(){
+		return healthyFood.size();
+	}
+	
+	public int getPoisonFoodSize(){
+		return poisonFood.size();
 	}
 }	

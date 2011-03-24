@@ -98,11 +98,8 @@ public class GEP {
 	//have higher health with travelling short distances are more fit.
 	//
 	public double fitness(Organism org) {
-		if (org.getNumSteps() == 0) return 0;
 		double avgHealth = org.getHlthTot()/org.getSamples();
-//		double fitness = avgHealth/org.getNumSteps();
-		double fitness = avgHealth;
-//		out.println(fitness);
+		double fitness = (avgHealth/org.getMaxHealth()) + (org.getHealthyFoodSize()*10) - (org.getPoisonFoodSize()*5);
 		org.setFitness(fitness);
 		return fitness;
 	}

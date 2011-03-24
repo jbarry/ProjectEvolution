@@ -26,42 +26,42 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 	//distance to food.
 	//Amount of food left in food source.
 	//Rate at which health is decreasing.
-	public Gene(int aLenGenes) {
-		lenGenes = aLenGenes;
-		symList = new LinkedList<Character>();
-		ran = new Random();
-		terminals = new LinkedList<Character>();
-		nonTerminals = new LinkedList<Character>();
-		nonTerminals.add('*');
-		nonTerminals.add('/');
-		nonTerminals.add('-');
-		nonTerminals.add('+');
-		terminals.add('a');
-		terminals.add('b');
-		terminals.add('c');
-		terminals.add('d');
-		ran = new Random();
-		ArrayList<Integer> indexChoices = new ArrayList<Integer>();
-		Character[] finiteList = new Character[lenGenes];
-		for (int i = 0; i < lenGenes; i++)
-			indexChoices.add(i);
-		for(int i = 0; i < terminals.size(); i++) {
-			int nextRan = ran.nextInt(indexChoices.size());
-			finiteList[indexChoices.remove(nextRan)]
-			           = terminals.get(ran.nextInt(terminals.size()));
-		}
-		while (!indexChoices.isEmpty()) {
-			int nextRan = ran.nextInt(indexChoices.size());
-			finiteList[indexChoices.remove(nextRan)]
-			           = nonTerminals.get(ran.nextInt(nonTerminals.size()));
-		}
-		for(int i = 0; i < finiteList.length; i++)
-			symList.add(finiteList[i]);
-		evaledList = Eval.evaluation(makeStringArray());
-	}
+//	public Gene(int aLenGenes) {
+//		lenGenes = aLenGenes;
+//		symList = new LinkedList<Character>();
+//		ran = new Random();
+//		terminals = new LinkedList<Character>();
+//		nonTerminals = new LinkedList<Character>();
+//		nonTerminals.add('*');
+//		nonTerminals.add('/');
+//		nonTerminals.add('-');
+//		nonTerminals.add('+');
+//		terminals.add('a');
+//		terminals.add('b');
+//		terminals.add('c');
+//		terminals.add('d');
+//		ran = new Random();
+//		ArrayList<Integer> indexChoices = new ArrayList<Integer>();
+//		Character[] finiteList = new Character[lenGenes];
+//		for (int i = 0; i < lenGenes; i++)
+//			indexChoices.add(i);
+//		for(int i = 0; i < terminals.size(); i++) {
+//			int nextRan = ran.nextInt(indexChoices.size());
+//			finiteList[indexChoices.remove(nextRan)]
+//			           = terminals.get(ran.nextInt(terminals.size()));
+//		}
+//		while (!indexChoices.isEmpty()) {
+//			int nextRan = ran.nextInt(indexChoices.size());
+//			finiteList[indexChoices.remove(nextRan)]
+//			           = nonTerminals.get(ran.nextInt(nonTerminals.size()));
+//		}
+//		for(int i = 0; i < finiteList.length; i++)
+//			symList.add(finiteList[i]);
+//		evaledList = Eval.evaluation(makeStringArray());
+//	}
 	
 	//Ctor that does not inform the init of the genes.
-	public Gene(boolean boo, int aLenGenes) {
+	public Gene(int aLenGenes) {
 		lenGenes = aLenGenes;
 		symList = new LinkedList<Character>();
 		ran = new Random();
