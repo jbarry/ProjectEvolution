@@ -66,6 +66,7 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 		symList = new LinkedList<Character>();
 		ran = new Random();
 		symbols = new LinkedList<Character>();
+		terminals = new LinkedList<Character>();
 		symbols.add('*');
 		symbols.add('/');
 		symbols.add('-');
@@ -74,14 +75,18 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 		symbols.add('b');
 		symbols.add('c');
 		symbols.add('d');
-		terminals.add('a');
-		terminals.add('b');
-		terminals.add('c');
-		terminals.add('d');
+		symbols.add('e');
+		symbols.add('f');
+		terminals.add('a'); //x distance
+		terminals.add('b'); //y distance
+		terminals.add('c'); //organisms near food source
+		terminals.add('d'); //organism's health
+		terminals.add('e'); //food remaining in food source
+		terminals.add('f'); //if poison = -1 normalized, otherwise 1 normalized
 		Collections.shuffle(symbols);
 		ran = new Random();
 		for (int i = 0; i < aLenGenes; i++) 
-			symList.add(symbols.get(ran.nextInt(symList.size())));
+			symList.add(symbols.get(ran.nextInt(symbols.size())));
 		//Ensure that there is always at least one variable
 		//in the Gene.
 		int variable = 0;
@@ -90,6 +95,7 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 		if (variable == 0) 
 			symList.set(ran.nextInt(symList.size()),
 				terminals.get(ran.nextInt(terminals.size())));
+		evaledList = Eval.evaluation(makeStringArray());
 	}
 	
 	public Gene(LinkedList<Character> aSymList) {
@@ -115,6 +121,10 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 
 	public Expr getEvaledList() {
 		return evaledList;
+	}
+	
+	public void updateEvaledList(){
+		evaledList=Eval.evaluation(makeStringArray());
 	}
 	//TODO: Make the symList a String Array.
 	//no need to have two separate lists.
@@ -177,6 +187,13 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 
 	public void queue(Character e) {
 		symList.add(e);
+	}
+
+	public void mutate() {
+		int size1 = ran.nextInt(size());
+		int size2 = ran.nextInt(symbols.size());
+		char mut = symbols.get(size2);
+		setSym(size1 , mut);
 	}
 }
 

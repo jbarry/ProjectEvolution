@@ -55,11 +55,6 @@ public class GEP {
 		twoPtProb = aTwoPtProb;
 //		TODO: handicap = aHandicap;
 		ran = new Random();
-
-		//testing.
-//		makeChromList();
-//		onePointCrossOver();
-//		printChromList();
 	}
 
 	/**
@@ -78,8 +73,12 @@ public class GEP {
 		rotation();
 		mutation();
 		onePointCrossOver();
-		out.println("orgList size: " + orgList.size() + 
-				"\nchromList size: " + chromList.size() + "\n");
+		onePointCrossOver();
+		for(Chromosome chrom: chromList){
+			for(Gene gene: chrom.subListGene(0, chrom.size())){
+				gene.updateEvaledList();
+			}
+		}
 		for(int i = 0; i < orgList.size(); i++)
 			orgList.get(i).setChromosome(chromList.get(i));
 		return orgList;
@@ -98,10 +97,9 @@ public class GEP {
 	//have higher health with travelling short distances are more fit.
 	//
 	public double fitness(Organism org) {
-		if (org.getNumSteps() == 0) return 0;
 		double avgHealth = org.getHlthTot()/org.getSamples();
-		double fitness = avgHealth/org.getNumSteps();
-//		out.println(fitness);
+		double fitness = (avgHealth/org.getMaxHealth()) + (org.getHealthyFoodSize()*10)
+							- (org.getPoisonFoodSize()*5) ;
 		org.setFitness(fitness);
 		return fitness;
 	}
@@ -150,37 +148,15 @@ public class GEP {
 	 * @param mutation
 	 */
 	public void mutation() {
-		Character mutation = new Character('a'); 
 		for(Chromosome chrom: chromList) {
-			if(ran.nextDouble() < mutProb) {
-				int gene = ran.nextInt((chrom.size()));
-				chrom.mutate(gene, mutation);
-			}
+			if(ran.nextDouble() < mutProb)
+				chrom.mutate();
 		}
 	}
 
-
-
 	public void onePointCrossOver() {
 		LinkedList<Pair<Chromosome, Chromosome>> pairList =
-			mateSelect(chromList);
-//		LinkedList<Chromosome> printList = 
-//			new LinkedList<Chromosome>();
-//		for (int i = 0; i < pairList.size(); i ++) {
-//			printList.add(pairList.get(i).left());
-//			printList.add(pairList.get(i).right());
-//		}
-//		for (int i = 0; i < printList.size(); i ++) {
-//			Chromosome aChrom = printList.get(i);
-//			out.println("Chromosome " + i);
-//			for (int j = 0; j < aChrom.size(); j++) {
-//				Gene aGene = aChrom.getGene(j);
-//				for (int k = 0; k < aGene.size(); k++) {
-//					out.print(aGene.getSym(k) + " ");
-//				}
-//				out.println();
-//			}
-//		}
+			mateSelect();
 		chromList.clear();
 		for(int i = 0; i < pairList.size(); i++) {
 			if(ran.nextDouble() < onePtProb) {
@@ -200,23 +176,23 @@ public class GEP {
 			chromList.add(chromPair.get(i).right());			
 		}
 	}
+	
 	//TODO: remove print statements. Only for testing.
 	//Pairs up indiv from the chromosome list parameter and 
 	//makes them into Pair objects. Puts Pairs into a LinkedList.
-	private LinkedList <Pair<Chromosome, Chromosome>> mateSelect(
-			LinkedList<Chromosome> generation) {
+	private LinkedList <Pair<Chromosome, Chromosome>> mateSelect() {
 		LinkedList<Pair<Chromosome, Chromosome>> pairList =
 			new LinkedList<Pair<Chromosome, Chromosome>>();
 		LinkedList<Chromosome> competitors = 
-			(LinkedList<Chromosome>) generation.clone();
+			(LinkedList<Chromosome>) chromList.clone();
 		while(!competitors.isEmpty()) {
 			Chromosome chrom = competitors.remove(0);
 			int mate;
 			Chromosome partner;
 			if(competitors.size() == 0) {
-				mate = ran.nextInt(generation.size());
-				generation.remove(chrom);
-				partner = generation.get(mate);
+				mate = ran.nextInt(chromList.size());
+				chromList.remove(chrom);
+				partner = chromList.get(mate);
 			} else {
 				mate = ran.nextInt(competitors.size());
 				partner = competitors.remove(mate);
@@ -262,8 +238,8 @@ public class GEP {
 	 * that is passed to it.
 	 * @param list
 	 */
-	public void printOrgList(LinkedList<Organism> list) {
-		for(int i = 0; i < list.size(); i++) {
+	public void printOrgList() {
+		for(int i = 0; i < orgList.size(); i++) {
 			out.println("Chromosome " + i);
 			Chromosome chromOne = orgList.get(i).getChromosome();
 			for(int j = 0; j < chromOne.size(); j++) {
@@ -306,7 +282,7 @@ public class GEP {
 	}
 	
 	public void setTournProb(double x){
-		tournProb=x;
+		tournProb = x;
 	}
 	
 	public double getMutProb(){
@@ -314,7 +290,7 @@ public class GEP {
 	}
 	
 	public void setMutProb(double x){
-		mutProb=x;
+		mutProb = x;
 	}
 
 	public double getRotProb(){
@@ -322,7 +298,7 @@ public class GEP {
 	}
 	
 	public void setRotProb(double x){
-		rotProb=x;
+		rotProb = x;
 	}
 
 	public double getOnePtProb(){
@@ -330,19 +306,19 @@ public class GEP {
 	}
 	
 	public void setOnePtProb(double x){
-		onePtProb=x;
+		onePtProb = x;
 	}
 
 	public void setTwoPtProb(double x){
-		twoPtProb=x;
+		twoPtProb = x;
 	}
 
 	public void setChromList(LinkedList<Chromosome> aChromList){
-		chromList=aChromList;
+		chromList = aChromList;
 	}
 
 	public void setOrgList(LinkedList<Organism> anOrgList){
-		orgList=anOrgList;
+		orgList = anOrgList;
 	}
 
 	//Used for debugging. Prints the line number.

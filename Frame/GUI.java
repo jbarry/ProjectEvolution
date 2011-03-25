@@ -92,7 +92,7 @@ public class GUI {
 		/** Create and set jframe attributes */
 		jframe = new JFrame();
 		jframe.setLayout(null);
-		jframe.setAlwaysOnTop(true);
+		jframe.setAlwaysOnTop(false);
 		jframe.setSize(GUI.WIDTH, GUI.HEIGHT);
 		jframe.setVisible(true);
 		jframe.setFocusable(true);

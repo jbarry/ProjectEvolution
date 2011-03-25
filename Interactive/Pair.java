@@ -15,5 +15,12 @@ public class Pair<A, B> {
 	public A left() {return fst;}
 
 	public B right() {return snd;}
+	
+	public void setLeft(A a){
+		fst = a;
+	}
+	
+	public void setRight(B b){
+		snd = b;
+	}
 }
-
