@@ -2,7 +2,6 @@ package Frame;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import Frame.getSurroundingObjects;
 import Interactive.Organism;
 import Searching.AStar;
 

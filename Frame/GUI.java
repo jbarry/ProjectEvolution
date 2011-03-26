@@ -185,7 +185,7 @@ public class GUI {
 					saveGenes.setEnabled(true);
 					loadGenes.setEnabled(true);
 					simulation.initialize();
-					simulation.start();
+//					simulation.start();
 					
 				}
 			}
