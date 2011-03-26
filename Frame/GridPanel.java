@@ -177,92 +177,44 @@ public class GridPanel extends JPanel
 
 				//initial program settings
 				organisms = new LinkedList<Organism>();
+				shuffleIds = new ArrayList<Integer>();
 				healthFd = new LinkedList<HealthyFood>();
 				poisFd = new LinkedList<PoisonousFood>();
 
-				t = new javax.swing.Timer(lengthTimeStep, new TimerListener(gui));
+				t = new javax.swing.Timer(lengthTimeStep, new ActionListener(){
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						doSimulation();
+						
+					}
+					
+				});
 			}
 
 		};
 		r.run();
 	}
+	private void doSimulation() {
 
-	/**
-	 * Sets the initial game state of the GridPanel
-	 */
-	public void initialize(){
-		//reset all generation info from previous simulations.
-		generationNum = 1;
-		trialNum = 1;
-		GUI.genPanel.resetGenInformation();
-		ran = new Random();
-		timePassed = 0;
-		numFoodSources = 0;
-		shuffleIds = new ArrayList<Integer>();
-		
-		/*
-		 * location map will consist of:
-		 * 	key: current instance number of object
-		 *  value:
-		 * 		'w' for white space or available.
-		 * 		'o' for organism.
-		 * 		'h' for healthy food.
-		 * 		'p' for poisonous food.
-		 */
-		locationMap = new Pair[GridPanel.WIDTH][GridPanel.HEIGHT];
-//		availablePositions = new String[GridPanel.WIDTH][GridPanel.HEIGHT];
-		clearLocations();
-		norm = new Normalizer(-600.0, 600.0, -50.0, 50.0);
-
-		organisms.clear();
-		for(int i = 0; i < OptionsPanel.numOrganisms; i++){
-			Organism o = new Organism(100.0, 9, i, 100); //justin b (03.15).
-			shuffleIds.add(i);
-			organisms.add(o);
-			o.addStartingLocation();
-			o.addChromosome();
-		}
-		healthFd.clear();
-		for(int i = 0; i < OptionsPanel.numOrganisms/5; i++){
-			HealthyFood h = new HealthyFood(100.0, i, 2);
-			healthFd.add(h);
-			numFoodSources++;
-		}
-		poisFd.clear();
-		for(int i = 0; i < OptionsPanel.numOrganisms/5; i++){
-			PoisonousFood p = new PoisonousFood(100.0, i, 2);
-			poisFd.add(p);
-		}
-		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
-//		preProcess(12);
-//		game();
-	}
-
-	class TimerListener implements ActionListener {
-
-		GUI gui;
-		public TimerListener(final GUI aGui) {
-			gui = aGui;
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
 			t.stop();
 			if(timePassed < lengthGeneration) {
 				timePassed+=lengthTimeStep;
+				if(shuffleIds.isEmpty()) nextGen();
 				Collections.shuffle(shuffleIds);
 				int orgIndex = 0;
-				for(int k = 0; k < shuffleIds.size(); k++){
+		action:	for(int k = 0; k < shuffleIds.size(); k++){
+					if(shuffleIds.isEmpty()) nextGen();
 					Integer integ = shuffleIds.get(k);
 					Organism org = organisms.get(integ);
-//					while (org.getHealth() == 0) {
-//						if(shuffleIds.isEmpty()) break;
-//						shuffleIds.remove(k);
-//						integ = shuffleIds.get(k);
-//						org = organisms.get(integ);
-//					}
+					
+					if (org.getHealth() == 0) {
+						shuffleIds.remove(k);
+						k--;
+						continue action;
+					}
 //					org.deplete(org.getMaxHealth()/lengthGeneration);
-					org.deplete(0.3);
+					org.deplete(ran.nextInt(20));
 //					out.println("max: " + org.getMaxHealth() + "\nlen gen: " +
 //							lengthGeneration + 
 //							"\ndec by: " + org.getMaxHealth()/lengthGeneration);
@@ -479,137 +431,197 @@ public class GridPanel extends JPanel
 				}
 				//End AI LOGIC
 				repaint();
-			} else if (trialNum < trialsPerGen) {
-				t.stop();
-				for(Organism o: organisms){
-					o.newLocation();
-					o.setHealth(o.getMaxHealth());
-				}
-				trialNum++;
-				healthFd.clear();
-				poisFd.clear();
-				for(int i = 0; i < OptionsPanel.numOrganisms/5; i++){
-					HealthyFood h = new HealthyFood(100.0, i, 2);
-					PoisonousFood f = new PoisonousFood(100.0, i, 2);
-					healthFd.add(h);
-					poisFd.add(f);
-				}
-				timePassed = 0;
-				if(!GUI.genPanel.resumeHasNotBeenClicked() &&
-						!GUI.genPanel.genIsSelected()){
-					GUI.genPanel.enableResumeSimulation();
-					gui.toggleAllPauses(false);
-				}
-				else{
-					t.start();
-					GUI.genPanel.newTrial();
-				}
-			} else {
+			}
+//			else if (trialNum < trialsPerGen) {
+//				t.stop();
+//				for(Organism o: organisms){
+//					o.newLocation();
+//					o.setHealth(o.getMaxHealth());
+//				}
+//				trialNum++;
+//				healthFd.clear();
+//				poisFd.clear();
+//				for(int i = 0; i < OptionsPanel.numOrganisms/5; i++){
+//					HealthyFood h = new HealthyFood(100.0, i, 2);
+//					PoisonousFood f = new PoisonousFood(100.0, i, 2);
+//					healthFd.add(h);
+//					poisFd.add(f);
+//				}
+//				timePassed = 0;
+//				if(!GUI.genPanel.resumeHasNotBeenClicked() &&
+//						!GUI.genPanel.genIsSelected()){
+//					GUI.genPanel.enableResumeSimulation();
+//					gui.toggleAllPauses(false);
+//				}
+//				else{
+//					t.start();
+//					GUI.genPanel.newTrial();
+//				}
+//			} 
+			else {
 				nextGen();
 			}
 			t.start();
-		}
-		 private void nextGen() {
-			 t.stop();
-				timePassed = 0;
-				double sum = 0;	
-				for(Organism o: organisms) {
-					sum+=g.fitness(o);
-					o.newLocation();
-					out.println(o.getFitness());
-				}
-				lastAvg = sum/OptionsPanel.numOrganisms;
-				g.setOrgList(organisms);
-				organisms = g.newGeneration();
-				healthFd.clear();
-				poisFd.clear();
-				clearLocations();
-				for(Organism o: organisms)
-					o.setHealth(o.getMaxHealth());
-				for(int i = 0; i < OptionsPanel.numOrganisms/5; i++) {
-					HealthyFood h = new HealthyFood(100.0, i, 2);
-					PoisonousFood f = new PoisonousFood(100.0, i, 2);
-					healthFd.add(h);
-					poisFd.add(f);
-				}
-				trialNum = 1;
-				generationNum++;
+	}
+	/**
+	 * Sets the initial game state of the GridPanel
+	 */
+	public void initialize(){
+		//reset all generation info from previous simulations.
+		generationNum = 1;
+		trialNum = 1;
+		GUI.genPanel.resetGenInformation();
+		ran = new Random();
+		timePassed = 0;
+		numFoodSources = 0;
+		
+		/*
+		 * location map will consist of:
+		 * 	key: current instance number of object
+		 *  value:
+		 * 		'w' for white space or available.
+		 * 		'o' for organism.
+		 * 		'h' for healthy food.
+		 * 		'p' for poisonous food.
+		 */
+		locationMap = new Pair[GridPanel.WIDTH][GridPanel.HEIGHT];
+//		availablePositions = new String[GridPanel.WIDTH][GridPanel.HEIGHT];
+		clearLocations();
+		norm = new Normalizer(-600.0, 600.0, -50.0, 50.0);
 
-				GUI.genPanel.addGeneration();
-				if(!GUI.genPanel.resumeHasNotBeenClicked()) {
-					GUI.genPanel.enableResumeSimulation();
-					gui.toggleAllPauses(false);
-				} else {
-					t.start();
-					GUI.genPanel.newGeneration();
-					repaint();
-				}
-		 }
-		private void doAction(Organism org, Pair<Integer, Double> bestEval,
-				ArrayList<Food> sight) {
-//			System.out.println("Org ID: " + org.getId() + " Action 1: " + bestEval.left()  + " numObj in Sight:" + sight.size());
-			// Genes are set as N-S-E-W-NE-NW-SE-SW-Eat.
-			switch (bestEval.left()) {
-			case 0: 
-				org.moveNorth(organisms);
-				//org.addAction("N", orgIndex);
-				org.countStep();
-				break;
-			case 1: 
-				org.moveSouth(organisms);
-				//org.addAction("S", orgIndex);
-				org.countStep();
-				break;
-			case 2: 
-				org.moveEast(organisms); 
-				//org.addAction("E", orgIndex);
-				org.countStep();
-				break;
-			case 3: 
-				org.moveWest(organisms);
-				//org.addAction("W", orgIndex);
-				org.countStep();
-				break;
-			case 4: 
-				org.moveNorthEast(organisms);
-				//org.addAction("NE", orgIndex);
-				org.countStep();
-				break;
-			case 5: 
-				org.moveNorthWest(organisms);
-				//org.addAction("NW", orgIndex);
-				org.countStep();
-				break;
-			case 6: 
-				org.moveSouthEast(organisms);
-				//org.addAction("SE", orgIndex);
-				org.countStep();
-				break;
-			case 7: 
-				org.moveSouthWest(organisms);
-				//org.addAction("SW", orgIndex);
-				org.countStep();
-				break;
-			case 8: //eat
-				ArrayList<Integer> surrndngHlthyFd =
-					org.getSurroundingObjects('h', 40);
-				ArrayList<Integer> surrndngPoisFd = 
-					org.getSurroundingObjects('p', 40);
-				if (surrndngHlthyFd.size() != 0) {
-					int anId = surrndngHlthyFd.get(
-							ran.nextInt(surrndngHlthyFd.size()));
-					org.eatFood(healthFd.get(anId), 5.0);
-				}
-				else if (surrndngPoisFd.size() != 0) {
-					int anId = surrndngPoisFd.get(
-							ran.nextInt(surrndngPoisFd.size()));
-					org.eatFood(poisFd.get(anId), 5.0);
-				}
-//				if(organismIsNextToPoisonousFood(org) || organismIsNextToHealthyFood(org) );
-			}
+		organisms.clear();
+		for(int i = 0; i < OptionsPanel.numOrganisms; i++){
+			Organism o = new Organism(100.0, 9, i, 100); //justin b (03.15).
+			shuffleIds.add(i);
+			organisms.add(o);
+			o.addStartingLocation();
+			o.addChromosome();
 		}
+		healthFd.clear();
+		for(int i = 0; i < OptionsPanel.numOrganisms/5; i++){
+			HealthyFood h = new HealthyFood(100.0, i, 2);
+			healthFd.add(h);
+			numFoodSources++;
+		}
+		poisFd.clear();
+		for(int i = 0; i < OptionsPanel.numOrganisms/5; i++){
+			PoisonousFood p = new PoisonousFood(100.0, i, 2);
+			poisFd.add(p);
+		}
+		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
+//		preProcess(12);
+//		game();
 	}
 
+//	class TimerListener implements ActionListener {
+
+//		GUI gui;
+//		public TimerListener(final GUI aGui) {
+//			gui = aGui;
+//		}
+
+//	}
+
+	private void nextGen() {
+		 t.stop();
+			timePassed = 0;
+			double sum = 0;	
+			for(Organism o: organisms) {
+				sum+=g.fitness(o);
+				o.newLocation();
+				out.println(o.getFitness());
+			}
+			lastAvg = sum/OptionsPanel.numOrganisms;
+			g.setOrgList(organisms);
+			organisms = g.newGeneration();
+			healthFd.clear();
+			poisFd.clear();
+			clearLocations();
+			for(Organism o: organisms)
+				o.setHealth(o.getMaxHealth());
+			for(int i = 0; i < OptionsPanel.numOrganisms/5; i++) {
+				HealthyFood h = new HealthyFood(100.0, i, 2);
+				PoisonousFood f = new PoisonousFood(100.0, i, 2);
+				healthFd.add(h);
+				poisFd.add(f);
+			}
+			trialNum = 1;
+			generationNum++;
+
+			GUI.genPanel.addGeneration();
+			if(!GUI.genPanel.resumeHasNotBeenClicked()) {
+				GUI.genPanel.enableResumeSimulation();
+//				gui.toggleAllPauses(false);
+			} else {
+				t.start();
+				GUI.genPanel.newGeneration();
+				repaint();
+			}
+	 }
+	
+	private void doAction(Organism org, Pair<Integer, Double> bestEval,
+			ArrayList<Food> sight) {
+//		System.out.println("Org ID: " + org.getId() + " Action 1: " + bestEval.left()  + " numObj in Sight:" + sight.size());
+		// Genes are set as N-S-E-W-NE-NW-SE-SW-Eat.
+		switch (bestEval.left()) {
+		case 0: 
+			org.moveNorth(organisms);
+			//org.addAction("N", orgIndex);
+			org.countStep();
+			break;
+		case 1: 
+			org.moveSouth(organisms);
+			//org.addAction("S", orgIndex);
+			org.countStep();
+			break;
+		case 2: 
+			org.moveEast(organisms); 
+			//org.addAction("E", orgIndex);
+			org.countStep();
+			break;
+		case 3: 
+			org.moveWest(organisms);
+			//org.addAction("W", orgIndex);
+			org.countStep();
+			break;
+		case 4: 
+			org.moveNorthEast(organisms);
+			//org.addAction("NE", orgIndex);
+			org.countStep();
+			break;
+		case 5: 
+			org.moveNorthWest(organisms);
+			//org.addAction("NW", orgIndex);
+			org.countStep();
+			break;
+		case 6: 
+			org.moveSouthEast(organisms);
+			//org.addAction("SE", orgIndex);
+			org.countStep();
+			break;
+		case 7: 
+			org.moveSouthWest(organisms);
+			//org.addAction("SW", orgIndex);
+			org.countStep();
+			break;
+		case 8: //eat
+			ArrayList<Integer> surrndngHlthyFd =
+				org.getSurroundingObjects('h', 40);
+			ArrayList<Integer> surrndngPoisFd = 
+				org.getSurroundingObjects('p', 40);
+			if (surrndngHlthyFd.size() != 0) {
+				int anId = surrndngHlthyFd.get(
+						ran.nextInt(surrndngHlthyFd.size()));
+				org.eatFood(healthFd.get(anId), 5.0);
+			}
+			else if (surrndngPoisFd.size() != 0) {
+				int anId = surrndngPoisFd.get(
+						ran.nextInt(surrndngPoisFd.size()));
+				org.eatFood(poisFd.get(anId), 5.0);
+			}
+//			if(organismIsNextToPoisonousFood(org) || organismIsNextToHealthyFood(org) );
+		}
+	}
 	public void clearLocations() {
 		for(int i = 0; i < locationMap.length; i++) {
 			for(int j = 0; j < locationMap[i].length; j++){
@@ -996,7 +1008,6 @@ public class GridPanel extends JPanel
 		t.start();
 	}
 	public void stop(){
-		out.println(getLineNumber());
 		t.stop();
 	}
 	public boolean isPaused(){
@@ -1023,8 +1034,7 @@ public class GridPanel extends JPanel
 //			org.paint(g);
 		
 		for(Integer integ: shuffleIds) 
-			organisms.get(shuffleIds.get(
-					ran.nextInt(shuffleIds.size()))).paint(g);
+			organisms.get(integ).paint(g);
 		
 		for(HealthyFood h: healthFd){
 			if(h.getHealth() > 0){
