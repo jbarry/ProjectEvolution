@@ -44,7 +44,7 @@ public class GridPanel extends JPanel
 	public static Pair<Integer, Character>[][] locationMap;
 	protected LinkedList<Organism> organisms;
 	protected LinkedList<HealthyFood> healthFd;
-	protected LinkedList<PoisonousFood> poisFood;
+	protected LinkedList<PoisonousFood> poisFd;
 	protected ArrayList<Integer> shuffleIds;
 	protected int lengthTimeStep = 100;
 	protected int lengthGeneration = lengthTimeStep*300;
@@ -118,7 +118,7 @@ public class GridPanel extends JPanel
 									isHFood = false;
 								}
 							}
-							for(PoisonousFood r: poisFood) {
+							for(PoisonousFood r: poisFd) {
 								if(mouseLocation.approxEquals(r.getLocation(), Food.WIDTH/2)){
 									//food found
 									isPFood = true;
@@ -178,7 +178,7 @@ public class GridPanel extends JPanel
 				//initial program settings
 				organisms = new LinkedList<Organism>();
 				healthFd = new LinkedList<HealthyFood>();
-				poisFood = new LinkedList<PoisonousFood>();
+				poisFd = new LinkedList<PoisonousFood>();
 
 				t = new javax.swing.Timer(lengthTimeStep, new TimerListener(gui));
 			}
@@ -228,13 +228,14 @@ public class GridPanel extends JPanel
 			healthFd.add(h);
 			numFoodSources++;
 		}
-		poisFood.clear();
+		poisFd.clear();
 		for(int i = 0; i < OptionsPanel.numOrganisms/5; i++){
 			PoisonousFood p = new PoisonousFood(100.0, i, 2);
-			poisFood.add(p);
+			poisFd.add(p);
 		}
 		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
-		//		preProcess(20);
+//		preProcess(12);
+//		game();
 	}
 
 	class TimerListener implements ActionListener {
@@ -246,12 +247,20 @@ public class GridPanel extends JPanel
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			t.stop();
 			if(timePassed < lengthGeneration) {
 				timePassed+=lengthTimeStep;
 				Collections.shuffle(shuffleIds);
 				int orgIndex = 0;
-				for(Integer integ: shuffleIds){
+				for(int k = 0; k < shuffleIds.size(); k++){
+					Integer integ = shuffleIds.get(k);
 					Organism org = organisms.get(integ);
+//					while (org.getHealth() == 0) {
+//						if(shuffleIds.isEmpty()) break;
+//						shuffleIds.remove(k);
+//						integ = shuffleIds.get(k);
+//						org = organisms.get(integ);
+//					}
 //					org.deplete(org.getMaxHealth()/lengthGeneration);
 					org.deplete(0.3);
 //					out.println("max: " + org.getMaxHealth() + "\nlen gen: " +
@@ -259,23 +268,27 @@ public class GridPanel extends JPanel
 //							"\ndec by: " + org.getMaxHealth()/lengthGeneration);
 					//Take sample of organism health for fitness.
 					org.incHlthTot();
-					if(org.getHealth() > 0){
+//					if(org.getHealth() > 0) {
 						ArrayList<Integer> sightIds =
 							org.getSurroundingObjects('h', 20);
 						ArrayList<Food> sight = new ArrayList<Food>();
 						for (Integer id: sightIds)
 							sight.add(healthFd.get(id));
 						sightIds.clear();
-						sightIds.addAll(org.getSurroundingObjects('p', 20));
+						sightIds = org.getSurroundingObjects('p', 20);
 						for (Integer id: sightIds)
-							sight.add(poisFood.get(id));
+							sight.add(poisFd.get(id));
 						double orgX = norm.normalize(
 								org.getLocation().getX());
 						double orgY = norm.normalize(
 								org.getLocation().getY());
 						double health = org.getHealth();
 						Chromosome chrom = org.getChromosome();
-						Pair<Integer, Double> bestEval =
+//						Pair<Integer, Double> bestEval =
+//							new Pair<Integer, Double> (0, 0.0);
+						Pair<Integer, Double> bestEval1 =
+							new Pair<Integer, Double> (0, 0.0);
+						Pair<Integer, Double> bestEval2 =
 							new Pair<Integer, Double> (0, 0.0);
 						for (int i = 0; i < chrom.size(); i++) {
 							Gene workingGene = chrom.getGene(i);
@@ -307,8 +320,16 @@ public class GridPanel extends JPanel
 									environment.put("d", norm.normalize(health));
 									environment.put("e", norm.normalize(f.getHealth()));
 									double geneEval = result.evaluate(environment);
-									if(geneEval > bestEval.right())
-										bestEval = new Pair<Integer, Double> (i, geneEval);
+									if(geneEval > bestEval1.right() && bestEval1.right() < bestEval2.right()){
+										bestEval1.setLeft(i);
+										bestEval1.setRight(geneEval);
+									}
+									else if(geneEval>bestEval2.right()){
+										bestEval2.setLeft(i);
+										bestEval2.setRight(geneEval);
+									}
+//									if(geneEval > bestEval.right())
+//										bestEval = new Pair<Integer, Double> (i, geneEval);
 								}
 							}
 							//TODO: if there isn't anything in org's field of vision. 
@@ -322,12 +343,138 @@ public class GridPanel extends JPanel
 								environment.put("d", norm.normalize(health));
 								environment.put("e", norm.normalize(0.0));
 								double geneEval = result.evaluate(environment);
-								if(geneEval > bestEval.right())
-									bestEval = new Pair<Integer, Double> (i, geneEval);
+//								if(geneEval > bestEval.right())
+//									bestEval = new Pair<Integer, Double> (i, geneEval);
+								if(geneEval > bestEval1.right() && bestEval1.right() < bestEval2.right()){
+									bestEval1.setLeft(i);
+									bestEval1.setRight(geneEval);
+								}
+								else if(geneEval > bestEval2.right()){
+									bestEval2.setLeft(i);
+									bestEval2.setRight(geneEval);
+								}
 							}
 						}
-						doAction(org, bestEval, sight);
-					}
+
+//						System.out.println("Org ID: " + org.getId() + " Action 1: " + bestEval.left()  + " numObj in Sight:" + sight.size());
+						// Genes are set as N-S-E-W-NE-NW-SE-SW-Eat.
+						switch (bestEval1.left()) {
+						case 0: 
+							org.moveNorth(organisms);
+							//org.addAction("N", orgIndex);
+							org.countStep();
+							break;
+						case 1: 
+							org.moveSouth(organisms);
+							//org.addAction("S", orgIndex);
+							org.countStep();
+							break;
+						case 2: 
+							org.moveEast(organisms); 
+							//org.addAction("E", orgIndex);
+							org.countStep();
+							break;
+						case 3: 
+							org.moveWest(organisms);
+							//org.addAction("W", orgIndex);
+							org.countStep();
+							break;
+						case 4: 
+							org.moveNorthEast(organisms);
+							//org.addAction("NE", orgIndex);
+							org.countStep();
+							break;
+						case 5: 
+							org.moveNorthWest(organisms);
+							//org.addAction("NW", orgIndex);
+							org.countStep();
+							break;
+						case 6: 
+							org.moveSouthEast(organisms);
+							//org.addAction("SE", orgIndex);
+							org.countStep();
+							break;
+						case 7: 
+							org.moveSouthWest(organisms);
+							//org.addAction("SW", orgIndex);
+							org.countStep();
+							break;
+						case 8: //eat
+							ArrayList<Integer> surrndngHlthyFd =
+								org.getSurroundingObjects('h', 2);
+							ArrayList<Integer> surrndngPoisFd = 
+								org.getSurroundingObjects('p', 2);
+							if (surrndngHlthyFd.size() != 0) {
+								int anId = surrndngHlthyFd.get(
+										ran.nextInt(surrndngHlthyFd.size()));
+								org.eatFood(healthFd.get(anId), 0.8);
+							}
+							else if (surrndngPoisFd.size() != 0) {
+								int anId = surrndngPoisFd.get(
+										ran.nextInt(surrndngPoisFd.size()));
+								org.eatFood(poisFd.get(anId), 0.8);
+							}
+//							if(organismIsNextToPoisonousFood(org) || organismIsNextToHealthyFood(org) );
+						}
+						switch (bestEval2.left()) {
+						case 0:
+							org.moveNorth(organisms);
+							//org.addAction("N", orgIndex);
+							org.countStep();
+							break;
+						case 1:
+							org.moveSouth(organisms);
+							//org.addAction("S", orgIndex);
+							org.countStep();
+							break;
+						case 2:
+							org.moveEast(organisms);
+							//org.addAction("E", orgIndex);
+							org.countStep();
+							break;
+						case 3:
+							org.moveWest(organisms);
+							//org.addAction("W", orgIndex);
+							org.countStep();
+							break;
+						case 4:
+							org.moveNorthEast(organisms);
+							//org.addAction("NE", orgIndex);
+							org.countStep();
+							break;
+						case 5:
+							org.moveNorthWest(organisms);
+							//org.addAction("NW", orgIndex);
+							org.countStep();
+							break;
+						case 6:
+							org.moveSouthEast(organisms);
+							//org.addAction("SE", orgIndex);
+							org.countStep();
+							break;
+						case 7:
+							org.moveSouthWest(organisms);
+							//org.addAction("SW", orgIndex);
+							org.countStep();
+							break;
+						case 8:
+							ArrayList<Integer> surrndngHlthyFd =
+								org.getSurroundingObjects('h', 2);
+							ArrayList<Integer> surrndngPoisFd =
+								org.getSurroundingObjects('p', 2);
+							if (surrndngHlthyFd.size() != 0) {
+								int anId = surrndngHlthyFd.get(
+										ran.nextInt(surrndngHlthyFd.size()));
+								org.eatFood(healthFd.get(anId), 0.8);
+							}
+							else if (surrndngPoisFd.size() != 0) {
+								int anId = surrndngPoisFd.get(
+										ran.nextInt(surrndngPoisFd.size()));
+								org.eatFood(poisFd.get(anId), 0.8);
+							}
+//							if(organismIsNextToPoisonousFood(org) || organismIsNextToHealthyFood(org) );
+						}
+//					}
 					orgIndex++;
 				}
 				//End AI LOGIC
@@ -340,12 +487,12 @@ public class GridPanel extends JPanel
 				}
 				trialNum++;
 				healthFd.clear();
-				poisFood.clear();
+				poisFd.clear();
 				for(int i = 0; i < OptionsPanel.numOrganisms/5; i++){
 					HealthyFood h = new HealthyFood(100.0, i, 2);
 					PoisonousFood f = new PoisonousFood(100.0, i, 2);
 					healthFd.add(h);
-					poisFood.add(f);
+					poisFd.add(f);
 				}
 				timePassed = 0;
 				if(!GUI.genPanel.resumeHasNotBeenClicked() &&
@@ -358,7 +505,12 @@ public class GridPanel extends JPanel
 					GUI.genPanel.newTrial();
 				}
 			} else {
-				t.stop();
+				nextGen();
+			}
+			t.start();
+		}
+		 private void nextGen() {
+			 t.stop();
 				timePassed = 0;
 				double sum = 0;	
 				for(Organism o: organisms) {
@@ -370,7 +522,7 @@ public class GridPanel extends JPanel
 				g.setOrgList(organisms);
 				organisms = g.newGeneration();
 				healthFd.clear();
-				poisFood.clear();
+				poisFd.clear();
 				clearLocations();
 				for(Organism o: organisms)
 					o.setHealth(o.getMaxHealth());
@@ -378,7 +530,7 @@ public class GridPanel extends JPanel
 					HealthyFood h = new HealthyFood(100.0, i, 2);
 					PoisonousFood f = new PoisonousFood(100.0, i, 2);
 					healthFd.add(h);
-					poisFood.add(f);
+					poisFd.add(f);
 				}
 				trialNum = 1;
 				generationNum++;
@@ -392,9 +544,7 @@ public class GridPanel extends JPanel
 					GUI.genPanel.newGeneration();
 					repaint();
 				}
-			}
-		}
-		
+		 }
 		private void doAction(Organism org, Pair<Integer, Double> bestEval,
 				ArrayList<Food> sight) {
 //			System.out.println("Org ID: " + org.getId() + " Action 1: " + bestEval.left()  + " numObj in Sight:" + sight.size());
@@ -442,15 +592,20 @@ public class GridPanel extends JPanel
 				break;
 			case 8: //eat
 				ArrayList<Integer> surrndngHlthyFd =
-					org.getSurroundingObjects('h', 5);
+					org.getSurroundingObjects('h', 40);
 				ArrayList<Integer> surrndngPoisFd = 
-					org.getSurroundingObjects('p', 5);
-				if (surrndngHlthyFd.size() != 0)
-					org.eatFood(healthFd.get(
-							ran.nextInt(surrndngHlthyFd.size())), 5.0);
-				else if (surrndngPoisFd.size() != 0)
-					org.eatFood(poisFood.get(
-							ran.nextInt(surrndngPoisFd.size())), 5.0);
+					org.getSurroundingObjects('p', 40);
+				if (surrndngHlthyFd.size() != 0) {
+					int anId = surrndngHlthyFd.get(
+							ran.nextInt(surrndngHlthyFd.size()));
+					org.eatFood(healthFd.get(anId), 5.0);
+				}
+				else if (surrndngPoisFd.size() != 0) {
+					int anId = surrndngPoisFd.get(
+							ran.nextInt(surrndngPoisFd.size()));
+					org.eatFood(poisFd.get(anId), 5.0);
+				}
+//				if(organismIsNextToPoisonousFood(org) || organismIsNextToHealthyFood(org) );
 			}
 		}
 	}
@@ -492,14 +647,18 @@ public class GridPanel extends JPanel
 						sightIds.clear();
 						sightIds.addAll(org.getSurroundingObjects('p', 20));
 						for (Integer id: sightIds)
-							sight.add(poisFood.get(id));
+							sight.add(poisFd.get(id));
 						double orgX = norm.normalize(
 								org.getLocation().getX());
 						double orgY = norm.normalize(
 								org.getLocation().getY());
 						double health = org.getHealth();
 						Chromosome chrom = org.getChromosome();
-						Pair<Integer, Double> bestEval =
+//						Pair<Integer, Double> bestEval =
+//							new Pair<Integer, Double> (0, 0.0);
+						Pair<Integer, Double> bestEval1 =
+							new Pair<Integer, Double> (0, 0.0);
+						Pair<Integer, Double> bestEval2 =
 							new Pair<Integer, Double> (0, 0.0);
 						for (int i = 2; i < chrom.size(); i++) {
 							Gene workingGene = chrom.getGene(i);
@@ -522,16 +681,16 @@ public class GridPanel extends JPanel
 									environment.put("d", norm.normalize(health));
 									environment.put("e", norm.normalize(f.getHealth()));
 									double geneEval = result.evaluate(environment);
-//									if(geneEval > bestEval1.right() && bestEval1.right() < bestEval2.right()){
-//										bestEval1.setLeft(i);
-//										bestEval1.setRight(geneEval);
-//									}
-//									else if(geneEval>bestEval2.right()){
-//										bestEval2.setLeft(i);
-//										bestEval2.setRight(geneEval);
-//									}
-									if(geneEval > bestEval.right())
-										bestEval = new Pair<Integer, Double> (i, geneEval);
+									if(geneEval > bestEval1.right() && bestEval1.right() < bestEval2.right()){
+										bestEval1.setLeft(i);
+										bestEval1.setRight(geneEval);
+									}
+									else if(geneEval>bestEval2.right()){
+										bestEval2.setLeft(i);
+										bestEval2.setRight(geneEval);
+									}
+//									if(geneEval > bestEval.right())
+//										bestEval = new Pair<Integer, Double> (i, geneEval);
 								}
 								sight.clear();
 							}
@@ -546,20 +705,20 @@ public class GridPanel extends JPanel
 								environment.put("d", norm.normalize(health));
 								environment.put("e", norm.normalize(0.0));
 								double geneEval = result.evaluate(environment);
-//								if(geneEval > bestEval1.right() && bestEval1.right() < bestEval2.right()){
-//									bestEval1.setLeft(i);
-//									bestEval1.setRight(geneEval);
-//								}
-//								else if(geneEval > bestEval2.right()){
-//									bestEval2.setLeft(i);
-//									bestEval2.setRight(geneEval);
-//								}
-								if(geneEval > bestEval.right())
-									bestEval = new Pair<Integer, Double> (i, geneEval);
+								if(geneEval > bestEval1.right() && bestEval1.right() < bestEval2.right()){
+									bestEval1.setLeft(i);
+									bestEval1.setRight(geneEval);
+								}
+								else if(geneEval > bestEval2.right()){
+									bestEval2.setLeft(i);
+									bestEval2.setRight(geneEval);
+								}
+//								if(geneEval > bestEval.right())
+//									bestEval = new Pair<Integer, Double> (i, geneEval);
 							}
 						}
 						// Genes are set as N-S-E-W-NE-NW-SE-SW-Eat.
-						switch (bestEval.left()) {
+						switch (bestEval1.left()) {
 						case 0:
 							org.moveNorth(organisms);
 							//org.addAction("N", orgIndex);
@@ -602,16 +761,79 @@ public class GridPanel extends JPanel
 							break;
 						case 8:
 							ArrayList<Integer> surrndngHlthyFd =
-								org.getSurroundingObjects('h', 5);
+								org.getSurroundingObjects('h', 2);
 							ArrayList<Integer> surrndngPoisFd =
-								org.getSurroundingObjects('p', 5);
+								org.getSurroundingObjects('p', 2);
 							if (surrndngHlthyFd.size() != 0) {
-								org.eatFood(healthFd.get(
-										ran.nextInt(surrndngHlthyFd.size())), 5.0);
-							} else if (surrndngPoisFd.size() != 0) {
-								org.eatFood(poisFood.get(
-										ran.nextInt(surrndngPoisFd.size())), 5.0);
+								int anId = surrndngHlthyFd.get(
+										ran.nextInt(surrndngHlthyFd.size()));
+								org.eatFood(healthFd.get(anId), 0.8);
 							}
+							else if (surrndngPoisFd.size() != 0) {
+								int anId = surrndngPoisFd.get(
+										ran.nextInt(surrndngPoisFd.size()));
+								org.eatFood(poisFd.get(anId), 0.8);
+							}
+//							if(organismIsNextToPoisonousFood(org) || organismIsNextToHealthyFood(org) );
+						}
+						// Genes are set as N-S-E-W-NE-NW-SE-SW-Eat.
+						switch (bestEval2.left()) {
+						case 0:
+							org.moveNorth(organisms);
+							//org.addAction("N", orgIndex);
+							org.countStep();
+							break;
+						case 1:
+							org.moveSouth(organisms);
+							//org.addAction("S", orgIndex);
+							org.countStep();
+							break;
+						case 2:
+							org.moveEast(organisms);
+							//org.addAction("E", orgIndex);
+							org.countStep();
+							break;
+						case 3:
+							org.moveWest(organisms);
+							//org.addAction("W", orgIndex);
+							org.countStep();
+							break;
+						case 4:
+							org.moveNorthEast(organisms);
+							//org.addAction("NE", orgIndex);
+							org.countStep();
+							break;
+						case 5:
+							org.moveNorthWest(organisms);
+							//org.addAction("NW", orgIndex);
+							org.countStep();
+							break;
+						case 6:
+							org.moveSouthEast(organisms);
+							//org.addAction("SE", orgIndex);
+							org.countStep();
+							break;
+						case 7:
+							org.moveSouthWest(organisms);
+							//org.addAction("SW", orgIndex);
+							org.countStep();
+							break;
+						case 8:
+							ArrayList<Integer> surrndngHlthyFd =
+								org.getSurroundingObjects('h', 2);
+							ArrayList<Integer> surrndngPoisFd =
+								org.getSurroundingObjects('p', 2);
+							if (surrndngHlthyFd.size() != 0) {
+								int anId = surrndngHlthyFd.get(
+										ran.nextInt(surrndngHlthyFd.size()));
+								org.eatFood(healthFd.get(anId), 0.8);
+							}
+							else if (surrndngPoisFd.size() != 0) {
+								int anId = surrndngPoisFd.get(
+										ran.nextInt(surrndngPoisFd.size()));
+								org.eatFood(poisFd.get(anId), 0.8);
+							}
+//							if(organismIsNextToPoisonousFood(org) || organismIsNextToHealthyFood(org) );
 						}
 					}
 					orgIndex++;
@@ -624,12 +846,12 @@ public class GridPanel extends JPanel
 				}
 				trialNum++;
 				healthFd.clear();
-				poisFood.clear();
+				poisFd.clear();
 				for(int i = 0; i < OptionsPanel.numOrganisms/5; i++){
 					HealthyFood h = new HealthyFood(100.0, i, 2);
 					PoisonousFood f = new PoisonousFood(100.0, i, 2);
 					healthFd.add(h);
-					poisFood.add(f);
+					poisFd.add(f);
 				}
 				timePassed = 0;
 			}
@@ -644,7 +866,7 @@ public class GridPanel extends JPanel
 				g.setOrgList(organisms);
 				organisms = g.newGeneration();
 				healthFd.clear();
-				poisFood.clear();
+				poisFd.clear();
 				clearLocations();
 				for(Organism o: organisms)
 					o.setHealth(o.getMaxHealth());
@@ -652,7 +874,7 @@ public class GridPanel extends JPanel
 					HealthyFood h = new HealthyFood(100.0, i, 2);
 					PoisonousFood f = new PoisonousFood(100.0, i, 2);
 					healthFd.add(h);
-					poisFood.add(f);
+					poisFd.add(f);
 				}
 				trialNum = 1;
 				generationNum++;
@@ -660,7 +882,92 @@ public class GridPanel extends JPanel
 		}
 		generationNum = 1;
 	}
+	
+	/**
+	 * Determines whether of not the passed Organism is next to a food source.
+	 *
+	 * @param org The Organism that is being compared to the food sources.
+	 * @return (true/false) whether or not the organism is next to food.
+	 */
+	private boolean organismIsNextToHealthyFood(Organism org) {
+		int leftBoundary = org.getLocation().getX() - Food.WIDTH/2;
+		int rightBoundary = org.getLocation().getX() + Food.WIDTH/2;
+		int lowerBoundary = org.getLocation().getY() + Food.HEIGHT/2;
+		int upperBoundary = org.getLocation().getY() - Food.HEIGHT/2;
 
+		boolean isNextToFood = false;
+		for(HealthyFood food: healthFd){
+			if(food!=null){
+			int leftBoundary2 = food.getLocation().getX() - Organism.WIDTH/2 - 1;
+			int rightBoundary2 = food.getLocation().getX() + Organism.WIDTH/2 + 1;
+			int lowerBoundary2 = food.getLocation().getY() + Organism.HEIGHT/2 + 1;
+			int upperBoundary2 = food.getLocation().getY() - Organism.HEIGHT/2 - 1;
+
+			if((leftBoundary >= leftBoundary2 && leftBoundary <= rightBoundary2 &&
+					((upperBoundary >= upperBoundary2 && upperBoundary <= lowerBoundary2) ||
+							(lowerBoundary >= upperBoundary2 && lowerBoundary <= lowerBoundary2))) ||
+							(rightBoundary >= leftBoundary2 && rightBoundary <= rightBoundary2 &&
+									((upperBoundary >= upperBoundary2 && upperBoundary <= lowerBoundary2) ||
+											(lowerBoundary >= upperBoundary2 && lowerBoundary <= lowerBoundary2)))){
+				/*
+				 * Organism is next to food
+				 */
+				org.eatFood(food, 5);
+				if(food.getHealth() <= 0){ 
+					//Delete food source if it is depleted
+					healthFd.set(food.getId(), null);
+				}
+				isNextToFood = true;
+				break;
+			}
+			}
+		}
+
+		return isNextToFood;
+	}
+
+	/**
+	 * Determines whether of not the passed Organism is next to a food source.
+	 *
+	 * @param org The Organism that is being compared to the food sources.
+	 * @return (true/false) whether or not the organism is next to food.
+	 */
+	private boolean organismIsNextToPoisonousFood(Organism org) {
+		int leftBoundary = org.getLocation().getX() - Food.WIDTH/2;
+		int rightBoundary = org.getLocation().getX() + Food.WIDTH/2;
+		int lowerBoundary = org.getLocation().getY() + Food.HEIGHT/2;
+		int upperBoundary = org.getLocation().getY() - Food.HEIGHT/2;
+
+		boolean isNextToFood = false;
+		for(PoisonousFood foodList: poisFd){
+			if(foodList!=null){
+			int leftBoundary2 = foodList.getLocation().getX() - Organism.WIDTH/2 - 1;
+			int rightBoundary2 = foodList.getLocation().getX() + Organism.WIDTH/2 + 1;
+			int lowerBoundary2 = foodList.getLocation().getY() + Organism.HEIGHT/2 + 1;
+			int upperBoundary2 = foodList.getLocation().getY() - Organism.HEIGHT/2 - 1;
+
+			if((leftBoundary >= leftBoundary2 && leftBoundary <= rightBoundary2 &&
+					((upperBoundary >= upperBoundary2 && upperBoundary <= lowerBoundary2) ||
+							(lowerBoundary >= upperBoundary2 && lowerBoundary <= lowerBoundary2))) ||
+							(rightBoundary >= leftBoundary2 && rightBoundary <= rightBoundary2 &&
+									((upperBoundary >= upperBoundary2 && upperBoundary <= lowerBoundary2) ||
+											(lowerBoundary >= upperBoundary2 && lowerBoundary <= lowerBoundary2)))){
+				/*
+				 * Organism is next to food
+				 */
+				org.eatFood(foodList, 2);
+				if(foodList.getHealth() <= 0){
+					//Delete food source if it is depleted
+					poisFd.set(foodList.getId(),null);
+				}
+				isNextToFood = true;
+				break;
+			}
+			}
+		}
+
+		return isNextToFood;
+	}
 	//------------------------------------------------------------------------------------
 	//--Getters/Setters--
 	//------------------------------------------------------------------------------------
@@ -689,6 +996,7 @@ public class GridPanel extends JPanel
 		t.start();
 	}
 	public void stop(){
+		out.println(getLineNumber());
 		t.stop();
 	}
 	public boolean isPaused(){
@@ -711,9 +1019,13 @@ public class GridPanel extends JPanel
 		super.paintComponent(g);
 
 		//handle each new organism created.
-		for(Organism org : organisms){
-			org.paint(g);
-		}
+//		for(Organism org : organisms)
+//			org.paint(g);
+		
+		for(Integer integ: shuffleIds) 
+			organisms.get(shuffleIds.get(
+					ran.nextInt(shuffleIds.size()))).paint(g);
+		
 		for(HealthyFood h: healthFd){
 			if(h.getHealth() > 0){
 				h.paint(g, false);
@@ -722,7 +1034,7 @@ public class GridPanel extends JPanel
 				h.paint(g, true);
 			}
 		}
-		for(PoisonousFood p: poisFood){
+		for(PoisonousFood p: poisFd){
 			if(p.getHealth()>0){
 				p.paint(g, false);
 			}
@@ -731,5 +1043,7 @@ public class GridPanel extends JPanel
 			}
 		}
 	}
-
+	private int getLineNumber() {
+		return Thread.currentThread().getStackTrace()[2].getLineNumber();
+	}
 }

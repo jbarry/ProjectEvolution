@@ -101,7 +101,8 @@ public class GEP {
 	//
 	public double fitness(Organism org) {
 		double avgHealth = org.getHlthTot()/org.getSamples();
-		double fitness = (avgHealth/org.getMaxHealth()) + (org.getHealthyFoodSize()*10) - (org.getPoisonFoodSize()*5);
+		double fitness = (avgHealth/org.getMaxHealth()) +
+		(org.getHealthyFoodSize()*10) - (org.getPoisonFoodSize()*5);
 		org.setFitness(fitness);
 		return fitness;
 	}
