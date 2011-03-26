@@ -197,7 +197,9 @@ public class GridPanel extends JPanel
 						t.stop();
 						boolean cont = true;
 						if(timePassed < lengthGeneration) {
-							doSimulation();
+							//param numActions of the org
+							//at each time step.
+							doSimulation(2);
 						}
 						else {
 							cont = false;
@@ -259,7 +261,7 @@ public class GridPanel extends JPanel
 //		preProcess(12);
 	}
 	
-	private void doSimulation() {
+	private void doSimulation(int numActions) {
 
 		timePassed++;
 		if(shuffleIds.isEmpty()) nextGen();
@@ -276,50 +278,65 @@ public class GridPanel extends JPanel
 				continue action;
 			}
 			org.deplete(org.getMaxHealth()/(lengthGeneration/2));
-//			org.deplete(ran.nextInt(20));
-//			out.println("max: " + org.getMaxHealth() + "\nlen gen: " +
-//					lengthGeneration + 
-//					"\ndec by: " + org.getMaxHealth()/lengthGeneration);
+			
+			//org.deplete(ran.nextInt(20));
+			//out.println("max: " + org.getMaxHealth() + "\nlen gen: " +
+					//lengthGeneration + 
+					//"\ndec by: " + org.getMaxHealth()/lengthGeneration);
 			//Take sample of organism health for fitness.
 			org.incHlthTot();
-//			if(org.getHealth() > 0) {
-			ArrayList<Integer> sightIds =
-				org.getSurroundingObjects('h', 20);
-			ArrayList<Food> sight = new ArrayList<Food>();
-			for (Integer id: sightIds)
-				sight.add(healthFd.get(id));
-			sightIds.clear();
-			sightIds = org.getSurroundingObjects('p', 20);
-			for (Integer id: sightIds)
-				sight.add(poisFd.get(id));
-			double orgX = norm.normalize(
-					org.getLocation().getX());
-			double orgY = norm.normalize(
-					org.getLocation().getY());
-			double health = org.getHealth();
-			Chromosome chrom = org.getChromosome();
-//			Pair<Integer, Double> bestEval =
-//				new Pair<Integer, Double> (0, 0.0);
-			Pair<Integer, Double> bestEval1 =
-				new Pair<Integer, Double> (0, 0.0);
-			Pair<Integer, Double> bestEval2 =
-				new Pair<Integer, Double> (0, 0.0);
-			for (int i = 0; i < chrom.size(); i++) {
-				Gene workingGene = chrom.getGene(i);
-				//if there is something in org's field of vision.
-				if (sight.size() > 0) {
-					doHasSeen(sight, bestEval1, bestEval2,
-							workingGene, health, orgX, orgY, i);
+			
+			//TODO: health 0 case accounted for.
+			//if(org.getHealth() > 0) {
+			
+			//Iterate through and perform the evaluation
+			//process numAction times.
+			for (int l = 0; l < numActions; l++) {
+				ArrayList<Integer> sightIds =
+					org.getSurroundingObjects('h', 20);
+				ArrayList<Food> sight = new ArrayList<Food>();
+				for (Integer id: sightIds)
+					sight.add(healthFd.get(id));
+				sightIds.clear();
+				sightIds = org.getSurroundingObjects('p', 20);
+				for (Integer id: sightIds)
+					sight.add(poisFd.get(id));
+				double orgX = norm.normalize(
+						org.getLocation().getX());
+				double orgY = norm.normalize(
+						org.getLocation().getY());
+				double health = org.getHealth();
+				Chromosome chrom = org.getChromosome();
+				Pair<Integer, Double> bestEval =
+					new Pair<Integer, Double> (0, 0.0);
+				//Pair<Integer, Double> bestEval1 =
+				    //new Pair<Integer, Double> (0, 0.0);
+				//Pair<Integer, Double> bestEval2 =
+					//new Pair<Integer, Double> (0, 0.0);
+				for (int i = 0; i < chrom.size(); i++) {
+					Gene workingGene = chrom.getGene(i);
+					//if there is something in org's field of vision.
+					if (sight.size() > 0) {
+						//doHasSeen(sight, bestEval1, bestEval2,
+								//workingGene, health, orgX, orgY, i);
+						doHasSeen2(sight, bestEval,
+								workingGene, health, orgX, orgY, i);
+					}
+					//TODO: if there isn't anything in org's field of vision. 
+					//These numbers need to be worked out.
+					else {
+						//doSeenNothing(sight, bestEval1, bestEval2,
+								//workingGene, health, orgX, orgY, i);
+						doSeenNothing2(sight, bestEval,
+								workingGene, health, orgX, orgY, i);
+					}
 				}
-				//TODO: if there isn't anything in org's field of vision. 
-				//These numbers need to be worked out.
-				else {
-					doSeenNothing(sight, bestEval1, bestEval2,
-							workingGene, health, orgX, orgY, i);
-				}
+				doAction(org, bestEval);
+				//TODO: For doHasSeen and doHasSeen, the first ones.
+				//not the second forms.
+				//doAction(org, bestEval1);
+				//doAction(org, bestEval2);
 			}
-			doAction(org, bestEval1);
-			doAction(org, bestEval2);
 			orgIndex++;
 		}
 		repaint();
@@ -369,8 +386,8 @@ public class GridPanel extends JPanel
 				aBestEval2.setLeft(geneIndex);
 				aBestEval2.setRight(geneEval);
 			}
-//			if(geneEval > bestEval.right())
-//				bestEval = new Pair<Integer, Double> (i, geneEval);
+			//if(geneEval > bestEval.right())
+				//bestEval = new Pair<Integer, Double> (i, geneEval);
 		}
 	}
 	
@@ -391,8 +408,8 @@ public class GridPanel extends JPanel
 		environment.put("d", norm.normalize(aHealth));
 		environment.put("e", norm.normalize(0.0));
 		double geneEval = result.evaluate(environment);
-		//								if(geneEval > bestEval.right())
-		//									bestEval = new Pair<Integer, Double> (i, geneEval);
+		//if(geneEval > bestEval.right())
+			//bestEval = new Pair<Integer, Double> (i, geneEval);
 		if(geneEval > aBestEval1.right() && aBestEval1.right() < aBestEval2.right()){
 			aBestEval1.setLeft(geneIndex);
 			aBestEval1.setRight(geneEval);
@@ -403,6 +420,68 @@ public class GridPanel extends JPanel
 		}
 	}
 	
+	private void doHasSeen2(ArrayList<Food> aSight,
+			Pair<Integer, Double> aBestEval,
+			Gene aWorkingGene,
+			double aHealth,
+			double x,
+			double y,
+			int geneIndex) {
+		
+		for(int j = 0; j < aSight.size(); j++) {
+			Food f = aSight.get(j);
+			double foodX;
+			double foodY;
+			double orgNearFood;
+			
+			if(f!=null){
+				foodX = norm.normalize(
+						f.getLocation().getX());
+				foodY = norm.normalize(
+						f.getLocation().getY());
+				orgNearFood = norm.normalize(
+						f.numSurroundingObjects(5));
+			} else {
+				foodX = norm.normalize(ran.nextDouble()*100);
+				foodY = norm.normalize(ran.nextDouble()*100);
+				orgNearFood = norm.normalize(0.0);
+			}
+			
+			HashMap<String, Double> environment =
+				new HashMap<String, Double>();
+			Expr result = aWorkingGene.getEvaledList();
+			environment.put("a", foodX - x);
+			environment.put("b", y - foodY);
+			environment.put("c", orgNearFood);
+			environment.put("d", norm.normalize(aHealth));
+			environment.put("e", norm.normalize(f.getHealth()));
+			double geneEval = result.evaluate(environment);
+			
+			if(geneEval > aBestEval.right())
+				aBestEval = new Pair<Integer, Double> (geneIndex, geneEval);
+		}
+	}
+	
+	private void doSeenNothing2(ArrayList<Food> aSight,
+			Pair<Integer, Double> aBestEval,
+			Gene aWorkingGene,
+			double aHealth,
+			double x,
+			double y,
+			int geneIndex) {
+		
+		Expr result = aWorkingGene.getEvaledList();
+		HashMap<String,Double> environment = new HashMap<String, Double>();
+		environment.put("a", norm.normalize(10.0)); // not sure what to pass
+		environment.put("b", norm.normalize(10.0)); // not sure what to pass
+		environment.put("c", norm.normalize(0.0));
+		environment.put("d", norm.normalize(aHealth));
+		environment.put("e", norm.normalize(0.0));
+		double geneEval = result.evaluate(environment);
+		if(geneEval > aBestEval.right())
+			aBestEval = new Pair<Integer, Double> (geneIndex, geneEval);
+	}
+
 	private void nextGen() {
 		timePassed = 0;
 		double sum = 0;	
@@ -505,6 +584,74 @@ public class GridPanel extends JPanel
 //			if(organismIsNextToPoisonousFood(org) || organismIsNextToHealthyFood(org) );
 		}
 	}
+	
+	//May need to call paint after each step. So that actions are not missed.
+	private void doNumberOfActions(Organism org, ArrayList<Pair<Integer, Double>> bestEvalList, int howMany) {
+//		System.out.println("Org ID: " + org.getId() + " Action 1: " + bestEval.left()  + " numObj in Sight:" + sight.size());
+		// Genes are set as N-S-E-W-NE-NW-SE-SW-Eat.
+		for(int i = 0; i < howMany; i++) {
+			switch (bestEvalList.get(i).left()) {
+			case 0: 
+				org.moveNorth(organisms);
+				//org.addAction("N", orgIndex);
+				org.countStep();
+				break;
+			case 1: 
+				org.moveSouth(organisms);
+				//org.addAction("S", orgIndex);
+				org.countStep();
+				break;
+			case 2: 
+				org.moveEast(organisms); 
+				//org.addAction("E", orgIndex);
+				org.countStep();
+				break;
+			case 3: 
+				org.moveWest(organisms);
+				//org.addAction("W", orgIndex);
+				org.countStep();
+				break;
+			case 4: 
+				org.moveNorthEast(organisms);
+				//org.addAction("NE", orgIndex);
+				org.countStep();
+				break;
+			case 5: 
+				org.moveNorthWest(organisms);
+				//org.addAction("NW", orgIndex);
+				org.countStep();
+				break;
+			case 6: 
+				org.moveSouthEast(organisms);
+				//org.addAction("SE", orgIndex);
+				org.countStep();
+				break;
+			case 7: 
+				org.moveSouthWest(organisms);
+				//org.addAction("SW", orgIndex);
+				org.countStep();
+				break;
+			case 8: //eat
+				ArrayList<Integer> surrndngHlthyFd =
+					org.getSurroundingObjects('h', 2);
+				ArrayList<Integer> surrndngPoisFd = 
+					org.getSurroundingObjects('p', 2);
+				if (surrndngHlthyFd.size() != 0) {
+					int anId = surrndngHlthyFd.get(
+							ran.nextInt(surrndngHlthyFd.size()));
+					org.eatFood(healthFd.get(anId), 
+							(org.getMaxHealth()/(lengthGeneration/2) + 3));
+				}
+				else if (surrndngPoisFd.size() != 0) {
+					int anId = surrndngPoisFd.get(
+							ran.nextInt(surrndngPoisFd.size()));
+					org.eatFood(poisFd.get(anId), 5.0);
+				}
+				//			if(organismIsNextToPoisonousFood(org) || organismIsNextToHealthyFood(org) );
+			}
+		}
+	}
+	
 	public void clearLocations() {
 		for(int i = 0; i < locationMap.length; i++) {
 			for(int j = 0; j < locationMap[i].length; j++){
