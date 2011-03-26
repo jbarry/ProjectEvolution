@@ -17,6 +17,11 @@ public class Normalizer {
 //					new Pair<Double, Double> (1.0, 53.0), i));
 //		}
 //		Normalizer norm = new Normalizer(-600.0, 600.0, -50.0, 50.0);
+		Normalizer norm1 = new Normalizer(-600.0, 600.0, -50.0, 50.0);
+		Normalizer norm2 = new Normalizer(-15.0, 15.0, -3.0, 3.0);
+		out.println(norm2.getFromRange().left() + " " + norm2.getFromRange().right());
+		norm1.setTest(norm2, 76, 82);
+		out.println(norm2.getFromRange().left() + " " + norm2.getFromRange().right());
 //		for(int i = -600; i <= 600; i++)
 //			out.println(norm.normalize(i));
 //		if(7346278 < 754/0) {
@@ -39,6 +44,10 @@ public class Normalizer {
 	}
 	public Normalizer(double a, double b,
 			double c, double d) {
+		from1 = a;
+		to1 = b;
+		from2 = c;
+		to2 = d;
 		preCalc = (d-c)/(b-a);
 	}
 
@@ -68,5 +77,9 @@ public class Normalizer {
 
 	public Pair<Double, Double> getToRange() {
 		return new Pair<Double, Double>(from2, to2);
+	}
+	
+	public void setTest(Normalizer norma, double a, double b) {
+		norma.setFromRange(a, b);
 	}
 }
