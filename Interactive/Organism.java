@@ -87,17 +87,17 @@ public class Organism extends Matter{
 	public void eatFood(Food f, double fdVal){
 		f.deplete(fdVal);
 		if(f instanceof HealthyFood) {
-//			System.out.println("orgId: " + id);
-//			System.out.println("hlthy");
-//			System.out.println("orgHealth: " + hlth);
-//			System.out.println("FoodId: " + f.getId());
+			//System.out.println("orgId: " + id);
+			//System.out.println("hlthy");
+			//System.out.println("orgHealth: " + hlth);
+			//System.out.println("FoodId: " + f.getId());
 			incHlth(fdVal);
 		}
 		else if(f instanceof PoisonousFood){
-//			System.out.println("orgId: " + id);
-//			System.out.println("pois");
-//			System.out.println("orgHealth: " + hlth);
-//			System.out.println("FoodId: " + f.getId());
+			//System.out.println("orgId: " + id);
+			//System.out.println("pois");
+			//System.out.println("orgHealth: " + hlth);
+			//System.out.println("FoodId: " + f.getId());
 			deplete(fdVal);
 		}
 	}

@@ -301,6 +301,15 @@ public class GridPanel extends JPanel
 				sightIds = org.getSurroundingObjects('p', 20);
 				for (Integer id: sightIds)
 					sight.add(poisFd.get(id));
+				
+				out.println("orgId: " + org.getId());
+				out.println("orgPos: "  + "(" + org.getLocation().getX() +
+							", " + org.getLocation().getY() + ")");
+				for(Food fd: sight) {
+					out.println("fdid: " + fd.getId());
+					out.println("fdPos: " + "(" + fd.getLocation().getX() +
+							", " + fd.getLocation().getY() + ")");
+				}
 				double orgX = norm.normalize(
 						org.getLocation().getX());
 				double orgY = norm.normalize(
@@ -321,6 +330,8 @@ public class GridPanel extends JPanel
 								//workingGene, health, orgX, orgY, i);
 						doHasSeen2(sight, bestEval,
 								workingGene, health, orgX, orgY, i);
+						//out.println("Eval" + bestEval.getFst() +
+								//"\nsec" + bestEval.getSnd());
 					}
 					//TODO: if there isn't anything in org's field of vision. 
 					//These numbers need to be worked out.
@@ -434,7 +445,7 @@ public class GridPanel extends JPanel
 			double foodY;
 			double orgNearFood;
 			
-			if(f!=null){
+			if(f != null){
 				foodX = norm.normalize(
 						f.getLocation().getX());
 				foodY = norm.normalize(
@@ -457,8 +468,10 @@ public class GridPanel extends JPanel
 			environment.put("e", norm.normalize(f.getHealth()));
 			double geneEval = result.evaluate(environment);
 			
-			if(geneEval > aBestEval.right())
-				aBestEval = new Pair<Integer, Double> (geneIndex, geneEval);
+			if(geneEval > aBestEval.right()){
+				aBestEval.setLeft(geneIndex);
+				aBestEval.setRight(geneEval);
+			}
 		}
 	}
 	
@@ -478,8 +491,10 @@ public class GridPanel extends JPanel
 		environment.put("d", norm.normalize(aHealth));
 		environment.put("e", norm.normalize(0.0));
 		double geneEval = result.evaluate(environment);
-		if(geneEval > aBestEval.right())
-			aBestEval = new Pair<Integer, Double> (geneIndex, geneEval);
+		if(geneEval > aBestEval.right()){
+			aBestEval.setLeft(geneIndex);
+			aBestEval.setRight(geneEval);
+		}
 	}
 
 	private void nextGen() {
