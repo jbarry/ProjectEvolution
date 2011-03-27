@@ -39,27 +39,32 @@ public class GridPanel extends JPanel
 	public final static int HEIGHT = 400;
 	
 
-//	public static boolean[][] isValidLocation;
+	//public static boolean[][] isValidLocation;
 	public static Pair<Integer, Character>[][] locationMap;
 
+	//public static LinkedList<Organism> organisms;
+	//public static LinkedList<HealthyFood> healthFd;
+	//public static LinkedList<PoisonousFood> poisFood;
 	private LinkedList<Organism> organisms;
 	private LinkedList<HealthyFood> healthFd;
 	private LinkedList<PoisonousFood> poisFood;
+	
 	private ArrayList<Integer> shuffleIds;
 	private int lengthTimeStep = 100;
-	private int lengthGeneration = 500;
+	private int lengthGeneration = 100;
 	private int timePassed = 0;
 	private int trialsPerGen = 1;
 	public int trialNum = 1;
 	public int generationNum = 1;
 	public double lastAvg = 0;
 	private GEP g;
-	public static int numFoodSources=0;
+	public static int numFoodSources = 0;
 	private Timer t;
 	private Normalizer norm;
 	private int numPreProcessedGenerations = 0;
 	private Random ran;
 	private GUI gui;
+	
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
@@ -68,7 +73,7 @@ public class GridPanel extends JPanel
 	 * all objects in the current game state.
 	 */
 	public GridPanel(final GUI aGui) {
-		gui=aGui;
+		gui = aGui;
 		Runnable r = new Runnable() {
 			@Override
 			public void run() {
@@ -80,50 +85,10 @@ public class GridPanel extends JPanel
 
 				/**Add Listeners*/
 				//track user mouse movement.
-				MouseMotionListener simMouseMotion = new MouseMotionListener(){
-					@Override
-					public void mouseDragged(MouseEvent arg0) {
-					}
-					@Override
-					public void mouseMoved(MouseEvent arg0) {
-						mouseMovedAction(arg0);
-					}
-				};
-				addMouseMotionListener(simMouseMotion);
+				addMouseMotionListener(new MouseMotionListenerClass(GridPanel.this));
 
 				//handle other mouse events
-				MouseListener simMouseListener = new MouseListener(){
-					@Override
-					public void mouseClicked(MouseEvent arg0) {
-					}
-
-					@Override
-					public void mouseEntered(MouseEvent arg0) {
-						try{
-							//get and display current mouse location.
-							Coordinate mouseLocation = new Coordinate(arg0.getX(), arg0.getY());
-							MonitorPanel.currMouseLoc.setText(mouseLocation.toString());
-						}
-						catch(NullPointerException e){
-
-						}
-					}
-
-					@Override
-					public void mouseExited(MouseEvent arg0) {
-						MonitorPanel.currMouseLoc.setText("");
-					}
-
-					@Override
-					public void mousePressed(MouseEvent arg0) {
-					}
-
-					@Override
-					public void mouseReleased(MouseEvent arg0) {
-					}
-
-				};
-				addMouseListener(simMouseListener);
+				addMouseListener(new MouseListenerClass());
 
 				t = new javax.swing.Timer(lengthTimeStep, new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
@@ -497,7 +462,7 @@ public class GridPanel extends JPanel
 		organisms.clear();
 		numFoodSources=OptionsPanel.numOrganisms/5;
 		for(int i = 0; i < OptionsPanel.numOrganisms; i++){
-			Organism o = new Organism(500.00, 11, i, 100); //justin b (03.15).
+			Organism o = new Organism(100.00, 11, i, 100); //justin b (03.15).
 			organisms.add(o);
 			shuffleIds.add(i);
 			o.addStartingLocation();
@@ -911,7 +876,15 @@ public class GridPanel extends JPanel
 	public LinkedList<Organism> getOrganisms(){
 		return organisms;
 	}
-
+	
+	public LinkedList<HealthyFood> getHealthyFoodList() {
+		return healthFd;
+	}
+	
+	public LinkedList<PoisonousFood> getPoisonousFoodList() {
+		return poisFood;
+	}
+	
 	public GEP getGEP(){
 		return g;
 	}
@@ -981,62 +954,6 @@ public class GridPanel extends JPanel
 				p.paint(g, true);
 			}
 			}
-		}
-	}
-	
-	private void mouseMovedAction(MouseEvent arg0) {
-		try {
-			//get and display current mouse location.
-			Coordinate mouseLocation = new Coordinate(arg0.getX(), arg0.getY());
-			MonitorPanel.currMouseLoc.setText(mouseLocation.toString());
-
-			//used to manage checks
-			boolean isOrg = false;
-			boolean isPFood = false;
-			boolean isHFood = false;
-
-			//check mouse location vs. all organism's locations.
-			for(Organism o: organisms) {
-				if(mouseLocation.approxEquals(o.getLocation(), Organism.width/2)) {
-					//organism found
-					isOrg = true;
-					MonitorPanel.simObjInfo.setText(o.toString());
-					//break to prevent any more updating from occuring and loop overhead.
-					break;
-				} else {
-					isOrg = false;
-				}
-			}
-
-			for(HealthyFood r: healthFd) {
-				if(mouseLocation.approxEquals(r.getLocation(), Food.width/2)){
-					//food found
-					isHFood = true;
-					MonitorPanel.simObjInfo.setText(r.toString());
-					//break to prevent any more updating from occuring and loop overhead.
-					break;
-				} else {
-					isHFood = false;
-				}
-			}
-			for(PoisonousFood r: poisFood) {
-				if(mouseLocation.approxEquals(r.getLocation(), Food.width/2)){
-					//food found
-					isPFood = true;
-					MonitorPanel.simObjInfo.setText(r.toString());
-					//break to prevent any more updating from occuring and loop overhead.
-					break;
-				}
-				else{
-					isPFood = false;
-				}
-			}
-
-			if(!isHFood & !isPFood & !isOrg)
-				MonitorPanel.simObjInfo.setText("No Object Selected");
-		}
-		catch(NullPointerException e){
-
 		}
 	}
 }
