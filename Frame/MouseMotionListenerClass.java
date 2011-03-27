@@ -9,7 +9,11 @@ import Interactive.Organism;
 import Interactive.PoisonousFood;
 
 public class MouseMotionListenerClass implements MouseMotionListener{
-	public MouseMotionListenerClass() {
+	
+	private GridPanel gp;
+	
+	public MouseMotionListenerClass(GridPanel aGrid) {
+		gp = aGrid;
 	}
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
@@ -27,7 +31,7 @@ public class MouseMotionListenerClass implements MouseMotionListener{
 			boolean isHFood = false;
 
 			//check mouse location vs. all organism's locations.
-			for(Organism o: GridPanel.organisms) {
+			for(Organism o: gp.getOrganisms()) {
 				if(mouseLocation.approxEquals(o.getLocation(), Organism.width/2)) {
 					//organism found
 					isOrg = true;
@@ -39,7 +43,7 @@ public class MouseMotionListenerClass implements MouseMotionListener{
 				}
 			}
 
-			for(HealthyFood r: GridPanel.healthFd) {
+			for(HealthyFood r: gp.getHealthyFoodList()) {
 				if(mouseLocation.approxEquals(r.getLocation(), Food.width/2)){
 					//food found
 					isHFood = true;
@@ -50,7 +54,7 @@ public class MouseMotionListenerClass implements MouseMotionListener{
 					isHFood = false;
 				}
 			}
-			for(PoisonousFood r: GridPanel.poisFood) {
+			for(PoisonousFood r: gp.getPoisonousFoodList()) {
 				if(mouseLocation.approxEquals(r.getLocation(), Food.width/2)){
 					//food found
 					isPFood = true;

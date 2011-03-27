@@ -42,9 +42,13 @@ public class GridPanel extends JPanel
 	//public static boolean[][] isValidLocation;
 	public static Pair<Integer, Character>[][] locationMap;
 
-	public static LinkedList<Organism> organisms;
-	public static LinkedList<HealthyFood> healthFd;
-	public static LinkedList<PoisonousFood> poisFood;
+	//public static LinkedList<Organism> organisms;
+	//public static LinkedList<HealthyFood> healthFd;
+	//public static LinkedList<PoisonousFood> poisFood;
+	private LinkedList<Organism> organisms;
+	private LinkedList<HealthyFood> healthFd;
+	private LinkedList<PoisonousFood> poisFood;
+	
 	private ArrayList<Integer> shuffleIds;
 	private int lengthTimeStep = 100;
 	private int lengthGeneration = 100;
@@ -54,7 +58,7 @@ public class GridPanel extends JPanel
 	public int generationNum = 1;
 	public double lastAvg = 0;
 	private GEP g;
-	public static int numFoodSources=0;
+	public static int numFoodSources = 0;
 	private Timer t;
 	private Normalizer norm;
 	private int numPreProcessedGenerations = 0;
@@ -81,7 +85,7 @@ public class GridPanel extends JPanel
 
 				/**Add Listeners*/
 				//track user mouse movement.
-				addMouseMotionListener(new MouseMotionListenerClass());
+				addMouseMotionListener(new MouseMotionListenerClass(GridPanel.this));
 
 				//handle other mouse events
 				addMouseListener(new MouseListenerClass());
@@ -868,7 +872,15 @@ public class GridPanel extends JPanel
 	public LinkedList<Organism> getOrganisms(){
 		return organisms;
 	}
-
+	
+	public LinkedList<HealthyFood> getHealthyFoodList() {
+		return healthFd;
+	}
+	
+	public LinkedList<PoisonousFood> getPoisonousFoodList() {
+		return poisFood;
+	}
+	
 	public GEP getGEP(){
 		return g;
 	}
@@ -938,9 +950,5 @@ public class GridPanel extends JPanel
 			}
 			}
 		}
-	}
-	
-	private void mouseMovedAction(MouseEvent arg0) {
-		
 	}
 }
