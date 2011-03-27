@@ -42,9 +42,6 @@ public class GridPanel extends JPanel
 	//public static boolean[][] isValidLocation;
 	public static Pair<Integer, Character>[][] locationMap;
 
-	//public static LinkedList<Organism> organisms;
-	//public static LinkedList<HealthyFood> healthFd;
-	//public static LinkedList<PoisonousFood> poisFood;
 	private LinkedList<Organism> organisms;
 	private LinkedList<HealthyFood> healthFd;
 	private LinkedList<PoisonousFood> poisFood;
@@ -74,6 +71,7 @@ public class GridPanel extends JPanel
 	 */
 	public GridPanel(final GUI aGui) {
 		gui = aGui;
+		
 		Runnable r = new Runnable() {
 			@Override
 			public void run() {
@@ -83,19 +81,14 @@ public class GridPanel extends JPanel
 				setSize(GridPanel.WIDTH, GridPanel.HEIGHT);
 				setBorder(BorderFactory.createLineBorder(Color.black));
 
-				/**Add Listeners*/
 				//track user mouse movement.
 				addMouseMotionListener(new MouseMotionListenerClass(GridPanel.this));
-
 				//handle other mouse events
 				addMouseListener(new MouseListenerClass());
-
-				//initial program settings
-				organisms = new LinkedList<Organism>();
-				healthFd = new LinkedList<HealthyFood>();
-				poisFood = new LinkedList<PoisonousFood>();
-
-				t = new javax.swing.Timer(lengthTimeStep, new ActionListener() {
+				
+				t = new javax.swing.Timer(
+						lengthTimeStep, new ActionListener() {
+							
 					public void actionPerformed(ActionEvent e) {
 						if(timePassed < lengthGeneration) {
 							//t.stop();
@@ -112,8 +105,8 @@ public class GridPanel extends JPanel
 					}
 				});
 			}
-
 		};
+		
 		r.run();
 	}
 
@@ -435,6 +428,10 @@ public class GridPanel extends JPanel
 	 * Sets the initial game state of the GridPanel
 	 */
 	public void initialize(){
+		//initial program settings
+		organisms = new LinkedList<Organism>();
+		healthFd = new LinkedList<HealthyFood>();
+		poisFood = new LinkedList<PoisonousFood>();
 		//reset all generation info from previous simulations.
 		generationNum = 1;
 		trialNum = 1;
