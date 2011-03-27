@@ -64,29 +64,27 @@ public abstract class Food extends Matter{
 	//------------------------------------------------------------------------------------
 	//--getters/setters--
 	//------------------------------------------------------------------------------------
-	@Override
 	public int getHeight() {
 		return Food.HEIGHT;
 	}
 	
-	@Override
 	public int getWidth() {
 		return Food.WIDTH;
 	}
 	
-	public void paint(Graphics g, boolean isDepleted)
-	{
-		if(!isDepleted){
-			g.drawImage(icon, getLocation().getX()-2*getWidth()/2, getLocation().getY()-2*getHeight()/2, 2*getWidth(), 2*getHeight(), null);
-		}
-	}
-	
-//	public void paint(Graphics g, boolean isDepleted) {
-//		g.setColor(Color.BLUE);
+//	public void paint(Graphics g, boolean isDepleted)
+//	{
 //		if(!isDepleted){
-//			g.fillRect((int)this.location.getX()-(WIDTH/2), 
-//					   (int)this.location.getY()-(HEIGHT/2), 
-//					   WIDTH, HEIGHT);
+//			g.drawImage(icon, getLocation().getX()-2*getWidth()/2, getLocation().getY()-2*getHeight()/2, 2*getWidth(), 2*getHeight(), null);
 //		}
 //	}
+	
+	public void paint(Graphics g, boolean isDepleted) {
+		g.setColor(Color.BLUE);
+		if(!isDepleted){
+			g.fillRect((int)this.location.getX()-(WIDTH/2), 
+					   (int)this.location.getY()-(HEIGHT/2), 
+					   WIDTH, HEIGHT);
+		}
+	}
 }

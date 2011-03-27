@@ -33,16 +33,16 @@ public class HealthyFood extends Food {
 		return str;		
 	}
 
-//	@Override
-//	public void paint(Graphics g, boolean isDepleted) {
-//		g.setColor(Color.BLUE);
-//		
-//		if(!isDepleted){
-//			g.fillRect((int)this.getLocation().getX()-(getWidth()/2), 
-//					   (int)this.getLocation().getY()-(getHeight()/2), 
-//					   getWidth(), getHeight());
-//		}
-//	}
+	@Override
+	public void paint(Graphics g, boolean isDepleted) {
+		g.setColor(Color.BLUE);
+		
+		if(!isDepleted){
+			g.fillRect((int)this.getLocation().getX()-(getWidth()/2), 
+					   (int)this.getLocation().getY()-(getHeight()/2), 
+					   getWidth(), getHeight());
+		}
+	}
 
 	@Override
 	public void eaten(double val) {

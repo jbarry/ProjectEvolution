@@ -340,12 +340,10 @@ public class Organism extends Matter{
 		return samples;
 	}
 	
-	@Override
 	public int getHeight() {
 		return Organism.HEIGHT;
 	}
 	
-	@Override
 	public int getWidth() {
 		return Organism.WIDTH;
 	}
@@ -382,76 +380,76 @@ public class Organism extends Matter{
 	}
 	
 	//Painting.
-//	public void paint(Graphics g) {
-//		g.setColor(Color.BLACK);
-//		g.fillRect((int)this.location.getX()-(WIDTH/2), 
-//				   (int)this.location.getY()-(HEIGHT/2), 
-//				   WIDTH, HEIGHT);
-//	}
-	
 	public void paint(Graphics g) {
-		if(facingRight){
-			if(getHealth() <= 0){
-				g.drawImage(ninja_dead, location.getX()-2*Organism.WIDTH/2,
-						location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
-						2*Organism.HEIGHT, null);
-			}
-			else{
-				if(currentAction == 'e'){
-					g.drawImage(ninja_eat, location.getX()-2*Organism.WIDTH/2,
-							location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
-							2*Organism.HEIGHT, null);
-				}
-				else if(currentAction == 'a'){
-					g.drawImage(ninja_attack, location.getX()-2*Organism.WIDTH/2,
-							location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
-							2*Organism.HEIGHT, null);
-				}
-				else{
-					if(swapImage){
-						g.drawImage(ninja_walk1, location.getX()-2*Organism.WIDTH/2,
-								location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
-								2*Organism.HEIGHT, null);
-					}
-					else{
-						g.drawImage(ninja_walk2, location.getX()-2*Organism.WIDTH/2,
-								location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
-								2*Organism.HEIGHT, null);
-					}
-				}
-			}
-		}
-		else{
-			if(getHealth() <= 0){
-				g.drawImage(ninja_dead_inv, location.getX()-2*Organism.WIDTH/2,
-						location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
-						2*Organism.HEIGHT, null);
-			}
-			else{
-				if(currentAction == 'e'){
-					g.drawImage(ninja_eat_inv, location.getX()-2*Organism.WIDTH/2,
-							location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
-							2*Organism.HEIGHT, null);
-				}
-				else if(currentAction == 'a'){
-					g.drawImage(ninja_attack_inv, location.getX()-2*Organism.WIDTH/2,
-							location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
-							2*Organism.HEIGHT, null);
-				}
-				else{
-					if(swapImage){
-						g.drawImage(ninja_walk1_inv, location.getX()-2*Organism.WIDTH/2,
-								location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
-								2*Organism.HEIGHT, null);
-					}
-					else{
-						g.drawImage(ninja_walk2_inv, location.getX()-2*Organism.WIDTH/2,
-								location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
-								2*Organism.HEIGHT, null);
-					}
-				}
-			}
-		}
-		swapImage = !swapImage;
+		g.setColor(Color.BLACK);
+		g.fillRect((int)this.location.getX()-(WIDTH/2), 
+				   (int)this.location.getY()-(HEIGHT/2), 
+				   WIDTH, HEIGHT);
 	}
+	
+//	public void paint(Graphics g) {
+//		if(facingRight){
+//			if(getHealth() <= 0){
+//				g.drawImage(ninja_dead, location.getX()-2*Organism.WIDTH/2,
+//						location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
+//						2*Organism.HEIGHT, null);
+//			}
+//			else{
+//				if(currentAction == 'e'){
+//					g.drawImage(ninja_eat, location.getX()-2*Organism.WIDTH/2,
+//							location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
+//							2*Organism.HEIGHT, null);
+//				}
+//				else if(currentAction == 'a'){
+//					g.drawImage(ninja_attack, location.getX()-2*Organism.WIDTH/2,
+//							location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
+//							2*Organism.HEIGHT, null);
+//				}
+//				else{
+//					if(swapImage){
+//						g.drawImage(ninja_walk1, location.getX()-2*Organism.WIDTH/2,
+//								location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
+//								2*Organism.HEIGHT, null);
+//					}
+//					else{
+//						g.drawImage(ninja_walk2, location.getX()-2*Organism.WIDTH/2,
+//								location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
+//								2*Organism.HEIGHT, null);
+//					}
+//				}
+//			}
+//		}
+//		else{
+//			if(getHealth() <= 0){
+//				g.drawImage(ninja_dead_inv, location.getX()-2*Organism.WIDTH/2,
+//						location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
+//						2*Organism.HEIGHT, null);
+//			}
+//			else{
+//				if(currentAction == 'e'){
+//					g.drawImage(ninja_eat_inv, location.getX()-2*Organism.WIDTH/2,
+//							location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
+//							2*Organism.HEIGHT, null);
+//				}
+//				else if(currentAction == 'a'){
+//					g.drawImage(ninja_attack_inv, location.getX()-2*Organism.WIDTH/2,
+//							location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
+//							2*Organism.HEIGHT, null);
+//				}
+//				else{
+//					if(swapImage){
+//						g.drawImage(ninja_walk1_inv, location.getX()-2*Organism.WIDTH/2,
+//								location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
+//								2*Organism.HEIGHT, null);
+//					}
+//					else{
+//						g.drawImage(ninja_walk2_inv, location.getX()-2*Organism.WIDTH/2,
+//								location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
+//								2*Organism.HEIGHT, null);
+//					}
+//				}
+//			}
+//		}
+//		swapImage = !swapImage;
+//	}
 }	

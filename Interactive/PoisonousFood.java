@@ -17,7 +17,7 @@ public class PoisonousFood extends Food {
 				"sprites/volcano.gif")).getImage();
 	}
 
-	public PoisonousFood(int x, int y){
+	public PoisonousFood(int x, int y) {
 		super(x,y);
 	}
 
@@ -34,17 +34,17 @@ public class PoisonousFood extends Food {
 		return str;		
 	}
 
-//	@Override
-//	public void paint(Graphics g, boolean isDepleted) {
-//		g.setColor(Color.RED);
-//
-//		if(!isDepleted){
-//			g.fillRect((int)this.getLocation().getX()-(getWidth()/2), 
-//					   (int)this.getLocation().getY()-(getHeight()/2), 
-//					   getWidth(), getHeight());
-//		}
-//
-//	}
+	@Override
+	public void paint(Graphics g, boolean isDepleted) {
+		g.setColor(Color.RED);
+
+		if(!isDepleted){
+			g.fillRect((int)this.getLocation().getX()-(getWidth()/2), 
+					   (int)this.getLocation().getY()-(getHeight()/2), 
+					   getWidth(), getHeight());
+		}
+
+	}
 
 	@Override
 	public void eaten(double val) {
