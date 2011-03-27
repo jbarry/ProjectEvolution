@@ -85,10 +85,8 @@ public class GridPanel extends JPanel
 				addMouseMotionListener(new MouseMotionListenerClass(GridPanel.this));
 				//handle other mouse events
 				addMouseListener(new MouseListenerClass());
-				
-				t = new javax.swing.Timer(
-						lengthTimeStep, new ActionListener() {
-							
+
+				t = new javax.swing.Timer(lengthTimeStep, new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if(timePassed < lengthGeneration) {
 							//t.stop();
@@ -337,6 +335,7 @@ public class GridPanel extends JPanel
 					break;
 				case 9:
 					ArrayList<Integer> surroundingOrganisms = org.getSurroundingObjects('o', 1);
+					surroundingOrganisms.remove((Integer)org.getId());
 					if(surroundingOrganisms.size() > 0){
 					int index=surroundingOrganisms.get(ran.nextInt(surroundingOrganisms.size()));
 					if(index!=org.getId()){
@@ -346,6 +345,7 @@ public class GridPanel extends JPanel
 					break;
 				case 10:
 					ArrayList<Integer> surroundingOrganismsPush = org.getSurroundingObjects('o', 1);
+					surroundingOrganismsPush.remove((Integer)org.getId());
 					if(surroundingOrganismsPush.size() > 0){
 					int index=surroundingOrganismsPush.get(ran.nextInt(surroundingOrganismsPush.size()));
 					if(index!=org.getId()){
@@ -354,6 +354,7 @@ public class GridPanel extends JPanel
 					}
 					}
 				}
+				
 			}
 			orgIndex++;
 		}
@@ -433,6 +434,9 @@ public class GridPanel extends JPanel
 		healthFd = new LinkedList<HealthyFood>();
 		poisFood = new LinkedList<PoisonousFood>();
 		//reset all generation info from previous simulations.
+		organisms = new LinkedList<Organism>();
+		healthFd = new LinkedList<HealthyFood>();
+		poisFood = new LinkedList<PoisonousFood>();
 		generationNum = 1;
 		trialNum = 1;
 		GUI.genPanel.resetGenInformation();
@@ -473,7 +477,7 @@ public class GridPanel extends JPanel
 			poisFood.add(f);
 		}
 		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
-//		preProcess(50);
+		preProcess(0);
 		System.out.println("Preprocess Finished");
 	}
 	
@@ -726,6 +730,7 @@ public class GridPanel extends JPanel
 							break;
 						case 9:
 							ArrayList<Integer> surroundingOrganisms = org.getSurroundingObjects('o', 1);
+							surroundingOrganisms.remove((Integer)org.getId());
 							if(surroundingOrganisms.size() > 0){
 							int index=surroundingOrganisms.get(ran.nextInt(surroundingOrganisms.size()));
 							if(index!=org.getId()){
@@ -735,6 +740,7 @@ public class GridPanel extends JPanel
 							break;
 						case 10:
 							ArrayList<Integer> surroundingOrganismsPush = org.getSurroundingObjects('o', 1);
+							surroundingOrganismsPush.remove((Integer)org.getId());
 							if(surroundingOrganismsPush.size() > 0){
 							int index=surroundingOrganismsPush.get(ran.nextInt(surroundingOrganismsPush.size()));
 							if(index!=org.getId()){
@@ -799,6 +805,7 @@ public class GridPanel extends JPanel
 							break;
 						case 10:
 							ArrayList<Integer> surroundingOrganismsPush = org.getSurroundingObjects('o', 1);
+							surroundingOrganismsPush.remove((Integer)org.getId());
 							if(surroundingOrganismsPush.size() > 0){
 							int index=surroundingOrganismsPush.get(ran.nextInt(surroundingOrganismsPush.size()));
 							if(index!=org.getId()){
@@ -922,6 +929,7 @@ public class GridPanel extends JPanel
 
 		//handle each new organism created.
 		for(Organism org : organisms){
+			if(shuffleIds.contains(org.getId()))
 			org.paint(g);
 		}
 		

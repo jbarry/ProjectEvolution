@@ -433,7 +433,7 @@ public class Organism extends Matter{
 	}
 
 	@Override
-	protected int getHeight() {
+	public int getHeight() {
 		return height;
 	}
 	@Override
