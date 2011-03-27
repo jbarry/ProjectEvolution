@@ -86,59 +86,7 @@ public class GridPanel extends JPanel
 					}
 					@Override
 					public void mouseMoved(MouseEvent arg0) {
-						try {
-							//get and display current mouse location.
-							Coordinate mouseLocation = new Coordinate(arg0.getX(), arg0.getY());
-							MonitorPanel.currMouseLoc.setText(mouseLocation.toString());
-
-							//used to manage checks
-							boolean isOrg = false;
-							boolean isPFood = false;
-							boolean isHFood = false;
-
-							//check mouse location vs. all organism's locations.
-							for(Organism o: organisms) {
-								if(mouseLocation.approxEquals(o.getLocation(), Organism.width/2)) {
-									//organism found
-									isOrg = true;
-									MonitorPanel.simObjInfo.setText(o.toString());
-									//break to prevent any more updating from occuring and loop overhead.
-									break;
-								} else {
-									isOrg = false;
-								}
-							}
-
-							for(HealthyFood r: healthFd) {
-								if(mouseLocation.approxEquals(r.getLocation(), Food.width/2)){
-									//food found
-									isHFood = true;
-									MonitorPanel.simObjInfo.setText(r.toString());
-									//break to prevent any more updating from occuring and loop overhead.
-									break;
-								} else {
-									isHFood = false;
-								}
-							}
-							for(PoisonousFood r: poisFood) {
-								if(mouseLocation.approxEquals(r.getLocation(), Food.width/2)){
-									//food found
-									isPFood = true;
-									MonitorPanel.simObjInfo.setText(r.toString());
-									//break to prevent any more updating from occuring and loop overhead.
-									break;
-								}
-								else{
-									isPFood = false;
-								}
-							}
-
-							if(!isHFood & !isPFood & !isOrg)
-								MonitorPanel.simObjInfo.setText("No Object Selected");
-						}
-						catch(NullPointerException e){
-
-						}
+						mouseMovedAction(arg0);
 					}
 				};
 				addMouseMotionListener(simMouseMotion);
@@ -320,7 +268,7 @@ public class GridPanel extends JPanel
 					}
 				}
 				// Genes are set as N-S-E-W-NE-NW-SE-SW-Eat-Attack-PushOrg.
-				System.out.println("Org ID: " + org.getId() + " Action 1: " + bestEval1.left() + " Action 2: " + bestEval2.left() + " numObj in Sight:" + sight.size());
+				//System.out.println("Org ID: " + org.getId() + " Action 1: " + bestEval1.left() + " Action 2: " + bestEval2.left() + " numObj in Sight:" + sight.size());
 				switch (bestEval1.left()) {
 				case 0: 
 					org.moveNorth(organisms);
@@ -1030,5 +978,60 @@ public class GridPanel extends JPanel
 			}
 		}
 	}
+	
+	private void mouseMovedAction(MouseEvent arg0) {
+		try {
+			//get and display current mouse location.
+			Coordinate mouseLocation = new Coordinate(arg0.getX(), arg0.getY());
+			MonitorPanel.currMouseLoc.setText(mouseLocation.toString());
 
+			//used to manage checks
+			boolean isOrg = false;
+			boolean isPFood = false;
+			boolean isHFood = false;
+
+			//check mouse location vs. all organism's locations.
+			for(Organism o: organisms) {
+				if(mouseLocation.approxEquals(o.getLocation(), Organism.width/2)) {
+					//organism found
+					isOrg = true;
+					MonitorPanel.simObjInfo.setText(o.toString());
+					//break to prevent any more updating from occuring and loop overhead.
+					break;
+				} else {
+					isOrg = false;
+				}
+			}
+
+			for(HealthyFood r: healthFd) {
+				if(mouseLocation.approxEquals(r.getLocation(), Food.width/2)){
+					//food found
+					isHFood = true;
+					MonitorPanel.simObjInfo.setText(r.toString());
+					//break to prevent any more updating from occuring and loop overhead.
+					break;
+				} else {
+					isHFood = false;
+				}
+			}
+			for(PoisonousFood r: poisFood) {
+				if(mouseLocation.approxEquals(r.getLocation(), Food.width/2)){
+					//food found
+					isPFood = true;
+					MonitorPanel.simObjInfo.setText(r.toString());
+					//break to prevent any more updating from occuring and loop overhead.
+					break;
+				}
+				else{
+					isPFood = false;
+				}
+			}
+
+			if(!isHFood & !isPFood & !isOrg)
+				MonitorPanel.simObjInfo.setText("No Object Selected");
+		}
+		catch(NullPointerException e){
+
+		}
+	}
 }
