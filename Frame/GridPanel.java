@@ -47,7 +47,7 @@ public class GridPanel extends JPanel
 	private LinkedList<PoisonousFood> poisFood;
 	private ArrayList<Integer> shuffleIds;
 	private int lengthTimeStep = 100;
-	private int lengthGeneration = 100;
+	private int lengthGeneration = 500;
 	private int timePassed = 0;
 	private int trialsPerGen = 1;
 	public int trialNum = 1;
@@ -548,7 +548,7 @@ public class GridPanel extends JPanel
 		organisms.clear();
 		numFoodSources=OptionsPanel.numOrganisms/5;
 		for(int i = 0; i < OptionsPanel.numOrganisms; i++){
-			Organism o = new Organism(100.00, 11, i, 100); //justin b (03.15).
+			Organism o = new Organism(500.00, 11, i, 100); //justin b (03.15).
 			organisms.add(o);
 			shuffleIds.add(i);
 			o.addStartingLocation();
