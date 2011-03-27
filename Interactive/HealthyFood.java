@@ -1,19 +1,18 @@
 package Interactive;
 import java.awt.Color;
 import java.awt.Graphics;
-
-import javax.swing.ImageIcon;
-
 import Frame.Coordinate;
 
 public class HealthyFood extends Food {
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
+//	public HealthyFood(double aMxHlth, int anId){
+//		super(aMxHlth, anId);
+//	}
+
 	public HealthyFood(double aMxHlth, int anId, int aScanRange){
 		super(aMxHlth, anId, 'h');
-		icon = new ImageIcon(
-				getClass().getResource("sprites/flower.gif")).getImage();
 	}
 	
 	public HealthyFood(int x, int y){
@@ -29,11 +28,12 @@ public class HealthyFood extends Food {
 		String str = "";
 		str += " I am food. Eat me."
 			+ "\n Location: " + getLocation()
-			+ "\n Remaining Food: " + getHealth();
+			+ "\n Remaining Food: " + getHealth()
+			+ "\n ID: " + this.getId();
 		return str;		
 	}
 
-	@Override
+	
 	public void paint(Graphics g, boolean isDepleted) {
 		g.setColor(Color.BLUE);
 		
@@ -42,10 +42,5 @@ public class HealthyFood extends Food {
 					   (int)this.getLocation().getY()-(getHeight()/2), 
 					   getWidth(), getHeight());
 		}
-	}
-
-	@Override
-	public void eaten(double val) {
-		incHlth(val);
 	}
 }

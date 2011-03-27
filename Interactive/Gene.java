@@ -20,8 +20,9 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 	private int lenGenes;
 	private Expr evaledList;
 	
+	
 	//Ctor that does not inform the init of the genes.
-	public Gene(int aLenGenes) {
+	public Gene(boolean boo, int aLenGenes) {
 		lenGenes = aLenGenes;
 		symList = new LinkedList<Character>();
 		ran = new Random();
@@ -36,11 +37,15 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 		symbols.add('c');
 		symbols.add('d');
 		symbols.add('e');
-		terminals.add('a');
-		terminals.add('b');
-		terminals.add('c');
-		terminals.add('d');
-		terminals.add('e');
+		symbols.add('f');
+		symbols.add('g');
+		terminals.add('a'); //x distance
+		terminals.add('b'); //y distance
+		terminals.add('c'); //organisms near food source
+		terminals.add('d'); //organism's health
+		terminals.add('e'); //food remaining in food source
+		terminals.add('f'); //if poison = -1 normalized, otherwise 1 normalized
+		terminals.add('g'); //numOrganisms surrounding this organism
 		Collections.shuffle(symbols);
 		ran = new Random();
 		for (int i = 0; i < aLenGenes; i++) 
@@ -79,6 +84,10 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 
 	public Expr getEvaledList() {
 		return evaledList;
+	}
+	
+	public void updateEvaledList(){
+		evaledList=Eval.evaluation(makeStringArray());
 	}
 	//TODO: Make the symList a String Array.
 	//no need to have two separate lists.
@@ -149,9 +158,5 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 		char mut = symbols.get(size2);
 		setSym(size1 , mut);
 	}
-	
-	public void updateEvaledList(){
-		evaledList=Eval.evaluation(makeStringArray());
-		}
 }
 

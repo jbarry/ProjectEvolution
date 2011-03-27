@@ -1,5 +1,6 @@
 package Evolution;
 
+import Frame.GridPanel;
 import Interactive.Chromosome;
 import Interactive.Crossable;
 import Interactive.Gene;
@@ -55,11 +56,6 @@ public class GEP {
 		twoPtProb = aTwoPtProb;
 //		TODO: handicap = aHandicap;
 		ran = new Random();
-
-		//testing.
-//		makeChromList();
-//		onePointCrossOver();
-//		printChromList();
 	}
 
 	/**
@@ -79,9 +75,11 @@ public class GEP {
 		mutation();
 		onePointCrossOver();
 		onePointCrossOver();
-		for(Chromosome chrom: chromList)
-			for(Gene gene: chrom.subListGene(0, chrom.size()))
+		for(Chromosome chrom: chromList){
+			for(Gene gene: chrom.subListGene(0, chrom.size())){
 				gene.updateEvaledList();
+			}
+		}
 		for(int i = 0; i < orgList.size(); i++)
 			orgList.get(i).setChromosome(chromList.get(i));
 		return orgList;
@@ -101,8 +99,11 @@ public class GEP {
 	//
 	public double fitness(Organism org) {
 		double avgHealth = org.getHlthTot()/org.getSamples();
-		double fitness = (avgHealth/org.getMaxHealth()) +
-		(org.getHealthyFoodSize()*10) - (org.getPoisonFoodSize()*5);
+		double activity = (double) org.getNumSteps();
+		double goodEating = (double) org.getHealthEat()*(org.getHealthEat()+org.getPoisonEat()+org.getTotalScans())/(GridPanel.numFoodSources);
+		double assertion = 	(double) (org.getNumSteps()+org.getNumAttacked()+org.getNumPushed())/(org.getHealthEat()+1);
+		double badEating =	(double) org.getPoisonEat()+1;
+		double fitness = (avgHealth*(activity + goodEating + assertion))/badEating;
 		org.setFitness(fitness);
 		return fitness;
 	}
@@ -160,23 +161,6 @@ public class GEP {
 	public void onePointCrossOver() {
 		LinkedList<Pair<Chromosome, Chromosome>> pairList =
 			mateSelect();
-		LinkedList<Chromosome> printList = 
-			new LinkedList<Chromosome>();
-//		for (int i = 0; i < pairList.size(); i ++) {
-//			printList.add(pairList.get(i).left());
-//			printList.add(pairList.get(i).right());
-//		}
-//		for (int i = 0; i < printList.size(); i ++) {
-//			Chromosome aChrom = printList.get(i);
-//			out.println("Chromosome " + i);
-//			for (int j = 0; j < aChrom.size(); j++) {
-//				Gene aGene = aChrom.getGene(j);
-//				for (int k = 0; k < aGene.size(); k++) {
-//					out.print(aGene.getSym(k) + " ");
-//				}
-//				out.println();
-//			}
-//		}
 		chromList.clear();
 		for(int i = 0; i < pairList.size(); i++) {
 			if(ran.nextDouble() < onePtProb) {

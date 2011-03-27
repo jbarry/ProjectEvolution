@@ -2,7 +2,6 @@ package Interactive;
 
 import static java.lang.System.out;
 
-import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -77,13 +76,9 @@ public abstract class Matter{
 	 * @return a list of id numbers of the surrounding objects of choice.
 	 */
 	public ArrayList<Integer> getSurroundingObjects(char type, int scanRange) {
-		int widthSub = location.getX() - (getWidth()/2);
-		int heightSub = location.getY() - (getHeight()/2);
-		int widthPlus = location.getX() + (getWidth()/2);
-		int heightPlus = location.getY() + (getHeight()/2);
 		Set<Integer> objectIds = new HashSet<Integer>();
-		for(int i = widthSub - scanRange; i <= widthPlus + scanRange; i++){
-			for(int j = heightSub - scanRange; j <= heightPlus + scanRange; j++){
+		for(int i=location.getX()-getWidth()/2-scanRange; i<=location.getX()+getWidth()/2+scanRange; i++){
+			for(int j=location.getY()-getHeight()/2-scanRange; j<=location.getY()+getHeight()/2+scanRange; j++){
 				try{	
 					//count all occurrences of objects in location map
 					if(GridPanel.locationMap[i][j].getSnd() == type){
@@ -149,7 +144,8 @@ public abstract class Matter{
 					GridPanel.locationMap[i][j].setLeft(id);
 					GridPanel.locationMap[i][j].setRight(value);
 				}
-				catch(ArrayIndexOutOfBoundsException e){}
+				catch(ArrayIndexOutOfBoundsException e){
+				}
 			}
 		}
 	}
