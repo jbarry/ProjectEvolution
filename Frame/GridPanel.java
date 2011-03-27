@@ -92,8 +92,8 @@ public class GridPanel extends JPanel
 				addMouseMotionListener(simMouseMotion);
 
 				//handle other mouse events
-				MouseListener simMouseListener = new MouseListenerClass();
-				addMouseListener(simMouseListener);
+//				MouseListener simMouseListener = new MouseListenerClass();
+				addMouseListener(new MouseListenerClass());
 
 				//initial program settings
 				organisms = new LinkedList<Organism>();
