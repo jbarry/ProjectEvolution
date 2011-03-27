@@ -92,37 +92,7 @@ public class GridPanel extends JPanel
 				addMouseMotionListener(simMouseMotion);
 
 				//handle other mouse events
-				MouseListener simMouseListener = new MouseListener(){
-					@Override
-					public void mouseClicked(MouseEvent arg0) {
-					}
-
-					@Override
-					public void mouseEntered(MouseEvent arg0) {
-						try{
-							//get and display current mouse location.
-							Coordinate mouseLocation = new Coordinate(arg0.getX(), arg0.getY());
-							MonitorPanel.currMouseLoc.setText(mouseLocation.toString());
-						}
-						catch(NullPointerException e){
-
-						}
-					}
-
-					@Override
-					public void mouseExited(MouseEvent arg0) {
-						MonitorPanel.currMouseLoc.setText("");
-					}
-
-					@Override
-					public void mousePressed(MouseEvent arg0) {
-					}
-
-					@Override
-					public void mouseReleased(MouseEvent arg0) {
-					}
-
-				};
+				MouseListener simMouseListener = new MouseListenerClass();
 				addMouseListener(simMouseListener);
 
 				//initial program settings
@@ -511,7 +481,7 @@ public class GridPanel extends JPanel
 			poisFood.add(f);
 		}
 		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
-		preProcess(50);
+//		preProcess(50);
 		System.out.println("Preprocess Finished");
 	}
 	
