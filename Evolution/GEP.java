@@ -103,7 +103,8 @@ public class GEP {
 		double goodEating = (double) org.getHealthEat()*(org.getHealthEat()+org.getPoisonEat()+org.getTotalScans())/(GridPanel.numFoodSources);
 		double assertion = 	(double) (org.getNumSteps()+org.getNumAttacked()+org.getNumPushed())/(org.getHealthEat()+1);
 		double badEating =	(double) org.getPoisonEat()+1;
-		double fitness = (avgHealth*(activity + goodEating + assertion))/badEating;
+		double fitness = (org.getHealth()*(activity + goodEating + assertion))/badEating;
+		fitness = fitness/10000.0;
 		org.setFitness(fitness);
 		return fitness;
 	}

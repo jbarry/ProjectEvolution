@@ -47,7 +47,7 @@ public class GridPanel extends JPanel
 	private LinkedList<PoisonousFood> poisFood;
 	private ArrayList<Integer> shuffleIds;
 	private int lengthTimeStep = 100;
-	private int lengthGeneration = 100000;
+	private int lengthGeneration = 100;
 	private int timePassed = 0;
 	private int trialsPerGen = 1;
 	public int trialNum = 1;
@@ -135,7 +135,7 @@ public class GridPanel extends JPanel
 						if(timePassed < lengthGeneration) {
 							//t.stop();
 							//out.println();
-							timePassed+=100;
+							timePassed++;
 							simulateStep();
 							repaint();
 							//t.start();
@@ -166,7 +166,7 @@ public class GridPanel extends JPanel
 		int orgIndex = 0;
 		for(Integer orgNum: shuffleIds){
 			Organism org = organisms.get(orgNum);
-			org.deplete(.5);
+			org.deplete(1);
 			//Take sample of organism health for fitness.
 			org.incHlthTot();
 			if(org.getHealth() > 0){
@@ -242,7 +242,7 @@ public class GridPanel extends JPanel
 								bestEval2.setRight(geneEval);
 							}
 						}
-						sight.clear();
+						//sight.clear();
 					}
 					//TODO: if there isn't anything in org's field of vision. 
 					//These numbers need to be worked out.
@@ -496,7 +496,7 @@ public class GridPanel extends JPanel
 		organisms.clear();
 		numFoodSources=OptionsPanel.numOrganisms/5;
 		for(int i = 0; i < OptionsPanel.numOrganisms; i++){
-			Organism o = new Organism(600.00, 11, i, 100); //justin b (03.15).
+			Organism o = new Organism(100.00, 11, i, 100); //justin b (03.15).
 			organisms.add(o);
 			shuffleIds.add(i);
 			o.addStartingLocation();
@@ -511,7 +511,7 @@ public class GridPanel extends JPanel
 			poisFood.add(f);
 		}
 		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
-		preProcess(0);
+		preProcess(50);
 		System.out.println("Preprocess Finished");
 	}
 	
@@ -849,7 +849,7 @@ public class GridPanel extends JPanel
 					}
 					orgIndex++;
 				}
-				timePassed+=lengthTimeStep;
+				timePassed++;
 			} 
 			if (trialNum < trialsPerGen) {
 				for(Organism o: organisms){
