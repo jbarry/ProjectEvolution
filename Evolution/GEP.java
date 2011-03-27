@@ -1,5 +1,6 @@
 package Evolution;
 
+import Frame.GridPanel;
 import Interactive.Chromosome;
 import Interactive.Crossable;
 import Interactive.Gene;
@@ -98,8 +99,11 @@ public class GEP {
 	//
 	public double fitness(Organism org) {
 		double avgHealth = org.getHlthTot()/org.getSamples();
-		double fitness = (avgHealth/org.getMaxHealth()) + (org.getHealthyFoodSize()*10)
-							- (org.getPoisonFoodSize()*5) ;
+		double activity = (double) org.getNumSteps();
+		double goodEating = (double) org.getHealthEat()*(org.getHealthEat()+org.getPoisonEat()+org.getTotalScans())/(GridPanel.numFoodSources);
+		double assertion = 	(double) (org.getNumSteps()+org.getNumAttacked()+org.getNumPushed())/(org.getHealthEat()+1);
+		double badEating =	(double) org.getPoisonEat()+1;
+		double fitness = (avgHealth*(activity + goodEating + assertion))/badEating;
 		org.setFitness(fitness);
 		return fitness;
 	}

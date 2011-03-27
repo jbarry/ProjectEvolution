@@ -33,7 +33,7 @@ public class HealthyFood extends Food {
 		return str;		
 	}
 
-	@Override
+	
 	public void paint(Graphics g, boolean isDepleted) {
 		g.setColor(Color.BLUE);
 		

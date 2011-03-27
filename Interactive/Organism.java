@@ -27,6 +27,11 @@ public class Organism extends Matter{
 	private ArrayList<Coordinate> StartingLocation;
 	private ArrayList<Chromosome> chromosomeHistory;
 	private int eatFail=0;
+	private int healthyEatSuccess=0;
+	private int poisonEatSuccess=0;
+	private int numScans=0;
+	private int numAttacked=0;
+	private int numPushed=0;
 	public static int width = 5;
 	public static int height = 5;
 	//------------------------------------------------------------------------------------
@@ -96,55 +101,7 @@ public class Organism extends Matter{
 		//set boundaries
 		setWrapAround(width, height);
 		setRange(width, height, 'o');
-	}
-	
-	
-	public double numSurroundingObjects(int scanRange) {
-		double numObj = 0.0;
-		for(int i=location.getX()-width/2-scanRange; i<=location.getX()+width/2+scanRange; i++){
-			for(int j=location.getY()-height/2-scanRange; j<=location.getY()+height/2+scanRange; j++){
-				try{	
-					//count all occurrences of objects in location map
-					if(GridPanel.locationMap[i][j].snd == 'f' ||
-							GridPanel.locationMap[i][j].snd == 'h' ||
-							GridPanel.locationMap[i][j].snd == 'o') {
-						numObj++;
-					}
-				}
-				catch(ArrayIndexOutOfBoundsException e){
-				}
-			}
-		}
-		//make sure that scanning object was not included in scan.
-		if(numObj >= width*height){
-			numObj -= width*height; 
-		}
-		//return a normalized value. Will count "partially" discovered organisms
-		//as a whole number, does not include "wrapped" scan.
-		return Math.ceil(numObj/(width*height));
-	}
-	
-	public ArrayList<Integer> getSurroundingObjects(char type, int scanRange) {
-		Set<Integer> objectIds = new HashSet<Integer>();
-		for(int i=location.getX()-width/2-scanRange; i<=location.getX()+width/2+scanRange; i++){
-			for(int j=location.getY()-height/2-scanRange; j<=location.getY()+height/2+scanRange; j++){
-				try{	
-					//count all occurrences of objects in location map
-					if(GridPanel.locationMap[i][j].snd == type){
-						objectIds.add(GridPanel.locationMap[i][j].fst);
-					}
-				}
-				catch(ArrayIndexOutOfBoundsException e){
-				}
-			}
-		}
-		//make sure that scanning object was not included in scan.
-		//TODO: will do this outside of class. In GridPanel probably.
-		//		if(numObj >= width*height){
-		//			numObj -= width*height; 
-		//		}
-		return new ArrayList<Integer>(objectIds);
-	}
+	}	
 	
 	public void eatFood(Food f, double fdVal){
 		f.deplete(fdVal);
@@ -153,15 +110,23 @@ public class Organism extends Matter{
 //			System.out.println("hlthy");
 //			System.out.println("orgHealth: " + hlth);
 //			System.out.println("FoodId: " + f.getId());
+//			System.out.println("OrgLoc: " + this.getLocation().getX() + ", " + this.getLocation().getY());
+//			System.out.println();
 			incHlth(fdVal);
+			healthyEatSuccess++;
+			eatFail--;
 			healthyFood.add(f.getId());
 		}
 		else if(f instanceof PoisonousFood){
 //			System.out.println("orgId: " + id);
 //			System.out.println("pois");
-//			System.out.println("orgHealth: " + hlth);
-//			System.out.println("FoodId: " f+ f.getId());
+// 		    System.out.println("orgHealth: " + hlth);
+//			System.out.println("FoodId: " + f.getId());
+//			System.out.println("OrgLoc: " + this.getLocation().getX() + ", " + this.getLocation().getY());
+//			System.out.println();
 			poisonFood.add(f.getId());
+			poisonEatSuccess++;
+			eatFail--;
 			deplete(fdVal);
 		}
 	}
@@ -294,6 +259,52 @@ public class Organism extends Matter{
 		setRange(width, height, 'o');
 	}
 	
+		public void attack(int orgIndex, LinkedList<Organism> organisms){
+//			System.out.print("Attacking org " + orgIndex + "(" + organisms.get(orgIndex).getLocation().getX() + " " + organisms.get(orgIndex).getLocation().getY() + "). Health: " + organisms.get(orgIndex).getHealth());
+			organisms.get(orgIndex).deplete(5);
+			numAttacked++;
+//			System.out.print(". Health: " + organisms.get(orgIndex).getHealth());
+//			System.out.println(". Attacked by org " + this.id);
+	}
+	
+		public void pushOrg(int orgIndex, LinkedList<Organism> organisms){
+			int xPushing = this.getLocation().getX();
+			int yPushing = this.getLocation().getY();
+			int xGettingPushed = organisms.get(orgIndex).getLocation().getX();
+			int yGettingPushed = organisms.get(orgIndex).getLocation().getY();
+			
+//			System.out.print("Pushing org " + orgIndex + "(" + organisms.get(orgIndex).getLocation().getX() + " " + organisms.get(orgIndex).getLocation().getY() + ")");
+			
+			if(xGettingPushed < xPushing){
+				organisms.get(orgIndex).moveWest(organisms);
+			}
+			else if(xGettingPushed > xPushing){
+				organisms.get(orgIndex).moveEast(organisms);
+			}
+			
+			if(yGettingPushed < yPushing){
+				organisms.get(orgIndex).moveNorth(organisms);
+			}
+			else if(yGettingPushed > yPushing){
+				organisms.get(orgIndex).moveSouth(organisms);
+			}
+			numPushed++;
+//			System.out.print("(" + organisms.get(orgIndex).getLocation().getX() + " " + organisms.get(orgIndex).getLocation().getY() + ")");
+//			System.out.println(". Pushed by org " + getId());
+		
+	}
+	
+		public boolean currOrgIsNextToSpecifiedOrg(int orgIndex){
+		ArrayList<Integer> surroundingOrgs = new ArrayList<Integer>();
+		surroundingOrgs = this.getSurroundingObjects('o', 1);
+		boolean orgIsNextToOrg = false;
+		for(Integer o: surroundingOrgs){
+			if(orgIndex == o) orgIsNextToOrg = true;
+		}
+		
+		return orgIsNextToOrg;
+	}
+	
 	public void paint(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.fillRect((int)this.location.getX()-(width/2), 
@@ -380,24 +391,60 @@ public class Organism extends Matter{
 		return poisonFood.size();
 	}
 
-	public void addEatFail() {
-		eatFail++;
-	}
-	
-	public void subEatFail(){
-		eatFail--;
-	}
-	
 	public int getEatFail(){
 		return eatFail;
 	}
-
-	public void clearEatFail() {
-		eatFail=0;
+	
+	public void addEatFail(){
+		eatFail++;
 	}
 	
-	public void clearFoodList(){
+	public int getHealthEat(){
+		return healthyEatSuccess;
+	}
+	
+	public int getPoisonEat(){
+		return poisonEatSuccess;
+	}
+	
+
+	public int getTotalScans() {
+		return numScans;
+	}
+	
+	public void addScan(int scans){
+		numScans += scans;
+	}
+	
+	public void clear(){
+		eatFail = 0;
+		numScans = 0;
+		steps = 0;
+		samples = 0;
+		hlthTot = 0;
 		poisonFood.clear();
 		healthyFood.clear();
+		poisonEatSuccess = 0;
+		healthyEatSuccess = 0;
+		numAttacked=0;
+		numPushed=0;
+		
+	}
+
+	@Override
+	protected int getHeight() {
+		return height;
+	}
+	@Override
+	public int getWidth(){
+		return width;
+	}
+
+	public int getNumPushed() {
+		return numPushed;
+	}
+
+	public int getNumAttacked() {
+		return numAttacked;
 	}
 }	
