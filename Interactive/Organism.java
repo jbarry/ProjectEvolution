@@ -88,6 +88,7 @@ public class Organism extends Matter{
 		location = aLocation;
 		chromosome = aChromosome;
 	}
+
 	
 	public void newLocation() {
 		setRange(width, height, 'w');
