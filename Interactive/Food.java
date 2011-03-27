@@ -1,6 +1,7 @@
 package Interactive;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.util.Random;
 
 import Frame.*;
@@ -12,6 +13,7 @@ public abstract class Food extends Matter{
 	//------------------------------------------------------------------------------------
 	public static final int WIDTH = 5;
 	public static final int HEIGHT = 5;
+	protected Image icon;
 
 	//------------------------------------------------------------------------------------
 	//--constructors--
@@ -49,15 +51,6 @@ public abstract class Food extends Matter{
 	
 	public abstract void eaten(double val);
 	
-	public void paint(Graphics g, boolean isDepleted) {
-		g.setColor(Color.BLUE);
-		if(!isDepleted){
-			g.fillRect((int)this.location.getX()-(WIDTH/2), 
-					   (int)this.location.getY()-(HEIGHT/2), 
-					   WIDTH, HEIGHT);
-		}
-	}
-
 	/**
 	 * @return a String representation of the Object.v
 	 */
@@ -80,4 +73,20 @@ public abstract class Food extends Matter{
 	public int getWidth() {
 		return Food.WIDTH;
 	}
+	
+	public void paint(Graphics g, boolean isDepleted)
+	{
+		if(!isDepleted){
+			g.drawImage(icon, getLocation().getX()-2*getWidth()/2, getLocation().getY()-2*getHeight()/2, 2*getWidth(), 2*getHeight(), null);
+		}
+	}
+	
+//	public void paint(Graphics g, boolean isDepleted) {
+//		g.setColor(Color.BLUE);
+//		if(!isDepleted){
+//			g.fillRect((int)this.location.getX()-(WIDTH/2), 
+//					   (int)this.location.getY()-(HEIGHT/2), 
+//					   WIDTH, HEIGHT);
+//		}
+//	}
 }

@@ -15,6 +15,7 @@
 package Frame;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.FileDialog;
 import java.awt.GridLayout;
 
@@ -50,6 +51,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 
 import Interactive.*;
@@ -89,6 +93,65 @@ public class GUI {
 	// --constructors--
 	// ------------------------------------------------------------------------------------
 	public GUI() {
+		/** Handle UI override for Frame */ //TODO: Ian
+		UIManager ui = new UIManager();     
+		
+        try {
+    	    // Set System L&F.
+        	ui.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+            
+            //allow for fancy frame and dialog boxes.
+    		JFrame.setDefaultLookAndFeelDecorated(true);
+    		JDialog.setDefaultLookAndFeelDecorated(true);
+        } 
+        catch (UnsupportedLookAndFeelException e) {
+        }
+        catch (ClassNotFoundException e) {
+        }
+        catch (InstantiationException e) {
+        }
+        catch (IllegalAccessException e) {
+        }
+		
+        //Gradients
+        List<Object> gradients = new ArrayList<Object>(5);
+        gradients.add(0.00f);
+        gradients.add(0.00f);
+        gradients.add(new Color(0xC1C1C1));
+        gradients.add(new Color(0xFFFFFF));
+        gradients.add(new Color(0x5C5D5C));
+        
+        //UI HashMap Overrides
+        ui.put("Button.background", new Color(255, 255, 255));  
+        ui.put("Button.foreground", new Color(0, 0, 0));
+        ui.put("Button.gradient", gradients);
+        ui.put("Button.select", new Color(175, 175, 175));  
+        
+        ui.put("Label.foreground", new Color(0, 0, 0));
+        
+		ui.put("Menu.selectionBackground", new Color(175, 175, 175));
+		ui.put("MenuBar.background", new Color(220, 220, 220));
+		ui.put("MenuBar.foreground", new Color(0, 0, 0));
+		ui.put("MenuItem.selectionBackground", new Color(175, 175, 175));
+		
+		ui.put("OptionPane.background", new Color(175, 175, 175));
+		ui.put("OptionPane.errorDialog.titlePane.background", new Color(255, 153, 153)); //redish
+		ui.put("OptionPane.questionDialog.titlePane.background", new Color(153, 204, 153)); //greenish
+		ui.put("OptionPane.warningDialog.titlePane.background", new Color(255, 204, 103)); //yellowish
+		
+		ui.put("Panel.background", new Color(175, 175, 175));
+		
+		ui.put("RadioButton.background", new Color(175, 175, 175));
+		ui.put("RadioButton.foreground", new Color(0, 0, 0));
+		
+		ui.put("RootPane.frameBorder", BorderFactory.createLineBorder(Color.BLACK, 2));
+        ui.put("RootPane.plainDialogBorder", BorderFactory.createLineBorder(Color.BLACK, 2));
+        ui.put("RootPane.questionDialogBorder", BorderFactory.createLineBorder(Color.BLACK, 2));
+        ui.put("RootPane.warningDialogBorder", BorderFactory.createLineBorder(Color.BLACK, 2));
+       
+		ui.put("Slider.background", new Color(175, 175, 175));
+		
+		ui.put("TextArea.foreground", new Color(0, 0, 0));
 		/** Create and set jframe attributes */
 		jframe = new JFrame();
 		jframe.setLayout(null);
@@ -100,6 +163,9 @@ public class GUI {
 		jframe.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		jframe.setTitle("Project Evolution");
 
+		//TODO: Ian
+		Container pane = jframe.getContentPane();
+		
 		KeyListener frameKeyListener = new KeyListener() {
 			@Override
 			public void keyPressed(KeyEvent keyEvent) {
@@ -149,20 +215,24 @@ public class GUI {
 
 		/** Create Game Grid Panel */
 		simulation = new GridPanel(this);
-		jframe.add(simulation);
+//		jframe.add(simulation);
+		pane.add(simulation);
 
 		/** Create Options Panel */
 		optionsPanel = new OptionsPanel(this, simulation);
-		jframe.add(optionsPanel);
-
+//		jframe.add(optionsPanel);
+		pane.add(optionsPanel);
+		
 		/** Create Monitor Panel */
 		monitorPanel = new MonitorPanel(simulation);
-		jframe.add(monitorPanel);
-
+//		jframe.add(monitorPanel);
+		pane.add(monitorPanel);
+		
 		/** Create Generation Panel */
 		genPanel = new GenerationPanel(simulation, this);
-		jframe.add(genPanel);
-
+//		jframe.add(genPanel);
+		pane.add(genPanel);
+		
 		/** Create Menu */
 		menuBar = new JMenuBar();
 		fileMenu = new JMenu("File");
@@ -268,7 +338,7 @@ public class GUI {
 				confirmExit();
 			}
 		});
-
+		SwingUtilities.updateComponentTreeUI(jframe);
 	}
 
 	// ------------------------------------------------------------------------------------

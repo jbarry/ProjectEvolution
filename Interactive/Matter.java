@@ -2,6 +2,7 @@ package Interactive;
 
 import static java.lang.System.out;
 
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;

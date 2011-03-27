@@ -2,10 +2,13 @@ package Interactive;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.TreeSet;
+
+import javax.swing.ImageIcon;
 
 import Frame.*;
 
@@ -28,12 +31,44 @@ public class Organism extends Matter{
 	//TODO: what is this?
 	private TreeSet<Integer> healthyFood;
 	private TreeSet<Integer> poisonFood;
+	
+	//Ian's
+	//for images/actions
+    private Image ninja_walk1;
+    private Image ninja_walk1_inv;
+    private Image ninja_walk2;
+    private Image ninja_walk2_inv;
+    private Image ninja_eat;
+    private Image ninja_eat_inv;
+    private Image ninja_attack;
+    private Image ninja_attack_inv;
+    private Image ninja_dead;
+    private Image ninja_dead_inv;
+    private boolean swapImage;
+    private boolean facingRight;
+    private char currentAction; // 'a' for attack, 'e' for eating, 'm' for movement
+	
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
 
 	public Organism(double aHealth, int chromSize, int anId, int aScanRange) {
 		super(aHealth, anId, 'o');
+		//load initial images
+		ninja_walk1 = new ImageIcon(getClass().getResource("sprites/ninja_walk1.gif")).getImage();
+		ninja_walk1_inv = new ImageIcon(getClass().getResource("sprites/ninja_walk1_inv.gif")).getImage();
+		ninja_walk2 = new ImageIcon(getClass().getResource("sprites/ninja_walk2.gif")).getImage();
+		ninja_walk2_inv = new ImageIcon(getClass().getResource("sprites/ninja_walk2_inv.gif")).getImage();
+		ninja_eat = new ImageIcon(getClass().getResource("sprites/ninja_eat.gif")).getImage();
+		ninja_eat_inv = new ImageIcon(getClass().getResource("sprites/ninja_eat_inv.gif")).getImage();
+		ninja_attack = new ImageIcon(getClass().getResource("sprites/ninja_attack.gif")).getImage();
+		ninja_attack_inv = new ImageIcon(getClass().getResource("sprites/ninja_attack_inv.gif")).getImage();
+		ninja_dead = new ImageIcon(getClass().getResource("sprites/ninja_dead.gif")).getImage();
+		ninja_dead_inv = new ImageIcon(getClass().getResource("sprites/ninja_dead_inv.gif")).getImage();
+		//create behavior tracking boolean variables
+		swapImage = true;
+		facingRight = true;
+		currentAction = ' ';
 		chromosome = new Chromosome(chromSize);
 		samples = 0;
 		avgHealth = 0;
@@ -85,6 +120,7 @@ public class Organism extends Matter{
 	}
 	
 	public void eatFood(Food f, double fdVal){
+		currentAction = 'e';
 		f.deplete(fdVal);
 		if(f instanceof HealthyFood) {
 			//System.out.println("orgId: " + id);
@@ -102,7 +138,13 @@ public class Organism extends Matter{
 		}
 	}
 	
+	public void attackOrganism(){
+		currentAction = 'a';
+	}
+	
 	public void moveNorth(LinkedList<Organism> organisms) {
+		currentAction = 'm';
+		
 		//make old location available.
 		setRange(WIDTH, HEIGHT, 'w');
 		setWrapAround(WIDTH, HEIGHT);
@@ -122,6 +164,9 @@ public class Organism extends Matter{
 	}
 
 	public void moveNorthEast(LinkedList<Organism> organisms) {
+		currentAction = 'm';
+		facingRight = true;
+		
 		setRange(WIDTH, HEIGHT, 'w');
 		setWrapAround(WIDTH, HEIGHT);
 		try{
@@ -137,6 +182,9 @@ public class Organism extends Matter{
 	}
 
 	public void moveEast(LinkedList<Organism> organisms) {
+		currentAction = 'm';
+		facingRight = true;
+		
 		setRange(WIDTH, HEIGHT, 'w');
 		setWrapAround(WIDTH, HEIGHT);
 		try{
@@ -155,6 +203,9 @@ public class Organism extends Matter{
 	}
 
 	public void moveSouthEast(LinkedList<Organism> organisms) {
+		currentAction = 'm';
+		facingRight = true;
+		
 		setRange(WIDTH, HEIGHT, 'w');
 		setWrapAround(WIDTH, HEIGHT);
 		try{
@@ -174,6 +225,8 @@ public class Organism extends Matter{
 	}
 
 	public void moveSouth(LinkedList<Organism> organisms) {
+		currentAction = 'm';
+
 		setRange(WIDTH, HEIGHT, 'w');
 		setWrapAround(WIDTH, HEIGHT);
 		try{
@@ -189,6 +242,9 @@ public class Organism extends Matter{
 	}
 
 	public void moveSouthWest(LinkedList<Organism> organisms) {
+		currentAction = 'm';
+		facingRight = false;
+		
 		setRange(WIDTH, HEIGHT, 'w');
 		setWrapAround(WIDTH, HEIGHT);
 		try{
@@ -204,6 +260,9 @@ public class Organism extends Matter{
 	}
 
 	public void moveWest(LinkedList<Organism> organisms) {
+		currentAction = 'm';
+		facingRight = false;
+		
 		setRange(WIDTH, HEIGHT, 'w');
 		setWrapAround(WIDTH, HEIGHT);
 		try{
@@ -218,6 +277,9 @@ public class Organism extends Matter{
 	}
 
 	public void moveNorthWest(LinkedList<Organism> organisms) {
+		currentAction = 'm';
+		facingRight = true;
+		
 		setRange(WIDTH, HEIGHT, 'w');
 		setWrapAround(WIDTH, HEIGHT);
 		try{
@@ -228,13 +290,6 @@ public class Organism extends Matter{
 		}
 		catch(ArrayIndexOutOfBoundsException e){}
 		setRange(WIDTH, HEIGHT, 'o');
-	}
-	
-	public void paint(Graphics g) {
-		g.setColor(Color.BLACK);
-		g.fillRect((int)this.location.getX()-(WIDTH/2), 
-				   (int)this.location.getY()-(HEIGHT/2), 
-				   WIDTH, HEIGHT);
 	}
 	
 	//------------------------------------------------------------------------------------
@@ -324,5 +379,79 @@ public class Organism extends Matter{
 	
 	public int getPoisonFoodSize(){
 		return poisonFood.size();
+	}
+	
+	//Painting.
+//	public void paint(Graphics g) {
+//		g.setColor(Color.BLACK);
+//		g.fillRect((int)this.location.getX()-(WIDTH/2), 
+//				   (int)this.location.getY()-(HEIGHT/2), 
+//				   WIDTH, HEIGHT);
+//	}
+	
+	public void paint(Graphics g) {
+		if(facingRight){
+			if(getHealth() <= 0){
+				g.drawImage(ninja_dead, location.getX()-2*Organism.WIDTH/2,
+						location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
+						2*Organism.HEIGHT, null);
+			}
+			else{
+				if(currentAction == 'e'){
+					g.drawImage(ninja_eat, location.getX()-2*Organism.WIDTH/2,
+							location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
+							2*Organism.HEIGHT, null);
+				}
+				else if(currentAction == 'a'){
+					g.drawImage(ninja_attack, location.getX()-2*Organism.WIDTH/2,
+							location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
+							2*Organism.HEIGHT, null);
+				}
+				else{
+					if(swapImage){
+						g.drawImage(ninja_walk1, location.getX()-2*Organism.WIDTH/2,
+								location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
+								2*Organism.HEIGHT, null);
+					}
+					else{
+						g.drawImage(ninja_walk2, location.getX()-2*Organism.WIDTH/2,
+								location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
+								2*Organism.HEIGHT, null);
+					}
+				}
+			}
+		}
+		else{
+			if(getHealth() <= 0){
+				g.drawImage(ninja_dead_inv, location.getX()-2*Organism.WIDTH/2,
+						location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
+						2*Organism.HEIGHT, null);
+			}
+			else{
+				if(currentAction == 'e'){
+					g.drawImage(ninja_eat_inv, location.getX()-2*Organism.WIDTH/2,
+							location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
+							2*Organism.HEIGHT, null);
+				}
+				else if(currentAction == 'a'){
+					g.drawImage(ninja_attack_inv, location.getX()-2*Organism.WIDTH/2,
+							location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
+							2*Organism.HEIGHT, null);
+				}
+				else{
+					if(swapImage){
+						g.drawImage(ninja_walk1_inv, location.getX()-2*Organism.WIDTH/2,
+								location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
+								2*Organism.HEIGHT, null);
+					}
+					else{
+						g.drawImage(ninja_walk2_inv, location.getX()-2*Organism.WIDTH/2,
+								location.getY()-2*Organism.HEIGHT/2, 2*Organism.WIDTH,
+								2*Organism.HEIGHT, null);
+					}
+				}
+			}
+		}
+		swapImage = !swapImage;
 	}
 }	
