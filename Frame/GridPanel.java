@@ -54,7 +54,7 @@ public class GridPanel extends JPanel
 	public int generationNum = 1;
 	public double lastAvg = 0;
 	private GEP g;
-	public static int numFoodSources=OptionsPanel.numOrganisms/5;
+	public static int numFoodSources=0;
 	private Timer t;
 	private Normalizer norm;
 	private int numPreProcessedGenerations = 0;
@@ -185,12 +185,12 @@ public class GridPanel extends JPanel
 				t = new javax.swing.Timer(lengthTimeStep, new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if(timePassed < lengthGeneration) {
-							t.stop();
+							//t.stop();
 							//out.println();
 							timePassed+=100;
 							simulateStep();
 							repaint();
-							t.start();
+							//t.start();
 						} else if (trialNum < trialsPerGen) {
 							newTrial();
 						} else {
@@ -320,7 +320,7 @@ public class GridPanel extends JPanel
 					}
 				}
 				// Genes are set as N-S-E-W-NE-NW-SE-SW-Eat-Attack-PushOrg.
-				System.out.println("Org ID: " + org.getId() + " Action 1: " + bestEval1.left() + " Action 2: " + bestEval2.left() + " numObj in Sight:" + sight.size());
+				//System.out.println("Org ID: " + org.getId() + " Action 1: " + bestEval1.left() + " Action 2: " + bestEval2.left() + " numObj in Sight:" + sight.size());
 				switch (bestEval1.left()) {
 				case 0: 
 					org.moveNorth(organisms);
@@ -517,6 +517,7 @@ public class GridPanel extends JPanel
 		}
 	}
 	
+	
 	/**
 	 * Sets the initial game state of the GridPanel
 	 */
@@ -545,6 +546,7 @@ public class GridPanel extends JPanel
 				new Pair<Double, Double> (-50.0, 50.0));
 		
 		organisms.clear();
+		numFoodSources=OptionsPanel.numOrganisms/5;
 		for(int i = 0; i < OptionsPanel.numOrganisms; i++){
 			Organism o = new Organism(600.00, 11, i, 100); //justin b (03.15).
 			organisms.add(o);
