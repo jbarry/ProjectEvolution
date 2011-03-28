@@ -82,7 +82,6 @@ public class GridPanel extends JPanel
 				setLocation(GUI.WIDTH - GridPanel.WIDTH, 0);
 				setSize(GridPanel.WIDTH, GridPanel.HEIGHT);
 				setBorder(BorderFactory.createLineBorder(Color.black));
-				
 				organisms = new LinkedList<Organism>();
 				healthFd = new LinkedList<HealthyFood>();
 				poisFood = new LinkedList<PoisonousFood>();
@@ -128,8 +127,8 @@ public class GridPanel extends JPanel
 		int orgIndex = 0;
 		for(Integer orgNum: shuffleIds){
 			Organism org = organisms.get(orgNum);
-			org.deplete(.2);
 			org.clearAction();
+			org.deplete(org.getMaxHealth()/lengthGeneration);
 			//Take sample of organism health for fitness.
 			org.incHlthTot();
 			if(org.getHealth() > 0){
