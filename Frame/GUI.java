@@ -108,7 +108,7 @@ public class GUI {
 				case KeyEvent.VK_P: {
 					optionsPanel.eventPause(simulation);
 				}
-				break;
+					break;
 				}
 			}
 
@@ -218,7 +218,7 @@ public class GUI {
 			}
 		});
 		fileMenu.add(loadGenes);
-		loadGenes.setEnabled(false);
+		loadGenes.setEnabled(true);
 
 		// pause/resume option
 		pause = new JMenuItem("Pause/Resume");
@@ -245,15 +245,15 @@ public class GUI {
 		about.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane
-				.showMessageDialog(
-						jframe,
-						"Project Evolution v. 1.0\n\n"
-						+ "Written By:\n"
-						+ "Justin Barry, Dwight Bell, Ian Gardea, Devin Lam, and Chris Jackey\n\n"
-						+ "This program will simulate basic Social Darwinism amongst \n"
-						+ "organisms with the same initial conditions. Intelligence is \n"
-						+ "represented through a Robust Gene Expression Program.",
-						"About...", JOptionPane.INFORMATION_MESSAGE);
+						.showMessageDialog(
+								jframe,
+								"Project Evolution v. 1.0\n\n"
+										+ "Written By:\n"
+										+ "Justin Barry, Dwight Bell, Ian Gardea, Devin Lam, and Chris Jackey\n\n"
+										+ "This program will simulate basic Social Darwinism amongst \n"
+										+ "organisms with the same initial conditions. Intelligence is \n"
+										+ "represented through a Robust Gene Expression Program.",
+								"About...", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		helpMenu.add(about);
@@ -383,6 +383,7 @@ public class GUI {
 		String[] tempChromArray;
 		LinkedList<Organism> population = new LinkedList<Organism>();
 		int geneLength = 0;
+		int numGenes = 0;
 
 		try {
 			FileDialog ld = new FileDialog(f);
@@ -398,15 +399,20 @@ public class GUI {
 				// traverse list of chromosomes in file, parse Gene info/assign
 				// to organisms, create population
 				for (int i = 1; i < tempChromArray.length; i++) {
-					if (i == 1) {
-						geneLength = Integer.parseInt(tempChromArray[i]);
+					if (i <= 2) {
+						if (i == 1) {
+							geneLength = Integer.parseInt(tempChromArray[i]);
+						}
+						if (i == 2) {
+							numGenes = Integer.parseInt(tempChromArray[i]);
+						}
 					} else {
 						Organism individOrganism = new Organism(500,
 								geneLength, i, 100);
 						LinkedList<Gene> tempGeneList = new LinkedList<Gene>();
 						// traverse individual chromosome to split genes at
 						// geneLength
-						for (int j = 0; j < geneLength; j++) {
+						for (int j = 0; j < numGenes; j++) {
 							String tempGene = tempChromArray[i].substring(
 									(j * geneLength),
 									((j * geneLength) + (geneLength - 1)))
@@ -431,7 +437,6 @@ public class GUI {
 					//
 					// }
 					// }
-					simulation.loadSimulationFromFile(population);
 				}
 			} else {
 				JOptionPane.showMessageDialog(jframe,
@@ -443,6 +448,7 @@ public class GUI {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		simulation.loadSimulationFromFile(population);
 		jframe.setAlwaysOnTop(true);
 	}
 
@@ -450,15 +456,18 @@ public class GUI {
 
 		LinkedList<Organism> tempOrgs;
 		tempOrgs = simulation.getOrganisms();
-		int geneLength = tempOrgs.get(0).getChromosome().getGene(0).getGeneLength();
+		int geneLength = tempOrgs.get(0).getChromosome().getGene(0)
+				.getGeneLength();
+		int numGenes = tempOrgs.get(0).getChromosome().size();
+
 		String tempChrom = "";
 
-		tempChrom+= "VALID_GEP_FILE" + " " + geneLength +" ";
-		
+		tempChrom += "VALID_GEP_FILE" + " " + geneLength + " " + numGenes + " ";
+
 		for (int i = 0; i < tempOrgs.size(); i++) {
 			for (int k = 0; k < tempOrgs.get(i).getChromosome().size(); k++) {
 				ArrayList<String> tempArray = tempOrgs.get(i).getChromosome()
-				.getGene(k).makeStringArray();
+						.getGene(k).makeStringArray();
 				for (int j = 0; j < tempArray.size(); j++) {
 					tempChrom += tempArray.get(j);
 				}
