@@ -113,7 +113,15 @@ public class GridPanel extends JPanel
 		};
 		r.run();
 	}
-
+	
+	public int getGenerationNum(){
+		return generationNum;
+	}
+	
+	public void revert(int generation){
+		
+	}
+	
 	public void clearLocations(){
 		for(int i = 0; i < locationMap.length; i++){
 			for(int j=0; j<locationMap[i].length; j++){
@@ -282,7 +290,6 @@ public class GridPanel extends JPanel
 					break;
 				case 9:
 					ArrayList<Integer> surroundingOrganisms = org.getSurroundingObjects('o', 1);
-					surroundingOrganisms.remove((Integer) org.getId());
 					if(surroundingOrganisms.size() > 0){
 					int index=surroundingOrganisms.get(ran.nextInt(surroundingOrganisms.size()));
 					org.attack(index, organisms);
@@ -293,7 +300,6 @@ public class GridPanel extends JPanel
 					break;
 				case 10:
 					ArrayList<Integer> surroundingOrganismsPush = org.getSurroundingObjects('o', 1);
-					surroundingOrganismsPush.remove((Integer) org.getId());
 					if(surroundingOrganismsPush.size() > 0){
 					int index=surroundingOrganismsPush.get(ran.nextInt(surroundingOrganismsPush.size()));
 //					System.out.println(org.getId() + " " + index);
@@ -354,7 +360,6 @@ public class GridPanel extends JPanel
 					break;
 				case 9:
 					ArrayList<Integer> surroundingOrganisms = org.getSurroundingObjects('o', 1);
-					surroundingOrganisms.remove((Integer) org.getId());
 					if(surroundingOrganisms.size() > 0){
 					int index=surroundingOrganisms.get(ran.nextInt(surroundingOrganisms.size()));
 					org.attack(index, organisms);
@@ -365,7 +370,6 @@ public class GridPanel extends JPanel
 					break;
 				case 10:
 					ArrayList<Integer> surroundingOrganismsPush = org.getSurroundingObjects('o', 1);
-					surroundingOrganismsPush.remove((Integer) org.getId());
 					if(surroundingOrganismsPush.size() > 0){
 					int index=surroundingOrganismsPush.get(ran.nextInt(surroundingOrganismsPush.size()));
 //					System.out.println(org.getId() + " " + index);
@@ -492,8 +496,6 @@ public class GridPanel extends JPanel
 			poisFood.add(f);
 		}
 		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
-		preProcess(0);
-		System.out.println("Preprocess Finished");
 	}
 	
 	/**
@@ -746,7 +748,6 @@ public class GridPanel extends JPanel
 							break;
 						case 9:
 							ArrayList<Integer> surroundingOrganisms = org.getSurroundingObjects('o', 1);
-							surroundingOrganisms.remove((Integer)org.getId());
 							if(surroundingOrganisms.size() > 0){
 							int index=surroundingOrganisms.get(ran.nextInt(surroundingOrganisms.size()));
 							if(index!=org.getId()){
@@ -756,7 +757,6 @@ public class GridPanel extends JPanel
 							break;
 						case 10:
 							ArrayList<Integer> surroundingOrganismsPush = org.getSurroundingObjects('o', 1);
-							surroundingOrganismsPush.remove((Integer)org.getId());
 							if(surroundingOrganismsPush.size() > 0){
 							int index=surroundingOrganismsPush.get(ran.nextInt(surroundingOrganismsPush.size()));
 							if(index!=org.getId()){

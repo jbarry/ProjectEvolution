@@ -44,6 +44,7 @@ public class GenerationPanel extends JPanel{
 	
 	private JButton stopGenerationOrTrial;
 	private JButton preprocess;
+	private JButton jumpBack;
 	
 	private ButtonGroup stopSelection;
 	private JRadioButton stopGenButton;
@@ -140,7 +141,7 @@ public class GenerationPanel extends JPanel{
 		
 		/**
 		 * Button for deciding to preprocess.
-		 * Waits until the simulation ends the current generation.
+		 * Simulation must be paused.
 		 */
 		
 		preprocess = new JButton();
@@ -162,6 +163,32 @@ public class GenerationPanel extends JPanel{
 		};
 		
 		preprocess.addActionListener(PP);
+		
+		/**
+		 * Button for jumping back generations
+		 * Simulation must be paused
+		 */
+		jumpBack = new JButton();
+		jumpBack.setLayout(null);
+		jumpBack.setEnabled(true);
+		jumpBack.setText("Go Back Generations");
+		ActionListener JB= new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0){
+				if(simulation.isPaused()){
+					JOptionPane.showMessageDialog(simulation, "Any unsaved information will be lost. " +
+							"\nThis will revert back to the organisms of the generation you specify. " +
+							"\nAll generations after this will be discarded.", "Warning!", JOptionPane.WARNING_MESSAGE);
+					goBack(simulation,arg0);
+					}
+					else{
+						JOptionPane.showMessageDialog(simulation, "Simulation must be paused", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+			}
+		};
+		
+		jumpBack.addActionListener(JB);
+		
 		
 		//Add radio button for stopping either trial or generation
 		stopGenButton = new JRadioButton("Generation");
@@ -185,19 +212,77 @@ public class GenerationPanel extends JPanel{
 	    JPanel radioPanel = new JPanel();
 	    radioPanel.setOpaque(false);
 	    radioPanel.setFocusable(true);
-	    radioPanel.setSize(180, 110);
+	    radioPanel.setSize(180, 130);
 	    radioPanel.setLocation(210,20);
-	    radioPanel.setLayout(new GridLayout(4, 1));
+	    radioPanel.setLayout(new GridLayout(5, 1));
 	    radioPanel.add(stopGenButton);
 	    radioPanel.add(stopTrialButton);
 	    radioPanel.add(stopGenerationOrTrial);
 	    radioPanel.add(preprocess);
+	    radioPanel.add(jumpBack);
 	    radioPanel.setBorder(BorderFactory.createTitledBorder(
 	            BorderFactory.createEtchedBorder(), "Select Option to Stop"));
 	    
 	    add(radioPanel);
 	}
 	
+	private boolean goBack(GridPanel simulation, ActionEvent e) {
+		boolean userCancel = true;
+		JTextField numOrganisms = new JTextField();
+		JPanel jP = new JPanel();
+		jP.setLayout(new GridLayout(2, 2, 5, 5));
+		jP.add(new JLabel("What Generation would you like to revert to?"));
+		jP.add(numOrganisms);
+
+		Object[] msg = { jP };
+
+		JOptionPane op = new JOptionPane(msg, JOptionPane.QUESTION_MESSAGE,
+				JOptionPane.OK_CANCEL_OPTION, null, null);
+
+		JDialog dialog = op.createDialog("Reverting");
+		dialog.setVisible(true);
+		
+		int result = 1;
+		try {
+			result = ((Integer) op.getValue()).intValue();
+		} catch (NullPointerException q) {
+
+		}
+
+		if (result == JOptionPane.OK_OPTION) {
+			userCancel = false;
+			try {
+				int x = Integer.parseInt(numOrganisms.getText());
+				if (x <= 0) {
+					JOptionPane.showMessageDialog(this,
+							"Enter a positive integer", "Error",
+							JOptionPane.INFORMATION_MESSAGE);
+					// try again
+					goBack(simulation,e);
+				}
+				else if(x > simulation.getGenerationNum()-1){
+					JOptionPane.showMessageDialog(this,
+							"Enter a number less than " + (simulation.getGenerationNum()-1), "Error",
+							JOptionPane.INFORMATION_MESSAGE);
+					// try again
+					goBack(simulation,e);
+				}
+				else {
+					// the generation to go back to.
+					simulation.revert(x);
+				}
+			} catch (NumberFormatException a) {
+				JOptionPane.showMessageDialog(this, "Enter a valid integer",
+						"Error", JOptionPane.INFORMATION_MESSAGE);
+				// try again
+				simPreprocess(e,simulation);
+			}
+		}
+		
+		return userCancel;
+		
+	}
+
 	private boolean simPreprocess(ActionEvent e, GridPanel simulation){
 		boolean userCancel = true;
 		JTextField numOrganisms = new JTextField();
