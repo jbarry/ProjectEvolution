@@ -32,6 +32,7 @@ public class Organism extends Matter{
 	private int numScans=0;
 	private int numAttacked=0;
 	private int numPushed=0;
+	private String action = "";
 	public static int width = 5;
 	public static int height = 5;
 	//------------------------------------------------------------------------------------
@@ -114,6 +115,7 @@ public class Organism extends Matter{
 //			System.out.println("OrgLoc: " + this.getLocation().getX() + ", " + this.getLocation().getY());
 //			System.out.println();
 			incHlth(fdVal);
+			setAction("Eating health food");
 			healthyEatSuccess++;
 			eatFail--;
 			healthyFood.add(f.getId());
@@ -126,13 +128,14 @@ public class Organism extends Matter{
 //			System.out.println("OrgLoc: " + this.getLocation().getX() + ", " + this.getLocation().getY());
 //			System.out.println();
 			poisonFood.add(f.getId());
+			setAction("Eating poisonous food");
 			poisonEatSuccess++;
 			eatFail--;
 			deplete(fdVal);
 		}
 	}
 	
-	public void moveNorth(LinkedList<Organism> organisms) {
+	public void moveNorth(LinkedList<Organism> organisms, boolean wasPushed) {
 		//make old location available.
 		setRange(width, height, 'w');
 		setWrapAround(width, height);
@@ -142,6 +145,10 @@ public class Organism extends Matter{
 			if(canSpawn(location.getX(), location.getY() - 1)){
 				//move there.
 				location.setY(location.getY() - 1);
+				if(!wasPushed)setAction("Traveling North");
+			}
+			else{
+				if(!wasPushed)setAction("Attempting to travel North");
 			}
 		}
 		catch(ArrayIndexOutOfBoundsException e){
@@ -151,13 +158,17 @@ public class Organism extends Matter{
 		setRange(width, height, 'o');
 	}
 
-	public void moveNorthEast(LinkedList<Organism> organisms) {
+	public void moveNorthEast(LinkedList<Organism> organisms, boolean wasPushed) {
 		setRange(width, height, 'w');
 		setWrapAround(width, height);
 		try{
 			if(canSpawn(location.getX() + 1, location.getY() - 1)){
 				location.setX(location.getX() + 1);
 				location.setY(location.getY() - 1);
+				if(!wasPushed)setAction("Traveling Northeast");
+			}
+			else{
+				if(!wasPushed)setAction("Attempting to travel Northeast");
 			}
 		}
 		catch(ArrayIndexOutOfBoundsException e){
@@ -166,16 +177,22 @@ public class Organism extends Matter{
 		setRange(width, height, 'o');
 	}
 
-	public void moveEast(LinkedList<Organism> organisms) {
+	public void moveEast(LinkedList<Organism> organisms, boolean wasPushed) {
 		setRange(width, height, 'w');
 		setWrapAround(width, height);
 		try{
 			if(location.getX() + 1 + width/2 >= GridPanel.WIDTH){
-				if(canSpawn(width/2, location.getY()))
+				if(canSpawn(width/2, location.getY())){
 					location.setX(width/2);
+				if(!wasPushed)setAction("Traveling East");
+				}
 			}
 			if(canSpawn(location.getX() + 1, location.getY())){
 				location.setX(location.getX() + 1);
+				if(!wasPushed)setAction("Traveling East");
+			}
+			else{
+				if(!wasPushed)setAction("Attempting to travel East");
 			}
 		}
 		catch(ArrayIndexOutOfBoundsException e){
@@ -184,17 +201,23 @@ public class Organism extends Matter{
 		setRange(width, height, 'o');
 	}
 
-	public void moveSouthEast(LinkedList<Organism> organisms) {
+	public void moveSouthEast(LinkedList<Organism> organisms, boolean wasPushed) {
 		setRange(width, height, 'w');
 		setWrapAround(width, height);
 		try{
 			if(location.getY() + 1 + height/2>= GridPanel.HEIGHT){
-				if(canSpawn(location.getX(), height/2))
+				if(canSpawn(location.getX(), height/2)){
 					location.setY(height/2);
+				if(!wasPushed)setAction("Traveling Southeast");
+				}
 			}
 			if(canSpawn(location.getX() + 1, location.getY() + 1)){
 				location.setX(location.getX() + 1);
 				location.setY(location.getY() + 1);
+				if(!wasPushed)setAction("Traveling Southeast");
+			}
+			else{
+				if(!wasPushed)setAction("Attempting to travel Southeast");
 			}
 		}
 		catch(ArrayIndexOutOfBoundsException e){
@@ -203,12 +226,16 @@ public class Organism extends Matter{
 		setRange(width, height, 'o');
 	}
 
-	public void moveSouth(LinkedList<Organism> organisms) {
+	public void moveSouth(LinkedList<Organism> organisms, boolean wasPushed) {
 		setRange(width, height, 'w');
 		setWrapAround(width, height);
 		try{
 			if(canSpawn(location.getX(), location.getY() + 1)){
 				location.setY(location.getY() + 1);
+				if(!wasPushed)setAction("Traveling South");
+			}
+			else{
+				if(!wasPushed)setAction("Attempting to travel South");
 			}
 		}
 		catch(ArrayIndexOutOfBoundsException e){
@@ -218,13 +245,18 @@ public class Organism extends Matter{
 
 	}
 
-	public void moveSouthWest(LinkedList<Organism> organisms) {
+	public void moveSouthWest(LinkedList<Organism> organisms, boolean wasPushed) {
 		setRange(width, height, 'w');
 		setWrapAround(width, height);
 		try{
 			if(canSpawn(location.getX() - 1, location.getY() + 1)){
 				location.setX(location.getX() - 1);
 				location.setY(location.getY() + 1);
+				if(!wasPushed)setAction("Traveling Southwest");
+				
+			}
+			else{
+				if(!wasPushed)setAction("Attempting to travel Southwest");
 			}
 		}
 		catch(ArrayIndexOutOfBoundsException e){
@@ -233,12 +265,16 @@ public class Organism extends Matter{
 		setRange(width, height, 'o');
 	}
 
-	public void moveWest(LinkedList<Organism> organisms) {
+	public void moveWest(LinkedList<Organism> organisms, boolean wasPushed) {
 		setRange(width, height, 'w');
 		setWrapAround(width, height);
 		try{
 			if(canSpawn(location.getX() - 1, location.getY())){
 				location.setX(location.getX() - 1);
+				if(!wasPushed)setAction("Traveling West");
+			}
+			else{
+				if(!wasPushed)setAction("Attempting to travel West");
 			}
 		}
 		catch(ArrayIndexOutOfBoundsException e){
@@ -247,13 +283,17 @@ public class Organism extends Matter{
 		setRange(width, height, 'o');
 	}
 
-	public void moveNorthWest(LinkedList<Organism> organisms) {
+	public void moveNorthWest(LinkedList<Organism> organisms, boolean wasPushed) {
 		setRange(width, height, 'w');
 		setWrapAround(width, height);
 		try{
 			if(canSpawn(location.getX() - 1, location.getY() - 1)){
 				location.setX(location.getX() - 1);
 				location.setY(location.getY() - 1);
+				if(!wasPushed)setAction("Traveling Northwest");
+			}
+			else{
+				if(!wasPushed)setAction("Attempting to travel Northwest");
 			}
 		}
 		catch(ArrayIndexOutOfBoundsException e){}
@@ -264,6 +304,7 @@ public class Organism extends Matter{
 //			System.out.print("Attacking org " + orgIndex + "(" + organisms.get(orgIndex).getLocation().getX() + " " + organisms.get(orgIndex).getLocation().getY() + "). Health: " + organisms.get(orgIndex).getHealth());
 			organisms.get(orgIndex).deplete(5);
 			numAttacked++;
+			organisms.get(this.getId()).setAction("Attacking org " + orgIndex);
 //			System.out.print(". Health: " + organisms.get(orgIndex).getHealth());
 //			System.out.println(". Attacked by org " + this.id);
 	}
@@ -277,19 +318,20 @@ public class Organism extends Matter{
 //			System.out.print("Pushing org " + orgIndex + "(" + organisms.get(orgIndex).getLocation().getX() + " " + organisms.get(orgIndex).getLocation().getY() + ")");
 			
 			if(xGettingPushed < xPushing){
-				organisms.get(orgIndex).moveWest(organisms);
+				organisms.get(orgIndex).moveWest(organisms, true);
 			}
 			else if(xGettingPushed > xPushing){
-				organisms.get(orgIndex).moveEast(organisms);
+				organisms.get(orgIndex).moveEast(organisms,true);
 			}
 			
 			if(yGettingPushed < yPushing){
-				organisms.get(orgIndex).moveNorth(organisms);
+				organisms.get(orgIndex).moveNorth(organisms,true);
 			}
 			else if(yGettingPushed > yPushing){
-				organisms.get(orgIndex).moveSouth(organisms);
+				organisms.get(orgIndex).moveSouth(organisms,true);
 			}
 			numPushed++;
+			organisms.get(this.getId()).setAction("Pushing org " + orgIndex);
 //			System.out.print("(" + organisms.get(orgIndex).getLocation().getX() + " " + organisms.get(orgIndex).getLocation().getY() + ")");
 //			System.out.println(". Pushed by org " + getId());
 		
@@ -322,16 +364,27 @@ public class Organism extends Matter{
 	 */
 	public String toString(){
 		String str = "";
-		str += " I am an Organism. Fear me."
+		str += " I am an Organism " + this.getId()+ ". Fear me."
 			+  "\n Location: " + location
 			+  "\n Health: " + hlth
-			+  "\n ID: " + this.getId();
+			+  "\n Status: " + getAction();
 		return str;
 	}
 	
 	//------------------------------------------------------------------------------------
 	//--getters/setters--
 	//------------------------------------------------------------------------------------
+	public String getAction(){
+		return action;
+	}
+	
+	public void setAction(String s){
+		action += s + "\n               ";
+	}
+	
+	public void clearAction(){
+		action = "";
+	}
 	
 	public Chromosome getChromosome() {
 		return chromosome;
