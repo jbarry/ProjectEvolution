@@ -196,30 +196,30 @@ public class GUI {
 			public void actionPerformed(ActionEvent e) {
 				jframe.setAlwaysOnTop(false);
 				optionsPanel.toggleEnabled(false);
-				optionsPanel.eventPause(simulation);				
-				saveGene(jframe);				
+				optionsPanel.eventPause(simulation);
+				saveGene(jframe);
 				pause.setEnabled(false);
 				optionsPanel.toggleEnabled(true);
 			}
 		});
 		fileMenu.add(saveGenes);
 		saveGenes.setEnabled(false);
-		
+
 		// load genes from text file
 		loadGenes = new JMenuItem("Load Genes");
 		loadGenes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				jframe.setAlwaysOnTop(false);
 				optionsPanel.toggleEnabled(false);
-				optionsPanel.eventPause(simulation);				
-				loadGene(jframe);				
+				optionsPanel.eventPause(simulation);
+				loadGenes(jframe);
 				pause.setEnabled(false);
 				optionsPanel.toggleEnabled(true);
 			}
 		});
 		fileMenu.add(loadGenes);
 		loadGenes.setEnabled(false);
-		
+
 		// pause/resume option
 		pause = new JMenuItem("Pause/Resume");
 		pause.addActionListener(new ActionListener() {
@@ -348,18 +348,17 @@ public class GUI {
 	public void enableJMenuItemPause() {
 		pause.setEnabled(true);
 	}
-	
-	public void enableJMenuItemSaveGenes(){
+
+	public void enableJMenuItemSaveGenes() {
 		saveGenes.setEnabled(true);
 	}
-	
-	public void toggleAllPauses(boolean b){
+
+	public void toggleAllPauses(boolean b) {
 		pause.setEnabled(b);
 		optionsPanel.togglePause(b);
 	}
 
-	
-	public void enableStopGenButton(){
+	public void enableStopGenButton() {
 		genPanel.enableStopButton();
 	}
 
@@ -377,12 +376,85 @@ public class GUI {
 		}
 	}
 
+	public void loadGenes(JFrame f) {
+
+		BufferedReader reader = null;
+		String tempChars;
+		String[] tempChromArray;
+		LinkedList<Organism> population = new LinkedList<Organism>();
+		int geneLength = 0;
+
+		try {
+			FileDialog ld = new FileDialog(f);
+			ld.setMode(FileDialog.LOAD);
+			ld.setVisible(true);
+			ld.setAlwaysOnTop(true);
+			ld.setFocusable(true);
+			File file = new File(ld.getDirectory(), ld.getFile());
+			reader = new BufferedReader(new FileReader(file));
+			tempChars = reader.readLine();
+			tempChromArray = tempChars.split(" ");
+			if (tempChromArray[0].equals("VALID_GEP_FILE")) {
+				// traverse list of chromosomes in file, parse Gene info/assign
+				// to organisms, create population
+				for (int i = 1; i < tempChromArray.length; i++) {
+					if (i == 1) {
+						geneLength = Integer.parseInt(tempChromArray[i]);
+					} else {
+						Organism individOrganism = new Organism(500,
+								geneLength, i, 100);
+						LinkedList<Gene> tempGeneList = new LinkedList<Gene>();
+						// traverse individual chromosome to split genes at
+						// geneLength
+						for (int j = 0; j < geneLength; j++) {
+							String tempGene = tempChromArray[i].substring(
+									(j * geneLength),
+									((j * geneLength) + (geneLength - 1)))
+									.trim();
+							char[] tempCharGenes = tempGene.toCharArray();
+							LinkedList<Character> tempGeneArray = new LinkedList<Character>();
+							for (int h = 0; h < tempGene.length(); h++) {
+								tempGeneArray.add(tempCharGenes[h]);
+							}
+							Gene g = new Gene(tempGeneArray);
+							tempGeneList.add(g);
+						}
+						individOrganism.setChromosome(new Chromosome(
+								tempGeneList));
+						population.add(individOrganism);
+					}
+
+					// for(int h = 0 ; h < population.size(); h++){
+					// for (int o = 0 ; o <
+					// population.get(h).getChromosome().size() ; o++){
+					// System.out.println(population.get(h).getChromosome().getGene(o).getList());
+					//
+					// }
+					// }
+					simulation.loadSimulationFromFile(population);
+				}
+			} else {
+				JOptionPane.showMessageDialog(jframe,
+						"Please select a valid saved genes file.", "Error",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		jframe.setAlwaysOnTop(true);
+	}
+
 	private void saveGene(JFrame f) {
 
 		LinkedList<Organism> tempOrgs;
 		tempOrgs = simulation.getOrganisms();
+		int geneLength = tempOrgs.get(0).getChromosome().getGene(0).getGeneLength();
 		String tempChrom = "";
 
+		tempChrom+= "VALID_GEP_FILE" + " " + geneLength +" ";
+		
 		for (int i = 0; i < tempOrgs.size(); i++) {
 			for (int k = 0; k < tempOrgs.get(i).getChromosome().size(); k++) {
 				ArrayList<String> tempArray = tempOrgs.get(i).getChromosome()
@@ -402,7 +474,7 @@ public class GUI {
 			sd.setVisible(true);
 			sd.setAlwaysOnTop(true);
 			sd.setFocusable(true);
-			File file = new File(sd.getFile()+".txt");
+			File file = new File(sd.getDirectory(), sd.getFile() + ".txt");
 			writer = new BufferedWriter(new FileWriter(file));
 			writer.write(tempChrom);
 		} catch (FileNotFoundException e) {
@@ -418,35 +490,8 @@ public class GUI {
 				e.printStackTrace();
 			}
 		}
-		jframe.setAlwaysOnTop(true);	
-	}
-	
-	public void loadGene(JFrame f){
-		Reader reader = null;
-
-		try {
-			FileDialog ld = new FileDialog(f);
-			ld.setMode(FileDialog.LOAD);
-			ld.setVisible(true);
-			ld.setAlwaysOnTop(true);
-			ld.setFocusable(true);
-			File file = new File(ld.getFile());
-			reader = new BufferedReader(new FileReader(file));
-			reader.read();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (reader != null) {
-					reader.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 		jframe.setAlwaysOnTop(true);
+		// jframe.setAlwaysOnTop(false);
 	}
 
 	// ------------------------------------------------------------------------------------
