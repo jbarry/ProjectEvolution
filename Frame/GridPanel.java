@@ -42,13 +42,16 @@ public class GridPanel extends JPanel
 	//public static boolean[][] isValidLocation;
 	public static Pair<Integer, Character>[][] locationMap;
 
+	//public static LinkedList<Organism> organisms;
+	//public static LinkedList<HealthyFood> healthFd;
+	//public static LinkedList<PoisonousFood> poisFood;
 	private LinkedList<Organism> organisms;
 	private LinkedList<HealthyFood> healthFd;
 	private LinkedList<PoisonousFood> poisFood;
 	
 	private ArrayList<Integer> shuffleIds;
 	private int lengthTimeStep = 100;
-	private int lengthGeneration = 100;
+	private int lengthGeneration = 500;
 	private int timePassed = 0;
 	private int trialsPerGen = 1;
 	public int trialNum = 1;
@@ -71,7 +74,6 @@ public class GridPanel extends JPanel
 	 */
 	public GridPanel(final GUI aGui) {
 		gui = aGui;
-		
 		Runnable r = new Runnable() {
 			@Override
 			public void run() {
@@ -81,6 +83,10 @@ public class GridPanel extends JPanel
 				setSize(GridPanel.WIDTH, GridPanel.HEIGHT);
 				setBorder(BorderFactory.createLineBorder(Color.black));
 
+				organisms = new LinkedList<Organism>();
+				healthFd = new LinkedList<HealthyFood>();
+				poisFood = new LinkedList<PoisonousFood>();
+				
 				//track user mouse movement.
 				addMouseMotionListener(new MouseMotionListenerClass(GridPanel.this));
 				//handle other mouse events
@@ -103,8 +109,8 @@ public class GridPanel extends JPanel
 					}
 				});
 			}
+
 		};
-		
 		r.run();
 	}
 
@@ -122,7 +128,7 @@ public class GridPanel extends JPanel
 		int orgIndex = 0;
 		for(Integer orgNum: shuffleIds){
 			Organism org = organisms.get(orgNum);
-			org.deplete(1);
+			org.deplete(org.getMaxHealth()/lengthGeneration);
 			//Take sample of organism health for fitness.
 			org.incHlthTot();
 			if(org.getHealth() > 0){
@@ -267,7 +273,9 @@ public class GridPanel extends JPanel
 					org.countStep();
 					break;
 				case 8: 
-					if(organismIsNextToHealthyFood(org) || organismIsNextToPoisonousFood(org)){}else{org.addEatFail();};
+					if(organismIsNextToHealthyFood(org) || organismIsNextToPoisonousFood(org)){
+						
+					} else org.addEatFail();
 					break;
 				case 9:
 					ArrayList<Integer> surroundingOrganisms = org.getSurroundingObjects('o', 1);
@@ -429,14 +437,7 @@ public class GridPanel extends JPanel
 	 * Sets the initial game state of the GridPanel
 	 */
 	public void initialize(){
-		//initial program settings
-		organisms = new LinkedList<Organism>();
-		healthFd = new LinkedList<HealthyFood>();
-		poisFood = new LinkedList<PoisonousFood>();
 		//reset all generation info from previous simulations.
-		organisms = new LinkedList<Organism>();
-		healthFd = new LinkedList<HealthyFood>();
-		poisFood = new LinkedList<PoisonousFood>();
 		generationNum = 1;
 		trialNum = 1;
 		GUI.genPanel.resetGenInformation();

@@ -215,19 +215,16 @@ public class GEP {
 	 */
 	private LinkedList <Pair<Organism, Organism>> partnerSelect(
 			LinkedList<Organism> population) {
-		
 		LinkedList<Pair<Organism, Organism>> pairList =
 			new LinkedList<Pair<Organism, Organism>>();
 		HashMap<Organism, LinkedList<Organism>> notSeenMap =
 			new HashMap<Organism, LinkedList<Organism>>();
-		
 		for(int i = 0; i < population.size(); i++) {
 			Organism org = population.get(i);
 			notSeenMap.put(org, 
 					(LinkedList<Organism>) population.clone());
 			notSeenMap.get(org).remove(i);
 		}
-		
 		for(int i = 0; i < population.size(); i++) {
 			Organism partner1 = population.get(i);
 			LinkedList<Organism> selection = notSeenMap.get(partner1);
