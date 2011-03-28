@@ -16,8 +16,10 @@ import javax.swing.BoundedRangeModel;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollBar;
@@ -41,6 +43,7 @@ public class GenerationPanel extends JPanel{
 	private JTextArea pastGenStats;
 	
 	private JButton stopGenerationOrTrial;
+	private JButton preprocess;
 	
 	private ButtonGroup stopSelection;
 	private JRadioButton stopGenButton;
@@ -112,6 +115,8 @@ public class GenerationPanel extends JPanel{
 		stopGenerationOrTrial.setEnabled(false);
 		stopGenerationOrTrial.setText("Stop");
 		
+
+		
 		//Need to add nested components before parent components.
 		add(pastGenPanel);
 		pastGenPanel.add(scrollPane);
@@ -132,6 +137,31 @@ public class GenerationPanel extends JPanel{
 			}
 		};
 		stopGenerationOrTrial.addActionListener(sG);
+		
+		/**
+		 * Button for deciding to preprocess.
+		 * Waits until the simulation ends the current generation.
+		 */
+		
+		preprocess = new JButton();
+		preprocess.setLayout(null);
+		preprocess.setEnabled(true);
+		preprocess.setText("Preprocess");
+		
+		//Listener for preprocess button
+		ActionListener PP = new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0){
+				if(simulation.isPaused()){
+				simPreprocess(arg0,simulation);
+				}
+				else{
+					JOptionPane.showMessageDialog(simulation, "Simulation must be paused", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		};
+		
+		preprocess.addActionListener(PP);
 		
 		//Add radio button for stopping either trial or generation
 		stopGenButton = new JRadioButton("Generation");
@@ -155,16 +185,65 @@ public class GenerationPanel extends JPanel{
 	    JPanel radioPanel = new JPanel();
 	    radioPanel.setOpaque(false);
 	    radioPanel.setFocusable(true);
-	    radioPanel.setSize(180, 90);
+	    radioPanel.setSize(180, 110);
 	    radioPanel.setLocation(210,20);
-	    radioPanel.setLayout(new GridLayout(3, 1));
+	    radioPanel.setLayout(new GridLayout(4, 1));
 	    radioPanel.add(stopGenButton);
 	    radioPanel.add(stopTrialButton);
 	    radioPanel.add(stopGenerationOrTrial);
+	    radioPanel.add(preprocess);
 	    radioPanel.setBorder(BorderFactory.createTitledBorder(
 	            BorderFactory.createEtchedBorder(), "Select Option to Stop"));
 	    
 	    add(radioPanel);
+	}
+	
+	private boolean simPreprocess(ActionEvent e, GridPanel simulation){
+		boolean userCancel = true;
+		JTextField numOrganisms = new JTextField();
+		JPanel jP = new JPanel();
+		jP.setLayout(new GridLayout(2, 2, 5, 5));
+		jP.add(new JLabel("Number of generation to pre-process(Will take take time, can not be stopped):"));
+		jP.add(numOrganisms);
+
+		Object[] msg = { jP };
+
+		JOptionPane op = new JOptionPane(msg, JOptionPane.QUESTION_MESSAGE,
+				JOptionPane.OK_CANCEL_OPTION, null, null);
+
+		JDialog dialog = op.createDialog("Pre-Process");
+		dialog.setVisible(true);
+		
+		int result = 1;
+		try {
+			result = ((Integer) op.getValue()).intValue();
+		} catch (NullPointerException q) {
+
+		}
+
+		if (result == JOptionPane.OK_OPTION) {
+			userCancel = false;
+			try {
+				int x = Integer.parseInt(numOrganisms.getText());
+				if (x < 0) {
+					JOptionPane.showMessageDialog(this,
+							"Enter a positive integer", "Error",
+							JOptionPane.INFORMATION_MESSAGE);
+					// try again
+					simPreprocess(e,simulation);
+				} else {
+					// the number of generations.
+					simulation.preProcess(x);
+				}
+			} catch (NumberFormatException a) {
+				JOptionPane.showMessageDialog(this, "Enter a valid integer",
+						"Error", JOptionPane.INFORMATION_MESSAGE);
+				// try again
+				simPreprocess(e,simulation);
+			}
+		}
+		
+		return userCancel;
 	}
 	
 	private void eventStopGenerationOrTrial(GridPanel simulation) {

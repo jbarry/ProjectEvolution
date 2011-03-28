@@ -40,6 +40,9 @@ public abstract class Matter{
 	public void deplete(double val) {
 		if (hlth - val < 0) hlth = 0;
 		else hlth-=val;
+		if(hlth==0){
+			setRange(this.getWidth(), this.getHeight(), 'w');
+		}
 	}
 	
 	/**
