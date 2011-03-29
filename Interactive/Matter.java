@@ -40,6 +40,9 @@ public abstract class Matter{
 	public void deplete(double val) {
 		if (hlth - val < 0) hlth = 0;
 		else hlth-=val;
+		if(hlth==0){
+			setRange(this.getWidth(), this.getHeight(), 'w');
+		}
 	}
 	
 	/**
@@ -48,13 +51,14 @@ public abstract class Matter{
 	 */
 	public double numSurroundingObjects(int scanRange) {
 		double numObj = 0.0;
-		for(int i=location.getX()-getWidth()/2-scanRange; i<=location.getX()+getWidth()/2+scanRange; i++){
-			for(int j=location.getY()-getHeight()/2-scanRange; j<=location.getY()+getHeight()/2+scanRange; j++){
+		//create a square from cornerTop to cornerBottom of dimension scanRange+getWidth/2 X scanRange+getHeight/2 
+		Coordinate cornerTop = new Coordinate(location.getX()-(getWidth()/2-scanRange), location.getY()-(getHeight()/2)-scanRange);
+		Coordinate cornerBottom = new Coordinate(location.getX()+(getWidth()/2+scanRange), location.getY()+(getHeight()/2)+scanRange);
+		for(int i=cornerTop.getX(); i<=cornerBottom.getX(); i++){
+			for(int j=cornerTop.getY(); j<=cornerBottom.getY(); j++){
 				try{	
 					//count all occurrences of objects in location map
-					if(GridPanel.locationMap[i][j].getSnd() == 'p' ||
-							GridPanel.locationMap[i][j].getSnd() == 'h' ||
-							GridPanel.locationMap[i][j].getSnd() == 'o') {
+					if(GridPanel.locationMap[i][j].getSnd() != 'w') {
 						numObj++;
 					}
 				}
@@ -77,11 +81,14 @@ public abstract class Matter{
 	 */
 	public ArrayList<Integer> getSurroundingObjects(char type, int scanRange) {
 		Set<Integer> objectIds = new HashSet<Integer>();
-		for(int i=(location.getX()-getWidth()/2)-scanRange; i<=(location.getX()+getWidth()/2)+scanRange; i++){
-			for(int j=(location.getY()-getHeight()/2)-scanRange; j<=(location.getY()+getHeight()/2)+scanRange; j++){
+		//create a square from cornerTop to cornerBottom of dimension scanRange+getWidth/2 X scanRange+getHeight/2 to be scanned.
+		Coordinate cornerTop = new Coordinate(location.getX()-(getWidth()/2)-scanRange, location.getY()-(getHeight()/2)-scanRange);
+		Coordinate cornerBottom = new Coordinate(location.getX()+(getWidth()/2)+scanRange, location.getY()+(getHeight()/2)+scanRange);
+		for(int i=cornerTop.getX(); i<=cornerBottom.getX(); i++){
+			for(int j=cornerTop.getY(); j<=cornerBottom.getY(); j++){
 				try{	
 					//count all occurrences of objects in location map
-					if(GridPanel.locationMap[i][j].getSnd() == type){
+					if(GridPanel.locationMap[i][j].getSnd() == type && GridPanel.locationMap[i][j].getFst()!=this.getId()){
 						objectIds.add(GridPanel.locationMap[i][j].getFst());
 					}
 				}
@@ -89,6 +96,11 @@ public abstract class Matter{
 				}
 			}
 		}
+//		Test prints
+//		System.out.println("Organism " + this.getId() + " is scanning from" + location.getX() + ", " + location.getY());
+//		System.out.println("The scan range is " + scanRange + " and the square is from " + cornerTop.getX() + ", " + cornerBottom.getY() 
+//				+ "to " + cornerBottom.getX() + ", " + cornerBottom.getY());
+		
 		return new ArrayList<Integer>(objectIds);
 	}
 	
@@ -141,7 +153,7 @@ public abstract class Matter{
 		for(int i=(location.getX()-(x/2)); i<=(location.getX()+(x/2)); i++){
 			for(int j=(location.getY()-(y/2)); j<=(location.getY()+(y/2)); j++){
 				try{
-					GridPanel.locationMap[i][j].setLeft(id);
+					GridPanel.locationMap[i][j].setLeft(this.getId());
 					GridPanel.locationMap[i][j].setRight(value);
 				}
 				catch(ArrayIndexOutOfBoundsException e){

@@ -180,7 +180,7 @@ public class GUI {
 				// initialize GridPanel.
 				if (!getGridPanelData(e)) {
 					pause.setEnabled(true);
-					genPanel.enableStopButton();
+					genPanel.enableButtons();
 					saveGenes.setEnabled(true);
 					loadGenes.setEnabled(true);
 					simulation.initialize();
@@ -360,7 +360,7 @@ public class GUI {
 
 	
 	public void enableStopGenButton(){
-		genPanel.enableStopButton();
+		genPanel.enableButtons();
 	}
 
 	private void confirmExit() {
