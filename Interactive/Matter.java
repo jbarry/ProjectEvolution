@@ -38,11 +38,11 @@ public abstract class Matter{
 	}
 
 	public void deplete(double val) {
-		if (hlth - val < 0) hlth = 0;
+		if (hlth - val < 0)
+			hlth = 0;
 		else hlth-=val;
-		if(hlth==0){
+		if(hlth == 0)
 			setRange(this.getWidth(), this.getHeight(), 'w');
-		}
 	}
 	
 	/**
@@ -97,13 +97,13 @@ public abstract class Matter{
 			for(int j=cornerTop.getY(); j<=cornerBottom.getY(); j++){
 				try{	
 					//count all occurrences of objects in location map
-					if(GridPanel.locationMap[i][j].getSnd() == type &&
-							GridPanel.locationMap[i][j].getFst() != this.getId()){
-						objectIds.add(GridPanel.locationMap[i][j].getFst());
-					}
+					Pair<Integer, Character> space =
+						GridPanel.locationMap[i][j];
+					if(space.getSnd() == type &&
+							space.getFst() != this.getId())
+						objectIds.add(space.getFst());
 				}
-				catch(ArrayIndexOutOfBoundsException e){
-				}
+				catch(ArrayIndexOutOfBoundsException e){}
 			}
 		}
 //		Test prints

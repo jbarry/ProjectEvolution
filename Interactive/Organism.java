@@ -26,12 +26,12 @@ public class Organism extends Matter{
 	private ArrayList<ArrayList<String>> ActionList;
 	private ArrayList<Coordinate> StartingLocation;
 	private ArrayList<Chromosome> chromosomeHistory;
-	private int eatFail=0;
-	private int healthyEatSuccess=0;
-	private int poisonEatSuccess=0;
-	private int numScans=0;
-	private int numAttacked=0;
-	private int numPushed=0;
+	private int eatFail = 0;
+	private int healthyEatSuccess = 0;
+	private int poisonEatSuccess = 0;
+	private int numScans = 0;
+	private int numAttacked = 0;
+	private int numPushed = 0;
 	private String action = "";
 	public static int width = 5;
 	public static int height = 5;
@@ -52,13 +52,13 @@ public class Organism extends Matter{
 //		chromosomeHistory = new ArrayList<Chromosome>();
 //	}
 
-	public Organism(double aHealth, int chromSize, int anId, int aScanRange) {
+	public Organism(double aHealth, int chromSize, int anId) {
 		super(aHealth, anId, 'o');
 		chromosome = new Chromosome(chromSize);
 		samples = 0;
 		avgHealth = 0;
 		hlthTot = 0;
-		scanRange = aScanRange;
+//		scanRange = aScanRange;
 		steps = 0;
 		fitness = 0.0;
 		ActionList= new ArrayList<ArrayList<String>>();
