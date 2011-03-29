@@ -309,8 +309,8 @@ public class GridPanel extends JPanel
 			org.countStep();
 			break;
 		case 8: 
-			//doEat(org);
-			eat(org);
+			doEat(org);
+			//eat(org);
 			break;
 		case 9:
 			attack(org);
@@ -337,11 +337,11 @@ public class GridPanel extends JPanel
 			org.getSurroundingObjects('p', 2);
 		if (surrndngHlthyFd.size() != 0) {
 			Food toEat = healthFd.get(surrndngHlthyFd.get(0));
-			out.println("orgId: " + org.getId());
-			out.print("orgPos: ");
-			org.printLocation();
-			out.print("FdLoc: ");
-			toEat.printLocation();
+//			out.println("orgId: " + org.getId());
+//			out.print("orgPos: ");
+//			org.printLocation();
+//			out.print("FdLoc: ");
+//			toEat.printLocation();
 			org.eatFood(toEat, 7.0);
 			if (toEat.getHealth() <= 0) {
 				toEat.setRange(toEat.getWidth(),toEat.getWidth(), 'w');
@@ -350,11 +350,11 @@ public class GridPanel extends JPanel
 		}
 		else if (surrndngPoisFd.size() != 0){
 			Food toEat = poisFood.get(surrndngPoisFd.get(0));
-			out.println("orgId: " + org.getId());
-			out.print("orgPos: ");
-			org.printLocation();
-			out.print("FdLoc: ");
-			toEat.printLocation();
+//			out.println("orgId: " + org.getId());
+//			out.print("orgPos: ");
+//			org.printLocation();
+//			out.print("FdLoc: ");
+//			toEat.printLocation();
 			org.eatFood(poisFood.get(surrndngPoisFd.get(0)), 5.0);
 			if (toEat.getHealth() <= 0) {
 				toEat.setRange(toEat.getWidth(),toEat.getWidth(), 'w');
@@ -466,8 +466,9 @@ public class GridPanel extends JPanel
 		trialNum = 1;
 		GUI.genPanel.resetGenInformation();
 		ran = new Random();
-		timePassed=0;
-		shuffleIds=new ArrayList<Integer>();
+		timePassed = 0;
+		shuffleIds = new ArrayList<Integer>();
+		
 		/*
 		 * location map will consist of:
 		 * 	key: current instance number of object
@@ -485,6 +486,10 @@ public class GridPanel extends JPanel
 				new Pair<Double, Double> (-50.0, 50.0));
 
 		organisms.clear();
+		healthFd.clear();
+		poisFood.clear();
+		shuffleIds.clear();
+		
 		numFoodSources = OptionsPanel.numOrganisms/5;
 		for(int i = 0; i < OptionsPanel.numOrganisms; i++){
 			Organism o = new Organism(100.00, 11, i); //justin b (03.15).
@@ -493,8 +498,7 @@ public class GridPanel extends JPanel
 			o.addStartingLocation();
 			o.addChromosome();
 		}
-		healthFd.clear();
-		poisFood.clear();
+		
 		for(int i = 0; i < numFoodSources; i++) {
 			HealthyFood h = new HealthyFood(100.0, i, 2);
 			PoisonousFood f = new PoisonousFood(100.0, i, 2);
