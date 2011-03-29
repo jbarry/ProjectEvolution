@@ -81,14 +81,24 @@ public abstract class Matter{
 	 */
 	public ArrayList<Integer> getSurroundingObjects(char type, int scanRange) {
 		Set<Integer> objectIds = new HashSet<Integer>();
-		//create a square from cornerTop to cornerBottom of dimension scanRange+getWidth/2 X scanRange+getHeight/2 to be scanned.
-		Coordinate cornerTop = new Coordinate(location.getX()-(getWidth()/2)-scanRange, location.getY()-(getHeight()/2)-scanRange);
-		Coordinate cornerBottom = new Coordinate(location.getX()+(getWidth()/2)+scanRange, location.getY()+(getHeight()/2)+scanRange);
+		//create a square from cornerTop to cornerBottom of 
+		//dimension scanRange+getWidth/2 X scanRange+getHeight/2 to be scanned.
+		int widthSub = location.getX() - (getWidth()/2);
+		int widthPlus = location.getX() + (getWidth()/2);
+		int heightSub = location.getY() - (getHeight()/2);
+		int heightPlus = location.getY() + (getHeight()/2);
+		
+		Coordinate cornerTop =
+			new Coordinate(widthSub - scanRange, heightSub - scanRange);
+		Coordinate cornerBottom =
+			new Coordinate(widthPlus + scanRange, heightPlus + scanRange);
+		
 		for(int i=cornerTop.getX(); i<=cornerBottom.getX(); i++){
 			for(int j=cornerTop.getY(); j<=cornerBottom.getY(); j++){
 				try{	
 					//count all occurrences of objects in location map
-					if(GridPanel.locationMap[i][j].getSnd() == type && GridPanel.locationMap[i][j].getFst()!=this.getId()){
+					if(GridPanel.locationMap[i][j].getSnd() == type &&
+							GridPanel.locationMap[i][j].getFst() != this.getId()){
 						objectIds.add(GridPanel.locationMap[i][j].getFst());
 					}
 				}
