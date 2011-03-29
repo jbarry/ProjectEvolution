@@ -128,10 +128,11 @@ public class GridPanel extends JPanel
 		for(Integer orgNum: shuffleIds){
 			Organism org = organisms.get(orgNum);
 			org.clearAction();
-			org.deplete(org.getMaxHealth()/lengthGeneration);
+			org.deplete(org.getMaxHealth()/(lengthGeneration/2));
+			out.println();
 			//Take sample of organism health for fitness.
 			org.incHlthTot();
-			if(org.getHealth() > 0){
+			if(org.getHealth() > 0) {
 				ArrayList<Food> sight = new ArrayList<Food>();
 				ArrayList<Integer> sightIDs = new ArrayList<Integer>();
 				sightIDs=org.getSurroundingObjects('h', 20);
@@ -231,154 +232,134 @@ public class GridPanel extends JPanel
 				}
 				// Genes are set as N-S-E-W-NE-NW-SE-SW-Eat-Attack-PushOrg.
 				//System.out.println("Org ID: " + org.getId() + " Action 1: " + bestEval1.left() + " Action 2: " + bestEval2.left() + " numObj in Sight:" + sight.size());
-				switch (bestEval1.left()) {
-				case 0: 
-					org.moveNorth(organisms,false);
-					//org.addAction("N", orgIndex);
-					org.countStep();
-					break;
-				case 1: 
-					org.moveSouth(organisms,false);
-					//org.addAction("S", orgIndex);
-					org.countStep();
-					break;
-				case 2: 
-					org.moveEast(organisms,false); 
-					//org.addAction("E", orgIndex);
-					org.countStep();
-					break;
-				case 3: 
-					org.moveWest(organisms,false);
-					//org.addAction("W", orgIndex);
-					org.countStep();
-					break;
-				case 4: 
-					org.moveNorthEast(organisms,false);
-					//org.addAction("NE", orgIndex);
-					org.countStep();
-					break;
-				case 5: 
-					org.moveNorthWest(organisms,false);
-					//org.addAction("NW", orgIndex);
-					org.countStep();
-					break;
-				case 6: 
-					org.moveSouthEast(organisms,false);
-					//org.addAction("SE", orgIndex);
-					org.countStep();
-					break;
-				case 7: 
-					org.moveSouthWest(organisms,false);
-					//org.addAction("SW", orgIndex);
-					org.countStep();
-					break;
-				case 8: 
-					if(organismIsNextToHealthyFood(org) || organismIsNextToPoisonousFood(org)){}
-					else{
-						org.addEatFail();
-						org.setAction("Attempted to eat");
-					}
-					break;
-				case 9:
-					ArrayList<Integer> surroundingOrganisms = org.getSurroundingObjects('o', 1);
-					surroundingOrganisms.remove((Integer) org.getId());
-					if(surroundingOrganisms.size() > 0){
-					int index=surroundingOrganisms.get(ran.nextInt(surroundingOrganisms.size()));
-					org.attack(index, organisms);
-					}
-					else{
-						org.setAction("Attempted to attack");
-					}
-					break;
-				case 10:
-					ArrayList<Integer> surroundingOrganismsPush = org.getSurroundingObjects('o', 1);
-					surroundingOrganismsPush.remove((Integer) org.getId());
-					if(surroundingOrganismsPush.size() > 0){
-					int index=surroundingOrganismsPush.get(ran.nextInt(surroundingOrganismsPush.size()));
-//					System.out.println(org.getId() + " " + index);
-					org.pushOrg(index, organisms);
-					}
-					else{
-						org.setAction("Attempted to push");
-					}
-				}
-				
-				switch (bestEval2.left()) {
-				case 0: 
-					org.moveNorth(organisms,false);
-					//org.addAction("N", orgIndex);
-					org.countStep();
-					break;
-				case 1: 
-					org.moveSouth(organisms,false);
-					//org.addAction("S", orgIndex);
-					org.countStep();
-					break;
-				case 2: 
-					org.moveEast(organisms,false); 
-					//org.addAction("E", orgIndex);
-					org.countStep();
-					break;
-				case 3: 
-					org.moveWest(organisms,false);
-					//org.addAction("W", orgIndex);
-					org.countStep();
-					break;
-				case 4: 
-					org.moveNorthEast(organisms,false);
-					//org.addAction("NE", orgIndex);
-					org.countStep();
-					break;
-				case 5: 
-					org.moveNorthWest(organisms,false);
-					//org.addAction("NW", orgIndex);
-					org.countStep();
-					break;
-				case 6: 
-					org.moveSouthEast(organisms,false);
-					//org.addAction("SE", orgIndex);
-					org.countStep();
-					break;
-				case 7: 
-					org.moveSouthWest(organisms,false);
-					//org.addAction("SW", orgIndex);
-					org.countStep();
-					break;
-				case 8: 
-					if(organismIsNextToHealthyFood(org) || organismIsNextToPoisonousFood(org)){}
-					else{
-					org.addEatFail();
-					org.setAction("Attempted to eat");
-					}
-					break;
-				case 9:
-					ArrayList<Integer> surroundingOrganisms = org.getSurroundingObjects('o', 1);
-					surroundingOrganisms.remove((Integer) org.getId());
-					if(surroundingOrganisms.size() > 0){
-					int index=surroundingOrganisms.get(ran.nextInt(surroundingOrganisms.size()));
-					org.attack(index, organisms);
-					}
-					else{
-						org.setAction("Attempted to attack");
-					}
-					break;
-				case 10:
-					ArrayList<Integer> surroundingOrganismsPush = org.getSurroundingObjects('o', 1);
-					surroundingOrganismsPush.remove((Integer) org.getId());
-					if(surroundingOrganismsPush.size() > 0){
-					int index=surroundingOrganismsPush.get(ran.nextInt(surroundingOrganismsPush.size()));
-//					System.out.println(org.getId() + " " + index);
-					org.pushOrg(index, organisms);
-					}
-					else{
-						org.setAction("Attempted to push");
-					}
-				}
-				
+				doAction(org, bestEval1);
+				doAction(org, bestEval2);
 			}
 			orgIndex++;
 		}
 		//End AI LOGIC
+	}
+	
+	private void doAction(Organism org, Pair<Integer, Double> bestEval) {
+		switch (bestEval.left()) {
+		case 0: 
+			org.moveNorth(organisms,false);
+			//org.addAction("N", orgIndex);
+			org.countStep();
+			break;
+		case 1: 
+			org.moveSouth(organisms,false);
+			//org.addAction("S", orgIndex);
+			org.countStep();
+			break;
+		case 2: 
+			org.moveEast(organisms,false); 
+			//org.addAction("E", orgIndex);
+			org.countStep();
+			break;
+		case 3: 
+			org.moveWest(organisms,false);
+			//org.addAction("W", orgIndex);
+			org.countStep();
+			break;
+		case 4: 
+			org.moveNorthEast(organisms,false);
+			//org.addAction("NE", orgIndex);
+			org.countStep();
+			break;
+		case 5: 
+			org.moveNorthWest(organisms,false);
+			//org.addAction("NW", orgIndex);
+			org.countStep();
+			break;
+		case 6: 
+			org.moveSouthEast(organisms,false);
+			//org.addAction("SE", orgIndex);
+			org.countStep();
+			break;
+		case 7: 
+			org.moveSouthWest(organisms,false);
+			//org.addAction("SW", orgIndex);
+			org.countStep();
+			break;
+		case 8: 
+			doEat(org);
+			//eat(org);
+			break;
+		case 9:
+			attack(org);
+			break;
+		case 10:
+			push(org);
+		}
+	}
+	
+	private void doEat(Organism org) {
+		if(organismIsNextToHealthyFood(org) ||
+				organismIsNextToPoisonousFood(org)){}
+		else {
+			org.addEatFail();
+			org.setAction("Attempted to eat");
+		}
+	}
+	
+	private void eat(Organism org) {
+		// out.println("org about to eat id: " + org.getId());
+		ArrayList<Integer> surrndngHlthyFd =
+			org.getSurroundingObjects('h', 2);
+		ArrayList<Integer> surrndngPoisFd =
+			org.getSurroundingObjects('p', 2);
+		if (surrndngHlthyFd.size() != 0) {
+			Food toEat = healthFd.get(surrndngHlthyFd.get(0));
+			out.println("orgId: " + org.getId());
+			out.print("orgPos: ");
+			org.printLocation();
+			out.print("FdLoc: ");
+			toEat.printLocation();
+			org.eatFood(toEat, 7.0);
+			if (toEat.getHealth() <= 0) {
+				toEat.setRange(toEat.getWidth(),toEat.getWidth(), 'w');
+				healthFd.set(toEat.getId(), null);
+			}
+		}
+		else if (surrndngPoisFd.size() != 0){
+			Food toEat = poisFood.get(surrndngPoisFd.get(0));
+			out.println("orgId: " + org.getId());
+			out.print("orgPos: ");
+			org.printLocation();
+			out.print("FdLoc: ");
+			toEat.printLocation();
+			org.eatFood(poisFood.get(surrndngPoisFd.get(0)), 5.0);
+			if (toEat.getHealth() <= 0) {
+				toEat.setRange(toEat.getWidth(),toEat.getWidth(), 'w');
+				poisFood.set(toEat.getId(), null);
+			}
+		}
+	}
+
+	private void attack(Organism org) {
+		ArrayList<Integer> surroundingOrganisms = org.getSurroundingObjects('o', 1);
+		surroundingOrganisms.remove((Integer) org.getId());
+		if(surroundingOrganisms.size() > 0){
+			int index=surroundingOrganisms.get(ran.nextInt(surroundingOrganisms.size()));
+			org.attack(index, organisms);
+		}
+		else{
+			org.setAction("Attempted to attack");
+		}
+	}
+	
+	private void push(Organism org) {
+		ArrayList<Integer> surroundingOrganismsPush = org.getSurroundingObjects('o', 1);
+		surroundingOrganismsPush.remove((Integer) org.getId());
+		if(surroundingOrganismsPush.size() > 0){
+			int index=surroundingOrganismsPush.get(ran.nextInt(surroundingOrganismsPush.size()));
+			//System.out.println(org.getId() + " " + index);
+			org.pushOrg(index, organisms);
+		}
+		else{
+			org.setAction("Attempted to push");
+		}
 	}
 	
 	private void newTrial(){

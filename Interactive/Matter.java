@@ -77,8 +77,8 @@ public abstract class Matter{
 	 */
 	public ArrayList<Integer> getSurroundingObjects(char type, int scanRange) {
 		Set<Integer> objectIds = new HashSet<Integer>();
-		for(int i=location.getX()-getWidth()/2-scanRange; i<=location.getX()+getWidth()/2+scanRange; i++){
-			for(int j=location.getY()-getHeight()/2-scanRange; j<=location.getY()+getHeight()/2+scanRange; j++){
+		for(int i=(location.getX()-getWidth()/2)-scanRange; i<=(location.getX()+getWidth()/2)+scanRange; i++){
+			for(int j=(location.getY()-getHeight()/2)-scanRange; j<=(location.getY()+getHeight()/2)+scanRange; j++){
 				try{	
 					//count all occurrences of objects in location map
 					if(GridPanel.locationMap[i][j].getSnd() == type){
@@ -217,5 +217,10 @@ public abstract class Matter{
 
 	public int getId() {
 		return id;
+	}
+	
+	public void printLocation() {
+		out.println("(" + location.getX() +
+				", " + location.getY() + ")");
 	}
 }
