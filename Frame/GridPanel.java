@@ -147,6 +147,11 @@ public class GridPanel extends JPanel
 	}
 	
 	private void simulateStep(){
+		for(int i=shuffleIds.size()-1;i>=0;i--){
+			if(organisms.get(i).getHealth()<=0){
+				shuffleIds.remove(i);
+			}
+		}
 		Collections.shuffle(shuffleIds);
 		int orgIndex = 0;
 		for(Integer orgNum: shuffleIds){
@@ -403,10 +408,12 @@ public class GridPanel extends JPanel
 	
 	private void newTrial(){
 		t.stop();
+		shuffleIds.clear();
 		for(Organism o: organisms){
 			o.newLocation();
 			o.setHealth(o.getMaxHealth());
 			o.clear();
+			shuffleIds.add(o.getId());
 		}
 		trialNum++;
 		healthFd.clear();
@@ -437,12 +444,14 @@ public class GridPanel extends JPanel
 		healthFd.clear();
 		poisFood.clear();
 		clearLocations();
+		shuffleIds.clear();
 		for(Organism o: organisms) {
 			sum+=g.fitness(o);
 			o.newLocation();
 			o.addChromosome();
 			o.setHealth(o.getMaxHealth());
 			o.clear();
+			shuffleIds.add(o.getId());
 		}
 		lastAvg = sum/OptionsPanel.numOrganisms;	
 		for(int i = 0; i < numFoodSources; i++) {
@@ -607,9 +616,14 @@ public class GridPanel extends JPanel
 
 	public void preProcess(int generations){
 		for(numPreProcessedGenerations=0; numPreProcessedGenerations < generations; numPreProcessedGenerations++){
-			System.out.println("Processing Generation " + numPreProcessedGenerations);
+			System.out.println("Processing Generation " + generationNum);
 			while(timePassed < lengthGeneration) {
 				/*begin game logic here:*/
+				for(int i=shuffleIds.size()-1;i>=0;i--){
+					if(organisms.get(i).getHealth()<=0){
+						shuffleIds.remove(i);
+					}
+				}
 				Collections.shuffle(shuffleIds);
 				int orgIndex = 0;
 				for(Integer orgNum: shuffleIds){
@@ -852,10 +866,12 @@ public class GridPanel extends JPanel
 				timePassed++;
 			} 
 			if (trialNum < trialsPerGen) {
+				shuffleIds.clear();
 				for(Organism o: organisms){
 					o.newLocation();
 					o.setHealth(o.getMaxHealth());
 					o.clear();
+					shuffleIds.add(o.getId());
 				}
 				trialNum++;
 				healthFd.clear();
@@ -877,16 +893,17 @@ public class GridPanel extends JPanel
 				healthFd.clear();
 				poisFood.clear();
 				clearLocations();
+				shuffleIds.clear();
 				for(Organism o: organisms) {
 					sum+=g.fitness(o);
 					o.newLocation();
 					o.addChromosome();
 					o.setHealth(o.getMaxHealth());
 					o.clear();
+					shuffleIds.add(o.getId());
 				}
 				lastAvg = sum/OptionsPanel.numOrganisms;
 				System.out.println(lastAvg);
-				
 				for(int i = 0; i < OptionsPanel.numOrganisms/2; i++) {
 					HealthyFood h = new HealthyFood(100.0, i, 2);
 					PoisonousFood f = new PoisonousFood(100.0, i, 2);
@@ -899,7 +916,6 @@ public class GridPanel extends JPanel
 				GUI.genPanel.newGeneration();
 			}
 		}
-		//generationNum = 1;
 	}
 
 	//------------------------------------------------------------------------------------
