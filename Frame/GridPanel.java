@@ -119,7 +119,22 @@ public class GridPanel extends JPanel
 	}
 	
 	public void revert(int generation){
-		
+		t.stop();
+		generationNum = generation;
+		timePassed=0;
+		clearLocations();
+		for(Organism org: organisms){
+			org.goBack(generation);
+		}
+		GUI.genPanel.removeGenerations(generation);
+		healthFd.clear();
+		poisFood.clear();
+		for(int i = 0; i < numFoodSources; i++) {
+			HealthyFood h = new HealthyFood(100.0, i, 2);
+			PoisonousFood f = new PoisonousFood(100.0, i, 2);
+			healthFd.add(h);
+			poisFood.add(f);
+		}
 	}
 	
 	public void clearLocations(){
@@ -136,7 +151,7 @@ public class GridPanel extends JPanel
 		int orgIndex = 0;
 		for(Integer orgNum: shuffleIds){
 			Organism org = organisms.get(orgNum);
-			org.deplete(.2);
+			org.deplete(org.getMaxHealth()/lengthGeneration);
 			org.clearAction();
 			//Take sample of organism health for fitness.
 			org.incHlthTot();
@@ -599,7 +614,7 @@ public class GridPanel extends JPanel
 				int orgIndex = 0;
 				for(Integer orgNum: shuffleIds){
 					Organism org=organisms.get(orgNum);
-					org.deplete(.2);
+					org.deplete(org.getMaxHealth()/lengthGeneration);
 					org.clearAction();
 					//Take sample of organism health for fitness.
 					org.incHlthTot();

@@ -146,7 +146,7 @@ public class GenerationPanel extends JPanel{
 		
 		preprocess = new JButton();
 		preprocess.setLayout(null);
-		preprocess.setEnabled(true);
+		preprocess.setEnabled(false);
 		preprocess.setText("Preprocess");
 		
 		//Listener for preprocess button
@@ -170,12 +170,15 @@ public class GenerationPanel extends JPanel{
 		 */
 		jumpBack = new JButton();
 		jumpBack.setLayout(null);
-		jumpBack.setEnabled(true);
+		jumpBack.setEnabled(false);
 		jumpBack.setText("Go Back Generations");
 		ActionListener JB= new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0){
-				if(simulation.isPaused()){
+				if(simulation.getGenerationNum()<2){
+					JOptionPane.showMessageDialog(simulation, "One generation must have passed before reverting", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				else if(simulation.isPaused()){
 					JOptionPane.showMessageDialog(simulation, "Any unsaved information will be lost. " +
 							"\nThis will revert back to the organisms of the generation you specify. " +
 							"\nAll generations after this will be discarded.", "Warning!", JOptionPane.WARNING_MESSAGE);
@@ -254,14 +257,14 @@ public class GenerationPanel extends JPanel{
 			try {
 				int x = Integer.parseInt(numOrganisms.getText());
 				if (x <= 0) {
-					JOptionPane.showMessageDialog(this,
+					JOptionPane.showMessageDialog(simulation,
 							"Enter a positive integer", "Error",
 							JOptionPane.INFORMATION_MESSAGE);
 					// try again
 					goBack(simulation,e);
 				}
 				else if(x > simulation.getGenerationNum()-1){
-					JOptionPane.showMessageDialog(this,
+					JOptionPane.showMessageDialog(simulation,
 							"Enter a number less than " + (simulation.getGenerationNum()-1), "Error",
 							JOptionPane.INFORMATION_MESSAGE);
 					// try again
@@ -270,9 +273,12 @@ public class GenerationPanel extends JPanel{
 				else {
 					// the generation to go back to.
 					simulation.revert(x);
+					JOptionPane.showMessageDialog(simulation,
+							"Reverting complete, resume the simulation to continue.", "Success!",
+							JOptionPane.INFORMATION_MESSAGE);
 				}
 			} catch (NumberFormatException a) {
-				JOptionPane.showMessageDialog(this, "Enter a valid integer",
+				JOptionPane.showMessageDialog(simulation, "Enter a valid integer",
 						"Error", JOptionPane.INFORMATION_MESSAGE);
 				// try again
 				simPreprocess(e,simulation);
@@ -310,8 +316,8 @@ public class GenerationPanel extends JPanel{
 			userCancel = false;
 			try {
 				int x = Integer.parseInt(numOrganisms.getText());
-				if (x < 0) {
-					JOptionPane.showMessageDialog(this,
+				if (x <= 0) {
+					JOptionPane.showMessageDialog(simulation,
 							"Enter a positive integer", "Error",
 							JOptionPane.INFORMATION_MESSAGE);
 					// try again
@@ -319,9 +325,12 @@ public class GenerationPanel extends JPanel{
 				} else {
 					// the number of generations.
 					simulation.preProcess(x);
+					JOptionPane.showMessageDialog(simulation,
+							"Pre-Processing complete, resume the simulation to continue.", "Success!",
+							JOptionPane.INFORMATION_MESSAGE);
 				}
 			} catch (NumberFormatException a) {
-				JOptionPane.showMessageDialog(this, "Enter a valid integer",
+				JOptionPane.showMessageDialog(simulation, "Enter a valid integer",
 						"Error", JOptionPane.INFORMATION_MESSAGE);
 				// try again
 				simPreprocess(e,simulation);
@@ -355,8 +364,10 @@ public class GenerationPanel extends JPanel{
 		}
 	}
 	
-	public void enableStopButton(){
+	public void enableButtons(){
 		stopGenerationOrTrial.setEnabled(true);
+		jumpBack.setEnabled(true);
+		preprocess.setEnabled(true);
 	}
 	
 	public void enableResumeSimulation(){
@@ -406,6 +417,12 @@ public class GenerationPanel extends JPanel{
 		else{
 			pastGenStats.append("\n" + " Generation " + (sim.generationNum-1) + ": " + sim.lastAvg);
 		}
+		
+	}
+	
+	public void removeGenerations(int generation){
+		pastGenStats.replaceRange("", generation*34-35 , pastGenStats.getText().length());
+
 	}
 
 }

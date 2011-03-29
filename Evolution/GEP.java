@@ -99,12 +99,12 @@ public class GEP {
 	//
 	public double fitness(Organism org) {
 		double avgHealth = org.getHlthTot()/org.getSamples();
-//		double activity = (double) org.getNumSteps();
-//		double goodEating = (double) org.getHealthEat()*(org.getHealthEat()+org.getPoisonEat()+org.getTotalScans())/(GridPanel.numFoodSources);
-//		double assertion = 	(double) (org.getNumSteps()+org.getNumAttacked()+org.getNumPushed())/(org.getHealthEat()+1);
-//		double badEating =	(double) org.getPoisonEat()+1;
-//		double fitness = (org.getHealth()*(activity + goodEating + assertion))/badEating;
-		double fitness = avgHealth/org.getSamples() + org.getHealthyFoodSize()*20 + org.getNumAttacked() + org.getNumPushed() - org.getPoisonFoodSize()*10;
+		double activity = (double) org.getNumSteps();
+		double goodEating = (double) org.getHealthEat()*(org.getHealthEat()+org.getPoisonEat()+org.getTotalScans())/(GridPanel.numFoodSources);
+		double assertion = 	(double) (org.getNumSteps()+org.getNumAttacked()+org.getNumPushed())/(org.getHealthEat()+1);
+		double badEating =	(double) org.getPoisonEat()+1;
+		double fitness = (avgHealth*(activity + goodEating + assertion))/badEating;
+//		double fitness = avgHealth/org.getSamples() + org.getHealthyFoodSize()*20 + org.getNumAttacked() + org.getNumPushed() - org.getPoisonFoodSize()*10;
 		org.setFitness(fitness);
 		return fitness;
 	}

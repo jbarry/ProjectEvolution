@@ -484,6 +484,15 @@ public class Organism extends Matter{
 		numPushed=0;
 		
 	}
+	
+	public void goBack(int generation){
+		newLocation();
+		chromosome = chromosomeHistory.get(generation-1);
+		for(int i=generation;i<chromosomeHistory.size();i++){
+			chromosomeHistory.remove(i);
+		}
+		clear();
+	}
 
 	@Override
 	public int getHeight() {
