@@ -76,7 +76,7 @@ public class Organism extends Matter{
 			int anId) {
 		hlth = 100.00;
 		r = new Random();
-		chromosome = new Chromosome(numGenes, anId);
+		chromosome = new Chromosome(numGenes, anId, true);
 		fitness = aFitness;
 		id = anId;
 	}

@@ -405,43 +405,43 @@ public class GEP {
 				aPairList.get(i).getFst().crossOver(aPairList.get(i).getSnd());
 	}
 
-	public LinkedList<Organism> getOrgList(){
+	public LinkedList<Organism> getOrgList() {
 		return orgList;
 	}
 
-	public double getTournProb(){
+	public double getTournProb() {
 		return tournProb;
 	}
 
-	public void setTournProb(double x){
+	public void setTournProb(double x) {
 		tournProb = x;
 	}
 
-	public double getMutProb(){
+	public double getMutProb() {
 		return mutProb;
 	}
 
-	public void setMutProb(double x){
+	public void setMutProb(double x) {
 		mutProb = x;
 	}
 
-	public double getRotProb(){
+	public double getRotProb() {
 		return rotProb;
 	}
 
-	public void setRotProb(double x){
+	public void setRotProb(double x) {
 		rotProb = x;
 	}
 
-	public double getOnePtProb(){
+	public double getOnePtProb() {
 		return onePtProb;
 	}
 
-	public void setOnePtProb(double x){
+	public void setOnePtProb(double x) {
 		onePtProb = x;
 	}
 
-	public void setTwoPtProb(double x){
+	public void setTwoPtProb(double x) {
 		twoPtProb = x;
 	}
 
@@ -496,29 +496,28 @@ public class GEP {
 		out.println("partnerList size: " + partners.size());
 		out.println();
 	}
-	
+
 	/**
-	 * Used for testing the GEP class. Simply prints the
-	 * chromosomes of the organism list
-	 * that is passed to it.
+	 * Used for testing the GEP class. Simply prints the chromosomes of the
+	 * organism list that is passed to it.
+	 * 
 	 * @param list
 	 */
-	private void printOrgListChromes() {
-		out.println("Printing orgList's Chromosomes");
-		for(int i = 0; i < orgList.size(); i++) {
-			out.println("Chromosome " + i);
-			Chromosome chromOne = orgList.get(i).getChromosome();
-			for(int j = 0; j < chromOne.size(); j++) {
-				Gene aGene = chromOne.getGene(j);
-				for(int k = 0; k < aGene.size(); k++) {
+	private void printChromGenes(LinkedList<Chromosome> aChromList) {
+		out.println("Printing genes in chromosomes:");
+		for (int i = 0; i < aChromList.size(); i++) {
+			Chromosome chrom = aChromList.get(i);
+			System.out.println("Chromosome: " + i);
+			for (int j = 0; j < chrom.size(); j++) {
+				Gene aGene = chrom.getGene(j);
+				for (int k = 0; k < aGene.size(); k++)
 					out.print(aGene.getSym(k).charValue() + " ");
-				}
 				out.println();
 			}
+			out.println();
 		}
-		out.println();
 	}
-	
+
 	/**
 	 * Used for testing the GEP class. Simply prints the
 	 * ids of the organism list
@@ -635,13 +634,22 @@ public class GEP {
 		
 		System.out.println("Pair representation of chromosome mates:");
 		gep.printMateListIds(afterMateSelect);
-		// Make a chrom list to print.
-		LinkedList<Chromosome> chromListAfterMateSelect = gep
-				.makeChrmListFrmPair(afterMateSelect);
+
+		// Print the symbols stored in the genes of each chrom
+		// in the chromList.
+		System.out.println("Before crossover: ");
+		System.out.println();
+		gep.printChromGenes(gep.makeChrmListFrmPair(afterMateSelect));
+
+		// One point crossover testing.
+		gep.onePointCrossOver(afterMateSelect);
 		
-		//TODO: onePt crossOver
-		//TODO: reselect mates
-		//TODO: make sure onePt crossOver uses prob.
-		//TODO: 2pt crossOver
+		//Print the result of crossOver.
+		System.out.println("After crossOver: ");
+		System.out.println();
+		gep.printChromGenes(gep.makeChrmListFrmPair(afterMateSelect));
+		// TODO: reselect mates
+		// TODO: make sure onePt crossOver uses prob.
+		// TODO: 2pt crossOver
 	}
 }
