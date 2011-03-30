@@ -30,7 +30,7 @@ public class GEP {
 
 	// Class variables.
 	private LinkedList<Organism> orgList;
-	private LinkedList<Chromosome> chromList;
+//	private LinkedList<Chromosome> chromList;
 	private Random ran;
 	private boolean handicap;
 	
@@ -48,7 +48,7 @@ public class GEP {
 			double aTwoPtProb) {
 
 		orgList = anOrgList;
-		chromList = new LinkedList<Chromosome>();
+//		chromList = new LinkedList<Chromosome>();
 		tournProb = aTournProb;
 		mutProb = aMutProb;
 		rotProb = aRotProb;
@@ -68,7 +68,7 @@ public class GEP {
 			double aHandicapProb) {
 
 		orgList = anOrgList;
-		chromList = new LinkedList<Chromosome>();
+//		chromList = new LinkedList<Chromosome>();
 		tournProb = aTournProb;
 		mutProb = aMutProb;
 		rotProb = aRotProb;
@@ -106,10 +106,15 @@ public class GEP {
 		LinkedList<Pair<Organism, Organism>> partners = partnerSelect(orgList);
 		LinkedList<Organism> organismList = tournament(partners);
 		LinkedList<Chromosome> chromList = makeChromList(organismList);
-		LinkedList<Chromosome> rotated = rotation(chromList);
-		mutation();
-		onePointCrossOver();
-		onePointCrossOver();
+		rotation(chromList);
+		mutation(chromList);
+		LinkedList<Pair<Chromosome, Chromosome>> pairList =
+			mateSelect(chromList);
+		onePointCrossOver(pairList);
+		chromList = makeChrmListFrmPair(pairList);
+		pairList = mateSelect(chromList);
+		onePointCrossOver(pairList);
+		onePointCrossOver(pairList);
 		for(Chromosome chrom: chromList){
 			for(Gene gene: chrom.subListGene(0, chrom.size())){
 				gene.updateEvaledList();
@@ -221,19 +226,21 @@ public class GEP {
 
 	//Pairs up indiv from the chromosome list parameter and 
 	//makes them into Pair objects. Puts Pairs into a LinkedList.
-	public LinkedList <Pair<Chromosome, Chromosome>> mateSelect() {
+	public LinkedList <Pair<Chromosome, Chromosome>> mateSelect(
+			LinkedList<Chromosome> aChromList) {
+		
 		LinkedList<Pair<Chromosome, Chromosome>> pairList =
 			new LinkedList<Pair<Chromosome, Chromosome>>();
 		LinkedList<Chromosome> competitors = 
-			(LinkedList<Chromosome>) chromList.clone();
+			(LinkedList<Chromosome>) aChromList.clone();
 		while(!competitors.isEmpty()) {
 			Chromosome chrom = competitors.remove(0);
 			int mate;
 			Chromosome partner;
 			if(competitors.size() == 0) {
-				mate = ran.nextInt(chromList.size());
-				chromList.remove(chrom);
-				partner = chromList.get(mate);
+				mate = ran.nextInt(aChromList.size());
+				aChromList.remove(chrom);
+				partner = aChromList.get(mate);
 			} else {
 				mate = ran.nextInt(competitors.size());
 				partner = competitors.remove(mate);
@@ -250,48 +257,46 @@ public class GEP {
 	 * @param aChromList
 	 * @param prob
 	 */
-	public LinkedList<Chromosome> rotation(LinkedList<Chromosome> chromList) {
-		for(Chromosome chrom: chromList)
-			if(ran.nextDouble() <= rotProb) {
-				int x = ran.nextInt(chrom.size());
-				chrom.rotate(x);
-			}
-		return chromList;
+	public void rotation(LinkedList<Chromosome> aChromList) {
+		for(Chromosome chrom: aChromList)
+			if(ran.nextDouble() <= rotProb)
+				chrom.rotate(ran.nextInt(chrom.size()));
 	}
 
 	/**
-	 * 
+	 * Iterate through chromList parameter and call each
+	 * chromosomes mutate function.
 	 * @param generation
 	 * @param prob
 	 * @param mutation
 	 */
-	public void mutation() {
-		for(Chromosome chrom: chromList) {
+	public void mutation(LinkedList<Chromosome> aChromList) {
+		for(Chromosome chrom: aChromList)
 			if(ran.nextDouble() < mutProb)
 				chrom.mutate();
-		}
 	}
 
-	public void onePointCrossOver() {
-		LinkedList<Pair<Chromosome, Chromosome>> pairList =
-			mateSelect();
-		chromList.clear();
-		for(int i = 0; i < pairList.size(); i++) {
-			if(ran.nextDouble() < onePtProb) {
-				Pair<Chromosome, Chromosome> crossed = 
-					pairList.get(i).left().crossOver(pairList.get(i).right());
-			}
-		}
-		makeChrmListFrmPair(pairList);
+	/**
+	 * Iterates through the aPairList parameter 
+	 * of paired chromosomes to mate, and the left chromosome
+	 * calls crossover on the right.
+	 * @param aPairList
+	 */
+	public void onePointCrossOver(
+			LinkedList<Pair<Chromosome, Chromosome>> aPairList) {
+		
+		for(int i = 0; i < aPairList.size(); i++)
+			if(ran.nextDouble() < onePtProb)
+					aPairList.get(i).left().crossOver(aPairList.get(i).right());
 	}
 
 	public LinkedList<Organism> getOrgList(){
 		return orgList;
 	}
 
-	public LinkedList<Chromosome> getChromList(){
-		return chromList;
-	}
+//	public LinkedList<Chromosome> getChromList(){
+//		return chromList;
+//	}
 
 	public double getTournProb(){
 		return tournProb;
@@ -329,9 +334,9 @@ public class GEP {
 		twoPtProb = x;
 	}
 
-	public void setChromList(LinkedList<Chromosome> aChromList){
-		chromList = aChromList;
-	}
+//	public void setChromList(LinkedList<Chromosome> aChromList){
+//		chromList = aChromList;
+//	}
 
 	public void setOrgList(LinkedList<Organism> anOrgList){
 		orgList = anOrgList;
@@ -353,13 +358,15 @@ public class GEP {
 		return chromList;
 	}
 
-	public void makeChrmListFrmPair(
+	public LinkedList<Chromosome> makeChrmListFrmPair(
 			LinkedList<Pair<Chromosome, Chromosome>> chromPair) {
-		chromList.clear();
+		
+		LinkedList<Chromosome> chromList = new LinkedList<Chromosome>(); 
 		for (int i = 0; i < chromPair.size(); i++) {
 			chromList.add(chromPair.get(i).left());
 			chromList.add(chromPair.get(i).right());			
 		}
+		return chromList;
 	}
 
 	/**
@@ -421,9 +428,9 @@ public class GEP {
 	 * Used for testing the GEP class. Simply prints a chromosome list
 	 * that is passed to it.
 	 */
-	public void printChromList() {
-		for(int i = 0; i < chromList.size(); i++) {
-			Chromosome chrom = chromList.get(i);
+	public void printChromList(LinkedList<Chromosome> aChromList) {
+		for(int i = 0; i < aChromList.size(); i++) {
+			Chromosome chrom = aChromList.get(i);
 			out.println("Chromosome" + i);
 			for(int j = 0; j < chrom.size(); j++) {
 				for(int k = 0; k < chrom.getGene(j).size(); k++) {
@@ -441,13 +448,16 @@ public class GEP {
 			orgList.add(new Organism(true, 4, r.nextDouble(), i));
 		GEP gep = new GEP(orgList, 0.75, 0.01, 0.01, 0.75, 0.75);
 //		GEP gep = new GEP(orgList, 0.10, 0.01, 0.01, 0.75, 0.75);
+		
 		//print original orgList.
 		gep.printOrgListIds();
+		
 		// Test partnerSelect.
 		out.println("orgListSize" + gep.getOrgList().size());
 		out.println();
 		LinkedList<Pair<Organism, Organism>> partners =
 			gep.partnerSelect(gep.getOrgList());
+		
 		//print the ids of the pair of orgs after
 		//partnerSelect is called.
 		gep.printPartnerListIds(partners);
