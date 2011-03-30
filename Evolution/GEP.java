@@ -274,12 +274,7 @@ public class GEP {
 	 *Pairs up indiv from the Organism Pair list parameter and 
 	 *makes them into Pair objects. Puts Pairs into a LinkedList.
 	 */
-	public LinkedList <Pair<Organism, Organism>> partnerSelect(
-			LinkedList<Organism> population) {
-		// pairList: list that will recieve the pairs
-		//of partners.
-		LinkedList<Pair<Organism, Organism>> pairList =
-			new LinkedList<Pair<Organism, Organism>>();
+	public void partnerSelect() {
 		//notSeenMap:
 			//key: Each org from population.
 			//val: A list of organisms that they have not
@@ -290,14 +285,14 @@ public class GEP {
 		// notSeenMap with keys, and making all the values
 		// a clone of the original population with 
 		// the current organism removed from the list.
-		for(int i = 0; i < population.size(); i++) {
-			Organism org = population.get(i);
-			notSeenMap.put(org, (LinkedList<Organism>) population.clone());
+		for(int i = 0; i < orgList.size(); i++) {
+			Organism org = orgList.get(i);
+			notSeenMap.put(org, (LinkedList<Organism>) orgList.clone());
 			notSeenMap.get(org).remove(i);
 		}
 		// Iterate through population list again.
-		for(int i = 0; i < population.size(); i++) {
-			Organism partner1 = population.get(i);
+		for(int i = 0; i < orgList.size(); i++) {
+			Organism partner1 = orgList.get(i);
 			//For the current org from the population list,
 			//get his notSeenList from the notSeenMap.
 			LinkedList<Organism> selection = notSeenMap.get(partner1);
@@ -308,7 +303,6 @@ public class GEP {
 			notSeenMap.get(partner2).remove(partner1);
 			pairList.add(new Pair<Organism, Organism>(partner1, partner2));
 		}
-		return pairList;
 	}
 
 	/**
@@ -316,10 +310,9 @@ public class GEP {
 	 * list that is passed as a param.
 	 * @param partners
 	 */
-	public void printPartnerListIds(
-			LinkedList <Pair<Organism, Organism>> partners) {
+	public void printPartnerListIds() {
 		
-		for (Pair<Organism, Organism> partner: partners) {
+		for (Pair<Organism, Organism> partner: partnerList) {
 			Organism o1 = partner.getFst();
 			Organism o2 = partner.getSnd();
 			out.println("part1: " + o1.getId() +
@@ -388,6 +381,7 @@ public class GEP {
 			orgList.add(new Organism(true, 4, r.nextDouble(), i));
 		GEP gep = new GEP(orgList, 1.00, 1.00, 1.00, 1.00, 1.00);
 		gep.printOrgListIds();
-		gep.printPartnerListIds(gep.partnerSelect(orgList));
+		gep.partnerSelect(orgList);
+		gep.printPartnerListIds();
 	}
 }
