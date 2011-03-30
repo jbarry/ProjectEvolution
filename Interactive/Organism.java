@@ -37,20 +37,23 @@ public class Organism extends Matter{
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
-//	public Organism() {
-//		super(7500.0);
-//		samples = 0;
-//		avgHealth = 0;
-//		hlthTot = 0;
-//		steps = 0;
-//		chromosome = new Chromosome(9);
-//		fitness = 0.0;
-//		ActionList = new ArrayList<ArrayList<String>>();
-//		ActionList.add(new ArrayList<String>());
-//		StartingLocation = new ArrayList<Coordinate>();
-//		chromosomeHistory = new ArrayList<Chromosome>();
-//	}
-
+	
+	/*
+	public Organism() {
+		super(7500.0);
+		samples = 0;
+		avgHealth = 0;
+		hlthTot = 0;
+		steps = 0;
+		chromosome = new Chromosome(9);
+		fitness = 0.0;
+		ActionList = new ArrayList<ArrayList<String>>();
+		ActionList.add(new ArrayList<String>());
+		StartingLocation = new ArrayList<Coordinate>();
+		chromosomeHistory = new ArrayList<Chromosome>();
+	}
+	*/
+	
 	public Organism(double aHealth, int chromSize, int anId) {
 		super(aHealth, anId, 'o');
 		chromosome = new Chromosome(chromSize);
@@ -399,20 +402,8 @@ public class Organism extends Matter{
 		samples++;
 	}
 	
-	public double getHlthTot() {
-		return hlthTot;
-	}
-	
 	public void countStep() {
 		steps++;
-	}
-	
-	public int getNumSteps() {
-		return steps;
-	}
-	
-	public int getSamples() {
-		return samples;
 	}
 	
 	public void addAction(String action,int index){
@@ -445,28 +436,23 @@ public class Organism extends Matter{
 //		return poisonFood.size();
 //	}
 
-	public int getEatFail(){
-		return eatFail;
-	}
-	
 	public void addEatFail(){
 		eatFail++;
 	}
 	
-	public int getHealthEat(){
-		return healthyEatSuccess;
-	}
+	//	public ArrayList<String> getActions(int generation){
+	//		return ActionList.get(generation);
+	//	}
+		
+	//	public int getHealthyFoodSize(){
+	//		return healthyFood.size();
+	//	}
+	//	
+	//	public int getPoisonFoodSize(){
+	//		return poisonFood.size();
+	//	}
 	
-	public int getPoisonEat(){
-		return poisonEatSuccess;
-	}
-	
-
-	public int getTotalScans() {
-		return numScans;
-	}
-	
-	public void addScan(int scans){
+		public void addScan(int scans){
 		numScans += scans;
 	}
 	
@@ -501,6 +487,57 @@ public class Organism extends Matter{
 	@Override
 	public int getWidth(){
 		return width;
+	}
+
+	/*
+	public ArrayList<String> getActions(int generation){
+		return ActionList.get(generation);
+	}
+
+	public int getHealthyFoodSize(){
+		return healthyFood.size();
+	}
+
+	public int getPoisonFoodSize(){
+		return poisonFood.size();
+	}
+	*/
+	
+	public double getFitness() {
+		return fitness;
+	}
+
+	public void setFitness(double aFit) {
+		fitness = aFit;
+	}
+	
+	
+	public double getHlthTot() {
+		return hlthTot;
+	}
+
+	public int getNumSteps() {
+		return steps;
+	}
+
+	public int getSamples() {
+		return samples;
+	}
+
+	public int getEatFail(){
+		return eatFail;
+	}
+
+	public int getHealthEat(){
+		return healthyEatSuccess;
+	}
+
+	public int getPoisonEat(){
+		return poisonEatSuccess;
+	}
+
+	public int getTotalScans() {
+		return numScans;
 	}
 
 	public int getNumPushed() {

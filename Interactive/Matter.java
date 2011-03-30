@@ -18,7 +18,6 @@ public abstract class Matter{
 	protected double mxHlth;
 	protected int id;
 	protected Random r;
-	protected double fitness;
 	
 	public Matter() {
 		r = new Random();
@@ -210,13 +209,6 @@ public abstract class Matter{
 
 	public void setHealth(double aHealth) {
 		hlth = aHealth;
-	}
-	public double getFitness() {
-		return fitness;
-	}
-
-	public void setFitness(double aFit) {
-		fitness = aFit;
 	}
 
 	public void incHlth(double val) {
