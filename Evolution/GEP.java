@@ -79,17 +79,6 @@ public class GEP {
 	}
 
 	/**
-	 * For testing
-	 * @param population
-	 */
-	public void makeChromList() {
-		chromList = new LinkedList<Chromosome>();
-		for(Organism org: orgList) {
-			chromList.add(org.getChromosome());
-		}
-	}
-
-	/**
 	 * This method assigns a double representing fitness of each organism.
 	 * @param org - a single organism to be assessed.
 	 * @return a double representing the evaluated fitness of the organism.
@@ -113,6 +102,66 @@ public class GEP {
 		return fitness;
 	}
 
+	public LinkedList<Organism> newGeneration() {
+		LinkedList<Pair<Organism, Organism>> partners = partnerSelect(orgList);
+		LinkedList<Organism> organismList = tournament(partners);
+		LinkedList<Chromosome> chromList = makeChromList(organismList);
+		LinkedList<Chromosome> rotated = rotation(chromList);
+		mutation();
+		onePointCrossOver();
+		onePointCrossOver();
+		for(Chromosome chrom: chromList){
+			for(Gene gene: chrom.subListGene(0, chrom.size())){
+				gene.updateEvaledList();
+			}
+		}
+		for(int i = 0; i < orgList.size(); i++)
+			orgList.get(i).setChromosome(chromList.get(i));
+		return orgList;
+	}
+
+	/**
+	 *Pairs up indiv from the Organism Pair list parameter and
+	 *makes them into Pair objects. Puts Pairs into a LinkedList.
+	 */
+	public LinkedList<Pair<Organism, Organism>> partnerSelect(
+			LinkedList<Organism> population) {
+		// pairList: list that will recieve the pairs
+		//of partners.
+		LinkedList<Pair<Organism, Organism>> pairList =
+			new LinkedList<Pair<Organism, Organism>>();
+		//notSeenMap:
+		//key: Each org from population.
+		//val: A list of organisms that they have not
+		// seen yet.
+		HashMap<Organism, LinkedList<Organism>> notSeenMap =
+			new HashMap<Organism, LinkedList<Organism>>();
+		// Iterate through population, initializing the
+		// notSeenMap with keys, and making all the values
+		// a clone of the original population with
+		// the current organism removed from the list.
+		for(int i = 0; i < population.size(); i++) {
+			Organism org = population.get(i);
+			notSeenMap.put(org, (LinkedList<Organism>) population.clone());
+			notSeenMap.get(org).remove(i);
+		}
+		// Iterate through population list again.
+		for(int i = 0; i < population.size(); i++) {
+			Organism partner1 = population.get(i);
+			//For the current org from the population list,
+			//get his notSeenList from the notSeenMap.
+			LinkedList<Organism> selection = notSeenMap.get(partner1);
+			//Select a random individual from the notSeenList
+			//Then remove that individual.
+			Organism partner2 =
+				selection.remove(ran.nextInt(selection.size()));
+			//Remove the partner1 from partner2's notSeenList.
+			notSeenMap.get(partner2).remove(partner1);
+			pairList.add(new Pair<Organism, Organism>(partner1, partner2));
+		}
+		return pairList;
+	}
+	
 	/**
 	 * @param partnerList - A LinkedList of organism Pairs.
 	 * Each member of a pair will compete with the other member.
@@ -169,18 +218,45 @@ public class GEP {
 		}
 		return newPop;
 	}
+
+	//Pairs up indiv from the chromosome list parameter and 
+	//makes them into Pair objects. Puts Pairs into a LinkedList.
+	public LinkedList <Pair<Chromosome, Chromosome>> mateSelect() {
+		LinkedList<Pair<Chromosome, Chromosome>> pairList =
+			new LinkedList<Pair<Chromosome, Chromosome>>();
+		LinkedList<Chromosome> competitors = 
+			(LinkedList<Chromosome>) chromList.clone();
+		while(!competitors.isEmpty()) {
+			Chromosome chrom = competitors.remove(0);
+			int mate;
+			Chromosome partner;
+			if(competitors.size() == 0) {
+				mate = ran.nextInt(chromList.size());
+				chromList.remove(chrom);
+				partner = chromList.get(mate);
+			} else {
+				mate = ran.nextInt(competitors.size());
+				partner = competitors.remove(mate);
+			}
+			Pair<Chromosome, Chromosome> mates = 
+				new Pair<Chromosome, Chromosome>(chrom, partner);
+			pairList.add(mates);
+		}
+		return pairList; 
+	}
+
 	/**
 	 * Iterates through the chromList
 	 * @param aChromList
 	 * @param prob
 	 */
-	public void rotation() {
-		for(Chromosome chrom: chromList) {
+	public LinkedList<Chromosome> rotation(LinkedList<Chromosome> chromList) {
+		for(Chromosome chrom: chromList)
 			if(ran.nextDouble() <= rotProb) {
 				int x = ran.nextInt(chrom.size());
 				chrom.rotate(x);
 			}
-		}
+		return chromList;
 	}
 
 	/**
@@ -209,44 +285,6 @@ public class GEP {
 		makeChrmListFrmPair(pairList);
 	}
 
-	public void makeChrmListFrmPair(
-			LinkedList<Pair<Chromosome, Chromosome>> chromPair
-			) {
-		chromList.clear();
-		for (int i = 0; i < chromPair.size(); i++) {
-			chromList.add(chromPair.get(i).left());
-			chromList.add(chromPair.get(i).right());			
-		}
-	}
-	
-	//Pairs up indiv from the chromosome list parameter and 
-	//makes them into Pair objects. Puts Pairs into a LinkedList.
-	public LinkedList <Pair<Chromosome, Chromosome>> mateSelect() {
-		LinkedList<Pair<Chromosome, Chromosome>> pairList =
-			new LinkedList<Pair<Chromosome, Chromosome>>();
-		LinkedList<Chromosome> competitors = 
-			(LinkedList<Chromosome>) chromList.clone();
-		while(!competitors.isEmpty()) {
-			Chromosome chrom = competitors.remove(0);
-			int mate;
-			Chromosome partner;
-			if(competitors.size() == 0) {
-				mate = ran.nextInt(chromList.size());
-				chromList.remove(chrom);
-				partner = chromList.get(mate);
-			} else {
-				mate = ran.nextInt(competitors.size());
-				partner = competitors.remove(mate);
-			}
-			Pair<Chromosome, Chromosome> mates = 
-				new Pair<Chromosome, Chromosome>(chrom, partner);
-			pairList.add(mates);
-		}
-		return pairList; 
-	}
-
-	
-
 	public LinkedList<Organism> getOrgList(){
 		return orgList;
 	}
@@ -258,15 +296,15 @@ public class GEP {
 	public double getTournProb(){
 		return tournProb;
 	}
-	
+
 	public void setTournProb(double x){
 		tournProb = x;
 	}
-	
+
 	public double getMutProb(){
 		return mutProb;
 	}
-	
+
 	public void setMutProb(double x){
 		mutProb = x;
 	}
@@ -274,7 +312,7 @@ public class GEP {
 	public double getRotProb(){
 		return rotProb;
 	}
-	
+
 	public void setRotProb(double x){
 		rotProb = x;
 	}
@@ -282,7 +320,7 @@ public class GEP {
 	public double getOnePtProb(){
 		return onePtProb;
 	}
-	
+
 	public void setOnePtProb(double x){
 		onePtProb = x;
 	}
@@ -303,63 +341,25 @@ public class GEP {
 	public int getLineNumber() {
 		return Thread.currentThread().getStackTrace()[2].getLineNumber();
 	}
-	
+
 	/**
-	 *Pairs up indiv from the Organism Pair list parameter and
-	 *makes them into Pair objects. Puts Pairs into a LinkedList.
+	 * For testing
+	 * @param population
 	 */
-	public LinkedList<Pair<Organism, Organism>> partnerSelect(
-			LinkedList<Organism> population) {
-		// pairList: list that will recieve the pairs
-		//of partners.
-		LinkedList<Pair<Organism, Organism>> pairList =
-			new LinkedList<Pair<Organism, Organism>>();
-		//notSeenMap:
-		//key: Each org from population.
-		//val: A list of organisms that they have not
-		// seen yet.
-		HashMap<Organism, LinkedList<Organism>> notSeenMap =
-			new HashMap<Organism, LinkedList<Organism>>();
-		// Iterate through population, initializing the
-		// notSeenMap with keys, and making all the values
-		// a clone of the original population with
-		// the current organism removed from the list.
-		for(int i = 0; i < population.size(); i++) {
-			Organism org = population.get(i);
-			notSeenMap.put(org, (LinkedList<Organism>) population.clone());
-			notSeenMap.get(org).remove(i);
-		}
-		// Iterate through population list again.
-		for(int i = 0; i < population.size(); i++) {
-			Organism partner1 = population.get(i);
-			//For the current org from the population list,
-			//get his notSeenList from the notSeenMap.
-			LinkedList<Organism> selection = notSeenMap.get(partner1);
-			//Select a random individual from the notSeenList
-			//Then remove that individual.
-			Organism partner2 =
-				selection.remove(ran.nextInt(selection.size()));
-			//Remove the partner1 from partner2's notSeenList.
-			notSeenMap.get(partner2).remove(partner1);
-			pairList.add(new Pair<Organism, Organism>(partner1, partner2));
-		}
-		return pairList;
+	public LinkedList<Chromosome> makeChromList(LinkedList<Organism> partners) {
+		LinkedList<Chromosome> chromList = new LinkedList<Chromosome>();
+		for(Organism org: partners)
+			chromList.add(org.getChromosome());
+		return chromList;
 	}
-	
-	public LinkedList<Organism> newGeneration() {
-		tournament(partnerSelect(orgList));
-		rotation();
-		mutation();
-		onePointCrossOver();
-		onePointCrossOver();
-		for(Chromosome chrom: chromList){
-			for(Gene gene: chrom.subListGene(0, chrom.size())){
-				gene.updateEvaledList();
-			}
+
+	public void makeChrmListFrmPair(
+			LinkedList<Pair<Chromosome, Chromosome>> chromPair) {
+		chromList.clear();
+		for (int i = 0; i < chromPair.size(); i++) {
+			chromList.add(chromPair.get(i).left());
+			chromList.add(chromPair.get(i).right());			
 		}
-		for(int i = 0; i < orgList.size(); i++)
-			orgList.get(i).setChromosome(chromList.get(i));
-		return orgList;
 	}
 
 	/**
