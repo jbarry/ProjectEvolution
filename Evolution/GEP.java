@@ -47,7 +47,6 @@ public class GEP {
 			double aTwoPtProb) {
 
 		orgList = anOrgList;
-		printOrgListIdsAndFitness(orgList);
 		tournProb = aTournProb;
 		mutProb = aMutProb;
 		rotProb = aRotProb;
@@ -63,8 +62,7 @@ public class GEP {
 			double aRotProb,
 			double aOnePtProb,
 			double aTwoPtProb,
-			boolean aHandicap,
-			double aHandicapProb) {
+			boolean aHandicap) {
 
 		orgList = anOrgList;
 		tournProb = aTournProb;
@@ -181,7 +179,7 @@ public class GEP {
 			Organism org1 = aPartners.get(i).getFst();
 			Organism org2 = aPartners.get(i).getSnd();
 			//TODO: change the fitness call when OrgData is used.
-			if(org1.getFitness() < org2.getFitness())
+			if(org1.getFitness() <= org2.getFitness())
 				newPop.add(org1);
 			else
 				newPop.add(org2);
@@ -210,7 +208,7 @@ public class GEP {
 			Organism org2 = partners.get(i).getSnd();
 
 			//TODO: change the fitness call when OrgData is used.
-			if(org1.getFitness() < org2.getFitness())
+			if(org1.getFitness() <= org2.getFitness())
 				if(!handicap)
 					newPop.add(org2);
 				else if(ran.nextDouble() <= tournProb)
@@ -220,6 +218,71 @@ public class GEP {
 			else
 				newPop.add(org2);
 		}
+		return newPop;
+	}
+
+	private LinkedList<Organism> tournamentWithPrint(
+			LinkedList<Pair<Organism, Organism>> partners) {
+
+		System.out.println("Reg tourn");
+		LinkedList<Organism> newPop = new LinkedList<Organism>();
+		// Iter through partners list.
+		for (int i = 0; i < partners.size(); i++) {
+			Organism org1 = partners.get(i).getFst();
+			Organism org2 = partners.get(i).getSnd();
+			double fit1 = org1.getFitness();
+			double fit2 = org2.getFitness();
+			// TODO: change the fitness call when OrgData is used.
+			if (fit1 <= fit2) { // Org1 is less fit.
+				System.out.println("org1Fit: " + fit1 + " <= org2Fit: " + fit2);
+				newPop.add(org2);
+			} else { // Org2 is less fit.
+				System.out.println("org1Fit: " + fit1 + " > org2Fit: " + fit2);
+				newPop.add(org1);
+			}
+		}
+		return newPop;
+	}
+
+	private LinkedList<Organism> tournamentHandicapWithPrint(
+			LinkedList<Pair<Organism, Organism>> partners) {
+
+		LinkedList<Organism> newPop = new LinkedList<Organism>();
+		int countWon = 0;
+		//Iter through partners list.
+		for (int i = 0; i < partners.size(); i++) {
+			Organism org1 = partners.get(i).getFst();
+			Organism org2 = partners.get(i).getSnd();
+			double fit1 = org1.getFitness();
+			double fit2 = org2.getFitness();
+			double rand = ran.nextDouble();
+			//TODO: change the fitness call when OrgData is used.
+			if (fit1 <= fit2)
+				if (!handicap) { // Handicap off.
+					System.out.println("Fair game");
+					System.out.println("org1Fit: " + fit1 + " <= org2Fit: "
+							+ fit2);
+					newPop.add(org2);
+				} else if (rand <= tournProb) { // Handicap on and probability
+												// is won.
+					System.out.println("Won!! Handicap on: " + rand + " <= "
+							+ tournProb);
+					System.out.println("org1Fit: " + fit1 + " <= org2Fit: "
+							+ fit2);
+					newPop.add(org1);
+					countWon++;
+				} else { // Handicap is on and probability is lost.
+					System.out.println("Handicap on But!: " + rand + " > "
+							+ tournProb);
+					System.out.println("org1Fit: " + fit1 + " < org2Fit: "
+							+ fit2);
+					newPop.add(org2);
+				}
+			else
+				newPop.add(org2);
+		}
+		System.out.println();
+		System.out.println("Number won: " + countWon);
 		return newPop;
 	}
 
@@ -372,8 +435,8 @@ public class GEP {
 		for (Pair<Organism, Organism> partner: partners) {
 			Organism o1 = partner.getFst();
 			Organism o2 = partner.getSnd();
-			out.println("part1: " + o1.getId() +
-					" part2: " + o2.getId());
+			out.println(o1.getId() +
+					" <=> " + o2.getId());
 		}
 		out.println();
 		out.println("partnerList size: " + partners.size());
@@ -410,6 +473,7 @@ public class GEP {
 	 */
 	private void printOrgListIds() {
 		out.println("Printing orgListIds");
+		System.out.println();
 		for(int i = 0; i < orgList.size(); i++) {
 			Organism org = orgList.get(i);
 			out.println("orgId: " + org.getId());
@@ -446,35 +510,35 @@ public class GEP {
 	}
 
 	public static void main(String[] args) {
-		LinkedList <Organism> orgList = new LinkedList<Organism>();
+		LinkedList<Organism> orgList = new LinkedList<Organism>();
 		Random r = new Random();
 		for(int i = 0; i < 41; i++)
 			orgList.add(new Organism(true, 4, r.nextInt(20), i));
 		
-		/*GEP gep = new GEP(orgList, 0.75, 0.01, 0.01, 0.75, 0.75);
-		gep.printOrgListIdsAndFitness(orgList);*/
-		
-		GEP gep = new GEP(orgList, 0.10, 0.01, 0.01, 0.75, 0.75);
-		gep.printOrgListIdsAndFitness(orgList);
+		/*GEP gep = new GEP(orgList, 0.75, 0.01, 0.01, 0.75, 0.75, true);*/
+		GEP gep = new GEP(orgList, 0.10, 0.01, 0.01, 0.75, 0.75, true);
 		
 		//print original orgList.
-		System.out.println("Original orgList");
-		gep.printOrgListIds();
+		/*System.out.println("Original orgList");
+		gep.printOrgListIdsAndFitness(gep.getOrgList());
 		
 		// Test partnerSelect.
+		System.out.println("Testing Partner Select");
+		System.out.println();
 		out.println("orgListSize" + gep.getOrgList().size());
-		out.println();
+		out.println();*/
 		LinkedList<Pair<Organism, Organism>> partners =
 			gep.partnerSelect(gep.getOrgList());
-		System.out.println("After partner select");
-		gep.printOrgListIdsAndFitness(orgList);
-
 		//print the ids of the pair of orgs after
 		//partnerSelect is called.
-		gep.printPartnerListIds(partners);
-		gep.printOrgListIdsAndFitness(gep.getOrgList());
+		/*System.out.println("After partner select:");*/
+		/*gep.printPartnerListIds(partners);*/
+		
 		//test that tournament with handicap works properly.
-		orgList = gep.tournament(partners);
-		gep.printOrgListIdsAndFitness(orgList);
+		/*LinkedList<Organism> afterTournOrgs = gep.tournament(partners);*/
+		/*LinkedList<Organism> afterTournOrgs = gep.tournamentWithPrint(partners);*/
+		LinkedList<Organism> afterTournOrgs = gep.tournamentHandicapWithPrint(partners);
+		/*System.out.println("After the tournament");*/
+		/*gep.printOrgListIdsAndFitness(afterTournOrgs);*/
 	}
 }
