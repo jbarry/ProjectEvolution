@@ -111,12 +111,12 @@ public class Organism extends Matter{
 	public void eatFood(Food f, double fdVal){
 		f.deplete(fdVal);
 		if(f instanceof HealthyFood) {
-//			System.out.println("orgId: " + id);
-//			System.out.println("hlthy");
-//			System.out.println("orgHealth: " + hlth);
-//			System.out.println("FoodId: " + f.getId());
-//			System.out.println("OrgLoc: " + this.getLocation().getX() + ", " + this.getLocation().getY());
-//			System.out.println();
+			/*System.out.println("orgId: " + id);
+			System.out.println("hlthy");
+			System.out.println("orgHealth: " + hlth);
+			System.out.println("FoodId: " + f.getId());
+			System.out.println("OrgLoc: " + this.getLocation().getX() + ", " + this.getLocation().getY());
+			System.out.println();*/
 			incHlth(fdVal);
 			setAction("Eating health food");
 			healthyEatSuccess++;
@@ -124,12 +124,12 @@ public class Organism extends Matter{
 			healthyFood.add(f.getId());
 		}
 		else if(f instanceof PoisonousFood){
-//			System.out.println("orgId: " + id);
-//			System.out.println("pois");
-// 		    System.out.println("orgHealth: " + hlth);
-//			System.out.println("FoodId: " + f.getId());
-//			System.out.println("OrgLoc: " + this.getLocation().getX() + ", " + this.getLocation().getY());
-//			System.out.println();
+			/*System.out.println("orgId: " + id);
+			System.out.println("pois");
+ 		    System.out.println("orgHealth: " + hlth);
+			System.out.println("FoodId: " + f.getId());
+			System.out.println("OrgLoc: " + this.getLocation().getX() + ", " + this.getLocation().getY());
+			System.out.println();*/
 			poisonFood.add(f.getId());
 			setAction("Eating poisonous food");
 			poisonEatSuccess++;
@@ -304,12 +304,17 @@ public class Organism extends Matter{
 	}
 	
 		public void attack(int orgIndex, LinkedList<Organism> organisms){
-//			System.out.print("Attacking org " + orgIndex + "(" + organisms.get(orgIndex).getLocation().getX() + " " + organisms.get(orgIndex).getLocation().getY() + "). Health: " + organisms.get(orgIndex).getHealth());
+			/*System.out.print("Attacking org " +
+					orgIndex + "(" +
+					organisms.get(orgIndex).getLocation().getX() +
+					" " + organisms.get(orgIndex).getLocation().getY() +
+					"). Health: " +
+					organisms.get(orgIndex).getHealth());*/
 			organisms.get(orgIndex).deplete(5);
 			numAttacked++;
 			organisms.get(this.getId()).setAction("Attacking org " + orgIndex);
-//			System.out.print(". Health: " + organisms.get(orgIndex).getHealth());
-//			System.out.println(". Attacked by org " + this.id);
+			/*System.out.print(". Health: " + organisms.get(orgIndex).getHealth());
+			System.out.println(". Attacked by org " + this.id);*/
 	}
 	
 		public void pushOrg(int orgIndex, LinkedList<Organism> organisms){
@@ -318,7 +323,10 @@ public class Organism extends Matter{
 			int xGettingPushed = organisms.get(orgIndex).getLocation().getX();
 			int yGettingPushed = organisms.get(orgIndex).getLocation().getY();
 			
-//			System.out.print("Pushing org " + orgIndex + "(" + organisms.get(orgIndex).getLocation().getX() + " " + organisms.get(orgIndex).getLocation().getY() + ")");
+			/*System.out.print("Pushing org " +
+					orgIndex + "(" +
+					organisms.get(orgIndex).getLocation().getX() +
+					" " + organisms.get(orgIndex).getLocation().getY() + ")");*/
 			
 			if(xGettingPushed < xPushing){
 				organisms.get(orgIndex).moveWest(organisms, true);
@@ -335,8 +343,11 @@ public class Organism extends Matter{
 			}
 			numPushed++;
 			organisms.get(this.getId()).setAction("Pushing org " + orgIndex);
-//			System.out.print("(" + organisms.get(orgIndex).getLocation().getX() + " " + organisms.get(orgIndex).getLocation().getY() + ")");
-//			System.out.println(". Pushed by org " + getId());
+			/*System.out.print("(" +
+					organisms.get(orgIndex).getLocation().getX() +
+					" " + organisms.get(orgIndex).getLocation().getY() + ")");
+			System.out.println(". Pushed by org " +
+					getId());*/
 		
 	}
 	
@@ -424,38 +435,38 @@ public class Organism extends Matter{
 		chromosomeHistory.add(chromosome);
 	}
 	
-//	public ArrayList<String> getActions(int generation){
-//		return ActionList.get(generation);
-//	}
+	/*public ArrayList<String> getActions(int generation){
+		return ActionList.get(generation);
+	}
 	
-//	public int getHealthyFoodSize(){
-//		return healthyFood.size();
-//	}
-//	
-//	public int getPoisonFoodSize(){
-//		return poisonFood.size();
-//	}
+	public int getHealthyFoodSize(){
+		return healthyFood.size();
+	}
+	
+	public int getPoisonFoodSize(){
+		return poisonFood.size();
+	}*/
 
 	public void addEatFail(){
 		eatFail++;
 	}
-	
-	//	public ArrayList<String> getActions(int generation){
-	//		return ActionList.get(generation);
-	//	}
-		
-	//	public int getHealthyFoodSize(){
-	//		return healthyFood.size();
-	//	}
-	//	
-	//	public int getPoisonFoodSize(){
-	//		return poisonFood.size();
-	//	}
-	
-		public void addScan(int scans){
+
+	/*public ArrayList<String> getActions(int generation){
+		return ActionList.get(generation);
+	}
+
+	public int getHealthyFoodSize(){
+		return healthyFood.size();
+	}
+
+	public int getPoisonFoodSize(){
+		return poisonFood.size();
+	}*/
+
+	public void addScan(int scans){
 		numScans += scans;
 	}
-	
+
 	public void clear(){
 		eatFail = 0;
 		numScans = 0;

@@ -30,7 +30,6 @@ public class GEP {
 
 	// Class variables.
 	private LinkedList<Organism> orgList;
-//	private LinkedList<Chromosome> chromList;
 	private Random ran;
 	private boolean handicap;
 	
@@ -49,7 +48,6 @@ public class GEP {
 
 		orgList = anOrgList;
 		printOrgListIdsAndFitness(orgList);
-//		chromList = new LinkedList<Chromosome>();
 		tournProb = aTournProb;
 		mutProb = aMutProb;
 		rotProb = aRotProb;
@@ -69,7 +67,6 @@ public class GEP {
 			double aHandicapProb) {
 
 		orgList = anOrgList;
-//		chromList = new LinkedList<Chromosome>();
 		tournProb = aTournProb;
 		mutProb = aMutProb;
 		rotProb = aRotProb;
@@ -98,7 +95,9 @@ public class GEP {
 		double assertion = 	(double) (org.getNumSteps()+org.getNumAttacked()+org.getNumPushed())/(org.getHealthEat()+1);
 		double badEating =	(double) org.getPoisonEat()+1;
 		double fitness = (avgHealth*(activity + goodEating + assertion))/badEating;
-//		double fitness = avgHealth/org.getSamples() + org.getHealthyFoodSize()*20 + org.getNumAttacked() + org.getNumPushed() - org.getPoisonFoodSize()*10;
+		/*double fitness = avgHealth/org.getSamples() +
+		 *  org.getHealthyFoodSize()*20 + org.getNumAttacked() +
+		 *   org.getNumPushed() - org.getPoisonFoodSize()*10;*/
 		org.setFitness(fitness);
 		return fitness;
 	}
@@ -116,11 +115,9 @@ public class GEP {
 		pairList = mateSelect(chromList);
 		onePointCrossOver(pairList);
 		onePointCrossOver(pairList);
-		for(Chromosome chrom: chromList){
-			for(Gene gene: chrom.subListGene(0, chrom.size())){
+		for(Chromosome chrom: chromList)
+			for(Gene gene: chrom.subListGene(0, chrom.size()))
 				gene.updateEvaledList();
-			}
-		}
 		for(int i = 0; i < orgList.size(); i++)
 			orgList.get(i).setChromosome(chromList.get(i));
 		return orgList;
@@ -296,10 +293,6 @@ public class GEP {
 		return orgList;
 	}
 
-//	public LinkedList<Chromosome> getChromList(){
-//		return chromList;
-//	}
-
 	public double getTournProb(){
 		return tournProb;
 	}
@@ -335,10 +328,6 @@ public class GEP {
 	public void setTwoPtProb(double x){
 		twoPtProb = x;
 	}
-
-//	public void setChromList(LinkedList<Chromosome> aChromList){
-//		chromList = aChromList;
-//	}
 
 	public void setOrgList(LinkedList<Organism> anOrgList){
 		orgList = anOrgList;
@@ -447,6 +436,7 @@ public class GEP {
 	
 	private void printOrgListIdsAndFitness(LinkedList<Organism> anOrgList) {
 		out.println("Printing orgList Ids and Fitness");
+		out.println();
 		for(int i = 0; i < anOrgList.size(); i++) {
 			Organism org = anOrgList.get(i);
 			out.println("orgId: " + org.getId() +
@@ -458,16 +448,17 @@ public class GEP {
 	public static void main(String[] args) {
 		LinkedList <Organism> orgList = new LinkedList<Organism>();
 		Random r = new Random();
-		for(int i = 0; i < 41; i++) {
-			orgList.add(new Organism(true, 4, 2.34, i));
-			out.println(orgList.get(i).getFitness());
-		}
-		GEP gep = new GEP(orgList, 0.75, 0.01, 0.01, 0.75, 0.75);
-		/*
-		gep.printOrgListIdsAndFitness(orgList);
+		for(int i = 0; i < 41; i++)
+			orgList.add(new Organism(true, 4, r.nextInt(20), i));
+		
+		/*GEP gep = new GEP(orgList, 0.75, 0.01, 0.01, 0.75, 0.75);
+		gep.printOrgListIdsAndFitness(orgList);*/
+		
 		GEP gep = new GEP(orgList, 0.10, 0.01, 0.01, 0.75, 0.75);
+		gep.printOrgListIdsAndFitness(orgList);
 		
 		//print original orgList.
+		System.out.println("Original orgList");
 		gep.printOrgListIds();
 		
 		// Test partnerSelect.
@@ -475,6 +466,7 @@ public class GEP {
 		out.println();
 		LinkedList<Pair<Organism, Organism>> partners =
 			gep.partnerSelect(gep.getOrgList());
+		System.out.println("After partner select");
 		gep.printOrgListIdsAndFitness(orgList);
 
 		//print the ids of the pair of orgs after
@@ -484,6 +476,5 @@ public class GEP {
 		//test that tournament with handicap works properly.
 		orgList = gep.tournament(partners);
 		gep.printOrgListIdsAndFitness(orgList);
-		*/
 	}
 }
