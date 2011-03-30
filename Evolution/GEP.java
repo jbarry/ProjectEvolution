@@ -172,7 +172,7 @@ public class GEP {
 		makeChrmListFrmPair(pairList);
 	}
 
-	private void makeChrmListFrmPair(
+	public void makeChrmListFrmPair(
 			LinkedList<Pair<Chromosome, Chromosome>> chromPair
 			) {
 		chromList.clear();
@@ -185,7 +185,7 @@ public class GEP {
 	//TODO: remove print statements. Only for testing.
 	//Pairs up indiv from the chromosome list parameter and 
 	//makes them into Pair objects. Puts Pairs into a LinkedList.
-	private LinkedList <Pair<Chromosome, Chromosome>> mateSelect() {
+	public LinkedList <Pair<Chromosome, Chromosome>> mateSelect() {
 		LinkedList<Pair<Chromosome, Chromosome>> pairList =
 			new LinkedList<Pair<Chromosome, Chromosome>>();
 		LinkedList<Chromosome> competitors = 
@@ -209,83 +209,7 @@ public class GEP {
 		return pairList; 
 	}
 
-	/**
-	 *Pairs up indiv from the Organism Pair list parameter and 
-	 *makes them into Pair objects. Puts Pairs into a LinkedList.
-	 */
-	private LinkedList <Pair<Organism, Organism>> partnerSelect(
-			LinkedList<Organism> population) {
-		// pairList: list that will recieve the pairs
-		//of partners.
-		LinkedList<Pair<Organism, Organism>> pairList =
-			new LinkedList<Pair<Organism, Organism>>();
-		//notSeenMap:
-			//key: Each org from population.
-			//val: A list of organisms that they have not
-				// seen yet.
-		HashMap<Organism, LinkedList<Organism>> notSeenMap =
-			new HashMap<Organism, LinkedList<Organism>>();
-		// Iterate through population, initializing the
-		// notSeenMap with keys, and making all the values
-		// a clone of the original population with 
-		// the current organism removed from the list.
-		for(int i = 0; i < population.size(); i++) {
-			Organism org = population.get(i);
-			notSeenMap.put(org, (LinkedList<Organism>) population.clone());
-			notSeenMap.get(org).remove(i);
-		}
-		// Iterate through population list again.
-		for(int i = 0; i < population.size(); i++) {
-			Organism partner1 = population.get(i);
-			//For the current org from the population list,
-			//get his notSeenList from the notSeenMap.
-			LinkedList<Organism> selection = notSeenMap.get(partner1);
-			//Select a random individual from the notSeenList
-			//Then remove that individual.
-			int mate = ran.nextInt(selection.size());
-			Organism partner2 = selection.remove(mate);
-			Pair<Organism, Organism> mates =
-				new Pair<Organism, Organism>(partner1, partner2);
-			pairList.add(mates);
-		}
-		return pairList;
-	}
-
-	/**
-	 * Used for testing the GEP class. Simply prints a organism list
-	 * that is passed to it.
-	 * @param list
-	 */
-	public void printOrgList() {
-		for(int i = 0; i < orgList.size(); i++) {
-			out.println("Chromosome " + i);
-			Chromosome chromOne = orgList.get(i).getChromosome();
-			for(int j = 0; j < chromOne.size(); j++) {
-				Gene aGene = chromOne.getGene(j);
-				for(int k = 0; k < aGene.size(); k++) {
-					out.print(aGene.getSym(k).charValue() + " ");
-				}
-				out.println();
-			}
-		}
-	}
-
-	/**
-	 * Used for testing the GEP class. Simply prints a chromosome list
-	 * that is passed to it.
-	 */
-	public void printChromList() {
-		for(int i = 0; i < chromList.size(); i++) {
-			Chromosome chrom = chromList.get(i);
-			out.println("Chromosome" + i);
-			for(int j = 0; j < chrom.size(); j++) {
-				for(int k = 0; k < chrom.getGene(j).size(); k++) {
-					out.print(chrom.getGene(j).getSym(k).charValue() + " ");
-				}
-				out.println();
-			}
-		}
-	}
+	
 
 	public LinkedList<Organism> getOrgList(){
 		return orgList;
@@ -340,7 +264,127 @@ public class GEP {
 	}
 
 	//Used for debugging. Prints the line number.
-	public static int getLineNumber() {
+	public int getLineNumber() {
 		return Thread.currentThread().getStackTrace()[2].getLineNumber();
+	}
+	
+	/**
+	 *Pairs up indiv from the Organism Pair list parameter and 
+	 *makes them into Pair objects. Puts Pairs into a LinkedList.
+	 */
+	public LinkedList <Pair<Organism, Organism>> partnerSelect(
+			LinkedList<Organism> population) {
+		// pairList: list that will recieve the pairs
+		//of partners.
+		LinkedList<Pair<Organism, Organism>> pairList =
+			new LinkedList<Pair<Organism, Organism>>();
+		//notSeenMap:
+			//key: Each org from population.
+			//val: A list of organisms that they have not
+				// seen yet.
+		HashMap<Organism, LinkedList<Organism>> notSeenMap =
+			new HashMap<Organism, LinkedList<Organism>>();
+		// Iterate through population, initializing the
+		// notSeenMap with keys, and making all the values
+		// a clone of the original population with 
+		// the current organism removed from the list.
+		for(int i = 0; i < population.size(); i++) {
+			Organism org = population.get(i);
+			notSeenMap.put(org, (LinkedList<Organism>) population.clone());
+			notSeenMap.get(org).remove(i);
+		}
+		// Iterate through population list again.
+		for(int i = 0; i < population.size(); i++) {
+			Organism partner1 = population.get(i);
+			//For the current org from the population list,
+			//get his notSeenList from the notSeenMap.
+			LinkedList<Organism> selection = notSeenMap.get(partner1);
+			//Select a random individual from the notSeenList
+			//Then remove that individual.
+			int mate = ran.nextInt(selection.size());
+			Organism partner2 = selection.remove(mate);
+			// TODO: get partner2's list and 
+			// remove partner1 from partner2's list.
+			pairList.add(new Pair<Organism, Organism>(partner1, partner2));
+		}
+		return pairList;
+	}
+
+	/**
+	 * Prints the id's of the orgs in the partner
+	 * list that is passed as a param.
+	 * @param partners
+	 */
+	public void printPartnerList(
+			LinkedList <Pair<Organism, Organism>> partners) {
+		for (Pair<Organism, Organism> partner: partners) {
+			Organism o1 = partner.getFst();
+			Organism o2 = partner.getSnd();
+			out.println("part1: " + o1.getId() +
+					"part2" + o2.getId());
+		}
+	}
+	
+	/**
+	 * Used for testing the GEP class. Simply prints the
+	 * chromosomes of the organism list
+	 * that is passed to it.
+	 * @param list
+	 */
+	public void printOrgListChromes() {
+		out.println("Printing orgList's Chromosomes");
+		for(int i = 0; i < orgList.size(); i++) {
+			out.println("Chromosome " + i);
+			Chromosome chromOne = orgList.get(i).getChromosome();
+			for(int j = 0; j < chromOne.size(); j++) {
+				Gene aGene = chromOne.getGene(j);
+				for(int k = 0; k < aGene.size(); k++) {
+					out.print(aGene.getSym(k).charValue() + " ");
+				}
+				out.println();
+			}
+		}
+		out.println();
+	}
+	
+	/**
+	 * Used for testing the GEP class. Simply prints the
+	 * ids of the organism list
+	 * that is passed to it.
+	 * @param list
+	 */
+	public void printOrgListIds() {
+		out.println("Printing orgListIds");
+		for(int i = 0; i < orgList.size(); i++) {
+			Organism org = orgList.get(i);
+			out.println("orgId: " + org.getId());
+		}
+		out.println();
+	}
+
+	/**
+	 * Used for testing the GEP class. Simply prints a chromosome list
+	 * that is passed to it.
+	 */
+	public void printChromList() {
+		for(int i = 0; i < chromList.size(); i++) {
+			Chromosome chrom = chromList.get(i);
+			out.println("Chromosome" + i);
+			for(int j = 0; j < chrom.size(); j++) {
+				for(int k = 0; k < chrom.getGene(j).size(); k++) {
+					out.print(chrom.getGene(j).getSym(k).charValue() + " ");
+				}
+				out.println();
+			}
+		}
+	}
+	
+	public static void main(String[] args) {
+		LinkedList <Organism> orgList = new LinkedList<Organism>();
+		Random r = new Random();
+		for(int i = 0; i < 8; i++)
+			orgList.add(new Organism(true, 4, r.nextDouble(), i));
+		GEP gep = new GEP(orgList, 1.00, 1.00, 1.00, 1.00, 1.00);
+		gep.partnerSelect(orgList);
 	}
 }

@@ -59,7 +59,7 @@ public class Organism extends Matter{
 		//scanRange = aScanRange;
 		steps = 0;
 		fitness = 0.0;
-		ActionList= new ArrayList<ArrayList<String>>();
+		ActionList = new ArrayList<ArrayList<String>>();
 		ActionList.add(new ArrayList<String>());
 		StartingLocation=new ArrayList<Coordinate>();
 		chromosomeHistory= new ArrayList<Chromosome>();
@@ -69,11 +69,13 @@ public class Organism extends Matter{
 	
 	//for testing purposes only.
 	//just removing the GridPanel call.
-	public Organism(boolean boo, int aChromSize) {
+	public Organism(boolean boo, int aChromSize, double aFitness,
+			int anId) {
 		hlth = 7500.00;
 		r = new Random();
 		chromosome = new Chromosome(aChromSize);
-		fitness = 0.0;
+		fitness = aFitness;
+		id = anId;
 	}
 	
 	//This ctor is for testing purposes.
