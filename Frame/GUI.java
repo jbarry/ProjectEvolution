@@ -183,7 +183,8 @@ public class GUI {
 					genPanel.enableButtons();
 					saveGenes.setEnabled(true);
 					loadGenes.setEnabled(true);
-					simulation.initialize();
+					//simulation.initialize();
+					simulation.initialize2();
 					simulation.start();
 				}
 			}

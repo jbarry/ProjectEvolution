@@ -16,9 +16,12 @@ public class OrgData{
 	private int samples;
 	private int steps;
 	private double health;
+	private int id;
 	
-	public OrgData(double aHealth) {
+	public OrgData(double aHealth, int anId) {
 		health = aHealth;
+		id = anId;
+		
 		eatFail = 0;
 		healthyEatSuccess = 0;
 		poisonEatSuccess = 0;
