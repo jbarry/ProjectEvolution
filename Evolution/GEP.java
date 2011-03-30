@@ -215,22 +215,35 @@ public class GEP {
 	 */
 	private LinkedList <Pair<Organism, Organism>> partnerSelect(
 			LinkedList<Organism> population) {
+		// pairList: list that will recieve the pairs
+		//of partners.
 		LinkedList<Pair<Organism, Organism>> pairList =
 			new LinkedList<Pair<Organism, Organism>>();
+		//notSeenMap:
+			//key: Each org from population.
+			//val: A list of organisms that they have not
+				// seen yet.
 		HashMap<Organism, LinkedList<Organism>> notSeenMap =
 			new HashMap<Organism, LinkedList<Organism>>();
+		// Iterate through population, initializing the
+		// notSeenMap with keys, and making all the values
+		// a clone of the original population with 
+		// the current organism removed from the list.
 		for(int i = 0; i < population.size(); i++) {
 			Organism org = population.get(i);
-			notSeenMap.put(org, 
-					(LinkedList<Organism>) population.clone());
+			notSeenMap.put(org, (LinkedList<Organism>) population.clone());
 			notSeenMap.get(org).remove(i);
 		}
+		// Iterate through population list again.
 		for(int i = 0; i < population.size(); i++) {
 			Organism partner1 = population.get(i);
+			//For the current org from the population list,
+			//get his notSeenList from the notSeenMap.
 			LinkedList<Organism> selection = notSeenMap.get(partner1);
+			//Select a random individual from the notSeenList
+			//Then remove that individual.
 			int mate = ran.nextInt(selection.size());
-			Organism partner2 = selection.get(mate);
-			selection.remove(partner2);
+			Organism partner2 = selection.remove(mate);
 			Pair<Organism, Organism> mates =
 				new Pair<Organism, Organism>(partner1, partner2);
 			pairList.add(mates);

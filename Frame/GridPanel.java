@@ -97,16 +97,17 @@ public class GridPanel extends JPanel
 
 				t = new javax.swing.Timer(lengthTimeStep, new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						if(timePassed < lengthGeneration) {
-							timePassed++;
-							//simulateStep();
-							simulateStep2();
-							repaint();
-						} else if (trialNum < trialsPerGen) {
-							newTrial();
-						} else {
-							newGeneration();
-						}
+//						if(timePassed < lengthGeneration) {
+//							timePassed++;
+//							//simulateStep();
+//							simulateStep2();
+//							repaint();
+//						} else if (trialNum < trialsPerGen) {
+//							newTrial();
+//						} else {
+//							newGeneration();
+//						}
+						repaint();
 					}
 				});
 			}
@@ -115,6 +116,19 @@ public class GridPanel extends JPanel
 		r.run();
 	}
 
+	private void game() {
+		if(timePassed < lengthGeneration) {
+			timePassed++;
+			//simulateStep();
+			simulateStep2();
+			//repaint();
+		} else if (trialNum < trialsPerGen) {
+			newTrial();
+		} else {
+			newGeneration();
+		}
+	}
+	
 	public int getGenerationNum(){
 		return generationNum;
 	}
