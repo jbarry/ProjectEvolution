@@ -31,6 +31,7 @@ public class GEP {
 	// Class variables.
 	private LinkedList<Organism> orgList;
 	private LinkedList<Chromosome> chromList;
+	private LinkedList <Pair<Organism, Organism>> partnerList;
 	private Random ran;
 
 	public static double tournProb;
@@ -49,6 +50,7 @@ public class GEP {
 
 		orgList = anOrgList;
 		chromList = new LinkedList<Chromosome>();
+		partnerList = new LinkedList <Pair<Organism, Organism>>();
 		tournProb = aTournProb;
 		mutProb = aMutProb;
 		rotProb = aRotProb;
@@ -301,10 +303,9 @@ public class GEP {
 			LinkedList<Organism> selection = notSeenMap.get(partner1);
 			//Select a random individual from the notSeenList
 			//Then remove that individual.
-			int mate = ran.nextInt(selection.size());
-			Organism partner2 = selection.remove(mate);
-			// TODO: get partner2's list and 
-			// remove partner1 from partner2's list.
+			Organism partner2 =
+				selection.remove(ran.nextInt(selection.size()));
+			notSeenMap.get(partner2).remove(partner1);
 			pairList.add(new Pair<Organism, Organism>(partner1, partner2));
 		}
 		return pairList;
@@ -315,13 +316,14 @@ public class GEP {
 	 * list that is passed as a param.
 	 * @param partners
 	 */
-	public void printPartnerList(
+	public void printPartnerListIds(
 			LinkedList <Pair<Organism, Organism>> partners) {
+		
 		for (Pair<Organism, Organism> partner: partners) {
 			Organism o1 = partner.getFst();
 			Organism o2 = partner.getSnd();
 			out.println("part1: " + o1.getId() +
-					"part2" + o2.getId());
+					" part2: " + o2.getId());
 		}
 	}
 	
@@ -382,9 +384,10 @@ public class GEP {
 	public static void main(String[] args) {
 		LinkedList <Organism> orgList = new LinkedList<Organism>();
 		Random r = new Random();
-		for(int i = 0; i < 8; i++)
+		for(int i = 0; i < 40; i++)
 			orgList.add(new Organism(true, 4, r.nextDouble(), i));
 		GEP gep = new GEP(orgList, 1.00, 1.00, 1.00, 1.00, 1.00);
-		gep.partnerSelect(orgList);
+		gep.printOrgListIds();
+		gep.printPartnerListIds(gep.partnerSelect(orgList));
 	}
 }
