@@ -70,13 +70,13 @@ public class Organism extends Matter{
 		poisonFood = new TreeSet<Integer>(); 
 	}
 	
-	//for testing purposes only.
-	//just removing the GridPanel call.
-	public Organism(boolean boo, int aChromSize, double aFitness,
+	// For testing purposes only.
+	// Just removing the GridPanel call.
+	public Organism(boolean boo, int numGenes, double aFitness,
 			int anId) {
-		hlth = 7500.00;
+		hlth = 100.00;
 		r = new Random();
-		chromosome = new Chromosome(aChromSize);
+		chromosome = new Chromosome(numGenes, anId);
 		fitness = aFitness;
 		id = anId;
 	}

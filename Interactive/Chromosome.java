@@ -11,8 +11,9 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 	private List<Gene> chromosome;
 	private Random ran;
 	public static final int EAT = 2;
+	private int id; // For testing only.
 	
-	//Default ctor.
+	// Default ctor.
 	public Chromosome(int numGenes) {
 		ran = new Random();
 		chromosome = new LinkedList<Gene>();
@@ -20,13 +21,20 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 			chromosome.add(new Gene(true, 30));
 	}
 	
-	//For testing purposes of the GEP class.
+	// For testing purposes of the GEP class.
 	public Chromosome(LinkedList<Gene> aChrom) {
 		chromosome = aChrom;
 		ran = new Random();
 	}
 
-	//TODO: Make specific ctor.
+	// TODO: Make specific ctor.
+	public Chromosome(int numGenes, int anId) {
+		ran = new Random();
+		id = anId;
+		chromosome = new LinkedList<Gene>();
+		for (int i = 0; i < numGenes; i++)
+			chromosome.add(new Gene(true, 30));
+	}
 
 	public void rotate(int gene) {
 		Gene theGene = (Gene)chromosome.get(gene);
@@ -110,5 +118,10 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 
 	public int size() {
 		return chromosome.size();
+	}
+
+	// For testing GEP.
+	public int getId() {
+		return id;
 	}
 }
