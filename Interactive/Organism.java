@@ -14,7 +14,6 @@ public class Organism extends Matter{
 	//------------------------------------------------------------------------------------
 	//--globals--
 	//------------------------------------------------------------------------------------
-	private double avgHealth;
 	private double hlthTot;
 	private int samples;
 	private int steps;
@@ -56,9 +55,8 @@ public class Organism extends Matter{
 		super(aHealth, anId, 'o');
 		chromosome = new Chromosome(chromSize);
 		samples = 0;
-		avgHealth = 0;
 		hlthTot = 0;
-//		scanRange = aScanRange;
+		//scanRange = aScanRange;
 		steps = 0;
 		fitness = 0.0;
 		ActionList= new ArrayList<ArrayList<String>>();
@@ -433,17 +431,17 @@ public class Organism extends Matter{
 		chromosomeHistory.add(chromosome);
 	}
 	
-	public ArrayList<String> getActions(int generation){
-		return ActionList.get(generation);
-	}
+//	public ArrayList<String> getActions(int generation){
+//		return ActionList.get(generation);
+//	}
 	
-	public int getHealthyFoodSize(){
-		return healthyFood.size();
-	}
-	
-	public int getPoisonFoodSize(){
-		return poisonFood.size();
-	}
+//	public int getHealthyFoodSize(){
+//		return healthyFood.size();
+//	}
+//	
+//	public int getPoisonFoodSize(){
+//		return poisonFood.size();
+//	}
 
 	public int getEatFail(){
 		return eatFail;
