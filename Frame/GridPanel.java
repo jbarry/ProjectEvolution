@@ -90,23 +90,24 @@ public class GridPanel extends JPanel
 				healthFd = new LinkedList<HealthyFood>();
 				poisFood = new LinkedList<PoisonousFood>();
 
-				//track user mouse movement.
-				addMouseMotionListener(new MouseMotionListenerClass(GridPanel.this));
-				//handle other mouse events
+				// track user mouse movement.
+				addMouseMotionListener(new MouseMotionListenerClass(
+						GridPanel.this));
+				// handle other mouse events
 				addMouseListener(new MouseListenerClass());
 
 				t = new javax.swing.Timer(lengthTimeStep, new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-//						if(timePassed < lengthGeneration) {
-//							timePassed++;
-//							//simulateStep();
-//							simulateStep2();
-//							repaint();
-//						} else if (trialNum < trialsPerGen) {
-//							newTrial();
-//						} else {
-//							newGeneration();
-//						}
+						if (timePassed < lengthGeneration) {
+							timePassed++;
+							simulateStep();
+							/* simulateStep2();*/
+							repaint();
+						} else if (trialNum < trialsPerGen) {
+							newTrial();
+						} else {
+							newGeneration();
+						}
 						repaint();
 					}
 				});

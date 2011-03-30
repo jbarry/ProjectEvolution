@@ -647,9 +647,16 @@ public class GEP {
 		//Print the result of crossOver.
 		System.out.println("After crossOver: ");
 		System.out.println();
-		gep.printChromGenes(gep.makeChrmListFrmPair(afterMateSelect));
-		// TODO: reselect mates
-		// TODO: make sure onePt crossOver uses prob.
-		// TODO: 2pt crossOver
+		// Make chromList of the crossedOver pairs.
+		LinkedList<Chromosome> nextGo =
+			gep.makeChrmListFrmPair(afterMateSelect);
+		gep.printChromGenes(nextGo);
+		// Pair up chroms again.
+		LinkedList<Pair<Chromosome, Chromosome>> afterSecondGo =
+			gep.mateSelect2(nextGo);
+		
+		//Perform 2-point cross over.
+		gep.onePointCrossOver(afterSecondGo);
+		gep.onePointCrossOver(afterSecondGo);
 	}
 }
