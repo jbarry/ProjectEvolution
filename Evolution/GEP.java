@@ -211,10 +211,14 @@ public class GEP {
 			makeChromList(tournament(partnerSelect(orgList)));
 		rotation(chromList);
 		mutation(chromList);
+		// Pair up Chromosomes in preparation
+		// for 1-point cross over.
 		LinkedList<Pair<Chromosome, Chromosome>> pairList = mateSelect(chromList);
 		onePointCrossOver(pairList);
-		chromList = makeChrmListFrmPair(pairList);
-		pairList = mateSelect(chromList);
+		// Pair up Chromosomes again in preparation
+		// for 2-point cross over.
+		pairList = mateSelect(makeChrmListFrmPair(pairList));
+		// 2-point cross over.
 		onePointCrossOver(pairList);
 		onePointCrossOver(pairList);
 		for (Chromosome chrom : chromList)
