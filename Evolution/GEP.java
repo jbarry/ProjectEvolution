@@ -19,31 +19,41 @@ import static java.lang.System.out;
 import static java.lang.System.err;
 import java.util.HashMap;
 import java.util.Collection;
-/**
- * 
- *
- */
+
 //TODO: implement in such a way that so many probability
 //variables do not need to be passed to the ctor.
+/**
+ * @author justin
+ * 
+ */
 @SuppressWarnings("all")
 public class GEP {
 
 	// Class variables.
 	private LinkedList<Organism> orgList;
 	private Random ran;
+
 	private boolean handicap;
-	
+	private boolean elitist;
+	private int numElites;
+	private boolean doElitism;
+
 	public static double tournProb;
 	public static double mutProb;
 	public static double rotProb;
 	public static double onePtProb;
 	public static double twoPtProb;
 
-	public GEP(LinkedList <Organism> anOrgList,
-			double aTournProb,
-			double aMutProb, 
-			double aRotProb,
-			double aOnePtProb,
+	/**
+	 * @param anOrgList
+	 * @param aTournProb
+	 * @param aMutProb
+	 * @param aRotProb
+	 * @param aOnePtProb
+	 * @param aTwoPtProb
+	 */
+	public GEP(LinkedList<Organism> anOrgList, double aTournProb,
+			double aMutProb, double aRotProb, double aOnePtProb,
 			double aTwoPtProb) {
 
 		orgList = anOrgList;
@@ -54,15 +64,22 @@ public class GEP {
 		twoPtProb = aTwoPtProb;
 		handicap = false;
 		ran = new Random();
+		doElitism = false;
+		numElites = 0;
 	}
-	
-	public GEP(LinkedList <Organism> anOrgList,
-			double aTournProb,
-			double aMutProb, 
-			double aRotProb,
-			double aOnePtProb,
-			double aTwoPtProb,
-			boolean aHandicap) {
+
+	/**
+	 * @param anOrgList
+	 * @param aTournProb
+	 * @param aMutProb
+	 * @param aRotProb
+	 * @param aOnePtProb
+	 * @param aTwoPtProb
+	 * @param aHandicap
+	 */
+	public GEP(LinkedList<Organism> anOrgList, double aTournProb,
+			double aMutProb, double aRotProb, double aOnePtProb,
+			double aTwoPtProb, boolean aHandicap) {
 
 		orgList = anOrgList;
 		tournProb = aTournProb;
@@ -72,6 +89,37 @@ public class GEP {
 		twoPtProb = aTwoPtProb;
 		handicap = aHandicap;
 		ran = new Random();
+		doElitism = false;
+		numElites = 0;
+	}
+
+	/**
+	 * @param anOrgList
+	 * @param aTournProb
+	 * @param aMutProb
+	 * @param aRotProb
+	 * @param aOnePtProb
+	 * @param aTwoPtProb
+	 * @param aNumElitists
+	 * @param aHandicap
+	 * @param aDoElitism
+	 */
+	public GEP(LinkedList<Organism> anOrgList, double aTournProb,
+			double aMutProb, double aRotProb, double aOnePtProb,
+			double aTwoPtProb, int aNumElitists, boolean aHandicap,
+			boolean aDoElitism) {
+
+		orgList = anOrgList;
+		tournProb = aTournProb;
+		mutProb = aMutProb;
+		rotProb = aRotProb;
+		onePtProb = aOnePtProb;
+		twoPtProb = aTwoPtProb;
+		handicap = aHandicap;
+		doElitism = aDoElitism;
+		numElites = aNumElitists;
+
+		ran = new Random();
 	}
 
 	/**
@@ -79,25 +127,76 @@ public class GEP {
 	 * @param org - a single organism to be assessed.
 	 * @return a double representing the evaluated fitness of the organism.
 	 */
-	//TODO: fitness function idea
-	//average health throughout the generation. ie., take
-	//samples of an org's health at time periods. Then take
-	//average.
-	//number of steps travelled. Essentially, org's that 
-	//have higher health with travelling short distances are more fit.
-	//
 	public double fitness(Organism org) {
-		double avgHealth = org.getHlthTot()/org.getSamples();
+		double avgHealth = org.getHlthTot() / org.getSamples();
 		double activity = (double) org.getNumSteps();
-		double goodEating = (double) org.getHealthEat()*(org.getHealthEat()+org.getPoisonEat()+org.getTotalScans())/(GridPanel.numFoodSources);
-		double assertion = 	(double) (org.getNumSteps()+org.getNumAttacked()+org.getNumPushed())/(org.getHealthEat()+1);
-		double badEating =	(double) org.getPoisonEat()+1;
-		double fitness = (avgHealth*(activity + goodEating + assertion))/badEating;
-		/*double fitness = avgHealth/org.getSamples() +
-		 *  org.getHealthyFoodSize()*20 + org.getNumAttacked() +
-		 *   org.getNumPushed() - org.getPoisonFoodSize()*10;*/
+		double goodEating = (double) org.getHealthEat()
+				* (org.getHealthEat() + org.getPoisonEat() + org
+						.getTotalScans()) / (GridPanel.numFoodSources);
+		double assertion = (double) (org.getNumSteps() + org.getNumAttacked() + org
+				.getNumPushed()) / (org.getHealthEat() + 1);
+		double badEating = (double) org.getPoisonEat() + 1;
+		double fitness = (avgHealth * (activity + goodEating + assertion))
+				/ badEating;
 		org.setFitness(fitness);
 		return fitness;
+	}
+	
+	/**
+	 * This method assigns a double representing fitness of each organism.
+	 * @param org - a single organism to be assessed.
+	 * @return a double representing the evaluated fitness of the organism.
+	 */
+	public double fitnessIan(Organism org) {
+		double avgHealth = org.getHlthTot() / org.getSamples();
+		double activity = (double) org.getNumSteps();
+		double goodEating = (double) org.getHealthEat()
+				* (org.getHealthEat() + org.getPoisonEat() + org
+						.getTotalScans()) / (GridPanel.numFoodSources);
+		double assertion = (double) (org.getNumSteps() + org.getNumAttacked() + org
+				.getNumPushed()) / (org.getHealthEat() + 1);
+		double badEating = (double) org.getPoisonEat() + 1;
+		double fitness = (avgHealth * (activity + goodEating + assertion))
+				/ badEating;
+		org.setFitness(fitness);
+		return fitness;
+	}
+	
+	/**
+	 * @param org
+	 * @return
+	 */
+	public double fitnessAvgHealth(Organism org) {
+		return 0.0;
+	}
+
+	/**
+	 * @param org
+	 * @return
+	 */
+	public double fitnessDwight(Organism org) {
+		/*double avgHealth = org.getHlthTot() / org.getSamples();
+		double fitness = avgHealth / org.getSamples()
+				+ org.getHealthyFoodSize() * 20 + org.getNumAttacked()
+				+ org.getNumPushed() - org.getPoisonFoodSize() * 10;
+		return fitness;*/
+		return 0.0;
+	}
+
+	/**
+	 * This fitness function evaluates the fitness of an Organism based on its
+	 * average health per the number of steps that it had taken over a
+	 * generation.
+	 * 
+	 * @param org
+	 * @return
+	 */
+	public double fitnessAvgHealthPerSteps(Organism org) {
+		double avgHealth = org.getHlthTot() / org.getSamples();
+		int numSteps = org.getNumSteps();
+		if (numSteps > 0)
+			return avgHealth / org.getNumSteps();
+		return 0.0;
 	}
 
 	/**
@@ -107,37 +206,37 @@ public class GEP {
 	 * @return
 	 */
 	public LinkedList<Organism> newGeneration() {
-		
-		LinkedList<Pair<Organism, Organism>> partners = partnerSelect(orgList);
-		LinkedList<Organism> organismList = tournament(partners);
-		LinkedList<Chromosome> chromList = makeChromList(organismList);
+
+		LinkedList<Chromosome> chromList =
+			makeChromList(tournament(partnerSelect(orgList)));
 		rotation(chromList);
 		mutation(chromList);
-		LinkedList<Pair<Chromosome, Chromosome>> pairList =
-			mateSelect(chromList);
+		LinkedList<Pair<Chromosome, Chromosome>> pairList = mateSelect(chromList);
 		onePointCrossOver(pairList);
 		chromList = makeChrmListFrmPair(pairList);
 		pairList = mateSelect(chromList);
 		onePointCrossOver(pairList);
 		onePointCrossOver(pairList);
-		for(Chromosome chrom: chromList)
-			for(Gene gene: chrom.subListGene(0, chrom.size()))
+		for (Chromosome chrom : chromList)
+			for (Gene gene : chrom.subListGene(0, chrom.size()))
 				gene.updateEvaledList();
-		for(int i = 0; i < orgList.size(); i++)
+		for (int i = 0; i < orgList.size(); i++)
 			orgList.get(i).setChromosome(chromList.get(i));
 		return orgList;
 	}
 
 	/**
-	 *Pairs up indiv from the Organism Pair list parameter and
-	 *makes them into Pair objects. Puts Pairs into a LinkedList.
+	 * Pairs up indiv from the Organism Pair list parameter and makes them into
+	 * Pair objects. Puts Pairs into a LinkedList.
+	 * 
+	 * @param population
+	 * @return
 	 */
 	private LinkedList<Pair<Organism, Organism>> partnerSelect(
 			LinkedList<Organism> population) {
 		// pairList: list that will recieve the pairs
 		// of partners.
-		LinkedList<Pair<Organism, Organism>> pairList =
-			new LinkedList<Pair<Organism, Organism>>();
+		LinkedList<Pair<Organism, Organism>> pairList = new LinkedList<Pair<Organism, Organism>>();
 		// notSeenMap:
 		// key: Each org from population.
 		// val: A list of organisms that they have not
@@ -170,22 +269,24 @@ public class GEP {
 	}
 	
 	/**
-	 * @param partnerList - A LinkedList of organism Pairs.
-	 * Each member of a pair will compete with the other member.
-	 * @param tournProb-the probability at which either the 
-	 * more fit, or the less fit individual will be chosen.
+	 * @param partnerList
+	 *            - A LinkedList of organism Pairs. Each member of a pair will
+	 *            compete with the other member.
+	 * @param tournProb
+	 *            -the probability at which either the more fit, or the less fit
+	 *            individual will be chosen.
 	 */
-	//TODO: make org unaware of its own fitness.
+	// TODO: make org unaware of its own fitness.
 	private LinkedList<Organism> tournament(
 			LinkedList<Pair<Organism, Organism>> aPartners) {
-		
+
 		LinkedList<Organism> newPop = new LinkedList<Organism>();
-		//Iter through partners list.
-		for(int i = 0; i < aPartners.size(); i++) {
+		// Iter through partners list.
+		for (int i = 0; i < aPartners.size(); i++) {
 			Organism org1 = aPartners.get(i).getFst();
 			Organism org2 = aPartners.get(i).getSnd();
-			//TODO: change the fitness call when OrgData is used.
-			if(org1.getFitness() <= org2.getFitness())
+			// TODO: change the fitness call when OrgData is used.
+			if (org1.getFitness() <= org2.getFitness())
 				newPop.add(org1);
 			else
 				newPop.add(org2);
@@ -194,30 +295,34 @@ public class GEP {
 	}
 
 	/**
-	 * @param partnerList - A LinkedList of organism Pairs.
-	 * Each member of a pair will compete with the other member.
-	 * @param tournProb-the probability at which either the 
-	 * more fit, or the less fit individual will be chosen.
-	 * @param handicap- Handicap to false means that the tournProb
-	 * probability will be in favor of the most fit individuals.
-	 * Handicap to true means that the prob will favor the less fit individuals.
+	 * @param partnerList
+	 *            - A LinkedList of organism Pairs. Each member of a pair will
+	 *            compete with the another organism from the population. There
+	 *            will be no duplicate pairs in the returned list.
+	 * @param tournProb
+	 *            -the probability at which either the more fit, or the less fit
+	 *            individual will be chosen.
+	 * @param handicap
+	 *            - Handicap to false means that the tournProb probability will
+	 *            be in favor of the most fit individuals. Handicap to true
+	 *            means that the prob will favor the less fit individuals.
 	 * @return returns each winner of a match, as a Chromosome, in a LinkedList.
 	 */
-	//TODO: make org unaware of its own fitness.
+	// TODO: make org unaware of its own fitness.
 	private LinkedList<Organism> tournamentHandicap(
 			LinkedList<Pair<Organism, Organism>> partners) {
-		
+
 		LinkedList<Organism> newPop = new LinkedList<Organism>();
-		//Iter through partners list.
+		// Iter through partners list.
 		for (int i = 0; i < partners.size(); i++) {
 			Organism org1 = partners.get(i).getFst();
 			Organism org2 = partners.get(i).getSnd();
 
-			//TODO: change the fitness call when OrgData is used.
-			if(org1.getFitness() <= org2.getFitness())
-				if(!handicap)
+			// TODO: change the fitness call when OrgData is used.
+			if (org1.getFitness() <= org2.getFitness())
+				if (!handicap)
 					newPop.add(org2);
-				else if(ran.nextDouble() <= tournProb)
+				else if (ran.nextDouble() <= tournProb)
 					newPop.add(org1);
 				else
 					newPop.add(org2);
@@ -404,7 +509,11 @@ public class GEP {
 			if (ran.nextDouble() < onePtProb)
 				aPairList.get(i).getFst().crossOver(aPairList.get(i).getSnd());
 	}
-
+	
+	private void Elitism() {
+			
+	}
+	
 	public LinkedList<Organism> getOrgList() {
 		return orgList;
 	}
@@ -445,15 +554,26 @@ public class GEP {
 		twoPtProb = x;
 	}
 
-	public void setOrgList(LinkedList<Organism> anOrgList){
+	/**
+	 * @param anOrgList
+	 */
+	public void setOrgList(LinkedList<Organism> anOrgList) {
 		orgList = anOrgList;
 	}
 
-	//Used for debugging. Prints the line number.
-	public int getLineNumber() {
-		return Thread.currentThread().getStackTrace()[2].getLineNumber();
+	public void enableElitism(boolean aDoElitism, int aNumElites) {
+		doElitism = aDoElitism;
+		numElites = aNumElites;
 	}
-
+	
+	public void setElitism(boolean aDoElitism) {
+		doElitism = aDoElitism;
+	}
+	
+	public void setElitismNumber(int aNumElites) {
+		numElites = aNumElites;
+	}
+	
 	/**
 	 * For testing
 	 * @param population
@@ -535,15 +655,15 @@ public class GEP {
 	}
 
 	/**
-	 * Used for testing the GEP class. Simply prints a chromosome list
-	 * that is passed to it.
+	 * Used for testing the GEP class. Simply prints a chromosome list that is
+	 * passed to it.
 	 */
 	private void printGenes(LinkedList<Chromosome> aChromList) {
-		for(int i = 0; i < aChromList.size(); i++) {
+		for (int i = 0; i < aChromList.size(); i++) {
 			Chromosome chrom = aChromList.get(i);
 			out.println("Chromosome" + i);
-			for(int j = 0; j < chrom.size(); j++) {
-				for(int k = 0; k < chrom.getGene(j).size(); k++) {
+			for (int j = 0; j < chrom.size(); j++) {
+				for (int k = 0; k < chrom.getGene(j).size(); k++) {
 					out.print(chrom.getGene(j).getSym(k).charValue() + " ");
 				}
 				out.println();
@@ -551,6 +671,9 @@ public class GEP {
 		}
 	}
 	
+	/**
+	 * @param anOrgList
+	 */
 	private void printOrgListIdsAndFitness(LinkedList<Organism> anOrgList) {
 		out.println("Printing orgList Ids and Fitness");
 		out.println();
@@ -562,22 +685,27 @@ public class GEP {
 		out.println();		
 	}
 
+	/**
+	 * @param chromListAfterMateSelect
+	 */
 	private void printChromeListIds(
 			LinkedList<Chromosome> chromListAfterMateSelect) {
-		
+
 		System.out.println("Printing chromosome ids: ");
-		for (Chromosome chrom: chromListAfterMateSelect)
+		for (Chromosome chrom : chromListAfterMateSelect)
 			System.out.println(chrom.getId());
 		System.out.println();
 	}
 
+	/**
+	 * @param mates
+	 */
 	private void printMateListIds(LinkedList<Pair<Chromosome, Chromosome>> mates) {
 		out.println("chrom pair list with Ids:");
-		for (Pair<Chromosome, Chromosome> partners: mates) {
+		for (Pair<Chromosome, Chromosome> partners : mates) {
 			Chromosome c1 = partners.getFst();
 			Chromosome c2 = partners.getSnd();
-			out.println(c1.getId() +
-					" <=> " + c2.getId());
+			out.println(c1.getId() + " <=> " + c2.getId());
 		}
 		out.println();
 		out.println("chrom pair list size: " + mates.size());
@@ -591,6 +719,7 @@ public class GEP {
 			orgList.add(new Organism(true, 4, r.nextInt(20), i));
 		
 		/*GEP gep = new GEP(orgList, 0.75, 0.01, 0.01, 0.75, 0.75, true);*/
+		/*GEP gep = new GEP(orgList, 0.10, 0.01, 0.01, 0.75, 0.75, true);*/
 		GEP gep = new GEP(orgList, 0.10, 0.01, 0.01, 0.75, 0.75, true);
 		
 		// print original orgList.
@@ -637,26 +766,31 @@ public class GEP {
 
 		// Print the symbols stored in the genes of each chrom
 		// in the chromList.
-		System.out.println("Before crossover: ");
+		/*System.out.println("Before crossover: ");
 		System.out.println();
-		gep.printChromGenes(gep.makeChrmListFrmPair(afterMateSelect));
+		gep.printChromGenes(gep.makeChrmListFrmPair(afterMateSelect));*/
 
 		// One point crossover testing.
-		gep.onePointCrossOver(afterMateSelect);
+		/*gep.onePointCrossOver(afterMateSelect);*/
 		
 		//Print the result of crossOver.
-		System.out.println("After crossOver: ");
-		System.out.println();
+		/*System.out.println("After crossOver: ");
+		System.out.println();*/
 		// Make chromList of the crossedOver pairs.
-		LinkedList<Chromosome> nextGo =
+		/*LinkedList<Chromosome> nextGo =
 			gep.makeChrmListFrmPair(afterMateSelect);
-		gep.printChromGenes(nextGo);
+		gep.printChromGenes(nextGo);*/
 		// Pair up chroms again.
-		LinkedList<Pair<Chromosome, Chromosome>> afterSecondGo =
-			gep.mateSelect2(nextGo);
+		/*LinkedList<Pair<Chromosome, Chromosome>> afterSecondGo =
+			gep.mateSelect2(nextGo);*/
 		
 		//Perform 2-point cross over.
-		gep.onePointCrossOver(afterSecondGo);
-		gep.onePointCrossOver(afterSecondGo);
+		/*gep.onePointCrossOver(afterSecondGo);
+		gep.onePointCrossOver(afterSecondGo);*/
+	}
+
+	// Used for debugging. Prints the line number.
+	public int getLineNumber() {
+		return Thread.currentThread().getStackTrace()[2].getLineNumber();
 	}
 }

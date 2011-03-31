@@ -1,11 +1,9 @@
 package Interactive;
 
-import java.util.List;
-import java.util.Arrays;
-import java.util.Random;
-import java.util.Queue;
 import java.util.LinkedList;
-import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
 public class Chromosome extends Genetic implements Crossable<Chromosome> {
 
 	private List<Gene> chromosome;
@@ -54,15 +52,6 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 
 	public void mutate() {
 		getGene(ran.nextInt(size())).mutate();
-	}
-	
-	public Pair<Chromosome, Chromosome> crossOver2(Chromosome other) {
-		for (int i = 0; i < chromosome.size(); i++) {
-			Pair<Gene, Gene> genePair = getGene(i).crossOver(other.getGene(i));
-			setGene(i, genePair.left());
-			other.setGene(i, genePair.right());
-		}
-		return new Pair<Chromosome, Chromosome>(this, other);
 	}
 	
 	@Override
