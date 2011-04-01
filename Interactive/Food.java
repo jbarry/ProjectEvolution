@@ -69,8 +69,14 @@ public class Food extends Matter{
 	}
 
 	@Override
-	public int compareTo(Organism arg0) {
-		// TODO Auto-generated method stub
+	public int compareTo(Matter fd) {
+		// TODO: Generate code.
+		/*Food aFd = (Food) fd;
+		if (fitness < aFd.getFitness())
+			return -1;
+		else if (fitness == aFd.getFitness())
+			return 0;
+		return 1;*/
 		return 0;
 	}
 }

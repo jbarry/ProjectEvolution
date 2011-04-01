@@ -11,7 +11,7 @@ import java.util.Set;
 import Frame.Coordinate;
 import Frame.GridPanel;
 
-public abstract class Matter implements Comparable<Organism>{
+public abstract class Matter implements Comparable<Matter>{
 
 	protected Coordinate location;
 	protected double hlth;

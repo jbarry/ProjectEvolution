@@ -560,10 +560,11 @@ public class Organism extends Matter{
 	}
 
 	@Override
-	public int compareTo(Organism o) {
-		if (fitness < o.getFitness())
+	public int compareTo(Matter o) {
+		Organism org = (Organism)o;
+		if (fitness < org.getFitness())
 			return -1;
-		else if (fitness == o.getFitness())
+		else if (fitness == org.getFitness())
 			return 0;
 		return 1;
 	}
