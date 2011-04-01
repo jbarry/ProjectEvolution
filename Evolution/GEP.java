@@ -5,9 +5,11 @@ import static java.lang.System.out;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.Stack;
 
 import Frame.GridPanel;
 import Interactive.Chromosome;
@@ -216,12 +218,15 @@ public class GEP {
 	public LinkedList<Organism> newGeneration() {
 
 		// List to hold the Elite individuals.
-		List<Organism> eliteList = new ArrayList<Organism>();
-		// Assign fitness for each organism.
+		LinkedList<Chromosome> eliteList = new LinkedList<Chromosome>();
+		// Get the most elite indiv or individuals.
 		if (doElitism)
-			assembleElites(eliteList);
-		eliteList = new ArrayList<Organism>();
-		LinkedList<Chromosome> chromList = makeChromList(tournament(partnerSelect(orgList)));
+			eliteList = (LinkedList<Chromosome>) assembleElites((LinkedList<Organism>) orgList
+					.clone()); // Called on a clone of the orgList because
+								// ordering the original list may be a
+								// detriment to randomization.
+		LinkedList<Chromosome> chromList = 
+			makeChromList(tournament(partnerSelect(orgList)));
 		rotation(chromList);
 		mutation(chromList);
 		// Pair up Chromosomes in preparation
@@ -234,9 +239,17 @@ public class GEP {
 		// 2-point cross over.
 		onePointCrossOver(pairList);
 		onePointCrossOver(pairList);
+		LinkedList<Chromosome> finalChromes = makeChrmListFrmPair(pairList);
+
+		// Proceed with elitism if true.
+		if (eliteList.size() != 0)
+			transferElites(finalChromes, eliteList);
+		// Update the evaluations of the genes.
 		for (Chromosome chrom : chromList)
 			for (Gene gene : chrom.subListGene(0, chrom.size()))
 				gene.updateEvaledList();
+		// TODO: Shouldn't have to reset the orgLists chromosomes. The objects
+		// themselves should be changed already.
 		for (int i = 0; i < orgList.size(); i++)
 			orgList.get(i).setChromosome(chromList.get(i));
 		return orgList;
@@ -249,14 +262,30 @@ public class GEP {
 	 * @param anOrgList
 	 *            An organism list to find the most fit individuals from.
 	 */
-	private void assembleElites(LinkedList<Organism> anOrgList) {
+	private List<Chromosome> assembleElites(LinkedList<Organism> anOrgList) {
 		Collections.sort(anOrgList);
 		List<Chromosome> eliteList = new ArrayList<Chromosome>();
-		
+
 		for (int i = 0; i < numElites; i++)
 			eliteList.add(anOrgList.pop().getChromosome());
+		return eliteList;
 	}
 
+	/**
+	 * @param aFinalChromes
+	 * @param anEliteList
+	 */
+	private void transferElites(LinkedList<Chromosome> aFinalChromes,
+			LinkedList<Chromosome> anEliteList) {
+		
+		HashSet<Integer> indeces = new HashSet<Integer>();
+		indeces.add(ran.nextInt(aFinalChromes.size()));
+		while (indeces.size() != numElites)
+			indeces.add(ran.nextInt(aFinalChromes.size()));
+		LinkedList<Integer> indexList = new LinkedList<Integer>(indeces);
+		aFinalChromes.set(indexList.pop(), anEliteList.pop());
+	}
+	
 	/**
 	 * Pairs up indiv from the Organism Pair list parameter and makes them into
 	 * Pair objects. Puts Pairs into a LinkedList.
