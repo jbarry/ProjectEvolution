@@ -558,4 +558,13 @@ public class Organism extends Matter{
 	public int getNumAttacked() {
 		return numAttacked;
 	}
-}	
+
+	@Override
+	public int compareTo(Organism o) {
+		if (fitness < o.getFitness())
+			return -1;
+		else if (fitness == o.getFitness())
+			return 0;
+		return 1;
+	}
+}

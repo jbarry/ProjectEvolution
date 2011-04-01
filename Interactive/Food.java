@@ -67,4 +67,10 @@ public class Food extends Matter{
 	public int getHeight() {
 		return height;
 	}
+
+	@Override
+	public int compareTo(Organism arg0) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
