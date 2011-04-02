@@ -148,6 +148,26 @@ public class GEP {
 		return fitness;
 	}
 
+	public double fitnessTest(Organism org) {
+			double avgHealth = org.getHlthTot() / org.getSamples();
+			System.out.println("avgHealth: " + avgHealth);
+			double activity = (double) org.getNumSteps();
+			System.out.println("activity: " + activity);
+			double goodEating = (double) org.getHealthEat()
+					* (org.getHealthEat() + org.getPoisonEat() + org
+							.getTotalScans()) / (GridPanel.numFoodSources);
+			System.out.println("goodEating: " + goodEating);
+			double assertion = (double) (org.getNumSteps() + org.getNumAttacked() + org
+					.getNumPushed()) / (org.getHealthEat() + 1);
+			System.out.println("assertion: " + assertion);
+			double badEating = (double) org.getPoisonEat() + 1;
+			System.out.println("badEating: " + badEating);
+			double fitness = (avgHealth * (activity + goodEating + assertion))
+					/ badEating;
+			org.setFitness(fitness);
+			System.out.println();
+			return fitness;
+	}
 	/**
 	 * This method assigns a double representing fitness of each organism.
 	 * 

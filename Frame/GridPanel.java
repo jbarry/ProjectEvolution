@@ -432,7 +432,7 @@ public class GridPanel extends JPanel
 		clearLocations();
 		shuffleIds.clear();
 		for(Organism o: organisms) {
-			sum+=g.fitness(o);
+			sum+=g.fitnessTest(o);
 			o.newLocation();
 			o.addChromosome();
 			o.setHealth(o.getMaxHealth());

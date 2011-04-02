@@ -41,7 +41,7 @@ public class GEPTest {
 	// - even num
 	// - odd num
 	// - all 0 <= fitness < 1.
-	 @Parameters
+	 /*@Parameters
 	 public static List<Organism>[][] data() {
 		Random ran = new Random();
 		LinkedList<Organism> orgList1 = new LinkedList<Organism>();
@@ -63,7 +63,7 @@ public class GEPTest {
 		LinkedList<Organism> orgList8 = new LinkedList<Organism>();
 //		LinkedList<Organism>[][] data = new LinkedList<Organism>[][];
 		return data;
-	 }
+	 }*/
 
  	@Test
 	public final void testFitness() {
