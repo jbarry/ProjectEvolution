@@ -248,11 +248,11 @@ public class GEP {
 		mutation(chromList);
 		// Pair up Chromosomes in preparation
 		// for 1-point cross over.
-		LinkedList<Pair<Chromosome, Chromosome>> pairList = mateSelect(chromList);
+		LinkedList<Pair<Chromosome, Chromosome>> pairList = mateSelect2(chromList);
 		onePointCrossOver(pairList);
 		// Pair up Chromosomes again in preparation
 		// for 2-point cross over.
-		pairList = mateSelect(makeChrmListFrmPair(pairList));
+		pairList = mateSelect2(makeChrmListFrmPair(pairList));
 		// 2-point cross over.
 		onePointCrossOver(pairList);
 		onePointCrossOver(pairList);
@@ -271,6 +271,56 @@ public class GEP {
 			orgList.get(i).setChromosome(chromList.get(i));
 		return orgList;
 	}
+	
+	/**
+	 * The same as newGeneration except with print lines.
+	 * 
+	 * @return
+	 */
+	public LinkedList<Organism> newGenerationTest() {
+		printOrgListIdsAndFitness(orgList);
+		// List to hold the Elite individuals.
+		LinkedList<Chromosome> eliteList = new LinkedList<Chromosome>();
+		// Get the most elite indiv or individuals.
+		if (doElitism)
+			eliteList = (LinkedList<Chromosome>) assembleElitesTest((LinkedList<Organism>) orgList
+					.clone()); // Called on a clone of the orgList because
+								// ordering the original list may be a
+								// detriment to randomization.
+		System.out.println("The elites are: ");
+		printChromeListIds(eliteList);
+		
+		LinkedList<Chromosome> chromList = makeChromList(tournament(partnerSelect(orgList)));
+		rotation(chromList);
+		mutation(chromList);
+		// Pair up Chromosomes in preparation
+		// for 1-point cross over.
+		LinkedList<Pair<Chromosome, Chromosome>> pairList = mateSelect2(chromList);
+		onePointCrossOver(pairList);
+		// Pair up Chromosomes again in preparation
+		// for 2-point cross over.
+		pairList = mateSelect2(makeChrmListFrmPair(pairList));
+		// 2-point cross over.
+		onePointCrossOver(pairList);
+		onePointCrossOver(pairList);
+		LinkedList<Chromosome> finalChromes = makeChrmListFrmPair(pairList);
+
+		printChromeListIds(finalChromes);
+		// Proceed with elitism if true.
+		if (eliteList.size() != 0)
+			transferElites(finalChromes, eliteList);
+		printChromeListIds(finalChromes);
+		
+		// Update the evaluations of the genes.
+		/*for (Chromosome chrom : chromList)
+			for (Gene gene : chrom.subListGene(0, chrom.size()))
+				gene.updateEvaledList();
+		// TODO: Shouldn't have to reset the orgLists chromosomes. The objects
+		// themselves should be changed already.
+		for (int i = 0; i < orgList.size(); i++)
+			orgList.get(i).setChromosome(chromList.get(i));*/
+		return orgList;
+	}
 
 	/**
 	 * This method retreives the most elite members of the organism list. The
@@ -281,13 +331,26 @@ public class GEP {
 	 */
 	public List<Chromosome> assembleElites(LinkedList<Organism> anOrgList) {
 		Collections.sort(anOrgList);
-		List<Chromosome> eliteList = new ArrayList<Chromosome>();
+		List<Chromosome> eliteList = new LinkedList<Chromosome>();
 
 		for (int i = 0; i < numElites; i++)
-			eliteList.add(anOrgList.pop().getChromosome());
+			eliteList.add(anOrgList.pollLast().getChromosome());
 		return eliteList;
 	}
 
+	public List<Chromosome> assembleElitesTest(LinkedList<Organism> anOrgList) {
+		System.out.println("before ordering: ");
+		printOrgListIdsAndFitness(anOrgList);
+		Collections.sort(anOrgList);
+		System.out.println("after ordering: ");
+		printOrgListIdsAndFitness(anOrgList);
+		List<Chromosome> eliteList = new LinkedList<Chromosome>();
+
+		for (int i = 0; i < numElites; i++)
+			eliteList.add(anOrgList.pollLast().getChromosome());
+		return eliteList;
+	}
+	
 	/**
 	 * @param aFinalChromes
 	 * @param anEliteList
@@ -492,6 +555,7 @@ public class GEP {
 			if (competitors.size() == 0) {
 				mate = ran.nextInt(aChromList.size());
 				aChromList.remove(chrom);
+				// TODO: ind out of bounds error at 558.
 				partner = aChromList.get(mate);
 			} else {
 				mate = ran.nextInt(competitors.size());
@@ -771,13 +835,13 @@ public class GEP {
 	}
 
 	/**
-	 * @param chromListAfterMateSelect
+	 * @param chromeList
 	 */
 	public void printChromeListIds(
-			LinkedList<Chromosome> chromListAfterMateSelect) {
+			LinkedList<Chromosome> chromeList) {
 
 		System.out.println("Printing chromosome ids: ");
-		for (Chromosome chrom : chromListAfterMateSelect)
+		for (Chromosome chrom : chromeList)
 			System.out.println(chrom.getId());
 		System.out.println();
 	}
@@ -805,7 +869,9 @@ public class GEP {
 
 		/* GEP gep = new GEP(orgList, 0.75, 0.01, 0.01, 0.75, 0.75, true); */
 		/* GEP gep = new GEP(orgList, 0.10, 0.01, 0.01, 0.75, 0.75, true); */
-		GEP gep = new GEP(orgList, 0.10, 0.01, 0.01, 0.75, 0.75, true);
+		/*GEP gep = new GEP(orgList, 0.10, 0.01, 0.01, 0.75, 0.75, true);*/
+		GEP gep = new GEP(orgList, 0.75, 0.01, 0.01, 0.75, 0.75, 2, false, true); // Elitism ctor.
+		gep.newGenerationTest();
 
 		// print original orgList.
 		/*
@@ -816,8 +882,8 @@ public class GEP {
 		 * System.out.println(); out.println("orgListSize" +
 		 * gep.getOrgList().size()); out.println();
 		 */
-		LinkedList<Pair<Organism, Organism>> partners = gep.partnerSelect(gep
-				.getOrgList());
+		/*LinkedList<Pair<Organism, Organism>> partners = gep.partnerSelect(gep
+				.getOrgList());*/
 		// print the ids of the pair of orgs after
 		// partnerSelect is called.
 		/* System.out.println("After partner select:"); */
@@ -826,9 +892,9 @@ public class GEP {
 		// test that tournament with handicap works properly.
 		/* LinkedList<Organism> afterTournOrgs = gep.tournament(partners); */
 		/* System.out.println("afterTournOrgs size: " + afterTournOrgs.size()); */
-		LinkedList<Organism> afterTournOrgs = gep.tournamentWithPrint(partners);
+		/*LinkedList<Organism> afterTournOrgs = gep.tournamentWithPrint(partners);
 		System.out.println();
-		System.out.println("afterTournOrgs size: " + afterTournOrgs.size());
+		System.out.println("afterTournOrgs size: " + afterTournOrgs.size());*/
 		/*
 		 * LinkedList<Organism> afterTournOrgs =
 		 * gep.tournamentHandicapWithPrint(partners);
@@ -838,11 +904,11 @@ public class GEP {
 
 		// Test mateSelect();
 		// Make a new ChromList.
-		LinkedList<Chromosome> afterTournChromList = gep
-				.makeChromList(afterTournOrgs);
+		/*LinkedList<Chromosome> afterTournChromList = gep
+				.makeChromList(afterTournOrgs);*/
 		// Print the ids of the chromosomes in the
 		// chrome list after tournament occurs.
-		System.out.println("Chromosome ids in list after tournament:");
+		/*System.out.println("Chromosome ids in list after tournament:");
 		gep.printChromeListIds(afterTournChromList);
 		// Call mateSelect().
 		LinkedList<Pair<Chromosome, Chromosome>> afterMateSelect = gep
@@ -850,7 +916,7 @@ public class GEP {
 		// Print representation of chrom's ids in pairs.
 
 		System.out.println("Pair representation of chromosome mates:");
-		gep.printMateListIds(afterMateSelect);
+		gep.printMateListIds(afterMateSelect);*/
 
 		// Print the symbols stored in the genes of each chrom
 		// in the chromList.
