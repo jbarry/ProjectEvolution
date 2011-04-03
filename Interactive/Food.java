@@ -9,7 +9,7 @@ import java.util.Set;
 import Frame.*;
 import Evolution.*;
 @SuppressWarnings("all")
-public class Food extends Matter{
+public abstract class Food extends Matter{
 	//------------------------------------------------------------------------------------
 	//--globals--
 	//------------------------------------------------------------------------------------
@@ -79,4 +79,6 @@ public class Food extends Matter{
 		return 1;*/
 		return 0;
 	}
+
+	public abstract Double getType();
 }

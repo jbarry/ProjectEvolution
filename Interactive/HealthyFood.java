@@ -43,4 +43,9 @@ public class HealthyFood extends Food {
 					   getWidth(), getHeight());
 		}
 	}
+
+	@Override
+	public Double getType() {
+		return 3.0;
+	}
 }

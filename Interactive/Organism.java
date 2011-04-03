@@ -606,4 +606,23 @@ public class Organism extends Matter{
 			return 0;
 		return 1;
 	}
+
+	public void attack2(int orgIndex, ArrayList<Organism> aOrgsUsed) {
+		/*
+		 * System.out.print("Attacking org " + orgIndex + "(" +
+		 * organisms.get(orgIndex).getLocation().getX() + " " +
+		 * organisms.get(orgIndex).getLocation().getY() + "). Health: " +
+		 * organisms.get(orgIndex).getHealth());
+		 */
+		Organism org = aOrgsUsed.get(orgIndex);
+		if(org.deplete(5))
+			aOrgsUsed.remove(org);
+		
+		numAttacked++;
+		aOrgsUsed.get(this.getId()).setAction("Attacking org " + orgIndex);
+		/*
+		 * System.out.print(". Health: " + organisms.get(orgIndex).getHealth());
+		 * System.out.println(". Attacked by org " + this.id);
+		 */
+	}
 }
