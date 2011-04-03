@@ -3,6 +3,7 @@ package Interactive;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.LinkedList;
@@ -136,6 +137,43 @@ public class Organism extends Matter{
 			eatFail--;
 			deplete(fdVal);
 		}
+	}
+	
+	/**
+	 * @param scanRange
+	 * @return
+	 */
+	public List<Integer> getFoodInRange(int scanRange) {
+		Set<Integer> objectIds = new HashSet<Integer>();
+		//create a square from cornerTop to cornerBottom of 
+		//dimension scanRange+getWidth/2 X scanRange+getHeight/2 to be scanned.
+		int widthSub = location.getX() - (getWidth()/2);
+		int widthPlus = location.getX() + (getWidth()/2);
+		int heightSub = location.getY() - (getHeight()/2);
+		int heightPlus = location.getY() + (getHeight()/2);
+		
+		Coordinate cornerTop =
+			new Coordinate(widthSub - scanRange, heightSub - scanRange);
+		Coordinate cornerBottom =
+			new Coordinate(widthPlus + scanRange, heightPlus + scanRange);
+		
+		for (int i = cornerTop.getX(); i <= cornerBottom.getX(); i++) {
+			for (int j = cornerTop.getY(); j <= cornerBottom.getY(); j++) {
+				try {
+					// count all occurrences of objects in location map
+					Pair<Integer, Character> space = GridPanel.locationMap[i][j];
+					if (space.getSnd() == 'h' || space.getSnd() == 'p')
+						objectIds.add(space.getFst());
+				} catch (ArrayIndexOutOfBoundsException e) {
+				}
+			}
+		}
+//		Test prints
+//		System.out.println("Organism " + this.getId() + " is scanning from" + location.getX() + ", " + location.getY());
+//		System.out.println("The scan range is " + scanRange + " and the square is from " + cornerTop.getX() + ", " + cornerBottom.getY() 
+//				+ "to " + cornerBottom.getX() + ", " + cornerBottom.getY());
+		
+		return new ArrayList<Integer>(objectIds);
 	}
 	
 	public void moveNorth(LinkedList<Organism> organisms, boolean wasPushed) {

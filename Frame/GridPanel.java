@@ -18,6 +18,7 @@ import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import Interactive.Pair;
 import javax.swing.Timer;
@@ -48,6 +49,7 @@ public class GridPanel extends JPanel
 	private LinkedList<Organism> organisms;
 	private LinkedList<HealthyFood> healthFd;
 	private LinkedList<PoisonousFood> poisFood;
+	private LinkedList<Food> food;
 	public static ArrayList<Organism> orgsUsed = 
 		new ArrayList<Organism>();
 	private ArrayList<OrgData> orgsData;
@@ -89,6 +91,7 @@ public class GridPanel extends JPanel
 				organisms = new LinkedList<Organism>();
 				healthFd = new LinkedList<HealthyFood>();
 				poisFood = new LinkedList<PoisonousFood>();
+				food = new LinkedList<Food>();
 
 				// track user mouse movement.
 				addMouseMotionListener(new MouseMotionListenerClass(
@@ -100,8 +103,8 @@ public class GridPanel extends JPanel
 					public void actionPerformed(ActionEvent e) {
 						if (timePassed < lengthGeneration) {
 							timePassed++;
-							simulateStep();
-							/* simulateStep2();*/
+							/*simulateStep();*/
+							 simulateStep2();
 							repaint();
 						} else if (trialNum < trialsPerGen) {
 							newTrial();
@@ -145,12 +148,15 @@ public class GridPanel extends JPanel
 		GUI.genPanel.removeGenerations(generation);
 		healthFd.clear();
 		poisFood.clear();
+		food.clear();
+		
 		for(int i = 0; i < numFoodSources; i++) {
 			HealthyFood h = new HealthyFood(100.0, i, 2);
 			PoisonousFood f = new PoisonousFood(100.0, i, 2);
 			healthFd.add(h);
 			poisFood.add(f);
 		}
+		
 	}
 
 	public void clearLocations(){
@@ -165,7 +171,7 @@ public class GridPanel extends JPanel
 	/**
 	 * Sets the initial game state of the GridPanel
 	 */
-	public void initialize(){
+	public void initialize() {
 		//reset all generation info from previous simulations.
 		generationNum = 1;
 		trialNum = 1;
@@ -205,7 +211,6 @@ public class GridPanel extends JPanel
 			o.addStartingLocation();
 			o.addChromosome();
 		}
-		
 		for(int i = 0; i < numFoodSources; i++) {
 			HealthyFood h = new HealthyFood(100.0, i, 2);
 			PoisonousFood f = new PoisonousFood(100.0, i, 2);
@@ -218,7 +223,7 @@ public class GridPanel extends JPanel
 	/**
 	 * Sets the initial game state of the GridPanel
 	 */
-	public void initialize2(){
+	public void initialize2() {
 		//reset all generation info from previous simulations.
 		generationNum = 1;
 		trialNum = 1;
@@ -266,6 +271,66 @@ public class GridPanel extends JPanel
 			healthFd.add(h);
 			poisFood.add(f);
 		}
+		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
+	}
+	
+	/**
+	 * Sets the initial game state of the GridPanel.
+	 * This initialize is where I am trying to implement the food list.
+	 */
+	public void initialize3() {
+		//reset all generation info from previous simulations.
+		generationNum = 1;
+		trialNum = 1;
+		GUI.genPanel.resetGenInformation();
+		ran = new Random();
+		timePassed = 0;
+		shuffleIds = new ArrayList<Integer>();
+		
+		/*
+		 * location map will consist of:
+		 * 	key: current instance number of object
+		 *  value:
+		 * 		'w' for white space or available.
+		 * 		'o' for organism.
+		 * 		'h' for healthy food.
+		 * 		'p' for poisonous food.
+		 */
+		locationMap = new Pair[GridPanel.WIDTH][GridPanel.HEIGHT];
+		clearLocations();
+	
+		norm = new Normalizer(
+				new Pair<Double, Double> (-600.0, 600.0),
+				new Pair<Double, Double> (-50.0, 50.0));
+	
+		organisms.clear();
+		healthFd.clear();
+		poisFood.clear();
+		shuffleIds.clear();
+		food.clear();
+		
+		numFoodSources = OptionsPanel.numOrganisms/5;
+		
+		for(int i = 0; i < OptionsPanel.numOrganisms; i++){
+			Organism o = new Organism(100.00, 11, i);
+			organisms.add(o);
+			
+			shuffleIds.add(i);
+			o.addStartingLocation();
+			o.addChromosome();
+		}
+		for(int i = 0; i < numFoodSources; i++) {
+			HealthyFood h = new HealthyFood(100.0, i, 2);
+			PoisonousFood f = new PoisonousFood(100.0, i, 2);
+			healthFd.add(h);
+			poisFood.add(f);
+		}
+		for (int i = 0; i < (numFoodSources*2); i++)
+			if(ran.nextBoolean())
+				food.add(new HealthyFood(100.0, i, 2));
+			else 
+				food.add(new PoisonousFood(100.0, i, 2));
+		
 		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
 	}
 	
@@ -821,10 +886,29 @@ public class GridPanel extends JPanel
 	
 	private void simulateStep2() {
 		Collections.shuffle(orgsUsed);
-		mainLoop: for(int i = 0; i < orgsUsed.size(); i++) {
+		mainLoop: for(int i = 0; i < orgsUsed.size(); i++) { // mainLoop.
 			Organism org = orgsUsed.get(i);
-			
-		} //end mainLoop.
+			if(org.deplete(org.getMaxHealth()/lengthGeneration))
+				continue mainLoop;
+			// Get the healthy food in the organisms sight range.
+			ArrayList<Integer> healthyFoodInRangeIds = org
+					.getSurroundingObjects('h', 20);
+			LinkedList<Food> healthyFoodInRange = new LinkedList<Food>();
+			for (Integer integer : healthyFoodInRangeIds)
+				healthyFoodInRange.add(healthFd.get(integer));
+			ArrayList<Integer> poisFoodInRangeIds = org.getSurroundingObjects('p', 20);
+			LinkedList<PoisonousFood> poisFoodInRange = new LinkedList<PoisonousFood>();
+			for (Integer integer : poisFoodInRangeIds)
+				poisFoodInRange.add(poisFood.get(integer));
+			LinkedList<Food> foodInRange = new LinkedList<Food>();
+			foodInRange.addAll(healthyFoodInRange);
+			foodInRange.addAll(poisFoodInRange);
+			if(!foodInRange.isEmpty()) { // If the organism has something in its sight range.
+				Chromosome chrome = org.getChromosome();
+			} else { // If the organism has nothing in its sight range.
+				
+			}
+		} // End mainLoop.
 	}
 	
 	private void simulateStep(){

@@ -36,12 +36,14 @@ public abstract class Matter implements Comparable<Matter>{
 		place(type);
 	}
 
-	public void deplete(double val) {
-		if (hlth - val < 0)
+	public boolean deplete(double val) {
+		if (hlth - val < 0) {
 			hlth = 0;
-		else hlth-=val;
-		if(hlth == 0)
 			setRange(this.getWidth(), this.getHeight(), 'w');
+			return true;
+		}
+		else hlth-=val;
+		return false;
 	}
 	
 	/**
@@ -113,6 +115,9 @@ public abstract class Matter implements Comparable<Matter>{
 		return new ArrayList<Integer>(objectIds);
 	}
 	
+	/**
+	 * @param type
+	 */
 	private void place(char type) {
 		//set location
 		int x = r.nextInt(GridPanel.WIDTH);
