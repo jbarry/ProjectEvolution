@@ -82,4 +82,13 @@ public abstract class Food extends Matter{
 
 	public abstract Double getType();
 	public abstract void paint(Graphics g, boolean isDepleted);
+	
+	public void printInfo() {
+		System.out.println("Food: ");
+		System.out.println("Id: " + id);
+		System.out.println("Health: " + hlth);
+		System.out.println("Position: (" + location.getX() + ", "
+				+ location.getY() + ")");
+		System.out.println();
+	}
 }

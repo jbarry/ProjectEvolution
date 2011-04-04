@@ -53,7 +53,7 @@ public class GridPanel extends JPanel {
 	private ArrayList<Integer> shuffleIds;
 	private ArrayList<String> shuffleStringIds;
 	private int lengthTimeStep = 100;
-	private int lengthGeneration = 10;
+	private int lengthGeneration = 300;
 	private int timePassed = 0;
 	private int trialsPerGen = 1;
 	public int trialNum = 1;
@@ -100,7 +100,7 @@ public class GridPanel extends JPanel {
 							timePassed++;
 							/* simulateStep(); */
 							/*simulateStep2(2);*/
-							simulateStep2Test(2);
+							simulateStep2Test(4);
 							repaint();
 						} else if (trialNum < trialsPerGen)
 							newTrial();
@@ -242,7 +242,7 @@ public class GridPanel extends JPanel {
 		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
 	}
 
-	private void doAction(Organism org, Pair<Integer, Double> bestEval) {
+	private boolean doAction(Organism org, Pair<Integer, Double> bestEval) {
 
 		switch (bestEval.left()) {
 		case 0:
@@ -287,14 +287,14 @@ public class GridPanel extends JPanel {
 			break;
 		case 8:
 			// doEat(org);
-			eat(org);
-			break;
+			return eat(org);
 		case 9:
 			attack(org);
 			break;
 		case 10:
 			push(org);
 		}
+		return false;
 	}
 
 	private void doAction(Organism org, ArrayList<Organism> orgsUsed,
@@ -375,39 +375,20 @@ public class GridPanel extends JPanel {
 		}
 	}
 
-	private void eat(Organism org) {
-		/* out.println("org about to eat id: " + org.getId()); */
-		ArrayList<Integer> surrndngHlthyFd = org.getSurroundingObjects('h', 2);
-		ArrayList<Integer> surrndngPoisFd = org.getSurroundingObjects('p', 2);
-		if (surrndngHlthyFd.size() != 0) {
-			Food toEat = healthFd.get(surrndngHlthyFd.get(0));
-
-			out.println("orgId: " + org.getId());
-			out.print("orgPos: ");
-			org.printLocation();
-			out.print("FdLoc: ");
-			toEat.printLocation();
-
-			org.eatFood(toEat, 7.0);
-			if (toEat.getHealth() <= 0) {
-				toEat.setRange(toEat.getWidth(), toEat.getWidth(), 'w');
-				healthFd.set(toEat.getId(), null);
-			}
-		} else if (surrndngPoisFd.size() != 0) {
-			Food toEat = poisFood.get(surrndngPoisFd.get(0));
-
-			out.println("orgId: " + org.getId());
-			out.print("orgPos: ");
-			org.printLocation();
-			out.print("FdLoc: ");
-			toEat.printLocation();
-
-			org.eatFood(poisFood.get(surrndngPoisFd.get(0)), 5.0);
-			if (toEat.getHealth() <= 0) {
-				toEat.setRange(toEat.getWidth(), toEat.getWidth(), 'w');
-				poisFood.set(toEat.getId(), null);
-			}
+	private boolean eat(Organism org) {
+		LinkedList<Food> foodToEatList = (LinkedList<Food>) collectFoodInRange2(
+				org, 30);
+		Food foodToEat;
+		if (!foodToEatList.isEmpty()) {
+			foodToEat = foodToEatList.get(ran.nextInt(foodToEatList.size()));
+		} else {
+			/*System.out.println("Fired Gene without any food in range.");*/
+			return false;
 		}
+		org.printInfo();
+		System.out.println("Ate food");
+		foodToEat.printInfo();
+		return org.changeHealth(5 * foodToEat.getType());
 	}
 
 	private void attack(Organism org) {
@@ -1021,13 +1002,12 @@ public class GridPanel extends JPanel {
 				// Check to see if the Organism is dead, if so remove that org
 				// from the shuffleIds list.
 				if (deplete(org, depleteValue)) {
-					System.out.println("removing");
 					/*shuffleStringIds.remove(Integer.toString(org.getId()));*/
 					shuffleIds.remove(new Integer(org.getId()));
 					continue mainLoop;
 				}
 				// Get the food in the org's sight range.
-				LinkedList<Food> foodInRange = (LinkedList<Food>) collectFoodInRange2(org);
+				LinkedList<Food> foodInRange = (LinkedList<Food>) collectFoodInRange2(org, 30);
 				Chromosome chrome = org.getChromosome();
 				Pair<Integer, Double> bestEval = null;
 				// If the organism has something in its sight range.
@@ -1061,7 +1041,10 @@ public class GridPanel extends JPanel {
 						} // end if.
 					} // End loopGenes.
 				} // end Else.
-				doAction(org, bestEval);
+				if (doAction(org, bestEval)) {
+					shuffleIds.remove(new Integer(org.getId()));
+					continue mainLoop;
+				}
 			}
 		} // End mainLoop.
 	}
@@ -1088,41 +1071,43 @@ public class GridPanel extends JPanel {
 				// from the shuffleIds list.
 				/*org.printInfo();*/
 				if (deplete(org, depleteValue)) {
-					/*Integer integer = new Integer(org.getId());*/
-					/*System.out.println("Integer object val: " + integer);
-					System.out.println("shuffleIds val: " + shuffleIds.get(integer));*/
+					System.out.println("removing on deplete");
+					/*shuffleStringIds.remove(Integer.toString(org.getId()));*/
 					shuffleIds.remove(new Integer(org.getId()));
-					System.out.println("removing");
 					continue mainLoop;
 				}
 				// Get the food in the org's sight range.
-				LinkedList<Food> foodInRange = (LinkedList<Food>) collectFoodInRange2(org);
+				LinkedList<Food> foodInRange = (LinkedList<Food>) collectFoodInRange2Test(org);
 				Chromosome chrome = org.getChromosome();
 				Pair<Integer, Double> bestEval = null;
 				// If the organism has something in its sight range.
 				if (!foodInRange.isEmpty()) {
+					Gene currentGene = chrome.getGene(0);
+					// Initialize the variable that decides the resulting
+					// action.
+					bestEval = new Pair<Integer, Double>(0,
+							evaluateGeneFoodInRange(org, currentGene, foodInRange.get(0)));
 					// Loop through Genes in Chromosome.
-					loopGenes: for (int j = 0; j < chrome.size(); j++) {
-						Gene currentGene = chrome.getGene(j);
-						// Initialize the variable that decides the resulting
-						// action.
-						bestEval = new Pair<Integer, Double>(0,
-								evaluateGeneFoodInRange(org, currentGene,
-										foodInRange.get(0)));
+					loopGenes: for (int j = 1; j < chrome.size(); j++) {
+						currentGene = chrome.getGene(j);
+						/*System.out.println("First Result: " + bestEval.getSnd());*/
 						loopFood: for (int k = 1; k < foodInRange.size(); k++) { // loopFood.
 							double aResult = evaluateGeneFoodInRange(org,
 									currentGene, foodInRange.get(k));
+							/*System.out.println("on food" + k);
+							System.out.println("Result for eval: " + aResult);*/
 							if (aResult > bestEval.getSnd()) {
+								/*System.out.println("Replaced!! result");*/
 								bestEval.setLeft(k);
 								bestEval.setRight(aResult);
 							}
 						} // End loopFood.
 					} // End loopGenes.
 				} else { // If the organism has nothing in its sight range.
-					bestEval = new Pair<Integer, Double>(0, evaluateGene(org,
-							chrome.getGene(0)));
+					Gene currentGene = chrome.getGene(0);
+					bestEval = new Pair<Integer, Double>(0, evaluateGene(org, currentGene));
 					loopGenes: for (int j = 1; j < chrome.size(); j++) { // loopGenes.
-						Gene currentGene = chrome.getGene(j);
+						currentGene = chrome.getGene(j);
 						double aResult = evaluateGene(org, currentGene);
 						if (aResult > bestEval.getSnd()) {
 							bestEval.setLeft(j);
@@ -1130,11 +1115,17 @@ public class GridPanel extends JPanel {
 						} // end if.
 					} // End loopGenes.
 				} // end Else.
-				doAction(org, bestEval);
+				/*System.out.println("Action result: " + bestEval.getSnd());*/
+				if (doAction(org, bestEval)) {
+					System.out.println("removing on action");
+					/* shuffleStringIds.remove(Integer.toString(org.getId())); */
+					shuffleIds.remove(new Integer(org.getId()));
+					continue mainLoop;
+				}
 			}
 		} // End mainLoop.
 	}
-	
+
 	private double evaluateGene(Organism org, Gene currentGene) {
 		HashMap<String, Double> environment = new HashMap<String, Double>();
 		double orgX = norm.normalize(org.getLocation().getX());
@@ -1216,10 +1207,10 @@ public class GridPanel extends JPanel {
 	 * @return
 	 */
 	// Uses abstract Food class instead of HealthyFood and Poisonous Food.
-	private List<Food> collectFoodInRange2(Organism org) {
+	private List<Food> collectFoodInRange2(Organism org, int aRange) {
 		// List of Ids of the food in range.
 		ArrayList<Integer> foodInRangeIds = (ArrayList<Integer>) org
-				.getFoodInRange(30);
+				.getFoodInRange(aRange);
 		// List to be filled with actual food objects.
 		LinkedList<Food> foodInRange = new LinkedList<Food>();
 		// Fill the healthyFoodInRange list with food objects obtained from
@@ -1227,6 +1218,48 @@ public class GridPanel extends JPanel {
 		if (!foodInRangeIds.isEmpty())
 			for (Integer integer : foodInRangeIds)
 				foodInRange.add(food.get(integer));
+		return foodInRange;
+	}
+	
+	/**
+	 * This method gets all returns a list of all the Food objects that are in
+	 * the org's sight range.
+	 * 
+	 * @param org
+	 * @return
+	 */
+	/*FOR TESTING.*/
+	// Uses abstract Food class instead of HealthyFood and Poisonous Food.
+	private List<Food> collectFoodInRange2Test(Organism org) {
+		int sightRange = 30;
+		// List of Ids of the food in range.
+		ArrayList<Integer> foodInRangeIds = (ArrayList<Integer>) org
+				.getFoodInRange(sightRange);
+		// List to be filled with actual food objects.
+		LinkedList<Food> foodInRange = new LinkedList<Food>();
+		// Fill the healthyFoodInRange list with food objects obtained from
+		// ids.
+		if (!foodInRangeIds.isEmpty())
+			for (Integer integer : foodInRangeIds)
+				foodInRange.add(food.get(integer));
+		for (Food f : foodInRange) {
+			Coordinate c = f.getLocation();
+			int fX = c.getX();
+			int fY = c.getY();
+			Coordinate cOrg = org.getLocation();
+			int oX = cOrg.getX();
+			int oY = cOrg.getY();
+			int xRange = Math.abs(oX - fX);
+			int yRange = Math.abs(oY - fY);
+			if(xRange > sightRange + 4) {
+				System.out.println("out of range x");
+				System.out.println("xRange: " + xRange);
+			}
+			if(yRange > sightRange + 4) {
+				System.out.println("out of range y");
+				System.out.println("yRange: " + yRange);
+			}
+		}
 		return foodInRange;
 	}
 	

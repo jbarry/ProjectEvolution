@@ -47,6 +47,6 @@ public class PoisonousFood extends Food{
 
 	@Override
 	public Double getType() {
-		return -3.0;
+		return -1.0;
 	}
 }

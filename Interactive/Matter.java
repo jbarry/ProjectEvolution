@@ -44,6 +44,16 @@ public abstract class Matter implements Comparable<Matter>{
 		else hlth-=val;
 		return false;
 	}
+	
+	public boolean changeHealth(double val) {
+		hlth+=val;
+		if (hlth <= 0) {
+			hlth = 0;
+			return true;
+		} else if (hlth > mxHlth)
+			hlth = mxHlth;
+		return false;
+	}
 
 	public void decreaseHealth(double val) {
 		if (hlth - val < 0) {
