@@ -149,7 +149,7 @@ public class GridPanel extends JPanel {
 	}
 
 	/**
-	 * Sets the initial game state of the GridPanel
+	 * Sets the initial game state of the GridPanel.
 	 */
 	public void initialize() {
 		// reset all generation info from previous simulations.
@@ -213,17 +213,13 @@ public class GridPanel extends JPanel {
 		// healthy food. 'p' for poisonous food.
 		locationMap = new Pair[GridPanel.WIDTH][GridPanel.HEIGHT];
 		clearLocations();
-
 		norm = new Normalizer(new Pair<Double, Double>(-600.0, 600.0),
 				new Pair<Double, Double>(-50.0, 50.0));
-
 		organisms.clear();
 		healthFd.clear();
 		poisFood.clear();
 		shuffleIds.clear();
-
 		numFoodSources = OptionsPanel.numOrganisms / 4;
-
 		// Create organisms and orgdata.
 		for (int i = 0; i < OptionsPanel.numOrganisms; i++) {
 			Organism o = new Organism(100.00, 11, i);
@@ -232,14 +228,11 @@ public class GridPanel extends JPanel {
 			o.addStartingLocation();
 			o.addChromosome();
 		}
-
 		/*orgsUsed = (LinkedList<Organism>) organisms.clone();*/
-
 		if (orgsUsed != null)
 			System.out.println(orgsUsed.size());
 		else
 			System.out.println("Is null");
-
 		// Create healthyfood and poisonous food.
 		for (int i = 0; i < numFoodSources; i++) {
 			HealthyFood h = new HealthyFood(100.0, i, 2);
@@ -859,30 +852,24 @@ public class GridPanel extends JPanel {
 		super.paintComponent(g);
 
 		// handle each new organism created.
-		for (Organism org : organisms) {
+		for (Organism org : organisms)
 			/* if(shuffleIds.contains(org.getId())) */
 			org.paint(g);
-		}
-
-		for (HealthyFood h : healthFd) {
-			if (h != null) {
-				if (h.getHealth() > 0) {
+		for (Food f : food)
+			if (f.getHealth() > 0)
+				f.paint(g, false);
+		/*for (HealthyFood h : healthFd)
+			if (h != null)
+				if (h.getHealth() > 0)
 					h.paint(g, false);
-				} else {
+				else
 					h.paint(g, true);
-				}
-			}
-		}
-
-		for (PoisonousFood p : poisFood) {
-			if (p != null) {
-				if (p.getHealth() > 0) {
+		for (PoisonousFood p : poisFood)
+			if (p != null)
+				if (p.getHealth() > 0)
 					p.paint(g, false);
-				} else {
-					p.paint(g, true);
-				}
-			}
-		}
+				else
+					p.paint(g, true);*/
 	}
 
 	
@@ -1024,7 +1011,7 @@ public class GridPanel extends JPanel {
 			// Get an Organism corresponding the the ids in the shuffleIds list.
 			Organism org = organisms.get(shuffleIds.get(i));
 			for (int l = 0; l < numActions; l++) {
-				org.incHlthTot(); // Sample for fitness function.
+				org.incHlthTot(); // SamisDepletedple for fitness function.
 				// depleteValue is the value to decrease the Organism's health
 				// by at each time step.
 				double depleteValue = org.getMaxHealth() / lengthGeneration;
@@ -1036,7 +1023,7 @@ public class GridPanel extends JPanel {
 					continue mainLoop;
 				}
 				// Get the food in the org's sight range.
-				LinkedList<Food> foodInRange = (LinkedList<Food>) collectFoodInRange(org);
+				LinkedList<Food> foodInRange = (LinkedList<Food>) collectFoodInRange2(org);
 				Chromosome chrome = org.getChromosome();
 				Pair<Integer, Double> bestEval = null;
 				// If the organism has something in its sight range.

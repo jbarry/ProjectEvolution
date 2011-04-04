@@ -81,4 +81,5 @@ public abstract class Food extends Matter{
 	}
 
 	public abstract Double getType();
+	public abstract void paint(Graphics g, boolean isDepleted);
 }

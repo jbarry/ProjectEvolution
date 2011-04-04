@@ -165,8 +165,6 @@ public class Organism extends Matter{
 					if (space.getSnd() == 'h' || space.getSnd() == 'p')
 						objectIds.add(space.getFst());
 				} catch (ArrayIndexOutOfBoundsException e) {
-					System.err
-							.println("ArrayIndexOutOfBoundsException in the getFoodInRange method");
 				}
 			}
 		}

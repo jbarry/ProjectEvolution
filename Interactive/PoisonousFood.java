@@ -33,7 +33,7 @@ public class PoisonousFood extends Food{
 		return str;		
 	}
 
-	
+	@Override
 	public void paint(Graphics g, boolean isDepleted) {
 		g.setColor(Color.RED);
 
@@ -49,6 +49,4 @@ public class PoisonousFood extends Food{
 	public Double getType() {
 		return -3.0;
 	}
-
-
 }
