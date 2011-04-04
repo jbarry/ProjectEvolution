@@ -110,7 +110,7 @@ public class Organism extends Matter{
 	}	
 	
 	public void eatFood(Food f, double fdVal){
-		f.deplete(fdVal);
+		f.decreaseHealth(fdVal);
 		if(f instanceof HealthyFood) {
 			/*System.out.println("orgId: " + id);
 			System.out.println("hlthy");
@@ -135,7 +135,7 @@ public class Organism extends Matter{
 			setAction("Eating poisonous food");
 			poisonEatSuccess++;
 			eatFail--;
-			deplete(fdVal);
+			decreaseHealth(fdVal);
 		}
 	}
 	
@@ -165,14 +165,15 @@ public class Organism extends Matter{
 					if (space.getSnd() == 'h' || space.getSnd() == 'p')
 						objectIds.add(space.getFst());
 				} catch (ArrayIndexOutOfBoundsException e) {
+					System.err
+							.println("ArrayIndexOutOfBoundsException in the getFoodInRange method");
 				}
 			}
 		}
-//		Test prints
-//		System.out.println("Organism " + this.getId() + " is scanning from" + location.getX() + ", " + location.getY());
-//		System.out.println("The scan range is " + scanRange + " and the square is from " + cornerTop.getX() + ", " + cornerBottom.getY() 
-//				+ "to " + cornerBottom.getX() + ", " + cornerBottom.getY());
-		
+		/*Test prints
+		System.out.println("Organism " + this.getId() + " is scanning from" + location.getX() + ", " + location.getY());
+		System.out.println("The scan range is " + scanRange + " and the square is from " + cornerTop.getX() + ", " + cornerBottom.getY() 
+				+ "to " + cornerBottom.getX() + ", " + cornerBottom.getY());*/
 		return new ArrayList<Integer>(objectIds);
 	}
 	
@@ -348,7 +349,7 @@ public class Organism extends Matter{
 					" " + organisms.get(orgIndex).getLocation().getY() +
 					"). Health: " +
 					organisms.get(orgIndex).getHealth());*/
-			organisms.get(orgIndex).deplete(5);
+			organisms.get(orgIndex).decreaseHealth(5);
 			numAttacked++;
 			organisms.get(this.getId()).setAction("Attacking org " + orgIndex);
 			/*System.out.print(". Health: " + organisms.get(orgIndex).getHealth());
@@ -607,22 +608,37 @@ public class Organism extends Matter{
 		return 1;
 	}
 
-	public void attack2(int orgIndex, ArrayList<Organism> aOrgsUsed) {
+	/**
+	 * Takes an organism index and a list of Organisms and decreases the health
+	 * of the organism that is attacked.
+	 * 
+	 * @param orgIndex
+	 * @param anOrgList
+	 */
+	public void attack2(int orgIndex, ArrayList<Organism> anOrgList) {
 		/*
 		 * System.out.print("Attacking org " + orgIndex + "(" +
 		 * organisms.get(orgIndex).getLocation().getX() + " " +
 		 * organisms.get(orgIndex).getLocation().getY() + "). Health: " +
 		 * organisms.get(orgIndex).getHealth());
 		 */
-		Organism org = aOrgsUsed.get(orgIndex);
-		if(org.deplete(5))
-			aOrgsUsed.remove(org);
+		Organism org = anOrgList.get(orgIndex);
+		org.decreaseHealth(5);
 		
 		numAttacked++;
-		aOrgsUsed.get(this.getId()).setAction("Attacking org " + orgIndex);
+		anOrgList.get(this.getId()).setAction("Attacking org " + orgIndex);
 		/*
 		 * System.out.print(". Health: " + organisms.get(orgIndex).getHealth());
 		 * System.out.println(". Attacked by org " + this.id);
 		 */
+	}
+	
+	public void printInfo() {
+		System.out.println("Organism: ");
+		System.out.println("Id: " + id);
+		System.out.println("Health: " + hlth);
+		System.out.println("Position: (" + location.getX() + ", "
+				+ location.getY() + ")");
+		System.out.println();
 	}
 }

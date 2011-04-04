@@ -3,7 +3,6 @@ package Interactive;
 import static java.lang.System.out;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -44,6 +43,14 @@ public abstract class Matter implements Comparable<Matter>{
 		}
 		else hlth-=val;
 		return false;
+	}
+
+	public void decreaseHealth(double val) {
+		if (hlth - val < 0) {
+			hlth = 0;
+			setRange(this.getWidth(), this.getHeight(), 'w');
+		}
+		else hlth-=val;
 	}
 	
 	/**
