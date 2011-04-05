@@ -17,6 +17,7 @@ public abstract class Matter implements Comparable<Matter>{
 	protected double mxHlth;
 	protected int id;
 	protected Random r;
+	protected char type;
 	
 	public Matter() {
 		r = new Random();
@@ -25,6 +26,7 @@ public abstract class Matter implements Comparable<Matter>{
 	public Matter(double aMxHlth, char type) {
 		hlth = mxHlth = aMxHlth;
 		r = new Random();
+		this.type = type;
 		place(type);
 	}
 
@@ -32,6 +34,7 @@ public abstract class Matter implements Comparable<Matter>{
 		hlth = mxHlth = aMxHlth;
 		id = anId;
 		r = new Random();
+		this.type = type;
 		place(type);
 	}
 
@@ -255,6 +258,8 @@ public abstract class Matter implements Comparable<Matter>{
 		return id;
 	}
 	
+	public abstract char getType();
+
 	public void printLocation() {
 		out.println("(" + location.getX() +
 				", " + location.getY() + ")");

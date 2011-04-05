@@ -1373,7 +1373,7 @@ public class GridPanel extends JPanel {
 		environment.put("c", orgNearFood);
 		environment.put("d", health);
 		environment.put("e", foodRemaining);
-		environment.put("f", aFood.getType());
+		environment.put("f", aFood.getFoodType());
 		environment.put("g", numSurroundingOrgs);
 		return result.evaluate(environment);
 	}
@@ -1397,7 +1397,7 @@ public class GridPanel extends JPanel {
 		environment.put("c", orgNearFood);
 		environment.put("d", health);
 		environment.put("e", foodRemaining);
-		environment.put("f", aFood.getType());
+		environment.put("f", aFood.getFoodType());
 		environment.put("g", numSurroundingOrgs);
 		return result.evaluate(environment);
 	}

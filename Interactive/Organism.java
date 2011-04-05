@@ -656,4 +656,9 @@ public class Organism extends Matter{
 				+ location.getY() + ")");
 		System.out.println();
 	}
+
+	@Override
+	public char getType() {
+		return 'o';
+	}
 }

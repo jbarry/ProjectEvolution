@@ -1,13 +1,7 @@
 package Interactive;
-import java.awt.Color;
 import java.awt.Graphics;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
 
-import Frame.*;
-import Evolution.*;
+import Frame.Coordinate;
 @SuppressWarnings("all")
 public abstract class Food extends Matter{
 	//------------------------------------------------------------------------------------
@@ -80,7 +74,7 @@ public abstract class Food extends Matter{
 		return 0;
 	}
 
-	public abstract Double getType();
+	public abstract Double getFoodType();
 	public abstract void paint(Graphics g, boolean isDepleted);
 	
 	public void printInfo() {
