@@ -224,9 +224,9 @@ public abstract class Matter implements Comparable<Matter>{
 		}
 	}
 	
-	protected abstract int getHeight();	
+	public abstract int getHeight();	
 	
-	protected abstract int getWidth();
+	public abstract int getWidth();
 
 	public void setMxHlth(double aMxHlth) {
 		mxHlth = aMxHlth;
