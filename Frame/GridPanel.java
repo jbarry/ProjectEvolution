@@ -42,7 +42,8 @@ public class GridPanel extends JPanel {
 	public final static int WIDTH = 600;
 	public final static int HEIGHT = 400;
 
-	public static Pair<Integer, Character>[][] locationMap;
+	/*public static Pair<Integer, Character>[][] locationMap;*/
+	private LocationMap locationMap;
 
 	private LinkedList<Organism> organisms;
 	private LinkedList<HealthyFood> healthFd;
@@ -145,10 +146,10 @@ public class GridPanel extends JPanel {
 	}
 
 	public void clearLocations() {
-		for (int i = 0; i < locationMap.length; i++) {
-			for (int j = 0; j < locationMap[i].length; j++) {
+		for (int i = 0; i < locationMap.length(); i++) {
+			for (int j = 0; j < locationMap.colLength(i); j++) {
 				// mark available
-				locationMap[i][j] = new Pair<Integer, Character>(0, 'w');
+				locationMap.set(i, j, new Pair<Integer, Character>(0, 'w'));
 			}
 		}
 	}
@@ -168,7 +169,7 @@ public class GridPanel extends JPanel {
 		// Location map will consist of: key: current instance number of object
 		// value: 'w' for white space or available. 'o' for organism. 'h' for
 		//healthy food. 'p' for poisonous food.
-		locationMap = new Pair[GridPanel.WIDTH][GridPanel.HEIGHT];
+		locationMap = new LocationMap();
 		clearLocations();
 		norm = new Normalizer(new Pair<Double, Double>(-600.0, 600.0),
 				new Pair<Double, Double>(-50.0, 50.0));
@@ -213,7 +214,7 @@ public class GridPanel extends JPanel {
 		// Location map will consist of: key: current instance number of object
 		// value: 'w' for white space or available. 'o' for organism. 'h' for
 		// healthy food. 'p' for poisonous food.
-		locationMap = new Pair[GridPanel.WIDTH][GridPanel.HEIGHT];
+		locationMap = new LocationMap();
 		clearLocations();
 		norm = new Normalizer(new Pair<Double, Double>(-600.0, 600.0),
 				new Pair<Double, Double>(-50.0, 50.0));
@@ -382,14 +383,13 @@ public class GridPanel extends JPanel {
 		LinkedList<Food> foodToEatList = (LinkedList<Food>) collectFoodInRange2(
 				org, 2);
 		Food foodToEat;
-		if (!foodToEatList.isEmpty()) {
+		if (!foodToEatList.isEmpty())
 			foodToEat = foodToEatList.get(ran.nextInt(foodToEatList.size()));
-		} else {
-			/*System.out.println("Fired Gene without any food in range.");*/
+		else
+			/* System.out.println("Fired Gene without any food in range."); */
 			return false;
-		}
 		org.printInfo();
-		/*System.out.println("Ate food");*/
+		/* System.out.println("Ate food"); */
 		foodToEat.printInfo();
 		return org.changeHealth(5 * foodToEat.getType());
 	}
