@@ -1277,25 +1277,24 @@ public class GridPanel extends JPanel {
 				// Get the first food.
 				Food foodDestination = food.get(0);
 				Pair<Integer, Double> bestEval = null;
-				// If the organism has something in its sight range.
-				// Initialize the variable that decides the resulting
-				// action.
 				bestEval = new Pair<Integer, Double>(0,
-						evaluateGeneFoodInRange(org, currentGene,
+						evaluateGeneFoodInRangeAstar(org, currentGene,
 								foodDestination));
-				// Loop through Genes in Chromosome.
-				loopGenes: for (int j = 1; j < chrome.size(); j++) {
-					currentGene = chrome.getGene(j);
-					loopFood: for (int k = 1; k < food.size(); k++) { // loopFood.
+				for (int k = 1; k < food.size(); k++) { // loopFood.
+					
+					double aResult = evaluateGeneFoodInRangeAstar(org, currentGene,
+							food.get(k));
+					/*System.out.println("on food" + k);
+					System.out.println("Result for eval: " + aResult);*/
+					if (aResult > bestEval.getSnd()) {
 						foodDestination = food.get(k);
-						double aResult = evaluateGeneFoodInRange(org,
-								currentGene, foodDestination);
-						if (aResult > bestEval.getSnd()) {
-							bestEval.setLeft(k);
-							bestEval.setRight(aResult);
-						}
-					} // End loopFood.
-				} // End loopGenes.
+						/*System.out.println("Replaced!! result");*/
+						bestEval.setLeft(k);
+						bestEval.setRight(aResult);
+					}
+				} // End loopFood.
+				/*System.out.println("foodToMoveto id: " + foodDestination.getId());
+				System.out.println();*/
 				moveAstar(org, bestEval, foodDestination);
 			}
 		} // End mainLoop.
@@ -1379,6 +1378,30 @@ public class GridPanel extends JPanel {
 		return result.evaluate(environment);
 	}
 
+	private double evaluateGeneFoodInRangeAstar(Organism org, Gene currentGene,
+			Food aFood) {
+		HashMap<String, Double> environment = new HashMap<String, Double>();
+		double orgX = org.getLocation().getX();
+		double orgY = org.getLocation().getY();
+		double foodX = aFood.getLocation().getX();
+		double foodY = aFood.getLocation().getY();
+		double distanceToFood = norm.normalize(AStar.distance(orgX, orgY,
+				foodX, foodY));
+		double health = norm.normalize(org.getHealth());
+		double numSurroundingOrgs = norm.normalize(org.getSurroundingObjects(
+				'o', 5).size() - 1);
+		double orgNearFood = norm.normalize(aFood.numSurroundingObjects(5));
+		double foodRemaining = norm.normalize(aFood.getHealth());
+		Expr result = currentGene.getEvaledList();
+		environment.put("a", distanceToFood); // Represents distance to food.
+		environment.put("c", orgNearFood);
+		environment.put("d", health);
+		environment.put("e", foodRemaining);
+		environment.put("f", aFood.getType());
+		environment.put("g", numSurroundingOrgs);
+		return result.evaluate(environment);
+	}
+	
 	/**
 	 * This method gets all returns a list of all the Food objects that are in
 	 * the org's sight range.

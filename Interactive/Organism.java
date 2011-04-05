@@ -175,23 +175,20 @@ public class Organism extends Matter{
 		return new ArrayList<Integer>(objectIds);
 	}
 
-	public void moveTo(int x, int y) {
-		// Make old location available.
-		setRange(width, height, 'w');
-		setWrapAround(width, height);
+	public boolean moveTo(int x, int y) {
 		try {
 			if (canSpawn(x, y)) { // If the next move is available.
-				/*setRange(width, height, 'w');
-				setWrapAround(width, height);*/
+				setRange(width, height, 'w');
+				setWrapAround(width, height);
 				location.setY(y);
 				location.setX(x);
 				// make current location unavailable
 				setRange(width, height, 'o');
-			} else {
-				printInfo();
-				System.out.println("Could not move");
-			}
+				return true;
+			} else
+				return false;
 		} catch (ArrayIndexOutOfBoundsException e) {
+			return false;
 		}
 	}
 	

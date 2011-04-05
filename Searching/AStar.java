@@ -31,7 +31,7 @@ public class AStar {
 		// on shortest distance to end node.
 		/* Coordinate endCoordinate = (Coordinate) end.spawnCoordinate(0); */
 		end.setPriority(0);
-		start.setPriority(distance(start.getX(), start.getY(), end.getX(),
+		start.setPriority(distance(start.getX(), start.getY(), end.getX(),	
 				end.getY()));
 		// for each surrounding position.
 		// assign priority, then add to queue.
@@ -40,7 +40,7 @@ public class AStar {
 				current.getY(), end);
 		// If there are available positions to move to.
 		// Then remove the top one. Which will be the best place to move to.
-		if (adjacentList != null)
+		if (!adjacentList.isEmpty())
 			return adjacentList.remove();
 		return start;
 	}
@@ -99,9 +99,9 @@ public class AStar {
 	 * @param end
 	 * @return
 	 */
-	public static double distance(int x1, int y1, int x2, int y2) {
-		return Math.sqrt(Math.pow((x2 - x1), 2) +
-				Math.pow((y2 - y1), 2));
+	public static double distance(double orgX, double orgY, double foodX, double foodY) {
+		return Math.sqrt(Math.pow((foodX - orgX), 2) +
+				Math.pow((foodY - orgY), 2));
 	}
 
 	/**
