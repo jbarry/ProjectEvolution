@@ -187,8 +187,10 @@ public class Organism extends Matter{
 				location.setX(x);
 				// make current location unavailable
 				setRange(width, height, 'o');
-			} else
+			} else {
+				printInfo();
 				System.out.println("Could not move");
+			}
 		} catch (ArrayIndexOutOfBoundsException e) {
 		}
 	}

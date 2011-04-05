@@ -1194,15 +1194,16 @@ public class GridPanel extends JPanel {
 				// Get the food in the org's sight range.
 				/*LinkedList<Food> foodInRange =
 					(LinkedList<Food>) collectFoodInRange2Test(org);*/
-				LinkedList<Food> foodInRange =
-					(LinkedList<Food>) collectFoodInRange2(org, 300);
+				/*LinkedList<Food> foodInRange =
+					(LinkedList<Food>) collectFoodInRange2(org, 300);*/
 				Chromosome chrome = org.getChromosome();
 				Gene currentGene = chrome.getGene(0); // First Gene in Chromosome.
 				// The food source that will be the final destination of the Astar search.
-				Food foodDestination = foodInRange.get(0);
+				/*Food foodDestination = foodInRange.get(0);*/
+				Food foodDestination = food.get(0);
 				Pair<Integer, Double> bestEval = null;
 				// If the organism has something in its sight range.
-				if (!foodInRange.isEmpty()) {
+				/*if (!foodInRange.isEmpty()) {*/
 					// Initialize the variable that decides the resulting
 					// action.
 					bestEval = new Pair<Integer, Double>(0,
@@ -1210,8 +1211,8 @@ public class GridPanel extends JPanel {
 					// Loop through Genes in Chromosome.
 					loopGenes: for (int j = 1; j < chrome.size(); j++) {
 						currentGene = chrome.getGene(j);
-						loopFood: for (int k = 1; k < foodInRange.size(); k++) { // loopFood.
-							foodDestination = foodInRange.get(k);
+						loopFood: for (int k = 1; k < food.size(); k++) { // loopFood.
+							foodDestination = food.get(k);
 							double aResult = evaluateGeneFoodInRange(org,
 									currentGene, foodDestination);
 							if (aResult > bestEval.getSnd()) {
@@ -1220,7 +1221,7 @@ public class GridPanel extends JPanel {
 							}
 						} // End loopFood.
 					} // End loopGenes.
-				} /*else { // If the organism has nothing in its sight range.
+				/*} else { // If the organism has nothing in its sight range.
 					bestEval = new Pair<Integer, Double>(0, evaluateGene(org, currentGene));
 					loopGenes: for (int j = 1; j < chrome.size(); j++) { // loopGenes.
 						currentGene = chrome.getGene(j);
