@@ -1,11 +1,15 @@
 package Frame;
+
+import java.util.Comparator;
+
 @SuppressWarnings("all")
-public class Coordinate {
+public class Coordinate implements Comparable<Coordinate>{
 	//------------------------------------------------------------------------------------
 	//--globals--
 	//------------------------------------------------------------------------------------
 	private int x;
 	private int y;
+	private double priority;
 	
 	//------------------------------------------------------------------------------------
 	//--constructors--
@@ -17,6 +21,20 @@ public class Coordinate {
 	public Coordinate(int x, int y){
 		this.x = x;
 		this.y = y;
+	}
+	
+	
+	/**
+	 * The ctor used for the Astar implementation. Only difference is
+	 * the priority field will now be used.
+	 * @param x
+	 * @param y
+	 * @param aPriority
+	 */
+	public Coordinate(int x, int y, double aPriority) {
+		this.x = x;
+		this.y = y;
+		priority = aPriority;
 	}
 	
 	//------------------------------------------------------------------------------------
@@ -89,5 +107,22 @@ public class Coordinate {
 	 */
 	public String toString(){
 		return "(" + x + ", " + y + ")";
+	}
+	
+	public double getPriority() {
+		return priority;
+	}
+	
+	public void setPriority(double priority) {
+		this.priority = priority;
+	}
+	
+	@Override
+	public int compareTo(Coordinate c) {
+		if (priority > c.getPriority())
+			return 1;
+		else if (priority == c.getPriority())
+			return 0;
+		else return -1;
 	}
 }
