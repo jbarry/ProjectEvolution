@@ -124,10 +124,10 @@ public abstract class Matter implements Comparable<Matter>{
 				catch(ArrayIndexOutOfBoundsException e){}
 			}
 		}
-//		Test prints
-//		System.out.println("Organism " + this.getId() + " is scanning from" + location.getX() + ", " + location.getY());
-//		System.out.println("The scan range is " + scanRange + " and the square is from " + cornerTop.getX() + ", " + cornerBottom.getY() 
-//				+ "to " + cornerBottom.getX() + ", " + cornerBottom.getY());
+		// Test prints
+		/*System.out.println("Organism " + this.getId() + " is scanning from" + location.getX() + ", " + location.getY());
+		System.out.println("The scan range is " + scanRange + " and the square is from " + cornerTop.getX() + ", " + cornerBottom.getY() 
+				+ "to " + cornerBottom.getX() + ", " + cornerBottom.getY());*/
 		
 		return new ArrayList<Integer>(objectIds);
 	}

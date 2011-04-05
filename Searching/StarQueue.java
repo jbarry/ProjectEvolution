@@ -18,6 +18,8 @@ public class StarQueue<Coordinate> {
 	}
 	
 	public Coordinate poll() {
+		if (list.isEmpty())
+			return null;
 		return list.poll();
 	}
 	
@@ -39,5 +41,9 @@ public class StarQueue<Coordinate> {
 	
 	public boolean contains(Coordinate nd) {
 		return list.contains(nd);
+	}
+
+	public void clear() {
+		list.clear();
 	}
 }
