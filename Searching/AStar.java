@@ -1,7 +1,5 @@
 package Searching;
 
-import static java.lang.System.out;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;

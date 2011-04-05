@@ -102,7 +102,8 @@ public class GridPanel extends JPanel {
 							/* simulateStep(); */
 							/*simulateStep2(2);*/
 							/*simulateStep2Test(4);*/
-							simulateStepAstar(1);
+							/*simulateStepAstar(1);*/
+							simulateStepAstarWithoutEat(2);
 							repaint();
 						} else if (trialNum < trialsPerGen)
 							newTrial();
@@ -1152,7 +1153,8 @@ public class GridPanel extends JPanel {
 		for (int i = 0; i < OptionsPanel.numOrganisms; i++) {
 			/*Organism o = new Organism(100.00, 9, i);*/
 			/*Organism o = new Organism(100.00, 11, i);*/
-			Organism o = new Organism(100.00, 2, i);
+			/*Organism o = new Organism(100.00, 2, i);*/
+			Organism o = new Organism(100.00, 1, i);
 			organisms.add(o);
 			shuffleIds.add(i);
 			/*shuffleStringIds.add(Integer.toString(i));*/
@@ -1199,7 +1201,11 @@ public class GridPanel extends JPanel {
 				Chromosome chrome = org.getChromosome();
 				Gene currentGene = chrome.getGene(0); // First Gene in Chromosome.
 				// The food source that will be the final destination of the Astar search.
-				/*Food foodDestination = foodInRange.get(0);*/
+				/* Food foodDestination = foodInRange.get(0);*/ // TODO: Removed the
+																// idea of a
+																// vision range
+																// for now.
+				// Get the first food.
 				Food foodDestination = food.get(0);
 				Pair<Integer, Double> bestEval = null;
 				// If the organism has something in its sight range.
@@ -1239,6 +1245,76 @@ public class GridPanel extends JPanel {
 				}
 			}
 		} // End mainLoop.
+	}
+	
+	/**
+	 * Just doing the movement of astar and no eat genes firing.
+	 * @param numActions
+	 */
+	// FOR TESTING.
+	private void simulateStepAstarWithoutEat(int numActions) {
+		Collections.shuffle(shuffleIds);
+		// Loop through Organisms.
+		mainLoop: for (int i = 0; i < shuffleIds.size(); i++) { // mainLoop.
+			// Get an Organism corresponding the the ids in the shuffleIds list.
+			Organism org = organisms.get(shuffleIds.get(i));
+			for (int l = 0; l < numActions; l++) {
+				org.incHlthTot(); // sample for fitness function.
+				// depleteValue is the value to decrease the Organism's health
+				// by at each time step.
+				double depleteValue = org.getMaxHealth()
+						/ ((lengthGeneration - 2) * numActions);
+				// Check to see if the Organism is dead, if so remove that org
+				// from the shuffleIds list.
+				if (deplete(org, depleteValue)) {
+					System.out.println("removing on deplete");
+					shuffleIds.remove(new Integer(org.getId()));
+					continue mainLoop;
+				}
+				Chromosome chrome = org.getChromosome();
+				Gene currentGene = chrome.getGene(0); // First Gene in Chromosome.
+				// The food source that will be the final destination of the Astar search.
+				// Get the first food.
+				Food foodDestination = food.get(0);
+				Pair<Integer, Double> bestEval = null;
+				// If the organism has something in its sight range.
+				// Initialize the variable that decides the resulting
+				// action.
+				bestEval = new Pair<Integer, Double>(0,
+						evaluateGeneFoodInRange(org, currentGene,
+								foodDestination));
+				// Loop through Genes in Chromosome.
+				loopGenes: for (int j = 1; j < chrome.size(); j++) {
+					currentGene = chrome.getGene(j);
+					loopFood: for (int k = 1; k < food.size(); k++) { // loopFood.
+						foodDestination = food.get(k);
+						double aResult = evaluateGeneFoodInRange(org,
+								currentGene, foodDestination);
+						if (aResult > bestEval.getSnd()) {
+							bestEval.setLeft(k);
+							bestEval.setRight(aResult);
+						}
+					} // End loopFood.
+				} // End loopGenes.
+				moveAstar(org, bestEval, foodDestination);
+			}
+		} // End mainLoop.
+	}
+
+	/**
+	 * Moves the organism using Astar.
+	 * @param org
+	 * @param bestEval
+	 * @param aFoodDestination
+	 */
+	// FOR TESTING.
+	private void moveAstar(Organism org, Pair<Integer, Double> bestEval,
+			Food aFoodDestination) {
+	
+			Coordinate nextMove = AStar.search(org.getLocation(),
+					aFoodDestination.getLocation());
+			org.moveTo(nextMove.getX(), nextMove.getY());
+			org.countStep();
 	}
 
 	private boolean doActionAstar(Organism org, Pair<Integer, Double> bestEval,
