@@ -3,20 +3,21 @@ package Searching;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
-public class StarQueue<Node> {
+import Frame.Coordinate;
 
-	private PriorityQueue<Node> list; 
+public class StarQueue<Coordinate> {
+
+	private PriorityQueue<Coordinate> list; 
 	
-	public StarQueue(int startSize) {
-		list = new PriorityQueue<Node>(startSize,
-				(Comparator<? super Node>) new CoordinateComparator());
+	public StarQueue() {
+		list = new PriorityQueue<Coordinate>();
 	}
 	
-	public void add(Node c) {
+	public void add(Coordinate c) {
 		list.add(c);
 	}
 	
-	public Node poll() {
+	public Coordinate poll() {
 		return list.poll();
 	}
 	
@@ -24,11 +25,11 @@ public class StarQueue<Node> {
 		return list.isEmpty();
 	}
 	
-	public Node peek() {
+	public Coordinate peek() {
 		return list.peek();
 	}
 	
-	public Node remove() {
+	public Coordinate remove() {
 		return list.remove();
 	}
 	
@@ -36,7 +37,7 @@ public class StarQueue<Node> {
 		return list.size();
 	}
 	
-	public boolean contains(Node nd) {
+	public boolean contains(Coordinate nd) {
 		return list.contains(nd);
 	}
 }

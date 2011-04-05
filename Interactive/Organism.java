@@ -174,6 +174,24 @@ public class Organism extends Matter{
 				+ "to " + cornerBottom.getX() + ", " + cornerBottom.getY());*/
 		return new ArrayList<Integer>(objectIds);
 	}
+
+	public void moveTo(int x, int y) {
+		// Make old location available.
+		setRange(width, height, 'w');
+		setWrapAround(width, height);
+		try {
+			if (canSpawn(x, y)) { // If the next move is available.
+				/*setRange(width, height, 'w');
+				setWrapAround(width, height);*/
+				location.setY(y);
+				location.setX(x);
+				// make current location unavailable
+				setRange(width, height, 'o');
+			} else
+				System.out.println("Could not move");
+		} catch (ArrayIndexOutOfBoundsException e) {
+		}
+	}
 	
 	public void moveNorth(LinkedList<Organism> organisms, boolean wasPushed) {
 		//make old location available.

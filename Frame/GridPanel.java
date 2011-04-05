@@ -29,6 +29,7 @@ import Interactive.OrgData;
 import Interactive.Organism;
 import Interactive.Pair;
 import Interactive.PoisonousFood;
+import Searching.AStar;
 
 /**
  * This class will handle all of the simulation's display.
@@ -100,7 +101,8 @@ public class GridPanel extends JPanel {
 							timePassed++;
 							/* simulateStep(); */
 							/*simulateStep2(2);*/
-							simulateStep2Test(4);
+							/*simulateStep2Test(4);*/
+							simulateStepAstar(1);
 							repaint();
 						} else if (trialNum < trialsPerGen)
 							newTrial();
@@ -175,9 +177,8 @@ public class GridPanel extends JPanel {
 		shuffleIds.clear();
 		numFoodSources = OptionsPanel.numOrganisms / 5;
 		for (int i = 0; i < OptionsPanel.numOrganisms; i++) {
-			/*Organism o = new Organism(100.00, 9, i);*/
+			Organism o = new Organism(100.00, 9, i);
 			/*Organism o = new Organism(100.00, 11, i);*/
-			Organism o = new Organism(100.00, 2, i);
 			organisms.add(o);
 			shuffleIds.add(i);
 			/*shuffleStringIds.add(Integer.toString(i));*/
@@ -242,7 +243,7 @@ public class GridPanel extends JPanel {
 		}
 		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
 	}
-
+	
 	private boolean doAction(Organism org, Pair<Integer, Double> bestEval) {
 
 		switch (bestEval.left()) {
@@ -354,21 +355,6 @@ public class GridPanel extends JPanel {
 		}
 	}
 	
-	private boolean doActionAstar(Organism org, Pair<Integer, Double> bestEval) {
-
-		switch (bestEval.left()) {
-		case 0:
-			org.moveNorth(organisms, false);
-			// org.addAction("N", orgIndex);
-			org.countStep();
-			break;
-		case 1:
-			// doEat(org);
-			return eat(org);
-		}
-		return false;
-	}
-
 	private void attack2(Organism org, ArrayList<Organism> aOrgsUsed) {
 		ArrayList<Integer> surroundingOrganisms = org.getSurroundingObjects(
 				'o', 1);
@@ -393,7 +379,7 @@ public class GridPanel extends JPanel {
 
 	private boolean eat(Organism org) {
 		LinkedList<Food> foodToEatList = (LinkedList<Food>) collectFoodInRange2(
-				org, 30);
+				org, 2);
 		Food foodToEat;
 		if (!foodToEatList.isEmpty()) {
 			foodToEat = foodToEatList.get(ran.nextInt(foodToEatList.size()));
@@ -402,7 +388,7 @@ public class GridPanel extends JPanel {
 			return false;
 		}
 		org.printInfo();
-		System.out.println("Ate food");
+		/*System.out.println("Ate food");*/
 		foodToEat.printInfo();
 		return org.changeHealth(5 * foodToEat.getType());
 	}
@@ -1139,7 +1125,54 @@ public class GridPanel extends JPanel {
 		} // End mainLoop.
 	}
 	
-	private void simulateStep(int numActions) {
+	/**
+	 * Sets the initial game state of the GridPanel.
+	 */
+	public void initializeAstar() {
+		// reset all generation info from previous simulations.
+		generationNum = 1;
+		trialNum = 1;
+		GUI.genPanel.resetGenInformation();
+		ran = new Random();
+		timePassed = 0;
+		shuffleIds = new ArrayList<Integer>();
+		/*shuffleStringIds = new ArrayList<String>();*/
+		// Location map will consist of: key: current instance number of object
+		// value: 'w' for white space or available. 'o' for organism. 'h' for
+		//healthy food. 'p' for poisonous food.
+		locationMap = new Pair[GridPanel.WIDTH][GridPanel.HEIGHT];
+		clearLocations();
+		norm = new Normalizer(new Pair<Double, Double>(-600.0, 600.0),
+				new Pair<Double, Double>(-50.0, 50.0));
+		organisms.clear();
+		healthFd.clear();
+		poisFood.clear();
+		shuffleIds.clear();
+		numFoodSources = OptionsPanel.numOrganisms / 5;
+		for (int i = 0; i < OptionsPanel.numOrganisms; i++) {
+			/*Organism o = new Organism(100.00, 9, i);*/
+			/*Organism o = new Organism(100.00, 11, i);*/
+			Organism o = new Organism(100.00, 2, i);
+			organisms.add(o);
+			shuffleIds.add(i);
+			/*shuffleStringIds.add(Integer.toString(i));*/
+			o.addStartingLocation();
+			o.addChromosome();
+		}
+		for (int i = 0; i < numFoodSources*2; i++) {
+			if (ran.nextBoolean())
+				food.add(new HealthyFood(100.00, i, 2));
+			else
+				food.add(new PoisonousFood(100.00, i, 2));
+			/*HealthyFood h = new HealthyFood(100.0, i, 2);
+			PoisonousFood f = new PoisonousFood(100.0, i, 2);*/
+			/*healthFd.add(h);
+			poisFood.add(f);*/
+		}
+		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
+	}
+
+	private void simulateStepAstar(int numActions) {
 		Collections.shuffle(shuffleIds);
 		// Loop through Organisms.
 		mainLoop: for (int i = 0; i < shuffleIds.size(); i++) { // mainLoop.
@@ -1159,29 +1192,35 @@ public class GridPanel extends JPanel {
 					continue mainLoop;
 				}
 				// Get the food in the org's sight range.
-				LinkedList<Food> foodInRange = (LinkedList<Food>) collectFoodInRange2Test(org);
+				/*LinkedList<Food> foodInRange =
+					(LinkedList<Food>) collectFoodInRange2Test(org);*/
+				LinkedList<Food> foodInRange =
+					(LinkedList<Food>) collectFoodInRange2(org, 300);
 				Chromosome chrome = org.getChromosome();
 				Gene currentGene = chrome.getGene(0); // First Gene in Chromosome.
+				// The food source that will be the final destination of the Astar search.
+				Food foodDestination = foodInRange.get(0);
 				Pair<Integer, Double> bestEval = null;
 				// If the organism has something in its sight range.
 				if (!foodInRange.isEmpty()) {
 					// Initialize the variable that decides the resulting
 					// action.
 					bestEval = new Pair<Integer, Double>(0,
-							evaluateGeneFoodInRange(org, currentGene, foodInRange.get(0)));
+							evaluateGeneFoodInRange(org, currentGene, foodDestination));
 					// Loop through Genes in Chromosome.
 					loopGenes: for (int j = 1; j < chrome.size(); j++) {
 						currentGene = chrome.getGene(j);
 						loopFood: for (int k = 1; k < foodInRange.size(); k++) { // loopFood.
+							foodDestination = foodInRange.get(k);
 							double aResult = evaluateGeneFoodInRange(org,
-									currentGene, foodInRange.get(k));
+									currentGene, foodDestination);
 							if (aResult > bestEval.getSnd()) {
 								bestEval.setLeft(k);
 								bestEval.setRight(aResult);
 							}
 						} // End loopFood.
 					} // End loopGenes.
-				} else { // If the organism has nothing in its sight range.
+				} /*else { // If the organism has nothing in its sight range.
 					bestEval = new Pair<Integer, Double>(0, evaluateGene(org, currentGene));
 					loopGenes: for (int j = 1; j < chrome.size(); j++) { // loopGenes.
 						currentGene = chrome.getGene(j);
@@ -1191,14 +1230,31 @@ public class GridPanel extends JPanel {
 							bestEval.setRight(aResult);
 						} // end if.
 					} // End loopGenes.
-				} // end Else.
-				if (doAction(org, bestEval)) {
+				}*/ // end Else.
+				if (doActionAstar(org, bestEval, foodDestination)) {
 					System.out.println("removing on action");
 					shuffleIds.remove(new Integer(org.getId()));
 					continue mainLoop;
 				}
 			}
 		} // End mainLoop.
+	}
+
+	private boolean doActionAstar(Organism org, Pair<Integer, Double> bestEval,
+			Food aFoodDestination) {
+	
+		switch (bestEval.left()) {
+		case 0:
+			Coordinate nextMove = AStar.search(org.getLocation(),
+					aFoodDestination.getLocation());
+			org.moveTo(nextMove.getX(), nextMove.getY());
+			org.countStep();
+			break;
+		case 1:
+			// doEat(org);
+			return eat(org);
+		}
+		return false;
 	}
 
 	private double evaluateGene(Organism org, Gene currentGene) {
