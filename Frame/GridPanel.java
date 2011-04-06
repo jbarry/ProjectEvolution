@@ -169,7 +169,7 @@ public class GridPanel extends JPanel {
 		// Location map will consist of: key: current instance number of object
 		// value: 'w' for white space or available. 'o' for organism. 'h' for
 		//healthy food. 'p' for poisonous food.
-		locationMap = new LocationMap();
+		locationMap = LocationMap.getInstance();
 		clearLocations();
 		norm = new Normalizer(new Pair<Double, Double>(-600.0, 600.0),
 				new Pair<Double, Double>(-50.0, 50.0));
@@ -521,7 +521,11 @@ public class GridPanel extends JPanel {
 					org.eatFood(food, 5);
 					if (food.getHealth() <= 0) {
 						// Delete food source if it is depleted
-						food.setRange(food.getWidth(), food.getWidth(), 'w');
+						Coordinate c = food.getLocation();
+						int x = c.getX();
+						int y = c.getY();
+						locationMap.setRange(food.getWidth(), food.getWidth(),
+								food.getType(), food.getId(), x, y);
 						healthFd.set(food.getId(), null);
 					}
 					isNextToFood = true;
@@ -546,15 +550,15 @@ public class GridPanel extends JPanel {
 		int upperBoundary = org.getLocation().getY() - Food.height / 2;
 
 		boolean isNextToFood = false;
-		for (PoisonousFood foodList : poisFood) {
-			if (foodList != null) {
-				int leftBoundary2 = foodList.getLocation().getX()
+		for (PoisonousFood food : poisFood) {
+			if (food != null) {
+				int leftBoundary2 = food.getLocation().getX()
 						- Organism.width / 2 - 1;
-				int rightBoundary2 = foodList.getLocation().getX()
+				int rightBoundary2 = food.getLocation().getX()
 						+ Organism.width / 2 + 1;
-				int lowerBoundary2 = foodList.getLocation().getY()
+				int lowerBoundary2 = food.getLocation().getY()
 						+ Organism.height / 2 + 1;
-				int upperBoundary2 = foodList.getLocation().getY()
+				int upperBoundary2 = food.getLocation().getY()
 						- Organism.height / 2 - 1;
 
 				if ((leftBoundary >= leftBoundary2
@@ -564,12 +568,15 @@ public class GridPanel extends JPanel {
 					/*
 					 * Organism is next to food
 					 */
-					org.eatFood(foodList, 2);
-					if (foodList.getHealth() <= 0) {
+					org.eatFood(food, 2);
+					if (food.getHealth() <= 0) {
+						Coordinate c = food.getLocation();
+						int x = c.getX();
+						int y = c.getY();
 						// Delete food source if it is depleted
-						foodList.setRange(foodList.getWidth(),
-								foodList.getHeight(), 'w');
-						poisFood.set(foodList.getId(), null);
+						locationMap.setRange(food.getWidth(), food.getWidth(),
+								food.getType(), food.getId(), x, y);
+						poisFood.set(food.getId(), null);
 					}
 					isNextToFood = true;
 					break;
@@ -1141,7 +1148,7 @@ public class GridPanel extends JPanel {
 		// Location map will consist of: key: current instance number of object
 		// value: 'w' for white space or available. 'o' for organism. 'h' for
 		//healthy food. 'p' for poisonous food.
-		locationMap = new Pair[GridPanel.WIDTH][GridPanel.HEIGHT];
+		locationMap = new LocationMap();
 		clearLocations();
 		norm = new Normalizer(new Pair<Double, Double>(-600.0, 600.0),
 				new Pair<Double, Double>(-50.0, 50.0));
@@ -1504,7 +1511,11 @@ public class GridPanel extends JPanel {
 	public boolean deplete(Matter m, double val) {
 		if (m.getHealth() - val < 0) {
 			m.setHealth(0);
-			m.setRange(this.getWidth(), this.getHeight(), 'w');
+			Coordinate c = m.getLocation();
+			int x = c.getX();
+			int y = c.getY();
+			locationMap.setRange(this.getWidth(), this.getHeight(), 'w',
+					m.getId(), x, y);
 			return true;
 		} else
 			m.setHealth(m.getHealth() - val);

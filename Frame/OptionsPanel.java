@@ -54,12 +54,13 @@ public class OptionsPanel extends JPanel implements Runnable{
 	private JButton    start;
 	private JButton    pause;
 	
+	private LocationMap locationMap;
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
 	public OptionsPanel(final GUI gui, final GridPanel simulation){
 		run();
-		
+		locationMap = LocationMap.getInstance();
 		/** initial JPanel settings */
 		setLayout(null);
 		setLocation(0,0);
@@ -136,7 +137,11 @@ public class OptionsPanel extends JPanel implements Runnable{
 				        		if(simulation.getTimer().isRunning()){
 					        		//make organisms able to move if they are shrunk.
 						        	for(Organism o: simulation.getOrganisms()){
-						        		o.setRange(Organism.width, Organism.height, 'w');
+						        		int x = o.getLocation().getX();
+						        		int y = o.getLocation().getY();
+										locationMap.setRange(Organism.width,
+												Organism.height, 'w',
+												o.getId(), x, y);
 						        	}
 				        		}
 					        	
@@ -526,7 +531,11 @@ public class OptionsPanel extends JPanel implements Runnable{
 						        		//make organisms able to move if they are shrunk.
 						        		//assumes simulation is running.
 							        	for(Organism o: simulation.getOrganisms()){
-							        		o.setRange(Organism.width, Organism.height, 'o');
+							        		int x = o.getLocation().getX();
+							        		int y = o.getLocation().getY();
+											locationMap.setRange(Organism.width,
+													Organism.height, 'w',
+													o.getId(), x, y);
 							        	}
 
 							        	Organism.width = Integer.parseInt(orgWidthTxtBox.getText());

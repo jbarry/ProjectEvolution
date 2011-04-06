@@ -9,6 +9,7 @@ import java.util.Set;
 
 import Frame.Coordinate;
 import Frame.GridPanel;
+import Frame.LocationMap;
 
 public abstract class Matter implements Comparable<Matter>{
 
@@ -18,6 +19,7 @@ public abstract class Matter implements Comparable<Matter>{
 	protected int id;
 	protected Random r;
 	protected char type;
+	protected LocationMap locationMap;
 	
 	public Matter() {
 		r = new Random();
@@ -27,18 +29,20 @@ public abstract class Matter implements Comparable<Matter>{
 		hlth = mxHlth = aMxHlth;
 		r = new Random();
 		this.type = type;
-		place(type);
+		locationMap = null;
+		/*place(type);*/
 	}
 
-	public Matter(double aMxHlth, int anId, char type) {
+	public Matter(double aMxHlth, int anId, char type, LocationMap aMap) {
 		hlth = mxHlth = aMxHlth;
 		id = anId;
 		r = new Random();
 		this.type = type;
-		place(type);
+		locationMap = aMap;
+		/*place(type);*/
 	}
 
-	public boolean deplete(double val) {
+	/*public boolean deplete(double val) {
 		if (hlth - val < 0) {
 			hlth = 0;
 			setRange(this.getWidth(), this.getHeight(), 'w');
@@ -46,7 +50,7 @@ public abstract class Matter implements Comparable<Matter>{
 		}
 		else hlth-=val;
 		return false;
-	}
+	}*/
 	
 	public boolean changeHealth(double val) {
 		hlth+=val;
@@ -79,7 +83,7 @@ public abstract class Matter implements Comparable<Matter>{
 			for(int j=cornerTop.getY(); j<=cornerBottom.getY(); j++){
 				try{	
 					//count all occurrences of objects in location map
-					if(GridPanel.locationMap[i][j].getSnd() != 'w') {
+					if(locationMap.get(i, j).getSnd() != 'w') {
 						numObj++;
 					}
 				}
@@ -108,23 +112,21 @@ public abstract class Matter implements Comparable<Matter>{
 		int widthPlus = location.getX() + (getWidth()/2);
 		int heightSub = location.getY() - (getHeight()/2);
 		int heightPlus = location.getY() + (getHeight()/2);
-		
-		Coordinate cornerTop =
-			new Coordinate(widthSub - scanRange, heightSub - scanRange);
-		Coordinate cornerBottom =
-			new Coordinate(widthPlus + scanRange, heightPlus + scanRange);
-		
-		for(int i=cornerTop.getX(); i<=cornerBottom.getX(); i++){
-			for(int j=cornerTop.getY(); j<=cornerBottom.getY(); j++){
-				try{	
+		Coordinate cornerTop = new Coordinate(widthSub - scanRange, heightSub
+				- scanRange);
+		Coordinate cornerBottom = new Coordinate(widthPlus + scanRange,
+				heightPlus + scanRange);
+		for (int i = cornerTop.getX(); i <= cornerBottom.getX(); i++) {
+			for (int j = cornerTop.getY(); j <= cornerBottom.getY(); j++) {
+				try {
 					//count all occurrences of objects in location map
-					Pair<Integer, Character> space =
-						GridPanel.locationMap[i][j];
-					if(space.getSnd() == type &&
-							space.getFst() != this.getId())
+					Pair<Integer, Character> space = locationMap.get(i, j);
+					Character spaceType = space.getSnd();
+					Integer spaceId = space.getFst();
+					if(spaceType == type && spaceId != id)
 						objectIds.add(space.getFst());
+				} catch (ArrayIndexOutOfBoundsException e) {
 				}
-				catch(ArrayIndexOutOfBoundsException e){}
 			}
 		}
 		// Test prints

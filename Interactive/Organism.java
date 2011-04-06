@@ -95,7 +95,7 @@ public class Organism extends Matter{
 	}
 
 	
-	public void newLocation() {
+	/*public void newLocation() {
 		setRange(width, height, 'w');
 		int x = r.nextInt(GridPanel.WIDTH);
 		int y = r.nextInt(GridPanel.HEIGHT);
@@ -107,7 +107,7 @@ public class Organism extends Matter{
 		//set boundaries
 		setWrapAround(width, height);
 		setRange(width, height, 'o');
-	}	
+	}*/	
 	
 	public void eatFood(Food f, double fdVal){
 		f.decreaseHealth(fdVal);

@@ -6,11 +6,14 @@ import java.util.HashSet;
 
 import Frame.Coordinate;
 import Frame.GridPanel;
+import Frame.LocationMap;
 import Interactive.Organism;
 import Interactive.Pair;
 
 public class AStar {
-
+	
+	private static LocationMap locationMap = LocationMap.getInstance();
+	
 	public static void main(String[] args) {
 		AStar a = new AStar();
 		Coordinate coord1 = new Coordinate(2, 5);
@@ -116,7 +119,7 @@ public class AStar {
 		checkObstacles: for(int i = x - Organism.width/2; i <= x + Organism.width/2; i++){
 			for(int j = y - Organism.height/2; j <= y + Organism.height/2; j++){
 				try{	
-					Pair<Integer, Character> object = GridPanel.locationMap[i][j];
+					Pair<Integer, Character> object = locationMap.get(i, j);
 					//count all occurrences of objects in location map
 					if(object.getSnd() == 'w') 
 						continue checkObstacles;
@@ -158,7 +161,7 @@ public class AStar {
 			for (int j = y - (Organism.height / 2); j <= y
 					+ (Organism.height / 2); j++){
 				try{	
-					Character matter = GridPanel.locationMap[i][j].getSnd();
+					Character matter = locationMap.get(i, j).getSnd();
 					//count all occurrences of objects in location map
 					if(matter == 'w') 
 						continue checkObstacles;
