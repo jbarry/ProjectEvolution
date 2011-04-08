@@ -33,6 +33,14 @@ public abstract class Matter implements Comparable<Matter>{
 		/*place(type);*/
 	}
 
+	public Matter(double aMxHlth, int anId, char type) {
+		hlth = mxHlth = aMxHlth;
+		id = anId;
+		r = new Random();
+		this.type = type;
+		/*place(type);*/
+	}
+	
 	public Matter(double aMxHlth, int anId, char type, LocationMap aMap) {
 		hlth = mxHlth = aMxHlth;
 		id = anId;

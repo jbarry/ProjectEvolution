@@ -3,6 +3,7 @@ package Frame;
 import java.util.Random;
 
 import Interactive.Matter;
+import Interactive.Organism;
 import Interactive.Pair;
 
 public class LocationMap {
@@ -23,7 +24,7 @@ public class LocationMap {
 		return instance;
 	}
 
-	private void LocationMap() {
+	protected void LocationMap() {
 		locationMap = new Pair[GridPanel.WIDTH][GridPanel.HEIGHT];
 		r = new Random();
 	}
@@ -31,24 +32,41 @@ public class LocationMap {
 	/**
 	 * @param type
 	 */
-	private Coordinate place(Matter m) {
-		// Potential location.
+	private Coordinate place(int width, int height, int anId, Character aType) {
+		//set location
 		int x = r.nextInt(GridPanel.WIDTH);
 		int y = r.nextInt(GridPanel.HEIGHT);
-		int width = m.getWidth();
-		int height = m.getHeight();
-		// Check for collisions.
-		while (!canSpawn(x, y, width, height)) {
+
+		//check for collisions
+		while(!canSpawn(x, y, width, height)) {
 			x = r.nextInt(GridPanel.WIDTH);
 			y = r.nextInt(GridPanel.HEIGHT);
 		}
-		// Set boundaries.
-		setWrapAround(m.getLocation(), width, height);
-		setRange(width, height, m.getType(), m.getId(), x, y);
-		return new Coordinate(x, y);
+		Coordinate newLocation = setWrapAround(x, y, width, height);;
+
+		//set boundaries
+		/*setWrapAround(getWidth(), getHeight());*/
+		setRange(x, y, width, height, aType, anId);
+		return newLocation;
 	}
 	
-	public void newLocation(Matter m) {
+	// CLOSER TO THE ORIGINAL THAN THE OTHER NEW LOCATION.
+	public Coordinate newLocation(int x, int y, int width, int height, int anId, Character aType) {
+		setRangeToBlank(width, height, x, y);
+		int newX = r.nextInt(GridPanel.WIDTH);
+		int newY = r.nextInt(GridPanel.HEIGHT);
+		while (!canSpawn(newX, newY, width, height)) {
+			newX = r.nextInt(GridPanel.WIDTH);
+			newY = r.nextInt(GridPanel.HEIGHT);
+		}
+		Coordinate newLocation = setWrapAround(newX, newY, width, height);
+		//set boundaries
+		/*setWrapAround(newLocation, width, height);*/
+		setRange(newX, newY, width, height, aType, anId);
+		return newLocation;
+	}
+	
+	/*public void newLocation(Matter m) {
 		int width = m.getWidth();
 		int height = m.getHeight();
 		int x = r.nextInt(GridPanel.WIDTH);
@@ -68,7 +86,7 @@ public class LocationMap {
 		// Set boundaries.
 		setWrapAround(width, height);
 		setRange(width, height, 'o');
-	}
+	}*/
 
 	/**
 	 * @param x
@@ -100,12 +118,33 @@ public class LocationMap {
 	 * @param x
 	 * @param y
 	 */
-	public void setRange(int width, int height, Character value, int id, int x, int y) {
+	public void setRange(int x, int y, int width, int height, Character value, int id) {
 		for (int i = (x - (width / 2)); i <= (x + (width / 2)); i++) {
 			for (int j = (y - (height / 2)); j <= (y + (height / 2)); j++) {
 				try {
 					locationMap[i][j].setLeft(id);
 					locationMap[i][j].setRight(value);
+				} catch (ArrayIndexOutOfBoundsException e) {
+				}
+			}
+		}
+	}
+	
+	/**
+	 * @param width
+	 * @param height
+	 * @param value
+	 * @param id
+	 * @param x
+	 * @param y
+	 */
+	public void setRangeToBlank(int width, int height, int x, int y) {
+		for (int i = (x - (width / 2)); i <= (x + (width / 2)); i++) {
+			for (int j = (y - (height / 2)); j <= (y + (height / 2)); j++) {
+				try {
+					/*locationMap[i][j].setLeft(null);*/
+					locationMap[i][j].setLeft(0);
+					locationMap[i][j].setRight('w');
 				} catch (ArrayIndexOutOfBoundsException e) {
 				}
 			}
@@ -117,45 +156,31 @@ public class LocationMap {
 	 * @param rightLeftBound   - right and left boundary to trigger wrap
 	 * @param topBottomBound   - top and bottom boundary to trigger wrap
 	 */
-	protected void setWrapAround(Coordinate location, int width, int height){
-		int y = location.getY();
-		int x = location.getX();
+	protected Coordinate setWrapAround(int x, int y, int width, int height){
+		Coordinate newLocation = new Coordinate();
 		if (x + (width / 2) >= GridPanel.WIDTH) // right.
 			if (canSpawn((width / 2) + 1, y, width, height))
-				location.setX((width / 2) + 1);
+				newLocation.setX((width / 2) + 1);
 		if (x - (width / 2) <= 0) // left.
 			if (canSpawn(GridPanel.WIDTH - (width / 2), y, width, height))
-				location.setX(GridPanel.WIDTH - (width / 2));
+				newLocation.setX(GridPanel.WIDTH - (width / 2));
 		if (y + (height / 2) >= GridPanel.HEIGHT) // bottom.
 			if (canSpawn(x, (height / 2) + 1, width, height))
-				location.setY((height / 2) + 1);
+				newLocation.setY((height / 2) + 1);
 		if (y - (height / 2) <= 0) // top.
 			if (canSpawn(x, GridPanel.HEIGHT - (height / 2), width, height))
-				location.setY(GridPanel.HEIGHT - (height / 2));
+				newLocation.setY(GridPanel.HEIGHT - (height / 2));
+		return newLocation;
 	}
 	
 	public void clearLocations() {
 		for (int i = 0; i < locationMap.length; i++) {
 			for (int j = 0; j < locationMap[i].length; j++) {
 				// mark available
-				locationMap[i][j] = new Pair<Integer, Character>(0, 'w');
+				/*locationMap[i][j] = new Pair<Integer, Character>(0, 'w');*/
+				locationMap[i][j] = new Pair<Integer, Character>(null, 'w');
 			}
 		}
-	}
-	
-	
-	public void newLocation() {
-		setRange(width, height, 'w');
-		int x = r.nextInt(GridPanel.WIDTH);
-		int y = r.nextInt(GridPanel.HEIGHT);
-		while(!canSpawn(x, y)){
-			x = r.nextInt(GridPanel.WIDTH);
-			y = r.nextInt(GridPanel.HEIGHT);
-		}
-		location = new Coordinate(x, y);
-		//set boundaries
-		setWrapAround(width, height);
-		setRange(width, height, 'o');
 	}
 	
 	public int length() {

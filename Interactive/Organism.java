@@ -156,12 +156,12 @@ public class Organism extends Matter{
 			new Coordinate(widthSub - scanRange, heightSub - scanRange);
 		Coordinate cornerBottom =
 			new Coordinate(widthPlus + scanRange, heightPlus + scanRange);
-		
+		LocationMap locationMap = LocationMap.getInstance();
 		for (int i = cornerTop.getX(); i <= cornerBottom.getX(); i++) {
 			for (int j = cornerTop.getY(); j <= cornerBottom.getY(); j++) {
 				try {
 					// count all occurrences of objects in location map
-					Pair<Integer, Character> space = GridPanel.locationMap[i][j];
+					Pair<Integer, Character> space = locationMap.get(i, j);
 					if (space.getSnd() == 'h' || space.getSnd() == 'p')
 						objectIds.add(space.getFst());
 				} catch (ArrayIndexOutOfBoundsException e) {
