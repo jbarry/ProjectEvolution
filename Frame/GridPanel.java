@@ -1315,8 +1315,11 @@ public class GridPanel extends JPanel {
 		
 		Coordinate nextMove = AStar.search(org.getLocation(),
 				aFoodDestination.getLocation());
+		System.out.println("current location");
+		org.printLocation();
 		System.out.println("nextMove: " + nextMove.getX() + ", " + nextMove.getY());
 		org.moveTo(nextMove);
+		System.out.println("after move to");
 		org.countStep();
 	}
 

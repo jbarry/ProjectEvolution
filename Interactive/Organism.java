@@ -181,9 +181,10 @@ public class Organism extends Matter {
 			int nextX = c.getX();
 			int nextY = c.getY();
 			// If the next move is available.
-			if (!map.canSpawn(nextX, nextY, width, height)) {
+			if (map.canSpawn(nextX, nextY, width, height)) {
 				location.setY(nextY);
 				location.setX(nextX);
+				System.out.println("moveto: " + location.getX() + ", " + location.getY());
 				// make current location unavailable
 				map.setRange(location, width, height, 'o', id);
 				return true;

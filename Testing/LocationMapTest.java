@@ -97,6 +97,7 @@ public class LocationMapTest {
 			// Assert that the space is filled with the appropriate type.
 			Assert.assertEquals("o", spaceType.toString());
 		}
+		System.out.println("In the random pair: " + map.get(20, 237).getFst() + ", " + map.get(20, 237).getSnd());
 		map.clearLocations();
 	}
 }
