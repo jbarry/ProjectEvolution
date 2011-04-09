@@ -170,17 +170,22 @@ public class Organism extends Matter {
 				id, 'o');
 	}
 	
-	public boolean moveTo(int x, int y) {
+	public boolean moveTo(Coordinate c) {
 		LocationMap map = LocationMap.getInstance();
-		map.setRangeToBlank(width, height, x, y);
+		int curX = location.getX();
+		int curY = location.getY();
+		// Set current location available.
+		map.setRangeToBlank(width, height, curX, curY);
 		map.setWrapAround(location, width, height);
 		try {
+			int nextX = c.getX();
+			int nextY = c.getY();
 			// If the next move is available.
-			if (!map.canSpawn(x, y, width, height)) {
-				location.setY(y);
-				location.setX(x);
+			if (!map.canSpawn(nextX, nextY, width, height)) {
+				location.setY(nextY);
+				location.setX(nextX);
 				// make current location unavailable
-				map.setRange(x, y, width, height, 'o', id);
+				map.setRange(location, width, height, 'o', id);
 				return true;
 			} else
 				return false;
@@ -414,11 +419,11 @@ public class Organism extends Matter {
 
 	public void paint(Graphics g) {
 		g.setColor(Color.BLACK);
-		if (location == null)
+		/*if (location == null)
 			System.out.println("loc at paint time is null");
 		else
 			System.out.println("org location at paint: " + location.getX()
-					+ ", " + location.getY());
+					+ ", " + location.getY());*/
 		g.fillRect((int) this.location.getX() - (width / 2),
 				(int) this.location.getY() - (height / 2), width, height);
 	}

@@ -1133,7 +1133,7 @@ public class GridPanel extends JPanel {
 	 */
 	public void initializeAstar() {
 		System.out.println("called init astar");
-		// reset all generation info from previous simulations.
+		// Reset all generation info from previous simulations.
 		generationNum = 1;
 		trialNum = 1;
 		GUI.genPanel.resetGenInformation();
@@ -1143,7 +1143,7 @@ public class GridPanel extends JPanel {
 		/*shuffleStringIds = new ArrayList<String>();*/
 		// Location map will consist of: key: current instance number of object
 		// value: 'w' for white space or available. 'o' for organism. 'h' for
-		//healthy food. 'p' for poisonous food.
+		// healthy food. 'p' for poisonous food.
 		locationMap = LocationMap.getInstance();
 		norm = new Normalizer(new Pair<Double, Double>(-600.0, 600.0),
 				new Pair<Double, Double>(-50.0, 50.0));
@@ -1312,11 +1312,12 @@ public class GridPanel extends JPanel {
 	// FOR TESTING.
 	private void moveAstar(Organism org, Pair<Integer, Double> bestEval,
 			Food aFoodDestination) {
-	
-			Coordinate nextMove = AStar.search(org.getLocation(),
-					aFoodDestination.getLocation());
-			org.moveTo(nextMove.getX(), nextMove.getY());
-			org.countStep();
+		
+		Coordinate nextMove = AStar.search(org.getLocation(),
+				aFoodDestination.getLocation());
+		System.out.println("nextMove: " + nextMove.getX() + ", " + nextMove.getY());
+		org.moveTo(nextMove);
+		org.countStep();
 	}
 
 	private boolean doActionAstar(Organism org, Pair<Integer, Double> bestEval,
@@ -1326,7 +1327,7 @@ public class GridPanel extends JPanel {
 		case 0:
 			Coordinate nextMove = AStar.search(org.getLocation(),
 					aFoodDestination.getLocation());
-			org.moveTo(nextMove.getX(), nextMove.getY());
+			org.moveTo(nextMove);
 			org.countStep();
 			break;
 		case 1:
