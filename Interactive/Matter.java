@@ -50,15 +50,17 @@ public abstract class Matter implements Comparable<Matter>{
 		/*place(type);*/
 	}
 
-	/*public boolean deplete(double val) {
+	public boolean deplete(double val) {
 		if (hlth - val < 0) {
 			hlth = 0;
-			setRange(this.getWidth(), this.getHeight(), 'w');
+			int x = location.getX();
+			int y = location.getY();
+			LocationMap.getInstance().setRangeToBlank(x, y, getWidth(), getHeight());
 			return true;
 		}
 		else hlth-=val;
 		return false;
-	}*/
+	}
 	
 	public boolean changeHealth(double val) {
 		hlth+=val;

@@ -43,7 +43,7 @@ public class GridPanel extends JPanel {
 	public final static int HEIGHT = 400;
 
 	/*public static Pair<Integer, Character>[][] locationMap;*/
-	private LocationMap locationMap;
+	private LocationMap locationMap = LocationMap.getInstance();
 
 	private LinkedList<Organism> organisms;
 	private LinkedList<HealthyFood> healthFd;
@@ -127,7 +127,7 @@ public class GridPanel extends JPanel {
 		t.stop();
 		generationNum = generation;
 		timePassed = 0;
-		clearLocations();
+		locationMap.clearLocations();
 		for (Organism org : organisms) {
 			org.goBack(generation);
 		}
@@ -145,14 +145,14 @@ public class GridPanel extends JPanel {
 
 	}
 
-	public void clearLocations() {
+	/*public void clearLocations() {
 		for (int i = 0; i < locationMap.length(); i++) {
 			for (int j = 0; j < locationMap.colLength(i); j++) {
 				// mark available
 				locationMap.set(i, j, new Pair<Integer, Character>(0, 'w'));
 			}
 		}
-	}
+	}*/
 
 	/**
 	 * Sets the initial game state of the GridPanel.
@@ -169,8 +169,8 @@ public class GridPanel extends JPanel {
 		// Location map will consist of: key: current instance number of object
 		// value: 'w' for white space or available. 'o' for organism. 'h' for
 		//healthy food. 'p' for poisonous food.
-		locationMap = LocationMap.getInstance();
-		clearLocations();
+		/*locationMap = LocationMap.getInstance();*/
+		locationMap.clearLocations();
 		norm = new Normalizer(new Pair<Double, Double>(-600.0, 600.0),
 				new Pair<Double, Double>(-50.0, 50.0));
 		organisms.clear();
@@ -214,8 +214,8 @@ public class GridPanel extends JPanel {
 		// Location map will consist of: key: current instance number of object
 		// value: 'w' for white space or available. 'o' for organism. 'h' for
 		// healthy food. 'p' for poisonous food.
-		locationMap = new LocationMap();
-		clearLocations();
+		/*locationMap = new LocationMap();*/
+		locationMap.clearLocations();
 		norm = new Normalizer(new Pair<Double, Double>(-600.0, 600.0),
 				new Pair<Double, Double>(-50.0, 50.0));
 		organisms.clear();
@@ -254,7 +254,7 @@ public class GridPanel extends JPanel {
 			// org.addAction("N", orgIndex);
 			org.countStep();
 			break;
-		case 1:
+		/*case 1:
 			org.moveSouth(organisms, false);
 			// org.addAction("S", orgIndex);
 			org.countStep();
@@ -288,7 +288,7 @@ public class GridPanel extends JPanel {
 			org.moveSouthWest(organisms, false);
 			// org.addAction("SW", orgIndex);
 			org.countStep();
-			break;
+			break;*/
 		case 8:
 			// doEat(org);
 			return eat(org);
@@ -310,7 +310,7 @@ public class GridPanel extends JPanel {
 			// org.addAction("N", orgIndex);
 			org.countStep();
 			break;
-		case 1:
+		/*case 1:
 			org.moveSouth(organisms, false);
 			// org.addAction("S", orgIndex);
 			org.countStep();
@@ -344,7 +344,7 @@ public class GridPanel extends JPanel {
 			org.moveSouthWest(organisms, false);
 			// org.addAction("SW", orgIndex);
 			org.countStep();
-			break;
+			break;*/
 		case 8:
 			// doEat(org);
 			eat(org);
@@ -414,7 +414,7 @@ public class GridPanel extends JPanel {
 			int index = surroundingOrganismsPush.get(ran
 					.nextInt(surroundingOrganismsPush.size()));
 			// System.out.println(org.getId() + " " + index);
-			org.pushOrg(index, organisms);
+			/*org.pushOrg(index, organisms);*/
 		} else
 			org.setAction("Attempted to push");
 	}
@@ -455,7 +455,7 @@ public class GridPanel extends JPanel {
 		organisms = g.newGeneration();
 		healthFd.clear();
 		poisFood.clear();
-		clearLocations();
+		locationMap.clearLocations();
 		shuffleIds.clear();
 		for (Organism o : organisms) {
 			sum += g.fitnessTest(o);
@@ -524,8 +524,8 @@ public class GridPanel extends JPanel {
 						Coordinate c = food.getLocation();
 						int x = c.getX();
 						int y = c.getY();
-						locationMap.setRange(food.getWidth(), food.getWidth(),
-								food.getType(), food.getId(), x, y);
+						locationMap.setRange(x, y, food.getWidth(),
+								food.getHeight(), food.getType(), food.getId());
 						healthFd.set(food.getId(), null);
 					}
 					isNextToFood = true;
@@ -574,8 +574,8 @@ public class GridPanel extends JPanel {
 						int x = c.getX();
 						int y = c.getY();
 						// Delete food source if it is depleted
-						locationMap.setRange(food.getWidth(), food.getWidth(),
-								food.getType(), food.getId(), x, y);
+						locationMap.setRange(x, y, food.getWidth(),
+								food.getHeight(), food.getType(), food.getId());
 						poisFood.set(food.getId(), null);
 					}
 					isNextToFood = true;
@@ -756,7 +756,7 @@ public class GridPanel extends JPanel {
 				organisms = g.newGeneration();
 				healthFd.clear();
 				poisFood.clear();
-				clearLocations();
+				locationMap.clearLocations();
 				shuffleIds.clear();
 				for (Organism o : organisms) {
 					sum += g.fitness(o);
@@ -1148,8 +1148,8 @@ public class GridPanel extends JPanel {
 		// Location map will consist of: key: current instance number of object
 		// value: 'w' for white space or available. 'o' for organism. 'h' for
 		//healthy food. 'p' for poisonous food.
-		locationMap = new LocationMap();
-		clearLocations();
+		/*locationMap = new LocationMap();*/
+		locationMap.clearLocations();
 		norm = new Normalizer(new Pair<Double, Double>(-600.0, 600.0),
 				new Pair<Double, Double>(-50.0, 50.0));
 		organisms.clear();
@@ -1514,8 +1514,7 @@ public class GridPanel extends JPanel {
 			Coordinate c = m.getLocation();
 			int x = c.getX();
 			int y = c.getY();
-			locationMap.setRange(this.getWidth(), this.getHeight(), 'w',
-					m.getId(), x, y);
+			locationMap.setRangeToBlank(x, y, m.getWidth(), m.getHeight());
 			return true;
 		} else
 			m.setHealth(m.getHealth() - val);

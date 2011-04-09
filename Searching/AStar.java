@@ -12,8 +12,6 @@ import Interactive.Pair;
 
 public class AStar {
 	
-	private static LocationMap locationMap = LocationMap.getInstance();
-	
 	public static void main(String[] args) {
 		AStar a = new AStar();
 		Coordinate coord1 = new Coordinate(2, 5);
@@ -116,6 +114,7 @@ public class AStar {
 		HashSet<Integer> heal = new HashSet<Integer>();
 		HashSet<Integer> orgs = new HashSet<Integer>();
 		double numObj = 0.0;
+		LocationMap locationMap = LocationMap.getInstance();
 		checkObstacles: for(int i = x - Organism.width/2; i <= x + Organism.width/2; i++){
 			for(int j = y - Organism.height/2; j <= y + Organism.height/2; j++){
 				try{	
@@ -156,6 +155,7 @@ public class AStar {
 	 */
 	public static boolean hasObstacle(int x, int y) {
 		int numObj = 0;
+		LocationMap locationMap = LocationMap.getInstance();
 		checkObstacles: for (int i = x - (Organism.width / 2); i <= x
 				+ (Organism.width / 2); i++) {
 			for (int j = y - (Organism.height / 2); j <= y

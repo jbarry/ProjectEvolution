@@ -139,9 +139,8 @@ public class OptionsPanel extends JPanel implements Runnable{
 						        	for(Organism o: simulation.getOrganisms()){
 						        		int x = o.getLocation().getX();
 						        		int y = o.getLocation().getY();
-										locationMap.setRange(Organism.width,
-												Organism.height, 'w',
-												o.getId(), x, y);
+										locationMap.setRangeToBlank(x, y, Organism.width,
+												Organism.height);
 						        	}
 				        		}
 					        	
@@ -533,9 +532,8 @@ public class OptionsPanel extends JPanel implements Runnable{
 							        	for(Organism o: simulation.getOrganisms()){
 							        		int x = o.getLocation().getX();
 							        		int y = o.getLocation().getY();
-											locationMap.setRange(Organism.width,
-													Organism.height, 'w',
-													o.getId(), x, y);
+											locationMap.setRangeToBlank(x, y, Organism.width,
+													Organism.height);
 							        	}
 
 							        	Organism.width = Integer.parseInt(orgWidthTxtBox.getText());

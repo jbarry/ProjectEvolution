@@ -10,7 +10,7 @@ public class LocationMap {
 	
 	public Pair<Integer, Character>[][] locationMap;
 	Random r;
-	private static LocationMap instance;
+	public static LocationMap instance;
 
 	/**
 	 * Public access for the singleton.
@@ -26,13 +26,14 @@ public class LocationMap {
 
 	protected void LocationMap() {
 		locationMap = new Pair[GridPanel.WIDTH][GridPanel.HEIGHT];
+		clearLocations();
 		r = new Random();
 	}
 
 	/**
 	 * @param type
 	 */
-	private Coordinate place(int width, int height, int anId, Character aType) {
+	public Coordinate place(int width, int height, int anId, Character aType) {
 		//set location
 		int x = r.nextInt(GridPanel.WIDTH);
 		int y = r.nextInt(GridPanel.HEIGHT);
@@ -95,7 +96,7 @@ public class LocationMap {
 	 *            Potential y location.
 	 * @return true if organism can spawn at given location.
 	 */
-	protected boolean canSpawn(int x, int y, int width, int height) {
+	public boolean canSpawn(int x, int y, int width, int height) {
 		for (int i = x - (width / 2); i <= x + (width / 2); i++) {
 			for (int j = y - (height / 2); j <= y + (height / 2); j++) {
 				try {
@@ -156,7 +157,7 @@ public class LocationMap {
 	 * @param rightLeftBound   - right and left boundary to trigger wrap
 	 * @param topBottomBound   - top and bottom boundary to trigger wrap
 	 */
-	protected Coordinate setWrapAround(int x, int y, int width, int height){
+	public Coordinate setWrapAround(int x, int y, int width, int height){
 		Coordinate newLocation = new Coordinate();
 		if (x + (width / 2) >= GridPanel.WIDTH) // right.
 			if (canSpawn((width / 2) + 1, y, width, height))
