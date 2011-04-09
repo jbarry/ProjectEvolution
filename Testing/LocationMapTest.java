@@ -6,12 +6,15 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 import Frame.LocationMap;
 
 public class LocationMapTest {
 
 	LocationMap map = LocationMap.getInstance();
+	
+	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -26,6 +29,11 @@ public class LocationMapTest {
 
 	@After
 	public void tearDown() throws Exception {
+		map.clearLocations();
 	}
-
+	
+	@Test
+	public void clearLocationsTest() {
+		
+	}
 }

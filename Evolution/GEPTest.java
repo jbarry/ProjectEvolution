@@ -19,83 +19,255 @@ import org.junit.runners.Parameterized.Parameters;
 
 import Interactive.Chromosome;
 import Interactive.Organism;
-
-@RunWith(value = Parameterized.class)
+import Interactive.Pair;
 public class GEPTest {
 
-	
-	private List<Organism> orgList;
+	/*private LinkedList<Organism> orgList;*/
+	GEP gep;
+	Random r;
 	/*private int number;*/
-	
-	public GEPTest(List<Organism> anOrgList) {
-		this.orgList = anOrgList;
-	}
-	
+
 	/*public GEPTest(int number) {
-		this.number = number;
-	}*/
+this.number = number;
+}*/
 
 	@Before
 	public void setUp() throws Exception {
-			/*Random ran = new Random();
-			LinkedList<Organism> orgList = new LinkedList<Organism>();
-			for (int i = 0; i < 7; i++)
-				orgList.add(new Organism(true, 7, ran.nextInt(20), i));
-			GEP gep = new GEP(orgList, 1.0, 1.0, 1.0, 1.0, 1.0, 3, true, true);*/
+		r = new Random();
+		gep = new GEP(null, 0.75, 0.01, 0.01, 0.75, 0.75, 3, false, true);
+		//
+		/*LinkedList<Organism> orgList = new LinkedList<Organism>();
+for (int i = 0; i < 7; i++)
+orgList.add(new Organism(true, 7, ran.nextInt(20), i));
+GEP gep = new GEP(orgList, 1.0, 1.0, 1.0, 1.0, 1.0, 3, true, true);*/
+
+		// CASE: ODD NUMBER OF ORGANISMS.
+		/*for (int i = 0; i < 13; i++)
+orgList.add(new Organism(true, 4, r.nextInt(20), i));*/
+
+		// CASE: EVEN NUMBER OF ORGANISMS.
+		/*for (int i = 0; i < 4; i++)
+orgList.add(new Organism(true, 4, r.nextInt(20), i));*/
+
+		// CASE: ORG LIST SIZE 1.
+		// CASE: ORG LIST SIZE 0.
+		// CASE: ORG ALL SAME FITNESS.
+		// CASE: ORG LIST ALL SAME IDS.
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		/*orgList.clear();*/
 	}
-	
-	/*// Types of orgLists:
-	// - even num
-	// - odd num
-	// - all 0 <= fitness < 1.
-	 @Parameters
-	 public static Object[][] data() {
-		Random ran = new Random();
-		LinkedList<Organism> orgList1 = new LinkedList<Organism>();
-		for (int i = 0; i < 7; i++) // Odd num.
-			orgList1.add(new Organism(true, 7, ran.nextInt(20), i));
-		LinkedList<Organism> orgList2 = new LinkedList<Organism>();
-		for (int i = 0; i < 6; i++) // Even num.
-			orgList2.add(new Organism(true, 7, ran.nextInt(20), i));
-		
-		LinkedList<Organism> orgList3 = new LinkedList<Organism>();
-		for (int i = 0; i < 4; i++) // All have fitness of zero.
-			orgList3.add(new Organism(true, 7, 0.0, i));
-		LinkedList<Organism> orgList4 = new LinkedList<Organism>();
-		for (int i = 0; i < 4; i++) // All have same fitness not equal to zero.
-			orgList4.add(new Organism(true, 7, 0.0, i));
-		LinkedList<Organism> orgList5 = new LinkedList<Organism>();
-		LinkedList<Organism> orgList6 = new LinkedList<Organism>();
-		LinkedList<Organism> orgList7 = new LinkedList<Organism>();
-		LinkedList<Organism> orgList8 = new LinkedList<Organism>();
-		
-		LinkedList<Organism>[][] data = new Collection<Object[]> { { orgList1 }, { orgList2 } };
-		return data;
-	 }*/
 
-	 /*@Parameters
-	public static Collection<Object[]> data() {
-		Object[][] data = new Object[][] { { 1 }, { 2 }, { 3 }, { 4 } };
-		return Arrays.asList(data);
-	}*/
+	// DONE CASE: ELITE LIST SIZE 1.
+	// DONE CASE:
+	// TODO CASE: NUM ELITES IS 0.
+	// TODO CASE: ALL SAME FITNESS.
+	@Test
+	public void assembleElitesListEvenOrgListTest() {
+		// Even number of Organisms.
+		LinkedList<Organism> orgList = new LinkedList<Organism>();
+		orgList.add(new Organism(true, 7, 10.0, 0));
+		orgList.add(new Organism(true, 7, 4.0, 1));
+		orgList.add(new Organism(true, 7, 11.0, 2));
+		orgList.add(new Organism(true, 7, 3.0, 3));
+		orgList.add(new Organism(true, 7, 10.0, 4));
+		orgList.add(new Organism(true, 7, 13.0, 5));
+		orgList.add(new Organism(true, 7, 12.0, 6));
+		orgList.add(new Organism(true, 7, 10.0, 7));
+		gep.setOrgList(orgList);
+		LinkedList<Chromosome> eliteList = (LinkedList<Chromosome>) gep.assembleElites(orgList);
+		assertSame(eliteList.pop().getId(), orgList.get(5).getId());
+		assertSame(eliteList.pop().getId(), orgList.get(6).getId());
+		assertSame(eliteList.pop().getId(), orgList.get(2).getId());
+	}
+
+	@Test
+	public void partnerSelectTestOddPopulation() {
+		// CASE: ODD NUMBER OF ORGANISMS.
+		LinkedList<Organism> orgList = new LinkedList<Organism>();
+		orgList.add(new Organism(true, 7, 10.0, 0));
+		orgList.add(new Organism(true, 7, 4.0, 1));
+		orgList.add(new Organism(true, 7, 11.0, 2));
+		orgList.add(new Organism(true, 7, 3.0, 3));
+		orgList.add(new Organism(true, 7, 10.0, 4));
+		orgList.add(new Organism(true, 7, 13.0, 5));
+		orgList.add(new Organism(true, 7, 12.0, 6));
+		orgList.add(new Organism(true, 7, 10.0, 7));
+		orgList.add(new Organism(true, 7, 10.0, 8));
+		orgList.add(new Organism(true, 7, 10.0, 9));
+		orgList.add(new Organism(true, 7, 10.0, 10));
+		orgList.add(new Organism(true, 7, 10.0, 11));
+		orgList.add(new Organism(true, 7, 10.0, 12));
+		orgList.add(new Organism(true, 7, 10.0, 13));
+		orgList.add(new Organism(true, 7, 10.0, 14));
+		gep.setOrgList(orgList);
+		LinkedList<Pair<Organism, Organism>> partnerList = gep.partnerSelect(orgList);
+		while (!partnerList.isEmpty()) {
+			Pair<Organism, Organism> partners1 = partnerList.poll();
+			for (int j = 0; j < partnerList.size(); j++) {
+				Pair<Organism, Organism> partners2 = partnerList.get(j);
+				Integer id1P1 = partners1.getFst().getId();
+				Integer id2P1 = partners1.getSnd().getId();
+				Integer id1P2 = partners2.getFst().getId();
+				Integer id2P2 = partners2.getSnd().getId();
+				assertFalse(id1P1 == id2P1 && id1P1 == id2P2);
+				if (id1P1 == id1P2)
+					assertFalse(id2P1 == id2P2);
+				if (id2P1 == id2P2)
+					assertFalse(id1P1 == id1P2);
+			}
+		}
+	}
+
+	@Test
+	public void partnerSelectTestEvenPopulation() {
+		// CASE: ODD NUMBER OF ORGANISMS.
+		LinkedList<Organism> orgList = new LinkedList<Organism>();
+		orgList.add(new Organism(true, 7, 10.0, 0));
+		orgList.add(new Organism(true, 7, 4.0, 1));
+		orgList.add(new Organism(true, 7, 11.0, 2));
+		orgList.add(new Organism(true, 7, 3.0, 3));
+		orgList.add(new Organism(true, 7, 10.0, 4));
+		orgList.add(new Organism(true, 7, 13.0, 5));
+		orgList.add(new Organism(true, 7, 12.0, 6));
+		orgList.add(new Organism(true, 7, 10.0, 7));
+		orgList.add(new Organism(true, 7, 10.0, 8));
+		orgList.add(new Organism(true, 7, 10.0, 9));
+		orgList.add(new Organism(true, 7, 10.0, 10));
+		orgList.add(new Organism(true, 7, 10.0, 11));
+		orgList.add(new Organism(true, 7, 10.0, 12));
+		orgList.add(new Organism(true, 7, 10.0, 13));
+		orgList.add(new Organism(true, 7, 10.0, 14));
+		orgList.add(new Organism(true, 7, 10.0, 15));
+		gep.setOrgList(orgList);
+		LinkedList<Pair<Organism, Organism>> partnerList = gep.partnerSelect(orgList);
+		while (!partnerList.isEmpty()) {
+			Pair<Organism, Organism> partners1 = partnerList.poll();
+			for (int j = 0; j < partnerList.size(); j++) {
+				Pair<Organism, Organism> partners2 = partnerList.get(j);
+				Integer id1P1 = partners1.getFst().getId();
+				Integer id2P1 = partners1.getSnd().getId();
+				Integer id1P2 = partners2.getFst().getId();
+				Integer id2P2 = partners2.getSnd().getId();
+				assertFalse(id1P1 == id2P1 && id1P1 == id2P2);
+				if (id1P1 == id1P2)
+					assertFalse(id2P1 == id2P2);
+				if (id2P1 == id2P2)
+					assertFalse(id1P1 == id1P2);
+			}
+		}
+	}
+
+	// TODO EVEN CASE.
+	// TODO
+	@Test
+	public void tournamentTestOddPopulation() {
+		// CASE: ODD NUMBER OF ORGANISMS.
+		LinkedList<Organism> orgList = new LinkedList<Organism>();
+		for (int i = 0; i < 13; i++)
+			orgList.add(new Organism(true, 4, r.nextInt(20), i));
+		gep.setOrgList(orgList);
+		LinkedList<Pair<Organism, Organism>> partnerList = gep
+		.partnerSelect(orgList);
+		LinkedList<Organism> tournOrgList = gep.tournament(partnerList);
+		for (int i = 0; i < partnerList.size(); i++) {
+			Organism firstOrg = partnerList.get(i).getFst();
+			Organism secOrg = partnerList.get(i).getSnd();
+			Organism tournListOrg = tournOrgList.get(i);
+			Double tournListOrgFitness = tournListOrg.getFitness();
+			Double firstFitness = firstOrg.getFitness();
+			Double secFitness = secOrg.getFitness();
+			if (firstFitness <= secFitness) {
+				assertEquals(tournListOrg,
+						secOrg);
+			}
+			else if (firstFitness > secFitness) {
+				assertEquals(tournListOrg,
+						firstOrg);
+			}
+		}
+	}
+
+	@Test
+	public void tournamentTestEvenPopulation() {
+		// CASE: ODD NUMBER OF ORGANISMS.
+		LinkedList<Organism> orgList = new LinkedList<Organism>();
+		for (int i = 0; i < 14; i++)
+			orgList.add(new Organism(true, 4, r.nextInt(20), i));
+		gep.setOrgList(orgList);
+		LinkedList<Pair<Organism, Organism>> partnerList = gep
+		.partnerSelect(orgList);
+		LinkedList<Organism> tournOrgList = gep.tournament(partnerList);
+		for (int i = 0; i < partnerList.size(); i++) {
+			Organism firstOrg = partnerList.get(i).getFst();
+			Organism secOrg = partnerList.get(i).getSnd();
+			Organism tournListOrg = tournOrgList.get(i);
+			Double tournListOrgFitness = tournListOrg.getFitness();
+			Double firstFitness = firstOrg.getFitness();
+			Double secFitness = secOrg.getFitness();
+			if (firstFitness <= secFitness) {
+				assertEquals(tournListOrg,
+						secOrg);
+			}
+			else if (firstFitness > secFitness) {
+				assertEquals(tournListOrg,
+						firstOrg);
+			}
+		}
+	}
 
 	/*@Test
-	public void pushTest() {
-		System.out.println("number: " + number);
-	}*/
-	 
- 	@Test
-	public final void pushTest2() {
- 		for (int i = 0; i < orgList.size(); i++) {
- 			Organism org = orgList.get(i);
- 			System.out.println("orgID: " + org.getId());
- 			/*Chromosome chrom = org.getChromosome();*/
+public void rotationTest() {
+}*/
+
+	/*@Test
+public void mutationTest() {
+}*/
+
+	/*@Test*/
+	public void mateSelectEvenPopulationTest() {
+		LinkedList<Organism> orgList = new LinkedList<Organism>();
+		for (int i = 0; i < 14; i++)
+			orgList.add(new Organism(true, 4, r.nextInt(20), i));
+		gep.setOrgList(orgList);
+		LinkedList<Chromosome> chromList = gep.makeChromList(gep.tournament(gep
+				.partnerSelect(orgList)));
+		/*gep.printChromeListIds(chromList);*/
+		LinkedList<Pair<Chromosome, Chromosome>> matePairList = gep
+		.mateSelect(chromList);
+		System.out.println("AfterMateSelect");
+		/*gep.printMateListIds(matePairList);*/
+		/*System.out.println("Printing contents of testing the mate list");
+System.out.println();
+System.out.println("matePairList size" + matePairList.size());*/
+		int i = 0;
+		while (!matePairList.isEmpty()) {
+			/*System.out.println(i);*/
+			System.out.println(i);
+			Pair<Chromosome, Chromosome> partners1 = matePairList.poll();
+			for (int j = 0; j < matePairList.size(); j++) {
+				Pair<Chromosome, Chromosome> partners2 = matePairList.get(j);
+				Chromosome chrom11 = partners1.getFst();
+				Chromosome chrom12 = partners1.getSnd();
+				Chromosome chrom21 = partners2.getFst();
+				Chromosome chrom22 = partners2.getSnd();
+				Integer id1P1 = chrom11.getId();
+				Integer id2P1 = chrom12.getId();
+				Integer id1P2 = chrom21.getId();
+				Integer id2P2 = chrom22.getId();
+				System.out.println("<" + id1P1 + ", " + id2P1 + ">");
+				System.out.println("<" + id1P2 + ", " + id2P2 + ">");
+				assertNotSame(chrom11, chrom12);
+				assertNotSame(chrom11, chrom21);
+				assertNotSame(chrom11, chrom22);
+				assertNotSame(chrom12, chrom21);
+				assertNotSame(chrom12, chrom22);
+				assertNotSame(chrom21, chrom22);
+			}
+			i++;
 		}
- 		System.out.println();
- 	}
+	}
+
+
 }
