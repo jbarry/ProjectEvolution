@@ -521,9 +521,7 @@ public class GridPanel extends JPanel {
 					if (food.getHealth() <= 0) {
 						// Delete food source if it is depleted
 						Coordinate c = food.getLocation();
-						int x = c.getX();
-						int y = c.getY();
-						locationMap.setRange(x, y, food.getWidth(),
+						locationMap.setRange(c, food.getWidth(),
 								food.getHeight(), food.getType(), food.getId());
 						healthFd.set(food.getId(), null);
 					}
@@ -570,10 +568,8 @@ public class GridPanel extends JPanel {
 					org.eatFood(food, 2);
 					if (food.getHealth() <= 0) {
 						Coordinate c = food.getLocation();
-						int x = c.getX();
-						int y = c.getY();
 						// Delete food source if it is depleted
-						locationMap.setRange(x, y, food.getWidth(),
+						locationMap.setRange(c, food.getWidth(),
 								food.getHeight(), food.getType(), food.getId());
 						poisFood.set(food.getId(), null);
 					}
@@ -1149,7 +1145,6 @@ public class GridPanel extends JPanel {
 		// value: 'w' for white space or available. 'o' for organism. 'h' for
 		//healthy food. 'p' for poisonous food.
 		locationMap = LocationMap.getInstance();
-		locationMap.clearLocations();
 		norm = new Normalizer(new Pair<Double, Double>(-600.0, 600.0),
 				new Pair<Double, Double>(-50.0, 50.0));
 		organisms.clear();
@@ -1175,7 +1170,8 @@ public class GridPanel extends JPanel {
 				food.add(new PoisonousFood(100.00, i, 2));
 		// TEST THAT ORGS HAVE LOCATIONS SET.
 		for (Organism org : organisms) {
-			System.out.println(org.getLocation().getX() + ", " + org.getLocation().getY());
+			System.out.println(org.getLocation().getX() + ", "
+					+ org.getLocation().getY());
 		}
 		locationMap.placeFood(food);
 		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);

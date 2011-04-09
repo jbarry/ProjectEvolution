@@ -4,13 +4,10 @@ import java.awt.Graphics;
 import Frame.Coordinate;
 
 public class HealthyFood extends Food {
+	
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
-//	public HealthyFood(double aMxHlth, int anId){
-//		super(aMxHlth, anId);
-//	}
-
 	public HealthyFood(double aMxHlth, int anId, int aScanRange){
 		super(aMxHlth, anId, 'h');
 	}

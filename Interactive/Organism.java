@@ -11,7 +11,8 @@ import java.util.Random;
 import java.util.ArrayList;
 import Frame.*;
 
-public class Organism extends Matter{
+public class Organism extends Matter {
+	
 	//------------------------------------------------------------------------------------
 	//--globals--
 	//------------------------------------------------------------------------------------
@@ -35,26 +36,10 @@ public class Organism extends Matter{
 	private String action = "";
 	public static int width = 5;
 	public static int height = 5;
+	
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
-	
-	/*
-	public Organism() {
-		super(7500.0);
-		samples = 0;
-		avgHealth = 0;
-		hlthTot = 0;
-		steps = 0;
-		chromosome = new Chromosome(9);
-		fitness = 0.0;
-		ActionList = new ArrayList<ArrayList<String>>();
-		ActionList.add(new ArrayList<String>());
-		StartingLocation = new ArrayList<Coordinate>();
-		chromosomeHistory = new ArrayList<Chromosome>();
-	}
-	*/
-	
 	public Organism(double aHealth, int chromSize, int anId) {
 		super(aHealth, anId, 'o');
 		chromosome = new Chromosome(chromSize);
@@ -75,11 +60,12 @@ public class Organism extends Matter{
 	// Just removing the GridPanel call.
 	public Organism(boolean boo, int numGenes, double aFitness,
 			int anId) {
-		hlth = 100.00;
+		super(100.00, anId, 'o');
+		/*hlth = 100.00;*/
 		r = new Random();
 		chromosome = new Chromosome(numGenes, anId, true);
 		fitness = aFitness;
-		id = anId;
+		/*id = anId;*/
 	}
 	
 	//This ctor is for testing purposes.
@@ -180,14 +166,14 @@ public class Organism extends Matter{
 	public void newLocation() {
 		int x = location.getX();
 		int y = location.getY();
-		location = LocationMap.getInstance().newLocation(x, y, width, height,
+		LocationMap.getInstance().newLocation(location, width, height,
 				id, 'o');
 	}
 	
 	public boolean moveTo(int x, int y) {
 		LocationMap map = LocationMap.getInstance();
 		map.setRangeToBlank(width, height, x, y);
-		map.setWrapAround(x, y, width, height);
+		map.setWrapAround(location, width, height);
 		try {
 			// If the next move is available.
 			if (!map.canSpawn(x, y, width, height)) {
@@ -428,9 +414,13 @@ public class Organism extends Matter{
 
 	public void paint(Graphics g) {
 		g.setColor(Color.BLACK);
-		g.fillRect((int)this.location.getX()-(width/2), 
-				(int)this.location.getY()-(height/2), 
-				width, height);
+		if (location == null)
+			System.out.println("loc at paint time is null");
+		else
+			System.out.println("org location at paint: " + location.getX()
+					+ ", " + location.getY());
+		g.fillRect((int) this.location.getX() - (width / 2),
+				(int) this.location.getY() - (height / 2), width, height);
 	}
 
 	//------------------------------------------------------------------------------------
@@ -549,7 +539,7 @@ public class Organism extends Matter{
 	public void goBack(int generation) {
 		int x = location.getX();
 		int y = location.getY();
-		location = LocationMap.getInstance().newLocation(x, y, width, height,
+		LocationMap.getInstance().newLocation(location, width, height,
 				id, 'o');
 		chromosome = chromosomeHistory.get(generation-1);
 		for (int i = generation; i < chromosomeHistory.size(); i++) {

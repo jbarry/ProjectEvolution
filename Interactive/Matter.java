@@ -29,6 +29,7 @@ public abstract class Matter implements Comparable<Matter>{
 		hlth = mxHlth = aMxHlth;
 		r = new Random();
 		this.type = type;
+		location = new Coordinate();
 		/*place(type);*/
 	}
 
@@ -37,6 +38,7 @@ public abstract class Matter implements Comparable<Matter>{
 		id = anId;
 		r = new Random();
 		this.type = type;
+		location = new Coordinate();
 		/*place(type);*/
 	}
 	
@@ -197,8 +199,8 @@ public abstract class Matter implements Comparable<Matter>{
 	*//**
 	 * This method will modify the boolean location map and account for wrapping.
 	 * 
-	 * @param width        x-size for rectangle
-	 * @param height        y-size for rectangle
+	 * @param width        x-size for rectangle or the width of the object.
+	 * @param height        y-size for rectangle or the height of the object.
 	 * @param validity the value to mark the location map.
 	 *//*
 	public void setRange(int width, int height, Character value){

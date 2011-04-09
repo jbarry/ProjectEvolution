@@ -4,13 +4,10 @@ import java.awt.Graphics;
 import Frame.Coordinate;
 
 public class PoisonousFood extends Food{
+	
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
-//	public PoisonousFood(double aMxHlth, int anId){
-//		super(aMxHlth, anId);
-//	}
-	
 	public PoisonousFood(double aMxHlth, int anId, int aScanRange){
 		super(aMxHlth, anId, 'p');
 	}
