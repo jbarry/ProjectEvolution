@@ -21,34 +21,42 @@ import Evolution.GEP;
 import Interactive.Chromosome;
 import Interactive.Organism;
 import Interactive.Pair;
+
 public class GEPTest {
 
-	/*private LinkedList<Organism> orgList;*/
+	/* private LinkedList<Organism> orgList; */
 	GEP gep;
 	Random r;
-	/*private int number;*/
 
-	/*public GEPTest(int number) {
-		this.number = number;
-	}*/
+	/* private int number; */
+
+	/*
+	 * public GEPTest(int number) { this.number = number; }
+	 */
 
 	@Before
 	public void setUp() throws Exception {
 		r = new Random();
 		gep = new GEP(null, 0.75, 0.01, 0.01, 0.75, 0.75, 3, false, true);
 		//
-		/*LinkedList<Organism> orgList = new LinkedList<Organism>();
-		for (int i = 0; i < 7; i++)
-			orgList.add(new Organism(true, 7, ran.nextInt(20), i));
-		GEP gep = new GEP(orgList, 1.0, 1.0, 1.0, 1.0, 1.0, 3, true, true);*/
+		/*
+		 * LinkedList<Organism> orgList = new LinkedList<Organism>(); for (int i
+		 * = 0; i < 7; i++) orgList.add(new Organism(true, 7, ran.nextInt(20),
+		 * i)); GEP gep = new GEP(orgList, 1.0, 1.0, 1.0, 1.0, 1.0, 3, true,
+		 * true);
+		 */
 
 		// CASE: ODD NUMBER OF ORGANISMS.
-		/*for (int i = 0; i < 13; i++)
-			orgList.add(new Organism(true, 4, r.nextInt(20), i));*/
+		/*
+		 * for (int i = 0; i < 13; i++) orgList.add(new Organism(true, 4,
+		 * r.nextInt(20), i));
+		 */
 
 		// CASE: EVEN NUMBER OF ORGANISMS.
-		/*for (int i = 0; i < 4; i++)
-			orgList.add(new Organism(true, 4, r.nextInt(20), i));*/
+		/*
+		 * for (int i = 0; i < 4; i++) orgList.add(new Organism(true, 4,
+		 * r.nextInt(20), i));
+		 */
 
 		// CASE: ORG LIST SIZE 1.
 		// CASE: ORG LIST SIZE 0.
@@ -77,7 +85,8 @@ public class GEPTest {
 		orgList.add(new Organism(true, 7, 12.0, 6));
 		orgList.add(new Organism(true, 7, 10.0, 7));
 		gep.setOrgList(orgList);
-		LinkedList<Chromosome> eliteList = (LinkedList<Chromosome>) gep.assembleElites(orgList);
+		LinkedList<Chromosome> eliteList = (LinkedList<Chromosome>) gep
+				.assembleElites(orgList);
 		assertSame(eliteList.pop().getId(), orgList.get(5).getId());
 		assertSame(eliteList.pop().getId(), orgList.get(6).getId());
 		assertSame(eliteList.pop().getId(), orgList.get(2).getId());
@@ -103,7 +112,8 @@ public class GEPTest {
 		orgList.add(new Organism(true, 7, 10.0, 13));
 		orgList.add(new Organism(true, 7, 10.0, 14));
 		gep.setOrgList(orgList);
-		LinkedList<Pair<Organism, Organism>> partnerList = gep.partnerSelect(orgList);
+		LinkedList<Pair<Organism, Organism>> partnerList = gep
+				.partnerSelect(orgList);
 		while (!partnerList.isEmpty()) {
 			Pair<Organism, Organism> partners1 = partnerList.poll();
 			for (int j = 0; j < partnerList.size(); j++) {
@@ -142,7 +152,8 @@ public class GEPTest {
 		orgList.add(new Organism(true, 7, 10.0, 14));
 		orgList.add(new Organism(true, 7, 10.0, 15));
 		gep.setOrgList(orgList);
-		LinkedList<Pair<Organism, Organism>> partnerList = gep.partnerSelect(orgList);
+		LinkedList<Pair<Organism, Organism>> partnerList = gep
+				.partnerSelect(orgList);
 		while (!partnerList.isEmpty()) {
 			Pair<Organism, Organism> partners1 = partnerList.poll();
 			for (int j = 0; j < partnerList.size(); j++) {
@@ -170,7 +181,7 @@ public class GEPTest {
 			orgList.add(new Organism(true, 4, r.nextInt(20), i));
 		gep.setOrgList(orgList);
 		LinkedList<Pair<Organism, Organism>> partnerList = gep
-		.partnerSelect(orgList);
+				.partnerSelect(orgList);
 		LinkedList<Organism> tournOrgList = gep.tournament(partnerList);
 		for (int i = 0; i < partnerList.size(); i++) {
 			Organism firstOrg = partnerList.get(i).getFst();
@@ -180,12 +191,9 @@ public class GEPTest {
 			Double firstFitness = firstOrg.getFitness();
 			Double secFitness = secOrg.getFitness();
 			if (firstFitness <= secFitness) {
-				assertEquals(tournListOrg,
-						secOrg);
-			}
-			else if (firstFitness > secFitness) {
-				assertEquals(tournListOrg,
-						firstOrg);
+				assertEquals(tournListOrg, secOrg);
+			} else if (firstFitness > secFitness) {
+				assertEquals(tournListOrg, firstOrg);
 			}
 		}
 	}
@@ -198,7 +206,7 @@ public class GEPTest {
 			orgList.add(new Organism(true, 4, r.nextInt(20), i));
 		gep.setOrgList(orgList);
 		LinkedList<Pair<Organism, Organism>> partnerList = gep
-		.partnerSelect(orgList);
+				.partnerSelect(orgList);
 		LinkedList<Organism> tournOrgList = gep.tournament(partnerList);
 		for (int i = 0; i < partnerList.size(); i++) {
 			Organism firstOrg = partnerList.get(i).getFst();
@@ -208,25 +216,22 @@ public class GEPTest {
 			Double firstFitness = firstOrg.getFitness();
 			Double secFitness = secOrg.getFitness();
 			if (firstFitness <= secFitness) {
-				assertEquals(tournListOrg,
-						secOrg);
-			}
-			else if (firstFitness > secFitness) {
-				assertEquals(tournListOrg,
-						firstOrg);
+				assertEquals(tournListOrg, secOrg);
+			} else if (firstFitness > secFitness) {
+				assertEquals(tournListOrg, firstOrg);
 			}
 		}
 	}
 
-    /*@Test
-	public void rotationTest() {
-	}
+	/*
+	 * @Test public void rotationTest() { }
+	 */
 
-	@Test
-	public void mutationTest() {
-	}*/
+	/*
+	 * @Test public void mutationTest() { }
+	 */
 
-	/*@Test*/
+	/* @Test */
 	public void mateSelectEvenPopulationTest() {
 		LinkedList<Organism> orgList = new LinkedList<Organism>();
 		for (int i = 0; i < 14; i++)
@@ -234,17 +239,19 @@ public class GEPTest {
 		gep.setOrgList(orgList);
 		LinkedList<Chromosome> chromList = gep.makeChromList(gep.tournament(gep
 				.partnerSelect(orgList)));
-		/*gep.printChromeListIds(chromList);*/
+		/* gep.printChromeListIds(chromList); */
 		LinkedList<Pair<Chromosome, Chromosome>> matePairList = gep
-		.mateSelect(chromList);
+				.mateSelect(chromList);
 		System.out.println("AfterMateSelect");
-		/*gep.printMateListIds(matePairList);*/
-		/*System.out.println("Printing contents of testing the mate list");
-		System.out.println();
-		System.out.println("matePairList size" + matePairList.size());*/
+		/* gep.printMateListIds(matePairList); */
+		/*
+		 * System.out.println("Printing contents of testing the mate list");
+		 * System.out.println(); System.out.println("matePairList size" +
+		 * matePairList.size());
+		 */
 		int i = 0;
 		while (!matePairList.isEmpty()) {
-			/*System.out.println(i);*/
+			/* System.out.println(i); */
 			System.out.println(i);
 			Pair<Chromosome, Chromosome> partners1 = matePairList.poll();
 			for (int j = 0; j < matePairList.size(); j++) {
@@ -269,6 +276,5 @@ public class GEPTest {
 			i++;
 		}
 	}
-
 
 }
