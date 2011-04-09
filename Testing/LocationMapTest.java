@@ -85,22 +85,47 @@ public class LocationMapTest {
 			int x = org.getLocation().getX();
 			int y = org.getLocation().getY();
 			int id = org.getId();
-			System.out.println("orgid: " + id);
-			System.out.println("orgType: " + 'o');
+			/*System.out.println("orgid: " + id);
+			System.out.println("orgType: " + 'o');*/
 			Pair<Integer, Character> space = map.get(x, y);
 			int spaceId = space.getFst();
 			Character spaceType = space.getSnd();
-			System.out.println("spaceid: " + spaceId);
-			System.out.println("spaceType: " + spaceType);
+			/*System.out.println("spaceid: " + spaceId);
+			System.out.println("spaceType: " + spaceType);*/
 			// Assert that the space is filled with the organism's id.
 			Assert.assertEquals(id, spaceId);
 			// Assert that the space is filled with the appropriate type.
 			Assert.assertEquals("o", spaceType.toString());
 		}
-		System.out.println("In the random pair: " + map.get(20, 237).getFst() + ", " + map.get(20, 237).getSnd());
+		/*System.out.println("In the random pair: " + map.get(20, 237).getFst()
+				+ ", " + map.get(20, 237).getSnd());*/
 		map.clearLocations();
 	}
 	
+	@Test
+	public void hasObstacleNorthTest() {
+		LocationMap map = LocationMap.getInstance();
+		map.set(10, 10, new Pair<Integer, Character>(0, 'o'));
+		map.set(10, 9, new Pair<Integer, Character>(1, 'o'));
+		Assert.assertTrue(LocationMap.hasObstacle(10, 9, 0));
+	}
+	
+	@Test
+	public void hasObstacleNorthEastTest() {
+		LocationMap map = LocationMap.getInstance();
+		map.set(10, 10, new Pair<Integer, Character>(0, 'o'));
+		map.set(11, 9, new Pair<Integer, Character>(1, 'o'));
+		Assert.assertTrue(LocationMap.hasObstacle(11, 9, 0));
+	}
+	
+	@Test
+	public void hasObstacleEastTest() {
+		LocationMap map = LocationMap.getInstance();
+		map.set(10, 10, new Pair<Integer, Character>(0, 'o'));
+		map.set(11, 10, new Pair<Integer, Character>(1, 'o'));
+		Assert.assertTrue(LocationMap.hasObstacle(11, 10, 0));
+	}
+
 	@Test
 	public void adjacentCoordinatesTest() {
 		LocationMap map = LocationMap.getInstance();
@@ -108,21 +133,26 @@ public class LocationMapTest {
 		for (int i = 0; i < 300; i++)
 			orgList.add(new Organism(true, 4, r.nextInt(20), i));
 		map.placeOrganisms(orgList);
+		fail("not yet implemented");
 	}
-
+	
 	@Test
 	public void searchTest() {
+		LocationMap map = LocationMap.getInstance();
+		LinkedList<Organism> orgList = new LinkedList<Organism>();
+		for (int i = 0; i < 300; i++)
+			orgList.add(new Organism(true, 4, r.nextInt(20), i));
+		map.placeOrganisms(orgList);
+		fail("not yet implemented");
 	}
 
 	@Test
 	public void distance() {
+		fail("not yet implemented");
 	}
 
 	@Test
 	public void objectsInSpaceTest() {
-	}
-
-	@Test
-	public void hasObstacleTest() {
+		fail("not yet implemented");
 	}
 }

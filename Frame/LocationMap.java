@@ -282,12 +282,20 @@ public class LocationMap {
 	 * 
 	 * @param orgList
 	 */
-	public void placeOrganism(LinkedList<Organism> orgList) {
-		for (int i = 0; i < orgList.size(); i++) {
-			Organism org = orgList.get(i);
-			place(org.getLocation(), org.getWidth(), org.getHeight(),
-					org.getId(), org.getType());
-		}
+	public void placeOrganism(Organism org) {
+		place(org.getLocation(), org.getWidth(), org.getHeight(), org.getId(),
+				org.getType());
+	}
+	
+	/**
+	 * Places the organism on
+	 * the map in the position that is passed as a parameter, and sets the organisms location field.
+	 * 
+	 * @param orgList
+	 */
+	public void setOrganism(Organism org, Coordinate c) {
+		place(org.getLocation(), org.getWidth(), org.getHeight(), org.getId(),
+				org.getType());
 	}
 	
 	/**
@@ -303,8 +311,8 @@ public class LocationMap {
 	}
 
 	/**
-	 * Receives a foodList and places all of the food onto the map and sets
-	 * their location fields.
+	 * Finds an available location for a single food source, places the food
+	 * source on the map, and sets the food's location field.
 	 * 
 	 * @param foodList
 	 */
@@ -315,19 +323,16 @@ public class LocationMap {
 					f.getType());
 		}
 	}
-
+	
 	/**
-	 * Finds an available location for a single food source, places the food
-	 * source on the map, and sets the food's location field.
+	 * Receives a foodList and places all of the food onto the map and sets
+	 * their location fields.
 	 * 
 	 * @param foodList
 	 */
-	public void placeFood(LinkedList<Food> foodList) {
-		for (int i = 0; i < foodList.size(); i++) {
-			Food f = foodList.get(i);
-			place(f.getLocation(), f.getWidth(), f.getHeight(), f.getId(),
-					f.getType());
-		}
+	public void placeFood(Food f) {
+		place(f.getLocation(), f.getWidth(), f.getHeight(), f.getId(),
+				f.getType());
 	}
 	
 	/**
@@ -467,36 +472,44 @@ public class LocationMap {
 	 * @param scanRange
 	 * @return boolean whether or not there are objects occupying the space.
 	 */
-	private static boolean hasObstacle(int x, int y, int anId) {
-		int edgeWidth = (int) Math.ceil((double) Organism.width / 2);
-		int edgeHeight = (int) Math.ceil((double) Organism.height / 2);
-
-		/*System.out.println("checking position" + x + ", " + y);*/
-		checkObstacles: for (int i = x - edgeWidth; i <= x
-		+ edgeWidth; i++) {
-			for (int j = y - edgeHeight; j <= y
-			+ edgeHeight; j++) {
+	public static boolean hasObstacle(int x, int y, int anId) {
+	/*	int edgeWidth = (int) Math.ceil((double) (Organism.width / 2));
+		int edgeHeight = (int) Math.ceil((double) (Organism.height / 2));*/
+		/*int edgeWidth = (Organism.width / 2) + 1;
+		int edgeHeight = (Organism.height / 2) + 1;*/
+		int edgeWidth = Organism.width / 2;
+		int edgeHeight = Organism.height / 2;
+		/*System.out.println(edgeWidth + " " + edgeHeight);
+		System.out.println("checking position: " + x + ", " + y);
+		System.out.println("y-edgeheight: " + (y - edgeHeight) + "y+edgeHeight"
+				+ (y + edgeHeight));*/
+		for (int i = x - edgeWidth; i <= x + edgeWidth; i++) {
+			checkObstacles: for (int j = y - edgeHeight; j <= y + edgeHeight; j++) {
 				/*System.out.println("i: " + i);
 				System.out.println("j: " + j);*/
 				try {
-					Pair<Integer, Character> aPair = LocationMap.getInstance().get(i, j);
+					Pair<Integer, Character> aPair = LocationMap.getInstance()
+							.get(i, j);
 					Character charType = aPair.getSnd();
 					Integer spaceId = aPair.getFst();
-					/*
-					 * System.out.println("charType: " + charType);
-					 * System.out.println("spaceId: " + spaceId);
-					 * System.out.println("orgId: " + anId);
-					 * System.out.println();
-					 */
+					/*System.out.println("charType: " + charType);
+					System.out.println("spaceId: " + spaceId);
+					System.out.println("orgId: " + anId);
+					System.out.println();*/
 					// Count all occurrences of objects in location map.
 					if (charType == 'w') {
+						/*System.out.println("Is w");*/
 						continue checkObstacles;
 					}
-					//ignore self
+					// ignore self
 					if (charType == 'o' && spaceId == anId) {
+						/*System.out.println("is self");*/
 						continue checkObstacles;
-					} else
+					} else {
+						/*System.out.println("encountered Obstacle");
+						System.out.println("At: " + i + ", " + j);*/
 						return true;
+					}
 				} catch (ArrayIndexOutOfBoundsException e) {
 				}
 			}
