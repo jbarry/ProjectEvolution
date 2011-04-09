@@ -42,14 +42,6 @@ public abstract class Matter implements Comparable<Matter>{
 		/*place(type);*/
 	}
 	
-	/*public Matter(double aMxHlth, int anId, char type, LocationMap aMap) {
-		hlth = mxHlth = aMxHlth;
-		id = anId;
-		r = new Random();
-		this.type = type;
-		place(type);
-	}*/
-
 	public boolean deplete(double val) {
 		if (hlth - val < 0) {
 			hlth = 0;
@@ -154,96 +146,6 @@ public abstract class Matter implements Comparable<Matter>{
 				+ cornerBottom.getY());*/
 		return new ArrayList<Integer>(objectIds);
 	}
-	
-	/**
-	 * @param type
-	 *//*
-	private void place(char type) {
-		//set location
-		int x = r.nextInt(GridPanel.WIDTH);
-		int y = r.nextInt(GridPanel.HEIGHT);
-
-		//check for collisions
-		while(!canSpawn(x, y)) {
-			x = r.nextInt(GridPanel.WIDTH);
-			y = r.nextInt(GridPanel.HEIGHT);
-		}
-		location = new Coordinate(x, y);
-
-		//set boundaries
-		setWrapAround(getWidth(), getHeight());
-		setRange(getWidth(), getHeight(), type);
-	}
-
-	*//**
-	 * @param x - current x location if valid.
-	 * @param y - current y location if valid.
-	 * @return true if organism can spawn at given location.
-	 *//*
-	protected boolean canSpawn(int x, int y){
-		for(int i = x-getWidth()/2; i <= x+getWidth()/2; i++){
-			for(int j=y-getHeight()/2; j<=y+getHeight()/2; j++){
-				try{
-					if(GridPanel.locationMap[i][j].getSnd() != 'w'){
-						return false;
-					}
-				}
-				catch(ArrayIndexOutOfBoundsException e){
-					
-				}
-			}
-		}
-		return true;
-	}
-
-	*//**
-	 * This method will modify the boolean location map and account for wrapping.
-	 * 
-	 * @param width        x-size for rectangle or the width of the object.
-	 * @param height        y-size for rectangle or the height of the object.
-	 * @param validity the value to mark the location map.
-	 *//*
-	public void setRange(int width, int height, Character value){
-		int x = location.getX();
-		int y = location.getY();
-		for (int i = (x - (width / 2)); i <= (x + (width / 2)); i++) {
-			for (int j = (y - (height / 2)); j <= (y + (height / 2)); j++) {
-				try {
-					GridPanel.locationMap[i][j].setLeft(this.getId());
-					GridPanel.locationMap[i][j].setRight(value);
-				} catch (ArrayIndexOutOfBoundsException e) {
-				}
-			}
-		}
-	}
-
-	*//**
-	 * Handles objects that stray off of the GridPanel and wraps their location.
-	 * @param rightLeftBound   - right and left boundary to trigger wrap
-	 * @param topBottomBound   - top and bottom boundary to trigger wrap
-	 *//*
-	protected void setWrapAround(int rightLeftBound, int topBottomBound){
-		if(location.getX() + (rightLeftBound/2) >= GridPanel.WIDTH){
-			//right
-			if(canSpawn(getWidth()/2+1, location.getY()))
-				location.setX((getWidth()/2)+1);
-		}
-		if(location.getX() - (rightLeftBound/2) <= 0){
-			//left
-			if(canSpawn(GridPanel.WIDTH - (getWidth()/2), location.getY()))
-				location.setX(GridPanel.WIDTH - (getWidth()/2));
-		}
-		if(location.getY() + (topBottomBound/2) >= GridPanel.HEIGHT){
-			//bottom
-			if(canSpawn(location.getX(), getHeight()/2 + 1))
-				location.setY(getHeight()/2 + 1);
-		}
-		if(location.getY() - (topBottomBound/2) <= 0){
-			//top
-			if(canSpawn(location.getX(), GridPanel.HEIGHT - (getHeight()/2)))
-				location.setY(GridPanel.HEIGHT - (getHeight()/2));
-		}
-	}*/
 	
 	public abstract int getHeight();	
 	
