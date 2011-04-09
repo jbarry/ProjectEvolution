@@ -1319,7 +1319,7 @@ public class GridPanel extends JPanel {
 		org.printLocation();
 		System.out.println("nextMove: " + nextMove.getX() + ", " + nextMove.getY());
 		org.moveTo(nextMove);
-		System.out.println("after move to");
+		org.printLocation();
 		org.countStep();
 	}
 

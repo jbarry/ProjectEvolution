@@ -43,6 +43,7 @@ public class AStar {
 		// Then remove the top one. Which will be the best place to move to.
 		if (!adjacentList.isEmpty())
 			return adjacentList.remove();
+		System.out.println("adjacentList is empty");
 		return start;
 	}
 
@@ -154,21 +155,19 @@ public class AStar {
 	 * @return boolean whether or not there are objects occupying the space.
 	 */
 	public static boolean hasObstacle(int x, int y) {
-		int numObj = 0;
 		LocationMap locationMap = LocationMap.getInstance();
 		checkObstacles: for (int i = x - (Organism.width / 2); i <= x
 				+ (Organism.width / 2); i++) {
 			for (int j = y - (Organism.height / 2); j <= y
-					+ (Organism.height / 2); j++){
-				try{	
+					+ (Organism.height / 2); j++) {
+				try {
 					Character matter = locationMap.get(i, j).getSnd();
-					//count all occurrences of objects in location map
-					if(matter == 'w') 
+					// count all occurrences of objects in location map
+					if (matter == 'w')
 						continue checkObstacles;
 					else
 						return true;
-				}
-				catch(ArrayIndexOutOfBoundsException e){
+				} catch (ArrayIndexOutOfBoundsException e){
 				}
 			}
 		}
