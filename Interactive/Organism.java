@@ -65,8 +65,8 @@ public class Organism extends Matter{
 		fitness = 0.0;
 		ActionList = new ArrayList<ArrayList<String>>();
 		ActionList.add(new ArrayList<String>());
-		StartingLocation=new ArrayList<Coordinate>();
-		chromosomeHistory= new ArrayList<Chromosome>();
+		StartingLocation = new ArrayList<Coordinate>();
+		chromosomeHistory = new ArrayList<Chromosome>();
 		healthyFood = new TreeSet<Integer>();
 		poisonFood = new TreeSet<Integer>(); 
 	}
@@ -186,7 +186,7 @@ public class Organism extends Matter{
 	
 	public boolean moveTo(int x, int y) {
 		LocationMap map = LocationMap.getInstance();
-		locationMap.setRangeToBlank(width, height, x, y);
+		map.setRangeToBlank(width, height, x, y);
 		map.setWrapAround(x, y, width, height);
 		try {
 			// If the next move is available.
@@ -481,21 +481,21 @@ public class Organism extends Matter{
 		steps++;
 	}
 
-	public void addAction(String action,int index){
-		ActionList.get(ActionList.size()-1).add(action + " " + index);
+	public void addAction(String action, int index) {
+		ActionList.get(ActionList.size() - 1).add(action + " " + index);
 	}
 
-	public void addGeneration(){
+	public void addGeneration() {
 		ActionList.add(new ArrayList<String>());
 		addStartingLocation();
 		addChromosome();
 	}
 
-	public void addStartingLocation(){
+	public void addStartingLocation() {
 		StartingLocation.add(getLocation());
 	}
 
-	public void addChromosome(){
+	public void addChromosome() {
 		chromosomeHistory.add(chromosome);
 	}
 
@@ -511,7 +511,7 @@ public class Organism extends Matter{
 		return poisonFood.size();
 	}*/
 
-	public void addEatFail(){
+	public void addEatFail() {
 		eatFail++;
 	}
 

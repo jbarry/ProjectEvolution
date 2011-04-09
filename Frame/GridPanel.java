@@ -43,8 +43,7 @@ public class GridPanel extends JPanel {
 	public final static int HEIGHT = 400;
 
 	/*public static Pair<Integer, Character>[][] locationMap;*/
-	private LocationMap locationMap = LocationMap.getInstance();
-
+	private LocationMap locationMap;
 	private LinkedList<Organism> organisms;
 	private LinkedList<HealthyFood> healthFd;
 	private LinkedList<PoisonousFood> poisFood;
@@ -158,6 +157,7 @@ public class GridPanel extends JPanel {
 	 * Sets the initial game state of the GridPanel.
 	 */
 	public void initialize() {
+		System.out.println("called original init");
 		// reset all generation info from previous simulations.
 		generationNum = 1;
 		trialNum = 1;
@@ -169,8 +169,7 @@ public class GridPanel extends JPanel {
 		// Location map will consist of: key: current instance number of object
 		// value: 'w' for white space or available. 'o' for organism. 'h' for
 		//healthy food. 'p' for poisonous food.
-		/*locationMap = LocationMap.getInstance();*/
-		locationMap.clearLocations();
+		locationMap = LocationMap.getInstance();
 		norm = new Normalizer(new Pair<Double, Double>(-600.0, 600.0),
 				new Pair<Double, Double>(-50.0, 50.0));
 		organisms.clear();
@@ -1137,6 +1136,7 @@ public class GridPanel extends JPanel {
 	 * Sets the initial game state of the GridPanel.
 	 */
 	public void initializeAstar() {
+		System.out.println("called init astar");
 		// reset all generation info from previous simulations.
 		generationNum = 1;
 		trialNum = 1;
@@ -1148,7 +1148,7 @@ public class GridPanel extends JPanel {
 		// Location map will consist of: key: current instance number of object
 		// value: 'w' for white space or available. 'o' for organism. 'h' for
 		//healthy food. 'p' for poisonous food.
-		/*locationMap = new LocationMap();*/
+		locationMap = LocationMap.getInstance();
 		locationMap.clearLocations();
 		norm = new Normalizer(new Pair<Double, Double>(-600.0, 600.0),
 				new Pair<Double, Double>(-50.0, 50.0));
@@ -1164,20 +1164,20 @@ public class GridPanel extends JPanel {
 			Organism o = new Organism(100.00, 1, i);
 			organisms.add(o);
 			shuffleIds.add(i);
-			/*shuffleStringIds.add(Integer.toString(i));*/
-			o.addStartingLocation();
-			o.addChromosome();
+			/*o.addStartingLocation();*/
+			/*o.addChromosome();*/
 		}
-		for (int i = 0; i < numFoodSources*2; i++) {
+		locationMap.placeOrganisms(organisms);
+		for (int i = 0; i < numFoodSources*2; i++)
 			if (ran.nextBoolean())
 				food.add(new HealthyFood(100.00, i, 2));
 			else
 				food.add(new PoisonousFood(100.00, i, 2));
-			/*HealthyFood h = new HealthyFood(100.0, i, 2);
-			PoisonousFood f = new PoisonousFood(100.0, i, 2);*/
-			/*healthFd.add(h);
-			poisFood.add(f);*/
+		// TEST THAT ORGS HAVE LOCATIONS SET.
+		for (Organism org : organisms) {
+			System.out.println(org.getLocation().getX() + ", " + org.getLocation().getY());
 		}
+		locationMap.placeFood(food);
 		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
 	}
 

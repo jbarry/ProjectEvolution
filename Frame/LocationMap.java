@@ -1,16 +1,18 @@
 package Frame;
 
+import java.util.LinkedList;
 import java.util.Random;
 
+import Interactive.Food;
 import Interactive.Matter;
 import Interactive.Organism;
 import Interactive.Pair;
 
 public class LocationMap {
 	
-	public Pair<Integer, Character>[][] locationMap;
+	private Pair<Integer, Character>[][] locationMap;
 	Random r;
-	public static LocationMap instance;
+	private static LocationMap instance;
 
 	/**
 	 * Public access for the singleton.
@@ -18,13 +20,12 @@ public class LocationMap {
 	 * @return the singleton object.
 	 */
 	public static LocationMap getInstance() {
-		if (instance == null) {
+		if (instance == null)
 			instance = new LocationMap();
-		}
 		return instance;
 	}
 
-	protected void LocationMap() {
+	private LocationMap() {
 		locationMap = new Pair[GridPanel.WIDTH][GridPanel.HEIGHT];
 		clearLocations();
 		r = new Random();
@@ -143,8 +144,8 @@ public class LocationMap {
 		for (int i = (x - (width / 2)); i <= (x + (width / 2)); i++) {
 			for (int j = (y - (height / 2)); j <= (y + (height / 2)); j++) {
 				try {
-					/*locationMap[i][j].setLeft(null);*/
-					locationMap[i][j].setLeft(0);
+					locationMap[i][j].setLeft(null);
+					/*locationMap[i][j].setLeft(0);*/
 					locationMap[i][j].setRight('w');
 				} catch (ArrayIndexOutOfBoundsException e) {
 				}
@@ -198,5 +199,21 @@ public class LocationMap {
 	
 	public Pair<Integer, Character> get(int i, int j) {
 		return locationMap[i][j];
+	}
+
+	public void placeOrganisms(LinkedList<Organism> orgList) {
+		for (int i = 0; i < orgList.size(); i++) {
+			Organism org = orgList.get(i);
+			org.setLocation(place(org.getWidth(), org.getHeight(), org.getId(),
+					org.getType()));
+		}
+	}
+
+	public void placeFood(LinkedList<Food> foodList) {
+		for (int i = 0; i < foodList.size(); i++) {
+			Food f = foodList.get(i);
+			f.setLocation(place(f.getWidth(), f.getHeight(), f.getId(),
+					f.getType()));
+		}
 	}
 }

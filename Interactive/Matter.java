@@ -19,7 +19,7 @@ public abstract class Matter implements Comparable<Matter>{
 	protected int id;
 	protected Random r;
 	protected char type;
-	protected LocationMap locationMap;
+	
 	
 	public Matter() {
 		r = new Random();
@@ -29,7 +29,6 @@ public abstract class Matter implements Comparable<Matter>{
 		hlth = mxHlth = aMxHlth;
 		r = new Random();
 		this.type = type;
-		locationMap = null;
 		/*place(type);*/
 	}
 
@@ -41,14 +40,13 @@ public abstract class Matter implements Comparable<Matter>{
 		/*place(type);*/
 	}
 	
-	public Matter(double aMxHlth, int anId, char type, LocationMap aMap) {
+	/*public Matter(double aMxHlth, int anId, char type, LocationMap aMap) {
 		hlth = mxHlth = aMxHlth;
 		id = anId;
 		r = new Random();
 		this.type = type;
-		locationMap = aMap;
-		/*place(type);*/
-	}
+		place(type);
+	}*/
 
 	public boolean deplete(double val) {
 		if (hlth - val < 0) {
@@ -86,27 +84,32 @@ public abstract class Matter implements Comparable<Matter>{
 	 */
 	public double numSurroundingObjects(int scanRange) {
 		double numObj = 0.0;
-		//create a square from cornerTop to cornerBottom of dimension scanRange+getWidth/2 X scanRange+getHeight/2 
-		Coordinate cornerTop = new Coordinate(location.getX()-(getWidth()/2-scanRange), location.getY()-(getHeight()/2)-scanRange);
-		Coordinate cornerBottom = new Coordinate(location.getX()+(getWidth()/2+scanRange), location.getY()+(getHeight()/2)+scanRange);
-		for(int i=cornerTop.getX(); i<=cornerBottom.getX(); i++){
-			for(int j=cornerTop.getY(); j<=cornerBottom.getY(); j++){
-				try{	
-					//count all occurrences of objects in location map
-					if(locationMap.get(i, j).getSnd() != 'w') {
+		// create a square from cornerTop to cornerBottom of dimension
+		// scanRange+getWidth/2 X scanRange+getHeight/2
+		Coordinate cornerTop = new Coordinate(location.getX()
+				- (getWidth() / 2 - scanRange), location.getY()
+				- (getHeight() / 2) - scanRange);
+		Coordinate cornerBottom = new Coordinate(location.getX()
+				+ (getWidth() / 2 + scanRange), location.getY()
+				+ (getHeight() / 2) + scanRange);
+		for (int i = cornerTop.getX(); i <= cornerBottom.getX(); i++) {
+			for (int j = cornerTop.getY(); j <= cornerBottom.getY(); j++) {
+				try {
+					// count all occurrences of objects in location map
+					if (LocationMap.getInstance().get(i, j).getSnd() != 'w') {
 						numObj++;
 					}
-				}
-				catch(ArrayIndexOutOfBoundsException e){
+				} catch (ArrayIndexOutOfBoundsException e) {
 				}
 			}
 		}
-		//make sure that scanning object was not included in scan.
-		if(numObj >= getWidth()*getHeight())
-			numObj -= getWidth()*getHeight(); 
-		//return a normalized value. Will count "partially" discovered organisms
-		//as a whole number, does not include "wrapped" scan.
-		return Math.ceil(numObj/(getWidth()*getHeight()));
+		// make sure that scanning object was not included in scan.
+		if (numObj >= getWidth() * getHeight())
+			numObj -= getWidth() * getHeight();
+		// return a normalized value. Will count "partially" discovered
+		// organisms
+		// as a whole number, does not include "wrapped" scan.
+		return Math.ceil(numObj / (getWidth() * getHeight()));
 	}
 
 	/**
@@ -116,12 +119,12 @@ public abstract class Matter implements Comparable<Matter>{
 	 */
 	public ArrayList<Integer> getSurroundingObjects(char type, int scanRange) {
 		Set<Integer> objectIds = new HashSet<Integer>();
-		//create a square from cornerTop to cornerBottom of 
-		//dimension scanRange+getWidth/2 X scanRange+getHeight/2 to be scanned.
-		int widthSub = location.getX() - (getWidth()/2);
-		int widthPlus = location.getX() + (getWidth()/2);
-		int heightSub = location.getY() - (getHeight()/2);
-		int heightPlus = location.getY() + (getHeight()/2);
+		// Create a square from cornerTop to cornerBottom of
+		// dimension scanRange+getWidth/2 X scanRange+getHeight/2 to be scanned.
+		int widthSub = location.getX() - (getWidth() / 2);
+		int widthPlus = location.getX() + (getWidth() / 2);
+		int heightSub = location.getY() - (getHeight() / 2);
+		int heightPlus = location.getY() + (getHeight() / 2);
 		Coordinate cornerTop = new Coordinate(widthSub - scanRange, heightSub
 				- scanRange);
 		Coordinate cornerBottom = new Coordinate(widthPlus + scanRange,
@@ -129,21 +132,24 @@ public abstract class Matter implements Comparable<Matter>{
 		for (int i = cornerTop.getX(); i <= cornerBottom.getX(); i++) {
 			for (int j = cornerTop.getY(); j <= cornerBottom.getY(); j++) {
 				try {
-					//count all occurrences of objects in location map
-					Pair<Integer, Character> space = locationMap.get(i, j);
+					// Count all occurrences of objects in location map
+					Pair<Integer, Character> space = LocationMap.getInstance()
+							.get(i, j);
 					Character spaceType = space.getSnd();
 					Integer spaceId = space.getFst();
-					if(spaceType == type && spaceId != id)
+					if (spaceType == type && spaceId != id)
 						objectIds.add(space.getFst());
 				} catch (ArrayIndexOutOfBoundsException e) {
 				}
 			}
 		}
 		// Test prints
-		/*System.out.println("Organism " + this.getId() + " is scanning from" + location.getX() + ", " + location.getY());
-		System.out.println("The scan range is " + scanRange + " and the square is from " + cornerTop.getX() + ", " + cornerBottom.getY() 
-				+ "to " + cornerBottom.getX() + ", " + cornerBottom.getY());*/
-		
+		/*System.out.println("Organism " + this.getId() + " is scanning from"
+				+ location.getX() + ", " + location.getY());
+		System.out.println("The scan range is " + scanRange
+				+ " and the square is from " + cornerTop.getX() + ", "
+				+ cornerBottom.getY() + "to " + cornerBottom.getX() + ", "
+				+ cornerBottom.getY());*/
 		return new ArrayList<Integer>(objectIds);
 	}
 	
@@ -265,6 +271,10 @@ public abstract class Matter implements Comparable<Matter>{
 
 	public Coordinate getLocation() {
 		return location;
+	}
+	
+	public void setLocation(Coordinate newLocation) {
+		location = newLocation;
 	}
 
 	public int getId() {

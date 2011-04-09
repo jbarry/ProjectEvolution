@@ -292,7 +292,8 @@ public class OptionsPanel extends JPanel implements Runnable{
 				        		gui.enableStopGenButton();
 				        		gui.enableJMenuItemSaveGenes();
 					        	gui.enableJMenuItemPause();
-								simulation.initialize();
+								/*simulation.initialize();*/
+					        	simulation.initializeAstar();
 								simulation.start();
 							}
 						}
