@@ -1,4 +1,4 @@
-package Evolution;
+package Testing;
 
 import static org.junit.Assert.*;
 
@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import Evolution.GEP;
 import Interactive.Chromosome;
 import Interactive.Organism;
 import Interactive.Pair;
@@ -28,8 +29,8 @@ public class GEPTest {
 	/*private int number;*/
 
 	/*public GEPTest(int number) {
-this.number = number;
-}*/
+		this.number = number;
+	}*/
 
 	@Before
 	public void setUp() throws Exception {
@@ -37,17 +38,17 @@ this.number = number;
 		gep = new GEP(null, 0.75, 0.01, 0.01, 0.75, 0.75, 3, false, true);
 		//
 		/*LinkedList<Organism> orgList = new LinkedList<Organism>();
-for (int i = 0; i < 7; i++)
-orgList.add(new Organism(true, 7, ran.nextInt(20), i));
-GEP gep = new GEP(orgList, 1.0, 1.0, 1.0, 1.0, 1.0, 3, true, true);*/
+		for (int i = 0; i < 7; i++)
+			orgList.add(new Organism(true, 7, ran.nextInt(20), i));
+		GEP gep = new GEP(orgList, 1.0, 1.0, 1.0, 1.0, 1.0, 3, true, true);*/
 
 		// CASE: ODD NUMBER OF ORGANISMS.
 		/*for (int i = 0; i < 13; i++)
-orgList.add(new Organism(true, 4, r.nextInt(20), i));*/
+			orgList.add(new Organism(true, 4, r.nextInt(20), i));*/
 
 		// CASE: EVEN NUMBER OF ORGANISMS.
 		/*for (int i = 0; i < 4; i++)
-orgList.add(new Organism(true, 4, r.nextInt(20), i));*/
+			orgList.add(new Organism(true, 4, r.nextInt(20), i));*/
 
 		// CASE: ORG LIST SIZE 1.
 		// CASE: ORG LIST SIZE 0.
@@ -217,13 +218,13 @@ orgList.add(new Organism(true, 4, r.nextInt(20), i));*/
 		}
 	}
 
-	/*@Test
-public void rotationTest() {
-}*/
+    /*@Test
+	public void rotationTest() {
+	}
 
-	/*@Test
-public void mutationTest() {
-}*/
+	@Test
+	public void mutationTest() {
+	}*/
 
 	/*@Test*/
 	public void mateSelectEvenPopulationTest() {
@@ -239,8 +240,8 @@ public void mutationTest() {
 		System.out.println("AfterMateSelect");
 		/*gep.printMateListIds(matePairList);*/
 		/*System.out.println("Printing contents of testing the mate list");
-System.out.println();
-System.out.println("matePairList size" + matePairList.size());*/
+		System.out.println();
+		System.out.println("matePairList size" + matePairList.size());*/
 		int i = 0;
 		while (!matePairList.isEmpty()) {
 			/*System.out.println(i);*/
