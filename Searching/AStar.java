@@ -1,4 +1,4 @@
-package Searching;
+/*package Searching;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,25 +12,17 @@ import Interactive.Pair;
 
 public class AStar {
 	
-	public static void main(String[] args) {
-		AStar a = new AStar();
-		Coordinate coord1 = new Coordinate(2, 5);
-		Coordinate coord2 = new Coordinate(2, 5);
-		//Test getPriority method.
-		//Test case where distance should be zero.
-	}
-
-	/**
+	*//**
 	 * Returns the next position produced by the Astar search algorithm.
 	 * 
 	 * @param start
 	 * @param end
 	 * @return
-	 */
+	 *//*
 	public static Coordinate search(Coordinate start, Coordinate end) {
 		// openList is a priority queue organized based
 		// on shortest distance to end node.
-		/* Coordinate endCoordinate = (Coordinate) end.spawnCoordinate(0); */
+		 Coordinate endCoordinate = (Coordinate) end.spawnCoordinate(0); 
 		end.setPriority(0);
 		start.setPriority(distance(start.getX(), start.getY(), end.getX(),	
 				end.getY()));
@@ -47,10 +39,10 @@ public class AStar {
 		return start;
 	}
 
-	/**
+	*//**
 	 * Only adds the adjacent nodes that don't have obstacles in them.
 	 * @return
-	 */
+	 *//*
 	public static StarQueue<Coordinate> adjacentCoordinates(int x, int y,
 			Coordinate end) {
 		StarQueue<Coordinate> adj = new StarQueue<Coordinate>();
@@ -93,23 +85,23 @@ public class AStar {
 		return adj;
 	}
 
-	/**
+	*//**
 	 * Calculates the priority of a given coordinate start o
 	 * the coordinate end. Priority is based on the distance of
 	 * a straight line between the two points.
 	 * @param current
 	 * @param end
 	 * @return
-	 */
+	 *//*
 	public static double distance(double orgX, double orgY, double foodX, double foodY) {
 		return Math.sqrt(Math.pow((foodX - orgX), 2) +
 				Math.pow((foodY - orgY), 2));
 	}
 
-	/**
+	*//**
 	 * @param scanRange
 	 * @return number of surrounding objects, namely Food or Organism Instances
-	 */
+	 *//*
 	public static HashMap<String, ArrayList<Integer>> objectsInSpace(int x, int y) {
 		HashSet<Integer> pois = new HashSet<Integer>();
 		HashSet<Integer> heal = new HashSet<Integer>();
@@ -150,10 +142,10 @@ public class AStar {
 		return obstacles;
 	}
 
-	/**
+	*//**
 	 * @param scanRange
 	 * @return boolean whether or not there are objects occupying the space.
-	 */
+	 *//*
 	public static boolean hasObstacle(int x, int y) {
 		LocationMap locationMap = LocationMap.getInstance();
 		checkObstacles: for (int i = x - (Organism.width / 2); i <= x
@@ -174,3 +166,4 @@ public class AStar {
 		return false;
 	}
 }
+*/

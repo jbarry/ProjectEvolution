@@ -100,4 +100,29 @@ public class LocationMapTest {
 		System.out.println("In the random pair: " + map.get(20, 237).getFst() + ", " + map.get(20, 237).getSnd());
 		map.clearLocations();
 	}
+	
+	@Test
+	public void adjacentCoordinatesTest() {
+		LocationMap map = LocationMap.getInstance();
+		LinkedList<Organism> orgList = new LinkedList<Organism>();
+		for (int i = 0; i < 300; i++)
+			orgList.add(new Organism(true, 4, r.nextInt(20), i));
+		map.placeOrganisms(orgList);
+	}
+
+	@Test
+	public void searchTest() {
+	}
+
+	@Test
+	public void distance() {
+	}
+
+	@Test
+	public void objectsInSpaceTest() {
+	}
+
+	@Test
+	public void hasObstacleTest() {
+	}
 }

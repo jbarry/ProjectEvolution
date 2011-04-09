@@ -184,7 +184,7 @@ public class Organism extends Matter {
 			if (map.canSpawn(nextX, nextY, width, height)) {
 				location.setY(nextY);
 				location.setX(nextX);
-				System.out.println("moveto: " + location.getX() + ", " + location.getY());
+				/*System.out.println("moveto: " + location.getX() + ", " + location.getY());*/
 				// make current location unavailable
 				map.setRange(location, width, height, 'o', id);
 				return true;
@@ -193,6 +193,31 @@ public class Organism extends Matter {
 		} catch (ArrayIndexOutOfBoundsException e) {
 		}
 		return false;
+	}
+	
+	public void moveToWithoutCanSpawn(Coordinate c) {
+		LocationMap map = LocationMap.getInstance();
+		int curX = location.getX();
+		int curY = location.getY();
+		// Set current location available.
+		map.setRangeToBlank(width, height, curX, curY);
+		map.setWrapAround(location, width, height);
+		try {
+			int nextX = c.getX();
+			int nextY = c.getY();
+			// If the next move is available.
+			if (map.canSpawn(nextX, nextY, width, height)) {
+				location.setY(nextY);
+				location.setX(nextX);
+				/*
+				 * System.out.println("moveto: " + location.getX() + ", " +
+				 * location.getY());
+				 */
+				// make current location unavailable
+				map.setRange(location, width, height, 'o', id);
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+		}
 	}
 	
 	public void moveNorth(LinkedList<Organism> organisms, boolean wasPushed) {

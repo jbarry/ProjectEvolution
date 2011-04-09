@@ -29,7 +29,7 @@ import Interactive.OrgData;
 import Interactive.Organism;
 import Interactive.Pair;
 import Interactive.PoisonousFood;
-import Searching.AStar;
+/*import Searching.AStar;*/
 
 /**
  * This class will handle all of the simulation's display.
@@ -1173,7 +1173,7 @@ public class GridPanel extends JPanel {
 			System.out.println(org.getLocation().getX() + ", "
 					+ org.getLocation().getY());
 		}
-		locationMap.placeFood(food);
+		locationMap.placeFoods(food);
 		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
 	}
 
@@ -1313,23 +1313,23 @@ public class GridPanel extends JPanel {
 	private void moveAstar(Organism org, Pair<Integer, Double> bestEval,
 			Food aFoodDestination) {
 		
-		Coordinate nextMove = AStar.search(org.getLocation(),
-				aFoodDestination.getLocation());
-		System.out.println("current location");
-		org.printLocation();
-		System.out.println("nextMove: " + nextMove.getX() + ", " + nextMove.getY());
+		Coordinate nextMove = LocationMap.search(org.getLocation(),
+				aFoodDestination.getLocation(), org.getId());
+		/*System.out.println("current location");*/
+		/*org.printLocation();*/
+		/*System.out.println("nextMove: " + nextMove.getX() + ", " + nextMove.getY());*/
 		org.moveTo(nextMove);
-		org.printLocation();
+		/*org.printLocation();*/
 		org.countStep();
 	}
 
 	private boolean doActionAstar(Organism org, Pair<Integer, Double> bestEval,
 			Food aFoodDestination) {
-	
+
 		switch (bestEval.left()) {
 		case 0:
-			Coordinate nextMove = AStar.search(org.getLocation(),
-					aFoodDestination.getLocation());
+			Coordinate nextMove = LocationMap.search(org.getLocation(),
+					aFoodDestination.getLocation(), org.getId());
 			org.moveTo(nextMove);
 			org.countStep();
 			break;
@@ -1392,7 +1392,7 @@ public class GridPanel extends JPanel {
 		double orgY = org.getLocation().getY();
 		double foodX = aFood.getLocation().getX();
 		double foodY = aFood.getLocation().getY();
-		double distanceToFood = norm.normalize(AStar.distance(orgX, orgY,
+		double distanceToFood = norm.normalize(LocationMap.distance(orgX, orgY,
 				foodX, foodY));
 		double health = norm.normalize(org.getHealth());
 		double numSurroundingOrgs = norm.normalize(org.getSurroundingObjects(
