@@ -1163,13 +1163,11 @@ public class GridPanel extends JPanel {
 			/*o.addChromosome();*/
 		}
 		locationMap.placeOrganisms(organisms);
-//		int count = 0;
 		for (Organism org : organisms)
 			if (org.getLocation().getX() > 590
 					|| org.getLocation().getY() > 590) {
 				System.out.println("x: " + org.getLocation().getX());
 				System.out.println("y: " + org.getLocation().getY());
-//				count++;
 			}
 		for (int i = 0; i < numFoodSources * 2; i++)
 			if (ran.nextBoolean())
