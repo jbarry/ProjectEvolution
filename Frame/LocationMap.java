@@ -480,42 +480,42 @@ public class LocationMap {
 		int edgeHeight = (Organism.height / 2) + 1;*/
 		int edgeWidth = Organism.width / 2;
 		int edgeHeight = Organism.height / 2;
-		System.out.println(edgeWidth + " " + edgeHeight);
+		/*System.out.println(edgeWidth + " " + edgeHeight);
 		System.out.println("checking position: " + x + ", " + y);
 		System.out.println("y - edgeheight: " + (y - edgeHeight));
-		System.out.println("y + edgeHeight: " + (y + edgeHeight));
+		System.out.println("y + edgeHeight: " + (y + edgeHeight));*/
 		for (int i = x - edgeWidth; i <= x + edgeWidth; i++) {
 			checkObstacles: for (int j = y - edgeHeight; j <= y + edgeHeight; j++) {
-				System.out.println("i: " + i);
-				System.out.println("j: " + j);
+				/*System.out.println("i: " + i);
+				System.out.println("j: " + j);*/
 				try {
 					Pair<Integer, Character> aPair = LocationMap.getInstance()
 							.get(i, j);
 					Character charType = aPair.getSnd();
 					Integer spaceId = aPair.getFst();
-					System.out.println("charType: " + charType);
+					/*System.out.println("charType: " + charType);
 					System.out.println("spaceId: " + spaceId);
 					System.out.println("orgId: " + anId);
-					System.out.println();
+					System.out.println();*/
 					// Count all occurrences of objects in location map.
 					if (charType == 'w') {
-						System.out.println("Is w");
+						/*System.out.println("Is w");*/
 						continue checkObstacles;
 					}
 					// ignore self
 					if (charType == 'o' && spaceId == anId) {
-						System.out.println("is self");
+						/*System.out.println("is self");*/
 						continue checkObstacles;
 					} else {
-						System.out.println("encountered Obstacle");
-						System.out.println("At: " + i + ", " + j);
+						/*System.out.println("encountered Obstacle");
+						System.out.println("At: " + i + ", " + j);*/
 						return true;
 					}
 				} catch (ArrayIndexOutOfBoundsException e) {
 				}
 			}
 		}
-		System.out.println("should move");
+		/*System.out.println("should move");*/
 		return false;
 	}
 }

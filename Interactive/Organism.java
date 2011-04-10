@@ -170,29 +170,15 @@ public class Organism extends Matter {
 				id, 'o');
 	}
 	
-	public boolean moveTo(Coordinate c) {
+	public void moveTo(Coordinate c) {
 		LocationMap map = LocationMap.getInstance();
-		int curX = location.getX();
-		int curY = location.getY();
 		// Set current location available.
-		map.setRangeToBlank(width, height, curX, curY);
+		map.setRangeToBlank(width, height, location.getX(), location.getY());
 		map.setWrapAround(location, width, height);
-		try {
-			int nextX = c.getX();
-			int nextY = c.getY();
-			// If the next move is available.
-			if (map.canSpawn(nextX, nextY, width, height)) {
-				location.setY(nextY);
-				location.setX(nextX);
-				/*System.out.println("moveto: " + location.getX() + ", " + location.getY());*/
-				// make current location unavailable
-				map.setRange(location, width, height, 'o', id);
-				return true;
-			} else
-				return false;
-		} catch (ArrayIndexOutOfBoundsException e) {
-		}
-		return false;
+		location.setY(c.getX());
+		location.setX(c.getY());
+		// Make current location unavailable.
+		map.setRange(location, width, height, 'o', id);
 	}
 	
 	public void moveToWithoutCanSpawn(Coordinate c) {

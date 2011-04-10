@@ -1169,10 +1169,6 @@ public class GridPanel extends JPanel {
 			else
 				food.add(new PoisonousFood(100.00, i, 2));
 		// TEST THAT ORGS HAVE LOCATIONS SET.
-		for (Organism org : organisms) {
-			System.out.println(org.getLocation().getX() + ", "
-					+ org.getLocation().getY());
-		}
 		locationMap.placeFoods(food);
 		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
 	}
