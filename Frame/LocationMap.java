@@ -283,8 +283,8 @@ public class LocationMap {
 	 * @param orgList
 	 */
 	public void placeOrganism(Organism org) {
-		place(org.getLocation(), org.getWidth(), org.getHeight(), org.getId(),
-				org.getType());
+		setWrapAround(org.getLocation(), org.getWidth(), org.getHeight());
+		setRange(org.getLocation(), org.getWidth(), org.getHeight(), 'o', org.getId());
 	}
 	
 	/**
@@ -380,32 +380,33 @@ public class LocationMap {
 			adj.add(new Coordinate(x - moveWidth, y, distance(x - moveWidth, y,
 					endX, endY)));
 		// NW
-		if (!hasObstacle(x - moveWidth, y + moveHeight, anId))
+		if (!hasObstacle(x - moveWidth, y - moveHeight, anId))
 			adj.add(new Coordinate(x - moveWidth, y + moveHeight, distance(x
-					- moveWidth, y + moveHeight, endX, endY)));
+					- moveWidth, y - moveHeight, endX, endY)));
 		// N
-		if (!hasObstacle(x, y + moveHeight, anId))
-			adj.add(new Coordinate(x, y + moveHeight, distance(x, y
+		if (!hasObstacle(x, y - moveHeight, anId))
+			adj.add(new Coordinate(x, y - moveHeight, distance(x, y
 					+ moveHeight, endX, endY)));
 		// NE
-		if (!hasObstacle(x + moveWidth, y + moveHeight, anId))
+		if (!hasObstacle(x + moveWidth, y - moveHeight, anId))
 			adj.add(new Coordinate(x + moveWidth, y + moveHeight, distance(x
-					+ moveWidth, y + moveHeight, endX, endY)));
+					+ moveWidth, y - moveHeight, endX, endY)));
 		// E
 		if (!hasObstacle(x + moveWidth, y, anId))
 			adj.add(new Coordinate(x + moveWidth, y, distance(x + moveWidth, y,
 					endX, endY)));
 		// SE
-		if (!hasObstacle(x + moveWidth, y - moveHeight, anId))
-			adj.add(new Coordinate(x + moveWidth, y - moveHeight, distance(x
+		if (!hasObstacle(x + moveWidth, y + moveHeight, anId)) {
+			adj.add(new Coordinate(x + moveWidth, y + moveHeight, distance(x
 					+ moveWidth, y - moveHeight, endX, endY)));
+		}
 		// S
-		if (!hasObstacle(x, y - moveHeight, anId))
-			adj.add(new Coordinate(x, y - moveHeight, distance(x, y
+		if (!hasObstacle(x, y + moveHeight, anId))
+			adj.add(new Coordinate(x, y + moveHeight, distance(x, y
 					- moveHeight, endX, endY)));
 		// SW
-		if (!hasObstacle(x - moveWidth, y - moveHeight, anId))
-			adj.add(new Coordinate(x - moveWidth, y - moveHeight, distance(x
+		if (!hasObstacle(x - moveWidth, y + moveHeight, anId))
+			adj.add(new Coordinate(x - moveWidth, y + moveHeight, distance(x
 					- moveWidth, y - moveHeight, endX, endY)));
 		return adj;
 	}
@@ -479,42 +480,42 @@ public class LocationMap {
 		int edgeHeight = (Organism.height / 2) + 1;*/
 		int edgeWidth = Organism.width / 2;
 		int edgeHeight = Organism.height / 2;
-		/*System.out.println(edgeWidth + " " + edgeHeight);
+		System.out.println(edgeWidth + " " + edgeHeight);
 		System.out.println("checking position: " + x + ", " + y);
-		System.out.println("y-edgeheight: " + (y - edgeHeight) + "y+edgeHeight"
-				+ (y + edgeHeight));*/
+		System.out.println("y - edgeheight: " + (y - edgeHeight));
+		System.out.println("y + edgeHeight: " + (y + edgeHeight));
 		for (int i = x - edgeWidth; i <= x + edgeWidth; i++) {
 			checkObstacles: for (int j = y - edgeHeight; j <= y + edgeHeight; j++) {
-				/*System.out.println("i: " + i);
-				System.out.println("j: " + j);*/
+				System.out.println("i: " + i);
+				System.out.println("j: " + j);
 				try {
 					Pair<Integer, Character> aPair = LocationMap.getInstance()
 							.get(i, j);
 					Character charType = aPair.getSnd();
 					Integer spaceId = aPair.getFst();
-					/*System.out.println("charType: " + charType);
+					System.out.println("charType: " + charType);
 					System.out.println("spaceId: " + spaceId);
 					System.out.println("orgId: " + anId);
-					System.out.println();*/
+					System.out.println();
 					// Count all occurrences of objects in location map.
 					if (charType == 'w') {
-						/*System.out.println("Is w");*/
+						System.out.println("Is w");
 						continue checkObstacles;
 					}
 					// ignore self
 					if (charType == 'o' && spaceId == anId) {
-						/*System.out.println("is self");*/
+						System.out.println("is self");
 						continue checkObstacles;
 					} else {
-						/*System.out.println("encountered Obstacle");
-						System.out.println("At: " + i + ", " + j);*/
+						System.out.println("encountered Obstacle");
+						System.out.println("At: " + i + ", " + j);
 						return true;
 					}
 				} catch (ArrayIndexOutOfBoundsException e) {
 				}
 			}
 		}
-		/*System.out.println("should move");*/
+		System.out.println("should move");
 		return false;
 	}
 }

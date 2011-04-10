@@ -13,9 +13,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import Frame.Coordinate;
 import Frame.LocationMap;
 import Interactive.Organism;
 import Interactive.Pair;
+import Searching.StarQueue;
 
 public class LocationMapTest {
 
@@ -102,41 +104,232 @@ public class LocationMapTest {
 		map.clearLocations();
 	}
 	
-	@Test
+	/*@Test
 	public void hasObstacleNorthTest() {
 		LocationMap map = LocationMap.getInstance();
-		map.set(10, 10, new Pair<Integer, Character>(0, 'o'));
-		map.set(10, 9, new Pair<Integer, Character>(1, 'o'));
+		Organism org1 = new Organism(true, 4, 0.0, 0);
+		org1.getLocation().setX(10);
+		org1.getLocation().setY(10);
+		Organism org2 = new Organism(true, 4, 0.0, 1);
+		org2.getLocation().setX(10);
+		org2.getLocation().setY(5);
+		map.placeOrganism(org1);
+		map.placeOrganism(org2);
 		Assert.assertTrue(LocationMap.hasObstacle(10, 9, 0));
+		map.clearLocations();
 	}
 	
 	@Test
 	public void hasObstacleNorthEastTest() {
 		LocationMap map = LocationMap.getInstance();
-		map.set(10, 10, new Pair<Integer, Character>(0, 'o'));
-		map.set(11, 9, new Pair<Integer, Character>(1, 'o'));
+		Organism org1 = new Organism(true, 4, 0.0, 0);
+		org1.getLocation().setX(10);
+		org1.getLocation().setY(10);
+		Organism org2 = new Organism(true, 4, 0.0, 1);
+		org2.getLocation().setX(15);
+		org2.getLocation().setY(5);
+		map.placeOrganism(org1);
+		map.placeOrganism(org2);
 		Assert.assertTrue(LocationMap.hasObstacle(11, 9, 0));
+		map.clearLocations();
 	}
 	
 	@Test
-	public void hasObstacleEastTest() {
+	public void hasObstacleSouthEastTest() {
 		LocationMap map = LocationMap.getInstance();
-		map.set(10, 10, new Pair<Integer, Character>(0, 'o'));
-		map.set(11, 10, new Pair<Integer, Character>(1, 'o'));
-		Assert.assertTrue(LocationMap.hasObstacle(11, 10, 0));
+		Organism org1 = new Organism(true, 4, 0.0, 0);
+		org1.getLocation().setX(10);
+		org1.getLocation().setY(10);
+		Organism org2 = new Organism(true, 4, 0.0, 1);
+		org2.getLocation().setX(15);
+		org2.getLocation().setY(15);
+		map.placeOrganism(org1);
+		map.placeOrganism(org2);
+		Assert.assertTrue(LocationMap.hasObstacle(11, 11, 0));
+		map.clearLocations();
 	}
 
 	@Test
-	public void adjacentCoordinatesTest() {
+	public void hasObstacleSouthTest() {
 		LocationMap map = LocationMap.getInstance();
-		LinkedList<Organism> orgList = new LinkedList<Organism>();
-		for (int i = 0; i < 300; i++)
-			orgList.add(new Organism(true, 4, r.nextInt(20), i));
-		map.placeOrganisms(orgList);
-		fail("not yet implemented");
+		Organism org1 = new Organism(true, 4, 0.0, 0);
+		org1.getLocation().setX(10);
+		org1.getLocation().setY(10);
+		Organism org2 = new Organism(true, 4, 0.0, 1);
+		org2.getLocation().setX(10);
+		org2.getLocation().setY(15);
+		map.placeOrganism(org1);
+		map.placeOrganism(org2);
+		Assert.assertTrue(LocationMap.hasObstacle(10, 11, 0));
+		map.clearLocations();
 	}
 	
 	@Test
+	public void hasObstacleSouthWestTest() {
+		LocationMap map = LocationMap.getInstance();
+		Organism org1 = new Organism(true, 4, 0.0, 0);
+		org1.getLocation().setX(10);
+		org1.getLocation().setY(10);
+		Organism org2 = new Organism(true, 4, 0.0, 1);
+		org2.getLocation().setX(5);
+		org2.getLocation().setY(15);
+		map.placeOrganism(org1);
+		map.placeOrganism(org2);
+		Assert.assertTrue(LocationMap.hasObstacle(9, 11, 0));
+		map.clearLocations();
+	}
+	
+	@Test
+	public void hasObstacleWestTest() {
+		LocationMap map = LocationMap.getInstance();
+		Organism org1 = new Organism(true, 4, 0.0, 0);
+		org1.getLocation().setX(10);
+		org1.getLocation().setY(10);
+		Organism org2 = new Organism(true, 4, 0.0, 1);
+		org2.getLocation().setX(5);
+		org2.getLocation().setY(10);
+		map.placeOrganism(org1);
+		map.placeOrganism(org2);
+		Assert.assertTrue(LocationMap.hasObstacle(9, 10, 0));
+		map.clearLocations();
+	}
+	
+	@Test
+	public void hasObstacleNorthWestTest() {
+		LocationMap map = LocationMap.getInstance();
+		Organism org1 = new Organism(true, 4, 0.0, 0);
+		org1.getLocation().setX(10);
+		org1.getLocation().setY(10);
+		Organism org2 = new Organism(true, 4, 0.0, 1);
+		org2.getLocation().setX(5);
+		org2.getLocation().setY(5);
+		map.placeOrganism(org1);
+		map.placeOrganism(org2);
+		Assert.assertTrue(LocationMap.hasObstacle(9, 9, 0));
+		map.clearLocations();
+	}*/
+	
+//	@Test
+	public void doesNothaveObstacleNorthWestTest() {
+		LocationMap map = LocationMap.getInstance();
+		Organism org1 = new Organism(true, 4, 0.0, 0);
+		org1.getLocation().setX(10);
+		org1.getLocation().setY(10);
+		Organism org2 = new Organism(true, 4, 0.0, 1);
+		org2.getLocation().setX(4);
+		org2.getLocation().setY(4);
+		map.placeOrganism(org1);
+		map.placeOrganism(org2);
+		Assert.assertTrue(!LocationMap.hasObstacle(9, 9, 0));
+		map.clearLocations();
+	}
+	
+	@Test
+	public void shouldOnlyHaveSouthMovementInStarQueue() {
+		LocationMap map = LocationMap.getInstance();
+		Organism org1 = new Organism(true, 4, 0.0, 0);
+		org1.getLocation().setX(10);
+		org1.getLocation().setY(10);
+		map.placeOrganism(org1);
+		
+		Organism org2 = new Organism(true, 4, 0.0, 1);
+		org2.getLocation().setX(5);
+		org2.getLocation().setY(5);
+		map.placeOrganism(org2);
+		
+		Organism org3 = new Organism(true, 4, 0.0, 1);
+		org3.getLocation().setX(10);
+		org3.getLocation().setY(5);
+		map.placeOrganism(org3);
+		
+		Organism org4 = new Organism(true, 4, 0.0, 1);
+		org4.getLocation().setX(15);
+		org4.getLocation().setY(5);
+		map.placeOrganism(org4);
+		
+		Organism org5 = new Organism(true, 4, 0.0, 1);
+		org5.getLocation().setX(15);
+		org5.getLocation().setY(10);
+		map.placeOrganism(org5);
+		
+		Organism org6 = new Organism(true, 4, 0.0, 1);
+		org6.getLocation().setX(15);
+		org6.getLocation().setY(15);
+		map.placeOrganism(org6);
+		
+		Organism org7 = new Organism(true, 4, 0.0, 1);
+		org7.getLocation().setX(5);
+		org7.getLocation().setY(15);
+		map.placeOrganism(org7);
+		
+		Organism org8 = new Organism(true, 4, 0.0, 1);
+		org8.getLocation().setX(5);
+		org8.getLocation().setY(10);
+		map.placeOrganism(org8);
+		
+		Coordinate end = new Coordinate(34, 9);
+		StarQueue<Coordinate> sq = LocationMap.adjacentCoordinates(10, 10, 1,
+				end, org1.getId());
+		System.out.println("queue size: " + sq.size());
+		Coordinate coord = sq.remove();
+		System.out.println("To move to: " + coord.getX() + ", " + coord.getY());
+		map.clearLocations();
+	}
+	
+	@Test
+	public void shouldOnlyHaveSouthandWestMovementInStarQueueAndSouthShouldBeFirst() {
+		LocationMap map = LocationMap.getInstance();
+		Organism org1 = new Organism(true, 4, 0.0, 0);
+		org1.getLocation().setX(10);
+		org1.getLocation().setY(10);
+		map.placeOrganism(org1);
+		
+		Organism org2 = new Organism(true, 4, 0.0, 1);
+		org2.getLocation().setX(5);
+		org2.getLocation().setY(5);
+		map.placeOrganism(org2);
+		
+		Organism org3 = new Organism(true, 4, 0.0, 1);
+		org3.getLocation().setX(10);
+		org3.getLocation().setY(5);
+		map.placeOrganism(org3);
+		
+		Organism org4 = new Organism(true, 4, 0.0, 1);
+		org4.getLocation().setX(15);
+		org4.getLocation().setY(5);
+		map.placeOrganism(org4);
+		
+		Organism org5 = new Organism(true, 4, 0.0, 1);
+		org5.getLocation().setX(15);
+		org5.getLocation().setY(10);
+		map.placeOrganism(org5);
+		
+		Organism org6 = new Organism(true, 4, 0.0, 1);
+		org6.getLocation().setX(15);
+		org6.getLocation().setY(15);
+		map.placeOrganism(org6);
+		
+		Organism org7 = new Organism(true, 4, 0.0, 1);
+		org7.getLocation().setX(5);
+		org7.getLocation().setY(15);
+		map.placeOrganism(org7);
+		
+		/*Organism org8 = new Organism(true, 4, 0.0, 1);
+		org8.getLocation().setX(5);
+		org8.getLocation().setY(10);
+		map.placeOrganism(org8);*/
+		
+		Coordinate end = new Coordinate(34, 9);
+		StarQueue<Coordinate> sq = LocationMap.adjacentCoordinates(10, 10, 1,
+				end, org1.getId());
+		while (!sq.isEmpty()) {
+			Coordinate coord = sq.remove();
+			System.out.println("To move to: " + coord.getX() + ", " + coord.getY());
+		}
+		map.clearLocations();
+	}
+	
+//	@Test
 	public void searchTest() {
 		LocationMap map = LocationMap.getInstance();
 		LinkedList<Organism> orgList = new LinkedList<Organism>();
