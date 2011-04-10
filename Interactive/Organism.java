@@ -11,7 +11,8 @@ import java.util.Random;
 import java.util.ArrayList;
 import Frame.*;
 
-public class Organism extends Matter{
+public class Organism extends Matter {
+	
 	//------------------------------------------------------------------------------------
 	//--globals--
 	//------------------------------------------------------------------------------------
@@ -35,26 +36,10 @@ public class Organism extends Matter{
 	private String action = "";
 	public static int width = 5;
 	public static int height = 5;
+	
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
-	
-	/*
-	public Organism() {
-		super(7500.0);
-		samples = 0;
-		avgHealth = 0;
-		hlthTot = 0;
-		steps = 0;
-		chromosome = new Chromosome(9);
-		fitness = 0.0;
-		ActionList = new ArrayList<ArrayList<String>>();
-		ActionList.add(new ArrayList<String>());
-		StartingLocation = new ArrayList<Coordinate>();
-		chromosomeHistory = new ArrayList<Chromosome>();
-	}
-	*/
-	
 	public Organism(double aHealth, int chromSize, int anId) {
 		super(aHealth, anId, 'o');
 		chromosome = new Chromosome(chromSize);
@@ -65,8 +50,8 @@ public class Organism extends Matter{
 		fitness = 0.0;
 		ActionList = new ArrayList<ArrayList<String>>();
 		ActionList.add(new ArrayList<String>());
-		StartingLocation=new ArrayList<Coordinate>();
-		chromosomeHistory= new ArrayList<Chromosome>();
+		StartingLocation = new ArrayList<Coordinate>();
+		chromosomeHistory = new ArrayList<Chromosome>();
 		healthyFood = new TreeSet<Integer>();
 		poisonFood = new TreeSet<Integer>(); 
 	}
@@ -75,11 +60,12 @@ public class Organism extends Matter{
 	// Just removing the GridPanel call.
 	public Organism(boolean boo, int numGenes, double aFitness,
 			int anId) {
-		hlth = 100.00;
+		super(100.00, anId, 'o');
+		/*hlth = 100.00;*/
 		r = new Random();
 		chromosome = new Chromosome(numGenes, anId, true);
 		fitness = aFitness;
-		id = anId;
+		/*id = anId;*/
 	}
 	
 	//This ctor is for testing purposes.
@@ -95,7 +81,7 @@ public class Organism extends Matter{
 	}
 
 	
-	public void newLocation() {
+	/*public void newLocation() {
 		setRange(width, height, 'w');
 		int x = r.nextInt(GridPanel.WIDTH);
 		int y = r.nextInt(GridPanel.HEIGHT);
@@ -107,10 +93,10 @@ public class Organism extends Matter{
 		//set boundaries
 		setWrapAround(width, height);
 		setRange(width, height, 'o');
-	}	
+	}*/	
 	
 	public void eatFood(Food f, double fdVal){
-		f.deplete(fdVal);
+		f.decreaseHealth(fdVal);
 		if(f instanceof HealthyFood) {
 			/*System.out.println("orgId: " + id);
 			System.out.println("hlthy");
@@ -135,7 +121,7 @@ public class Organism extends Matter{
 			setAction("Eating poisonous food");
 			poisonEatSuccess++;
 			eatFail--;
-			deplete(fdVal);
+			decreaseHealth(fdVal);
 		}
 	}
 	
@@ -151,55 +137,100 @@ public class Organism extends Matter{
 		int widthPlus = location.getX() + (getWidth()/2);
 		int heightSub = location.getY() - (getHeight()/2);
 		int heightPlus = location.getY() + (getHeight()/2);
-		
+		// cornerTop and cornerBottom will be values for the loop
+		// conditional.
 		Coordinate cornerTop =
 			new Coordinate(widthSub - scanRange, heightSub - scanRange);
 		Coordinate cornerBottom =
 			new Coordinate(widthPlus + scanRange, heightPlus + scanRange);
-		
+		// Instance of locationMap.
+		LocationMap locationMap = LocationMap.getInstance();
 		for (int i = cornerTop.getX(); i <= cornerBottom.getX(); i++) {
 			for (int j = cornerTop.getY(); j <= cornerBottom.getY(); j++) {
 				try {
 					// count all occurrences of objects in location map
-					Pair<Integer, Character> space = GridPanel.locationMap[i][j];
+					Pair<Integer, Character> space = locationMap.get(i, j);
 					if (space.getSnd() == 'h' || space.getSnd() == 'p')
 						objectIds.add(space.getFst());
 				} catch (ArrayIndexOutOfBoundsException e) {
 				}
 			}
 		}
-//		Test prints
-//		System.out.println("Organism " + this.getId() + " is scanning from" + location.getX() + ", " + location.getY());
-//		System.out.println("The scan range is " + scanRange + " and the square is from " + cornerTop.getX() + ", " + cornerBottom.getY() 
-//				+ "to " + cornerBottom.getX() + ", " + cornerBottom.getY());
-		
+		/*Test prints
+		System.out.println("Organism " + this.getId() + " is scanning from" + location.getX() + ", " + location.getY());
+		System.out.println("The scan range is " + scanRange + " and the square is from " + cornerTop.getX() + ", " + cornerBottom.getY() 
+				+ "to " + cornerBottom.getX() + ", " + cornerBottom.getY());*/
 		return new ArrayList<Integer>(objectIds);
+	}
+
+	public void newLocation() {
+		int x = location.getX();
+		int y = location.getY();
+		LocationMap.getInstance().newLocation(location, width, height,
+				id, 'o');
+	}
+	
+	public void moveTo(Coordinate c) {
+		LocationMap map = LocationMap.getInstance();
+		// Set current location available.
+		map.setRangeToBlank(width, height, location.getX(), location.getY());
+		map.setWrapAround(location, width, height);
+		location.setY(c.getX());
+		location.setX(c.getY());
+		// Make current location unavailable.
+		map.setRange(location, width, height, 'o', id);
+	}
+	
+	public void moveToWithoutCanSpawn(Coordinate c) {
+		LocationMap map = LocationMap.getInstance();
+		int curX = location.getX();
+		int curY = location.getY();
+		// Set current location available.
+		map.setRangeToBlank(width, height, curX, curY);
+		map.setWrapAround(location, width, height);
+		try {
+			int nextX = c.getX();
+			int nextY = c.getY();
+			// If the next move is available.
+			if (map.canSpawn(nextX, nextY, width, height)) {
+				location.setY(nextY);
+				location.setX(nextX);
+				/*
+				 * System.out.println("moveto: " + location.getX() + ", " +
+				 * location.getY());
+				 */
+				// make current location unavailable
+				map.setRange(location, width, height, 'o', id);
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+		}
 	}
 	
 	public void moveNorth(LinkedList<Organism> organisms, boolean wasPushed) {
+		LocationMap map = LocationMap.getInstance();
 		//make old location available.
-		setRange(width, height, 'w');
-		setWrapAround(width, height);
+		/*map.setRange(width, height, 'w');
+		map.setWrapAround(width, height);*/
 		
 		//if the next move is available.
 		try{
-			if(canSpawn(location.getX(), location.getY() - 1)){
-				//move there.
+			/*if(map.canSpawn(location.getX(), location.getY() - 1)){
+				// move there.
 				location.setY(location.getY() - 1);
-				if(!wasPushed)setAction("Traveling North");
-			}
-			else{
-				if(!wasPushed)setAction("Attempting to travel North");
-			}
+				if (!wasPushed)
+					setAction("Traveling North");
+			} else {
+				if (!wasPushed)setAction("Attempting to travel North");
+			}*/
 		}
 		catch(ArrayIndexOutOfBoundsException e){
 			
 		}
 		//make current location unavailable
-		setRange(width, height, 'o');
+		/*map.setRange(width, height, 'o')*/;
 	}
 
-	public void moveNorthEast(LinkedList<Organism> organisms, boolean wasPushed) {
+	/*public void moveNorthEast(LinkedList<Organism> organisms, boolean wasPushed) {
 		setRange(width, height, 'w');
 		setWrapAround(width, height);
 		try{
@@ -339,74 +370,76 @@ public class Organism extends Matter{
 		}
 		catch(ArrayIndexOutOfBoundsException e){}
 		setRange(width, height, 'o');
+	}*/
+	
+	public void attack(int orgIndex, LinkedList<Organism> organisms) {
+		/*System.out.print("Attacking org " + orgIndex + "("
+				+ organisms.get(orgIndex).getLocation().getX() + " "
+				+ organisms.get(orgIndex).getLocation().getY() + "). Health: "
+				+ organisms.get(orgIndex).getHealth());*/
+		organisms.get(orgIndex).decreaseHealth(5);
+		numAttacked++;
+		organisms.get(this.getId()).setAction("Attacking org " + orgIndex);
+		/*System.out.print(". Health: " + organisms.get(orgIndex).getHealth());
+		System.out.println(". Attacked by org " + this.id);*/
 	}
 	
-		public void attack(int orgIndex, LinkedList<Organism> organisms){
-			/*System.out.print("Attacking org " +
+	/*public void pushOrg(int orgIndex, LinkedList<Organism> organisms){
+		int xPushing = this.getLocation().getX();
+		int yPushing = this.getLocation().getY();
+		int xGettingPushed = organisms.get(orgIndex).getLocation().getX();
+		int yGettingPushed = organisms.get(orgIndex).getLocation().getY();
+
+		System.out.print("Pushing org " +
 					orgIndex + "(" +
 					organisms.get(orgIndex).getLocation().getX() +
-					" " + organisms.get(orgIndex).getLocation().getY() +
-					"). Health: " +
-					organisms.get(orgIndex).getHealth());*/
-			organisms.get(orgIndex).deplete(5);
-			numAttacked++;
-			organisms.get(this.getId()).setAction("Attacking org " + orgIndex);
-			/*System.out.print(". Health: " + organisms.get(orgIndex).getHealth());
-			System.out.println(". Attacked by org " + this.id);*/
-	}
-	
-		public void pushOrg(int orgIndex, LinkedList<Organism> organisms){
-			int xPushing = this.getLocation().getX();
-			int yPushing = this.getLocation().getY();
-			int xGettingPushed = organisms.get(orgIndex).getLocation().getX();
-			int yGettingPushed = organisms.get(orgIndex).getLocation().getY();
-			
-			/*System.out.print("Pushing org " +
-					orgIndex + "(" +
-					organisms.get(orgIndex).getLocation().getX() +
-					" " + organisms.get(orgIndex).getLocation().getY() + ")");*/
-			
-			if(xGettingPushed < xPushing){
-				organisms.get(orgIndex).moveWest(organisms, true);
-			}
-			else if(xGettingPushed > xPushing){
-				organisms.get(orgIndex).moveEast(organisms,true);
-			}
-			
-			if(yGettingPushed < yPushing){
-				organisms.get(orgIndex).moveNorth(organisms,true);
-			}
-			else if(yGettingPushed > yPushing){
-				organisms.get(orgIndex).moveSouth(organisms,true);
-			}
-			numPushed++;
-			organisms.get(this.getId()).setAction("Pushing org " + orgIndex);
-			/*System.out.print("(" +
+					" " + organisms.get(orgIndex).getLocation().getY() + ")");
+
+		if(xGettingPushed < xPushing){
+			organisms.get(orgIndex).moveWest(organisms, true);
+		}
+		else if(xGettingPushed > xPushing){
+			organisms.get(orgIndex).moveEast(organisms,true);
+		}
+
+		if(yGettingPushed < yPushing){
+			organisms.get(orgIndex).moveNorth(organisms,true);
+		}
+		else if(yGettingPushed > yPushing){
+			organisms.get(orgIndex).moveSouth(organisms,true);
+		}
+		numPushed++;
+		organisms.get(this.getId()).setAction("Pushing org " + orgIndex);
+		System.out.print("(" +
 					organisms.get(orgIndex).getLocation().getX() +
 					" " + organisms.get(orgIndex).getLocation().getY() + ")");
 			System.out.println(". Pushed by org " +
-					getId());*/
-		
-	}
-	
-		public boolean currOrgIsNextToSpecifiedOrg(int orgIndex){
+					getId());
+
+	}*/
+
+	public boolean currOrgIsNextToSpecifiedOrg(int orgIndex){
 		ArrayList<Integer> surroundingOrgs = new ArrayList<Integer>();
 		surroundingOrgs = this.getSurroundingObjects('o', 1);
 		boolean orgIsNextToOrg = false;
 		for(Integer o: surroundingOrgs){
 			if(orgIndex == o) orgIsNextToOrg = true;
 		}
-		
+
 		return orgIsNextToOrg;
 	}
-	
+
 	public void paint(Graphics g) {
 		g.setColor(Color.BLACK);
-		g.fillRect((int)this.location.getX()-(width/2), 
-				   (int)this.location.getY()-(height/2), 
-				   width, height);
+		/*if (location == null)
+			System.out.println("loc at paint time is null");
+		else
+			System.out.println("org location at paint: " + location.getX()
+					+ ", " + location.getY());*/
+		g.fillRect((int) this.location.getX() - (width / 2),
+				(int) this.location.getY() - (height / 2), width, height);
 	}
-	
+
 	//------------------------------------------------------------------------------------
 	//--overloaded functions--
 	//------------------------------------------------------------------------------------
@@ -417,75 +450,75 @@ public class Organism extends Matter{
 	public String toString(){
 		String str = "";
 		str += " I am an Organism " + this.getId()+ ". Fear me."
-			+  "\n Location: " + location
-			+  "\n Health: " + hlth
-			+  "\n Status: " + getAction();
+		+  "\n Location: " + location
+		+  "\n Health: " + hlth
+		+  "\n Status: " + getAction();
 		return str;
 	}
-	
+
 	//------------------------------------------------------------------------------------
 	//--getters/setters--
 	//------------------------------------------------------------------------------------
 	public String getAction(){
 		return action;
 	}
-	
+
 	public void setAction(String s){
 		action += s + "\n               ";
 	}
-	
+
 	public void clearAction(){
 		action = "";
 	}
-	
+
 	public Chromosome getChromosome() {
 		return chromosome;
 	}
-	
+
 	public void setChromosome(Chromosome aChrom){
 		chromosome = aChrom;
 	}
-	
+
 	public void incHlthTot() {
 		hlthTot+=hlth;
 		samples++;
 	}
-	
+
 	public void countStep() {
 		steps++;
 	}
-	
-	public void addAction(String action,int index){
-		ActionList.get(ActionList.size()-1).add(action + " " + index);
+
+	public void addAction(String action, int index) {
+		ActionList.get(ActionList.size() - 1).add(action + " " + index);
 	}
-	
-	public void addGeneration(){
+
+	public void addGeneration() {
 		ActionList.add(new ArrayList<String>());
 		addStartingLocation();
 		addChromosome();
 	}
-	
-	public void addStartingLocation(){
+
+	public void addStartingLocation() {
 		StartingLocation.add(getLocation());
 	}
-	
-	public void addChromosome(){
+
+	public void addChromosome() {
 		chromosomeHistory.add(chromosome);
 	}
-	
+
 	/*public ArrayList<String> getActions(int generation){
 		return ActionList.get(generation);
 	}
-	
+
 	public int getHealthyFoodSize(){
 		return healthyFood.size();
 	}
-	
+
 	public int getPoisonFoodSize(){
 		return poisonFood.size();
 	}*/
 
-	public void addEatFail(){
+	public void addEatFail() {
 		eatFail++;
 	}
 
@@ -517,13 +550,16 @@ public class Organism extends Matter{
 		healthyEatSuccess = 0;
 		numAttacked=0;
 		numPushed=0;
-		
+
 	}
-	
-	public void goBack(int generation){
-		newLocation();
+
+	public void goBack(int generation) {
+		int x = location.getX();
+		int y = location.getY();
+		LocationMap.getInstance().newLocation(location, width, height,
+				id, 'o');
 		chromosome = chromosomeHistory.get(generation-1);
-		for(int i=generation;i<chromosomeHistory.size();i++){
+		for (int i = generation; i < chromosomeHistory.size(); i++) {
 			chromosomeHistory.remove(i);
 		}
 		clear();
@@ -550,8 +586,8 @@ public class Organism extends Matter{
 	public int getPoisonFoodSize(){
 		return poisonFood.size();
 	}
-	*/
-	
+	 */
+
 	public double getFitness() {
 		return fitness;
 	}
@@ -559,8 +595,8 @@ public class Organism extends Matter{
 	public void setFitness(double aFit) {
 		fitness = aFit;
 	}
-	
-	
+
+
 	public double getHlthTot() {
 		return hlthTot;
 	}
@@ -607,22 +643,47 @@ public class Organism extends Matter{
 		return 1;
 	}
 
-	public void attack2(int orgIndex, ArrayList<Organism> aOrgsUsed) {
+	/**
+	 * Takes an organism index and a list of Organisms and decreases the health
+	 * of the organism that is attacked.
+	 * 
+	 * @param orgIndex
+	 * @param anOrgList
+	 */
+	public void attack2(int orgIndex, ArrayList<Organism> anOrgList) {
 		/*
 		 * System.out.print("Attacking org " + orgIndex + "(" +
 		 * organisms.get(orgIndex).getLocation().getX() + " " +
 		 * organisms.get(orgIndex).getLocation().getY() + "). Health: " +
 		 * organisms.get(orgIndex).getHealth());
 		 */
-		Organism org = aOrgsUsed.get(orgIndex);
-		if(org.deplete(5))
-			aOrgsUsed.remove(org);
-		
+		Organism org = anOrgList.get(orgIndex);
+		org.decreaseHealth(5);
+
 		numAttacked++;
-		aOrgsUsed.get(this.getId()).setAction("Attacking org " + orgIndex);
+		anOrgList.get(this.getId()).setAction("Attacking org " + orgIndex);
 		/*
 		 * System.out.print(". Health: " + organisms.get(orgIndex).getHealth());
 		 * System.out.println(". Attacked by org " + this.id);
 		 */
+	}
+
+	public void printInfo() {
+		System.out.println("Organism: ");
+		System.out.println("Id: " + id);
+		System.out.println("Health: " + hlth);
+		System.out.println("Position: (" + location.getX() + ", "
+				+ location.getY() + ")");
+		System.out.println();
+	}
+
+	public void printId() {
+		System.out.println("Id: " + id);
+		System.out.println();
+	}
+	
+	@Override
+	public char getType() {
+		return 'o';
 	}
 }

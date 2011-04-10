@@ -33,14 +33,14 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 		symbols.add('-');
 		symbols.add('+');
 		symbols.add('a');
-		symbols.add('b');
+		/*symbols.add('b');*/
 		symbols.add('c');
 		symbols.add('d');
 		symbols.add('e');
 		symbols.add('f');
 		symbols.add('g');
 		terminals.add('a'); //x distance
-		terminals.add('b'); //y distance
+		/*terminals.add('b');*/ //y distance
 		terminals.add('c'); //organisms near food source
 		terminals.add('d'); //organism's health
 		terminals.add('e'); //food remaining in food source

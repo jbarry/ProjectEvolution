@@ -14,10 +14,8 @@
 
 package Frame;
 
-import java.awt.Color;
 import java.awt.FileDialog;
 import java.awt.GridLayout;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -37,9 +35,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -52,7 +48,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
-import Interactive.*;
+import Interactive.Chromosome;
+import Interactive.Organism;
 
 /**
  * This class will host and initialize all JPanels and JMenuItems. It will NOT
@@ -184,7 +181,8 @@ public class GUI {
 					saveGenes.setEnabled(true);
 					loadGenes.setEnabled(true);
 					/*simulation.initialize();*/
-					simulation.initialize2();
+					/*simulation.initialize2();*/
+					simulation.initializeAstar();
 					simulation.start();
 				}
 			}

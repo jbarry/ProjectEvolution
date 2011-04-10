@@ -1,16 +1,14 @@
 package Interactive;
 import java.awt.Color;
 import java.awt.Graphics;
+
 import Frame.Coordinate;
 
 public class HealthyFood extends Food {
+	
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
-//	public HealthyFood(double aMxHlth, int anId){
-//		super(aMxHlth, anId);
-//	}
-
 	public HealthyFood(double aMxHlth, int anId, int aScanRange){
 		super(aMxHlth, anId, 'h');
 	}
@@ -33,7 +31,7 @@ public class HealthyFood extends Food {
 		return str;		
 	}
 
-	
+	@Override
 	public void paint(Graphics g, boolean isDepleted) {
 		g.setColor(Color.BLUE);
 		
@@ -45,7 +43,11 @@ public class HealthyFood extends Food {
 	}
 
 	@Override
-	public Double getType() {
-		return 3.0;
+	public char getType() {
+		return 'h';
+	}
+	
+	public Double getFoodType() {
+		return 1.0;
 	}
 }
