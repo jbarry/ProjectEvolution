@@ -28,11 +28,12 @@ public class HealthyFood extends Food {
 		String str = "";
 		str += " I am food. Eat me."
 			+ "\n Location: " + getLocation()
-			+ "\n Remaining Food: " + getHealth();
+			+ "\n Remaining Food: " + getHealth()
+			+ "\n ID: " + this.getId();
 		return str;		
 	}
 
-	@Override
+	
 	public void paint(Graphics g, boolean isDepleted) {
 		g.setColor(Color.BLUE);
 		
@@ -41,5 +42,10 @@ public class HealthyFood extends Food {
 					   (int)this.getLocation().getY()-(getHeight()/2), 
 					   getWidth(), getHeight());
 		}
+	}
+
+	@Override
+	public Double getType() {
+		return 3.0;
 	}
 }

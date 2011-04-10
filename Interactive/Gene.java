@@ -20,45 +20,6 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 	private int lenGenes;
 	private Expr evaledList;
 	
-	//Possible variable meanings:
-	//Amount of health left.
-	//Number of organisms around food.
-	//distance to food.
-	//Amount of food left in food source.
-	//Rate at which health is decreasing.
-	public Gene(int aLenGenes) {
-		lenGenes = aLenGenes;
-		symList = new LinkedList<Character>();
-		ran = new Random();
-		terminals = new LinkedList<Character>();
-		nonTerminals = new LinkedList<Character>();
-		nonTerminals.add('*');
-		nonTerminals.add('/');
-		nonTerminals.add('-');
-		nonTerminals.add('+');
-		terminals.add('a');
-		terminals.add('b');
-		terminals.add('c');
-		terminals.add('d');
-		ran = new Random();
-		ArrayList<Integer> indexChoices = new ArrayList<Integer>();
-		Character[] finiteList = new Character[lenGenes];
-		for (int i = 0; i < lenGenes; i++)
-			indexChoices.add(i);
-		for(int i = 0; i < terminals.size(); i++) {
-			int nextRan = ran.nextInt(indexChoices.size());
-			finiteList[indexChoices.remove(nextRan)]
-			           = terminals.get(ran.nextInt(terminals.size()));
-		}
-		while (!indexChoices.isEmpty()) {
-			int nextRan = ran.nextInt(indexChoices.size());
-			finiteList[indexChoices.remove(nextRan)]
-			           = nonTerminals.get(ran.nextInt(nonTerminals.size()));
-		}
-		for(int i = 0; i < finiteList.length; i++)
-			symList.add(finiteList[i]);
-		evaledList = Eval.evaluation(makeStringArray());
-	}
 	
 	//Ctor that does not inform the init of the genes.
 	public Gene(boolean boo, int aLenGenes) {
@@ -75,10 +36,16 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 		symbols.add('b');
 		symbols.add('c');
 		symbols.add('d');
-		terminals.add('a');
-		terminals.add('b');
-		terminals.add('c');
-		terminals.add('d');
+		symbols.add('e');
+		symbols.add('f');
+		symbols.add('g');
+		terminals.add('a'); //x distance
+		terminals.add('b'); //y distance
+		terminals.add('c'); //organisms near food source
+		terminals.add('d'); //organism's health
+		terminals.add('e'); //food remaining in food source
+		terminals.add('f'); //if poison = -1 normalized, otherwise 1 normalized
+		terminals.add('g'); //numOrganisms surrounding this organism
 		Collections.shuffle(symbols);
 		ran = new Random();
 		for (int i = 0; i < aLenGenes; i++) 
@@ -192,3 +159,4 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 		setSym(size1 , mut);
 	}
 }
+

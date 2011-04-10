@@ -92,7 +92,7 @@ public class GUI {
 		/** Create and set jframe attributes */
 		jframe = new JFrame();
 		jframe.setLayout(null);
-		jframe.setAlwaysOnTop(true);
+		jframe.setAlwaysOnTop(false);
 		jframe.setSize(GUI.WIDTH, GUI.HEIGHT);
 		jframe.setVisible(true);
 		jframe.setFocusable(true);
@@ -180,10 +180,11 @@ public class GUI {
 				// initialize GridPanel.
 				if (!getGridPanelData(e)) {
 					pause.setEnabled(true);
-					genPanel.enableStopButton();
+					genPanel.enableButtons();
 					saveGenes.setEnabled(true);
 					loadGenes.setEnabled(true);
-					simulation.initialize();
+					/*simulation.initialize();*/
+					simulation.initialize2();
 					simulation.start();
 				}
 			}
@@ -360,7 +361,7 @@ public class GUI {
 
 	
 	public void enableStopGenButton(){
-		genPanel.enableStopButton();
+		genPanel.enableButtons();
 	}
 
 	private void confirmExit() {

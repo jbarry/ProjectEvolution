@@ -1,12 +1,15 @@
 package Interactive;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import Frame.*;
 import Evolution.*;
 @SuppressWarnings("all")
-public class Food extends Matter{
+public abstract class Food extends Matter{
 	//------------------------------------------------------------------------------------
 	//--globals--
 	//------------------------------------------------------------------------------------
@@ -41,15 +44,6 @@ public class Food extends Matter{
 		hlth = 100.0;
 	}
 
-	public void paint(Graphics g, boolean isDepleted) {
-		g.setColor(Color.BLUE);
-		if(!isDepleted){
-			g.fillRect((int)this.location.getX()-(width/2), 
-					   (int)this.location.getY()-(height/2), 
-					   width, height);
-		}
-	}
-
 	/**
 	 * @return a String representation of the Object.v
 	 */
@@ -60,14 +54,31 @@ public class Food extends Matter{
 		return str;
 	}
 	
+	
 	//------------------------------------------------------------------------------------
 	//--getters/setters--
 	//------------------------------------------------------------------------------------
+	@Override
 	public int getWidth() {
 		return width;
 	}
 
+	@Override
 	public int getHeight() {
 		return height;
 	}
+
+	@Override
+	public int compareTo(Matter fd) {
+		// TODO: Generate code.
+		/*Food aFd = (Food) fd;
+		if (fitness < aFd.getFitness())
+			return -1;
+		else if (fitness == aFd.getFitness())
+			return 0;
+		return 1;*/
+		return 0;
+	}
+
+	public abstract Double getType();
 }

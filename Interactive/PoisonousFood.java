@@ -28,11 +28,12 @@ public class PoisonousFood extends Food{
 		String str = "";
 		str += " I am poisonous food. Don't eat me."
 			+ "\n Location: " + getLocation()
-			+ "\n Remaining Poison: " + getHealth();
+			+ "\n Remaining Poison: " + getHealth()
+			+ "\n ID: " + this.getId();
 		return str;		
 	}
 
-	@Override
+	
 	public void paint(Graphics g, boolean isDepleted) {
 		g.setColor(Color.RED);
 
@@ -42,6 +43,11 @@ public class PoisonousFood extends Food{
 					   getWidth(), getHeight());
 		}
 
+	}
+
+	@Override
+	public Double getType() {
+		return -3.0;
 	}
 
 
