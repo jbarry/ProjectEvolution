@@ -103,7 +103,7 @@ public class GridPanel extends JPanel {
 							/*simulateStep2(2);*/
 							/*simulateStep2Test(4);*/
 							/*simulateStepAstar(1);*/
-							simulateStepAstarWithoutEat(2);
+							simulateStepAstarWithoutEat(4);
 							repaint();
 						} else if (trialNum < trialsPerGen)
 							newTrial();
@@ -1157,13 +1157,13 @@ public class GridPanel extends JPanel {
 			/*Organism o = new Organism(100.00, 11, i);*/
 			/*Organism o = new Organism(100.00, 2, i);*/
 			Organism o = new Organism(100.00, 1, i);
-			locationMap.placeOrganism(o, o.getLocation());
+			/*locationMap.placeOrganism(o);*/
 			organisms.add(o);
 			shuffleIds.add(i);
 			/*o.addStartingLocation();*/
 			/*o.addChromosome();*/
 		}
-		/*locationMap.placeOrganisms(organisms);*/
+		locationMap.placeOrganisms(organisms);
 		for (int i = 0; i < numFoodSources * 2; i++)
 			if (ran.nextBoolean())
 				food.add(new HealthyFood(100.00, i, 2));

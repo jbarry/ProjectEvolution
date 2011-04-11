@@ -156,8 +156,8 @@ public class Organism extends Matter {
 				}
 			}
 		}
-		/*Test prints
-		System.out.println("Organism " + this.getId() + " is scanning from" + location.getX() + ", " + location.getY());
+		// Test prints.
+		/*System.out.println("Organism " + this.getId() + " is scanning from" + location.getX() + ", " + location.getY());
 		System.out.println("The scan range is " + scanRange + " and the square is from " + cornerTop.getX() + ", " + cornerBottom.getY() 
 				+ "to " + cornerBottom.getX() + ", " + cornerBottom.getY());*/
 		return new ArrayList<Integer>(objectIds);
@@ -174,9 +174,9 @@ public class Organism extends Matter {
 		LocationMap map = LocationMap.getInstance();
 		// Set current location available.
 		map.setRangeToBlank(width, height, location.getX(), location.getY());
-		map.setWrapAround(location, width, height);
 		location.setX(c.getX());
 		location.setY(c.getY());
+		map.setWrapAround(location, width, height);
 		// Make current location unavailable.
 		map.setRange(location, width, height, 'o', id);
 	}
@@ -195,10 +195,8 @@ public class Organism extends Matter {
 			if (map.canSpawn(nextX, nextY, width, height)) {
 				location.setY(nextY);
 				location.setX(nextX);
-				/*
-				 * System.out.println("moveto: " + location.getX() + ", " +
-				 * location.getY());
-				 */
+				/*System.out.println("moveto: " + location.getX() + ", "
+						+ location.getY());*/
 				// make current location unavailable
 				map.setRange(location, width, height, 'o', id);
 			}
