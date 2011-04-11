@@ -363,13 +363,13 @@ gep.printOrgListIdsAndFitness(afterTournOrgs);*/
 		System.out.println("Genes before cross");
 		printChromGenes(makeChrmListFrmPair(pairList));
 		onePointCrossOver(pairList);
-		System.out.println("Genes after cross");
+		System.out.println("After 1st onePoint cross over");
 		printChromGenes(makeChrmListFrmPair(pairList));
 
 		// Pair up Chromosomes again in preparation
 		// for 2-point cross over.
 		pairList = mateSelect(makeChrmListFrmPair(pairList));
-		System.out.println("After 1-point");
+		System.out.println("ids after 1 point");
 		printChromeListIds(makeChrmListFrmPair(pairList));
 
 		// 2-POINT CROSS OVER.
@@ -405,6 +405,50 @@ gep.printOrgListIdsAndFitness(afterTournOrgs);*/
 		return orgList;
 	}
 
+	
+	public LinkedList<Organism> newGenerationTest2() {
+
+		// List to hold the Elite individuals.
+		LinkedList<Chromosome> eliteList = new LinkedList<Chromosome>();
+		// Get the most elite indiv or individuals.
+		if (doElitism)
+			eliteList = (LinkedList<Chromosome>) assembleElites((LinkedList<Organism>) orgList
+					.clone()); // Called on a clone of the orgList because
+		// ordering the original list may be a
+		// detriment to randomization.
+		LinkedList<Chromosome> chromList = makeChromList(tournament(partnerSelect(orgList)));
+		System.out.println("Before rotation");
+		printGenes(chromList);
+		rotation(chromList);
+		System.out.println("After rotation");
+		printGenes(chromList);
+		mutation(chromList);
+		System.out.println("After mutation");
+		printGenes(chromList);
+		// Pair up Chromosomes in preparation
+		// for 1-point cross over.
+		LinkedList<Pair<Chromosome, Chromosome>> pairList = mateSelect(chromList);
+		onePointCrossOver(pairList);
+		// Pair up Chromosomes again in preparation
+		// for 2-point cross over.
+		pairList = mateSelect(makeChrmListFrmPair(pairList));
+		// 2-point cross over.
+		onePointCrossOver(pairList);
+		onePointCrossOver(pairList);
+		LinkedList<Chromosome> finalChromes = makeChrmListFrmPair(pairList);
+		// Proceed with elitism if true.
+		if (eliteList.size() != 0)
+			transferElites(finalChromes, eliteList);
+		// Update the evaluations of the genes.
+		for (Chromosome chrom : chromList)
+			for (Gene gene : chrom.subListGene(0, chrom.size()))
+				gene.updateEvaledList();
+		// TODO: May have to put org id's and chrom id's back together.
+		for (int i = 0; i < orgList.size(); i++)
+			orgList.get(i).setChromosome(chromList.get(i));
+		return orgList;
+	}
+	
 	/**
 	 * This method retreives the most elite members of the organism list. The
 	 * number of individuals depends on what the numElites feild is set to.
@@ -846,6 +890,7 @@ gep.printOrgListIdsAndFitness(afterTournOrgs);*/
 				out.println();
 			}
 		}
+		System.out.println();
 	}
 
 	/**
@@ -912,8 +957,9 @@ gep.printOrgListIdsAndFitness(afterTournOrgs);*/
 		/* GEP gep = new GEP(orgList, 0.75, 0.01, 0.01, 0.75, 0.75, true); */
 		/* GEP gep = new GEP(orgList, 0.10, 0.01, 0.01, 0.75, 0.75, true); */
 		/*GEP gep = new GEP(orgList, 0.10, 0.01, 0.01, 0.75, 0.75, true);*/
-		GEP gep = new GEP(orgList, 0.75, 0.01, 0.01, 0.75, 0.75, 2, false, true); // Elitism ctor.
-		gep.newGenerationTest();
+		GEP gep = new GEP(orgList, 1.00, 1.00, 1.00, 1.00, 1.00, 2, false, true); // Elitism ctor.
+		/*gep.newGenerationTest();*/
+		gep.newGenerationTest2();
 		/*
 		// PRINT ORIGINAL ORGLIST.
 		System.out.println("Original orgList");

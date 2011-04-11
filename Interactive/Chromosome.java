@@ -43,11 +43,13 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 			chromosome.add(new Gene(true, 7));
 	}
 	public void rotate(int gene) {
+		@SuppressWarnings("rawtypes")
 		Gene theGene = (Gene)chromosome.get(gene);
 		int rotNum = ran.nextInt(theGene.size());
-		for(int i = 0; i < rotNum; i++) {
+		while (rotNum == 0)
+			rotNum = ran.nextInt(theGene.size());
+		for(int i = 0; i < rotNum; i++)
 			theGene.queue(theGene.dequeue());
-		}
 	}
 
 	public void mutate() {

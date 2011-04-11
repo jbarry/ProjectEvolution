@@ -170,10 +170,9 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 	}
 
 	public void mutate() {
-		int size1 = ran.nextInt(size());
 		int size2 = ran.nextInt(symbols.size());
 		char mut = symbols.get(size2);
-		setSym(size1 , mut);
+		setSym(ran.nextInt(size()) , mut);
 	}
 }
 
