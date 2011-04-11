@@ -1,6 +1,7 @@
 package Interactive;
 
 import java.awt.Graphics;
+import java.awt.Image;
 
 import Frame.Coordinate;
 
@@ -11,7 +12,7 @@ public abstract class Food extends Matter {
 	// ------------------------------------------------------------------------------------
 	public static final int width = 5;
 	public static final int height = 5;
-
+	protected Image icon;
 	// ------------------------------------------------------------------------------------
 	// --constructors--
 	// ------------------------------------------------------------------------------------
@@ -74,8 +75,17 @@ public abstract class Food extends Matter {
 
 	public abstract Double getFoodType();
 
-	public abstract void paint(Graphics g, boolean isDepleted);
+	/*public abstract void paint(Graphics g, boolean isDepleted);*/
 
+	public void paint(Graphics g, boolean isDepleted)
+	{
+		if (!isDepleted) {
+			g.drawImage(icon, getLocation().getX() - 2 * getWidth() / 2,
+					getLocation().getY() - 2 * getHeight() / 2, 2 * getWidth(),
+					2 * getHeight(), null);
+		}
+	}
+	
 	public void printInfo() {
 		System.out.println("Food: ");
 		System.out.println("Id: " + id);

@@ -115,9 +115,7 @@ public class GenerationPanel extends JPanel{
 		stopGenerationOrTrial.setLayout(null);
 		stopGenerationOrTrial.setEnabled(false);
 		stopGenerationOrTrial.setText("Stop");
-		
-
-		
+				
 		//Need to add nested components before parent components.
 		add(pastGenPanel);
 		pastGenPanel.add(scrollPane);
@@ -216,7 +214,7 @@ public class GenerationPanel extends JPanel{
 	    radioPanel.setOpaque(false);
 	    radioPanel.setFocusable(true);
 	    radioPanel.setSize(180, 130);
-	    radioPanel.setLocation(210,20);
+	    radioPanel.setLocation(250,20);
 	    radioPanel.setLayout(new GridLayout(5, 1));
 	    radioPanel.add(stopGenButton);
 	    radioPanel.add(stopTrialButton);
@@ -364,6 +362,10 @@ public class GenerationPanel extends JPanel{
 		}
 	}
 	
+	public void enableStopButton(){
+		stopGenerationOrTrial.setEnabled(true);
+	}
+	
 	public void enableButtons(){
 		stopGenerationOrTrial.setEnabled(true);
 		jumpBack.setEnabled(true);
@@ -411,11 +413,13 @@ public class GenerationPanel extends JPanel{
 	}
 	
 	public void addGeneration(){
+		long x = (long)(sim.lastAvg*100);
+	    double formattedAvg = (double)x/100;
 		if(pastGenStats.getText().equals("")){
-			pastGenStats.append(" Generation " + (sim.generationNum-1) + ": " + sim.lastAvg);
+			pastGenStats.append(" Generation " + (sim.generationNum-1) + ": " + formattedAvg);
 		}
 		else{
-			pastGenStats.append("\n" + " Generation " + (sim.generationNum-1) + ": " + sim.lastAvg);
+			pastGenStats.append("\n" + " Generation " + (sim.generationNum-1) + ": " + formattedAvg);
 		}
 		
 	}

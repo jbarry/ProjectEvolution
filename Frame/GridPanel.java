@@ -105,6 +105,7 @@ public class GridPanel extends JPanel {
 							/*simulateStep2Test(4);*/
 							/*simulateStepAstar(1);*/
 							/*simulateStepAstarWithoutEat(4);*/
+							gui.updatePercentage((double)timePassed/lengthGeneration);
 							simulateStepAstarWithoutEatWithClosedList(7);
 							repaint();
 						} else if (trialNum < trialsPerGen)
@@ -883,7 +884,7 @@ public class GridPanel extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-
+		gui.getMap().paint(g);
 		// handle each new organism created.
 		for (Organism org : organisms)
 			org.paint(g);
@@ -908,6 +909,7 @@ public class GridPanel extends JPanel {
 	 * Sets the initial game state of the GridPanel.
 	 */
 	public void initializeAstar() {
+		System.out.println("got to intiastar");
 		// Reset all generation info from previous simulations.
 		generationNum = 1;
 		trialNum = 1;
@@ -1401,5 +1403,45 @@ public class GridPanel extends JPanel {
 		} else
 			m.setHealth(m.getHealth() - val);
 		return false;
+	}
+	
+	public void initializeFromGeneFile(LinkedList<Organism> population) {
+		// reset all generation info from previous simulations.
+		generationNum = 1;
+		trialNum = 1;
+		GUI.genPanel.resetGenInformation();
+		ran = new Random();
+		timePassed = 0;
+		shuffleIds = new ArrayList<Integer>();
+		
+		/*
+		 * location map will consist of: key: current instance number of object
+		 * value: 'w' for white space or available. 'o' for organism. 'h' for
+		 * healthy food. 'p' for poisonous food.
+		 */
+		locationMap.getInstance().clearLocations();
+
+		norm = new Normalizer(new Pair<Double, Double>(-600.0, 600.0),
+				new Pair<Double, Double>(-50.0, 50.0));
+
+		// clear any remaining organisms, food, or poison in simulation.
+		organisms.clear();
+		healthFd.clear();
+		poisFood.clear();
+		
+		for(int i = 0 ; i < population.size(); i++){
+			organisms.add(population.get(i));
+			shuffleIds.add(i);
+			organisms.get(i).newLocation();	
+		}
+	}
+	
+	public String getOrganismData(int index) {
+		Organism o = organisms.get(index);
+		return o.getId() + " " + o.getHealth() + " " + o.getFitness() + " "
+				+ o.getLocation().getX() + " " + o.getLocation().getY() + " "
+				+ o.getHealthEat() + " " + o.getPoisonEat() + " "
+				+ o.getEatFail() + " " + o.getNumAttacked() + " "
+				+ o.getNumPushed() + " " + o.getTotalScans();
 	}
 }

@@ -2,6 +2,7 @@ package Interactive;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -9,6 +10,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
+
+import javax.swing.ImageIcon;
 
 import Frame.Coordinate;
 import Frame.LocationMap;
@@ -38,10 +41,60 @@ public class Organism extends Matter {
 	private String action = "";
 	public static int width = 5;
 	public static int height = 5;
+	// For images/actions
+    private Image ninja_walk1;
+    private Image ninja_walk1_inv;
+    private Image ninja_walk2;
+    private Image ninja_walk2_inv;
+    private Image ninja_eat;
+    private Image ninja_eat_inv;
+    private Image ninja_attack;
+    private Image ninja_attack_inv;
+    private Image ninja_push;
+    private Image ninja_push_inv;
+    private Image ninja_dead;
+    private Image ninja_dead_inv;
+    private boolean swapImage;
+    private boolean facingRight;
+	private char currentAction;
+	
 	
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
+	public Organism(double aHealth, int chromSize, int anId, int aScanRange) {
+		super(aHealth, anId, 'o');
+		chromosome = new Chromosome(chromSize);
+		samples = 0;
+		/*avgHealth = 0;*/
+		hlthTot = 0;
+		scanRange = aScanRange;
+		steps = 0;
+		fitness = 0.0;
+		ActionList= new ArrayList<ArrayList<String>>();
+		ActionList.add(new ArrayList<String>());
+		StartingLocation=new ArrayList<Coordinate>();
+		chromosomeHistory= new ArrayList<Chromosome>();
+		healthyFood = new TreeSet<Integer>();
+		poisonFood = new TreeSet<Integer>(); 
+		ninja_walk1 = new ImageIcon(getClass().getResource("sprites/ninja_walk1.gif")).getImage();
+		ninja_walk1_inv = new ImageIcon(getClass().getResource("sprites/ninja_walk1_inv.gif")).getImage();
+		ninja_walk2 = new ImageIcon(getClass().getResource("sprites/ninja_walk2.gif")).getImage();
+		ninja_walk2_inv = new ImageIcon(getClass().getResource("sprites/ninja_walk2_inv.gif")).getImage();
+		ninja_eat = new ImageIcon(getClass().getResource("sprites/ninja_eat.gif")).getImage();
+		ninja_eat_inv = new ImageIcon(getClass().getResource("sprites/ninja_eat_inv.gif")).getImage();
+		ninja_attack = new ImageIcon(getClass().getResource("sprites/ninja_attack.gif")).getImage();
+		ninja_attack_inv = new ImageIcon(getClass().getResource("sprites/ninja_attack_inv.gif")).getImage();
+		ninja_push = new ImageIcon(getClass().getResource("sprites/ninja_push.gif")).getImage();
+		ninja_push_inv = new ImageIcon(getClass().getResource("sprites/ninja_push_inv.gif")).getImage();
+		ninja_dead = new ImageIcon(getClass().getResource("sprites/ninja_dead.gif")).getImage();
+		ninja_dead_inv = new ImageIcon(getClass().getResource("sprites/ninja_dead_inv.gif")).getImage();
+		//create behavior tracking boolean variables
+		swapImage = true;
+		facingRight = true;
+		currentAction = ' ';
+	}
+	
 	public Organism(double aHealth, int chromSize, int anId) {
 		super(aHealth, anId, 'o');
 		chromosome = new Chromosome(chromSize);
@@ -429,16 +482,16 @@ public class Organism extends Matter {
 		return orgIsNextToOrg;
 	}
 
-	public void paint(Graphics g) {
-		g.setColor(Color.BLACK);
+	/*public void paint(Graphics g) {
+		g.setColor(Color.BLACK);*/
 		/*if (location == null)
 			System.out.println("loc at paint time is null");
 		else
 			System.out.println("org location at paint: " + location.getX()
 					+ ", " + location.getY());*/
-		g.fillRect((int) this.location.getX() - (width / 2),
+		/*g.fillRect((int) this.location.getX() - (width / 2),
 				(int) this.location.getY() - (height / 2), width, height);
-	}
+	}*/
 
 	//------------------------------------------------------------------------------------
 	//--overloaded functions--
@@ -693,4 +746,105 @@ public class Organism extends Matter {
 	public void setSteps(int steps) {
 		this.steps = steps;
 	}
-}
+
+	public void setHealthyEat(int val) {
+		healthyEatSuccess = val;
+	}
+
+	public void setPoisonEat(int val) {
+		poisonEatSuccess = val;
+	}
+
+	public void setEatFail(int val) {
+		eatFail = val;
+	}
+
+	public void setNumPushed(int val) {
+		numPushed = val;
+	}
+
+	public void setNumAttacked(int val) {
+		numAttacked = val;
+	}
+
+	public void setTotalScans(int val) {
+		numScans = val;
+	}
+	
+	public void paint(Graphics g) {
+		if (facingRight) {
+			if (getHealth() <= 0) {
+				g.drawImage(ninja_dead, location.getX() - 2 * Organism.width
+						/ 2, location.getY() - 2 * Organism.height / 2,
+						2 * Organism.width, 2 * Organism.height, null);
+			} else {
+				if (currentAction == 'e') {
+					g.drawImage(ninja_eat, location.getX() - 2 * Organism.width
+							/ 2, location.getY() - 2 * Organism.height / 2,
+							2 * Organism.width, 2 * Organism.height, null);
+				} else if (currentAction == 'a') {
+					g.drawImage(ninja_attack, location.getX() - 2
+							* Organism.width / 2, location.getY() - 2
+							* Organism.height / 2, 2 * Organism.width,
+							2 * Organism.height, null);
+				} else if (currentAction == 'p') {
+					g.drawImage(ninja_push, location.getX() - 2
+							* Organism.width / 2, location.getY() - 2
+							* Organism.height / 2, 2 * Organism.width,
+							2 * Organism.height, null);
+				} else {
+					if (swapImage) {
+						g.drawImage(ninja_walk1, location.getX() - 2
+								* Organism.width / 2, location.getY() - 2
+								* Organism.height / 2, 2 * Organism.width,
+								2 * Organism.height, null);
+					} else {
+						g.drawImage(ninja_walk2, location.getX() - 2
+								* Organism.width / 2, location.getY() - 2
+								* Organism.height / 2, 2 * Organism.width,
+								2 * Organism.height, null);
+					}
+				}
+			}
+		}
+		else{
+			if (getHealth() <= 0) {
+				g.drawImage(ninja_dead_inv, location.getX() - 2
+						* Organism.width / 2, location.getY() - 2
+						* Organism.height / 2, 2 * Organism.width,
+						2 * Organism.height, null);
+			} else {
+				if (currentAction == 'e') {
+					g.drawImage(ninja_eat_inv, location.getX() - 2
+							* Organism.width / 2, location.getY() - 2
+							* Organism.height / 2, 2 * Organism.width,
+							2 * Organism.height, null);
+				} else if (currentAction == 'a') {
+					g.drawImage(ninja_attack_inv, location.getX() - 2
+							* Organism.width / 2, location.getY() - 2
+							* Organism.height / 2, 2 * Organism.width,
+							2 * Organism.height, null);
+				} else if (currentAction == 'p') {
+					g.drawImage(ninja_push_inv, location.getX() - 2
+							* Organism.width / 2, location.getY() - 2
+							* Organism.height / 2, 2 * Organism.width,
+							2 * Organism.height, null);
+				} else {
+					if (swapImage) {
+						g.drawImage(ninja_walk1_inv, location.getX() - 2
+								* Organism.width / 2, location.getY() - 2
+								* Organism.height / 2, 2 * Organism.width,
+								2 * Organism.height, null);
+					} else {
+						g.drawImage(ninja_walk2_inv, location.getX() - 2
+								* Organism.width / 2, location.getY() - 2
+								* Organism.height / 2, 2 * Organism.width,
+								2 * Organism.height, null);
+					}
+				}
+			}
+		}
+		swapImage = !swapImage;
+	}
+}	
+

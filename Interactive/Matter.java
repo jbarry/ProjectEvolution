@@ -185,6 +185,10 @@ public abstract class Matter implements Comparable<Matter>{
 		return id;
 	}
 	
+	public void setId(int anId) {
+		id = anId;
+	}
+	
 	public abstract char getType();
 
 	public void printLocation() {

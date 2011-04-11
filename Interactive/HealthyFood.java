@@ -2,6 +2,8 @@ package Interactive;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import javax.swing.ImageIcon;
+
 import Frame.Coordinate;
 
 public class HealthyFood extends Food {
@@ -9,16 +11,22 @@ public class HealthyFood extends Food {
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
-	public HealthyFood(double aMxHlth, int anId, int aScanRange){
+	public HealthyFood(double aMxHlth, int anId, int aScanRange) {
 		super(aMxHlth, anId, 'h');
-	}
-	
-	public HealthyFood(int x, int y){
-		super(x,y);
+		icon = new ImageIcon(getClass().getResource("sprites/flower.gif"))
+				.getImage();
 	}
 
-	public HealthyFood(Coordinate aCoord){
+	public HealthyFood(int x, int y) {
+		super(x, y);
+		icon = new ImageIcon(getClass().getResource("sprites/flower.gif"))
+				.getImage();
+	}
+
+	public HealthyFood(Coordinate aCoord) {
 		super(aCoord);
+		icon = new ImageIcon(getClass().getResource("sprites/flower.gif"))
+				.getImage();
 	}
 
 	@Override

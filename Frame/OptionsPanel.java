@@ -28,8 +28,8 @@ import javax.swing.text.AttributeSet;
 
 @SuppressWarnings("all")
 public class OptionsPanel extends JPanel implements Runnable{
-	public final static int WIDTH  = 200;
-	public final static int HEIGHT = 400;
+	public final static int WIDTH  = GUI.WIDTH/4;
+	public final static int HEIGHT = 2*GUI.HEIGHT/3;
 	
 	public static int numOrganisms = 0;
 	
@@ -54,13 +54,12 @@ public class OptionsPanel extends JPanel implements Runnable{
 	private JButton    start;
 	private JButton    pause;
 	
-	private LocationMap locationMap;
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
 	public OptionsPanel(final GUI gui, final GridPanel simulation){
 		run();
-		locationMap = LocationMap.getInstance();
+		
 		/** initial JPanel settings */
 		setLayout(null);
 		setLocation(0,0);
@@ -137,10 +136,8 @@ public class OptionsPanel extends JPanel implements Runnable{
 				        		if(simulation.getTimer().isRunning()){
 					        		//make organisms able to move if they are shrunk.
 						        	for(Organism o: simulation.getOrganisms()){
-						        		int x = o.getLocation().getX();
-						        		int y = o.getLocation().getY();
-										locationMap.setRangeToBlank(x, y, Organism.width,
-												Organism.height);
+						        		LocationMap.getInstance().setRangeToBlank(o.getLocation().getX(),
+						        				o.getLocation().getY(), Organism.width, Organism.height);
 						        	}
 				        		}
 					        	
@@ -531,10 +528,8 @@ public class OptionsPanel extends JPanel implements Runnable{
 						        		//make organisms able to move if they are shrunk.
 						        		//assumes simulation is running.
 							        	for(Organism o: simulation.getOrganisms()){
-							        		int x = o.getLocation().getX();
-							        		int y = o.getLocation().getY();
-											locationMap.setRangeToBlank(x, y, Organism.width,
-													Organism.height);
+							        		LocationMap.getInstance().setRangeToBlank(o.getLocation().getX(),
+							        				o.getLocation().getY(), Organism.width, Organism.height);;
 							        	}
 
 							        	Organism.width = Integer.parseInt(orgWidthTxtBox.getText());

@@ -39,7 +39,7 @@ public class Eval {
 		symbols.add("+");
 		Collections.shuffle(symbols);
 		Random r = new Random();
-		for (int i = 0; i < 40; i++) {
+		for (int i = 0; i < 7; i++) {
 			out.print("To be evaluated ");
 			for (int j = 0; j < 40; j++) {
 				strL.add(symbols.get(r.nextInt(symbols.size())));
