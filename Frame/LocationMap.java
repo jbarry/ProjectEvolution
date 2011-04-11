@@ -14,7 +14,7 @@ import Searching.StarQueue;
 public class LocationMap {
 	
 	private Pair<Integer, Character>[][] locationMap;
-	Random r;
+	private Random r;
 	private static LocationMap instance;
 
 	/**
@@ -523,7 +523,7 @@ public class LocationMap {
 		return false;
 	}
 
-	private static boolean hasObstacleSouthEast(int x, int y, int anId) {
+	public static boolean hasObstacleSouthEast(int x, int y, int anId) {
 		int startX = x - (Organism.width / 2);
 		int startY = (y + (Organism.height / 2)) + 1;
 		Pair<Integer, Character> aPair2 = LocationMap.getInstance().get(startX + 1, startY);
@@ -571,7 +571,7 @@ public class LocationMap {
 		return false;
 	}
 
-	private static boolean hasObstacleEast(int x, int y, int anId) {
+	public static boolean hasObstacleEast(int x, int y, int anId) {
 		int startX = (x + (Organism.width / 2)) + 1;
 		int startY = y - (Organism.height / 2);
 		Pair<Integer, Character> aPair1 = LocationMap.getInstance().get(startX, startY);
@@ -602,7 +602,7 @@ public class LocationMap {
 		return false;
 	}
 
-	private static boolean hasObstacleNorthEast(int x, int y, int anId) {
+	public static boolean hasObstacleNorthEast(int x, int y, int anId) {
 		int startX = x - (Organism.width / 2);
 		int startY = (y - (Organism.height / 2)) - 1;
 		Pair<Integer, Character> aPair2 = LocationMap.getInstance().get(startX + 1, startY);
@@ -650,7 +650,7 @@ public class LocationMap {
 		return false;
 	}
 
-	private static boolean hasObstacleNorth(int x, int y, int anId) {
+	public static boolean hasObstacleNorth(int x, int y, int anId) {
 		int startX = x - (Organism.width / 2);
 		int startY = (y - (Organism.height / 2)) - 1;
 		Pair<Integer, Character> aPair1 = LocationMap.getInstance().get(startX, startY);

@@ -104,6 +104,86 @@ public class LocationMapTest {
 		map.clearLocations();
 	}
 	
+	//	@Test
+	public void searchTest() {
+		LocationMap map = LocationMap.getInstance();
+		LinkedList<Organism> orgList = new LinkedList<Organism>();
+		for (int i = 0; i < 300; i++)
+			orgList.add(new Organism(true, 4, r.nextInt(20), i));
+		map.placeOrganisms(orgList);
+		fail("not yet implemented");
+	}
+
+	@Test
+	public void placeFoodPositionsNotEqualToZero() {
+		LocationMap map = LocationMap.getInstance();
+		LinkedList<Food> foodList = new LinkedList<Food>();
+		for (int i = 0; i < 300; i++) {
+			if (r.nextBoolean())
+				foodList.add(new HealthyFood(100.0, i, 'h'));
+			else
+				foodList.add(new PoisonousFood(100.0, i, 'p'));
+		}
+		map.placeFoods(foodList);
+		for(Food f : foodList)
+			Assert.assertTrue(f.getLocation().getX() != 0 && f.getLocation().getY() != 0);
+		map.clearLocations();
+	}
+
+	//	@Test
+	public void placeFoodPositionsAreUnique() {
+		LocationMap map = LocationMap.getInstance();
+		LinkedList<Food> foodList = new LinkedList<Food>();
+		for (int i = 0; i < 300; i++) {
+			if (r.nextBoolean())
+				foodList.add(new HealthyFood(100.0, i, 'h'));
+			else
+				foodList.add(new PoisonousFood(100.0, i, 'p'));
+		}
+		map.placeFoods(foodList);
+		for(Food f : foodList)
+			Assert.assertTrue(f.getLocation().getX() != 0 && f.getLocation().getY() != 0);
+		map.clearLocations();
+	}
+
+	@Test
+	public void placeFoodGivesUniquePositions() {
+		LocationMap map = LocationMap.getInstance();
+		LinkedList<Food> foodList = new LinkedList<Food>();
+		for (int i = 0; i < 300; i++) {
+			if (r.nextBoolean())
+				foodList.add(new HealthyFood(100.0, i, 'h'));
+			else
+				foodList.add(new PoisonousFood(100.0, i, 'p'));
+		}
+		map.placeFoods(foodList);
+		while (!foodList.isEmpty()) {
+			Food currentFood = foodList.remove();
+			int x = currentFood.getLocation().getX();
+			int y = currentFood.getLocation().getY();
+			for (int i = 0; i < foodList.size(); i++) {
+				Food aFood = foodList.remove();
+				int x2 = aFood.getLocation().getX();
+				int y2 = aFood.getLocation().getY();
+				if (x == x2)
+					Assert.assertTrue(y != y2);
+				if (y == y2)
+					Assert.assertTrue(x != x2);
+			}
+		}
+		map.clearLocations();
+	}
+
+	@Test
+	public void distance() {
+		fail("not yet implemented");
+	}
+
+	@Test
+	public void objectsInSpaceTest() {
+		fail("not yet implemented");
+	}
+
 	@Test
 	public void setRangeFillsInIndecesWithAppropriateLocations() {
 		LocationMap map = LocationMap.getInstance();
@@ -252,7 +332,7 @@ public class LocationMapTest {
 		map.clearLocations();
 	}
 	
-	@Test
+	/*@Test
 	public void hasObstacleSouthWestTestWithHasObstacleSouthWestMethod() {
 		LocationMap map = LocationMap.getInstance();
 		Organism org1 = new Organism(true, 4, 0.0, 0);
@@ -312,7 +392,7 @@ public class LocationMapTest {
 		map.setOrganism(org2);
 		Assert.assertTrue(LocationMap.hasObstacleNorthWest(9, 9, 0));
 		map.clearLocations();
-	}
+	}*/
 	
 	@Test
 	public void shouldOnlyHaveSouthMovementInStarQueue() {
@@ -407,90 +487,187 @@ public class LocationMapTest {
 		Coordinate end = new Coordinate(34, 9);
 		StarQueue<Coordinate> sq = LocationMap.adjacentCoordinates(10, 10, 1,
 				end, org1.getId());
-		while (!sq.isEmpty()) {
-			Coordinate coord = sq.remove();
-			System.out.println("To move to: " + coord.getX() + ", " + coord.getY());
-		}
-		map.clearLocations();
-	}
-	
-//	@Test
-	public void searchTest() {
-		LocationMap map = LocationMap.getInstance();
-		LinkedList<Organism> orgList = new LinkedList<Organism>();
-		for (int i = 0; i < 300; i++)
-			orgList.add(new Organism(true, 4, r.nextInt(20), i));
-		map.placeOrganisms(orgList);
-		fail("not yet implemented");
-	}
-
-	@Test
-	public void placeFoodPositionsNotEqualToZero() {
-		LocationMap map = LocationMap.getInstance();
-		LinkedList<Food> foodList = new LinkedList<Food>();
-		for (int i = 0; i < 300; i++) {
-			if (r.nextBoolean())
-				foodList.add(new HealthyFood(100.0, i, 'h'));
-			else
-				foodList.add(new PoisonousFood(100.0, i, 'p'));
-		}
-		map.placeFoods(foodList);
-		for(Food f : foodList)
-			Assert.assertTrue(f.getLocation().getX() != 0 && f.getLocation().getY() != 0);
-		map.clearLocations();
-	}
-	
-//	@Test
-	public void placeFoodPositionsAreUnique() {
-		LocationMap map = LocationMap.getInstance();
-		LinkedList<Food> foodList = new LinkedList<Food>();
-		for (int i = 0; i < 300; i++) {
-			if (r.nextBoolean())
-				foodList.add(new HealthyFood(100.0, i, 'h'));
-			else
-				foodList.add(new PoisonousFood(100.0, i, 'p'));
-		}
-		map.placeFoods(foodList);
-		for(Food f : foodList)
-			Assert.assertTrue(f.getLocation().getX() != 0 && f.getLocation().getY() != 0);
+		Coordinate coord = sq.remove();
+		System.out.println("To move to: " + coord.getX() + ", " + coord.getY());
+		assertEquals(10, coord.getX());
+		assertEquals(11, coord.getY());
 		map.clearLocations();
 	}
 	
 	@Test
-	public void placeFoodGivesUniquePositions() {
+	public void shouldOnlyHaveNorthMovementInStarQueue() {
 		LocationMap map = LocationMap.getInstance();
-		LinkedList<Food> foodList = new LinkedList<Food>();
-		for (int i = 0; i < 300; i++) {
-			if (r.nextBoolean())
-				foodList.add(new HealthyFood(100.0, i, 'h'));
-			else
-				foodList.add(new PoisonousFood(100.0, i, 'p'));
-		}
-		map.placeFoods(foodList);
-		while (!foodList.isEmpty()) {
-			Food currentFood = foodList.remove();
-			int x = currentFood.getLocation().getX();
-			int y = currentFood.getLocation().getY();
-			for (int i = 0; i < foodList.size(); i++) {
-				Food aFood = foodList.remove();
-				int x2 = aFood.getLocation().getX();
-				int y2 = aFood.getLocation().getY();
-				if (x == x2)
-					Assert.assertTrue(y != y2);
-				if (y == y2)
-					Assert.assertTrue(x != x2);
-			}
-		}
+		Organism org1 = new Organism(true, 4, 0.0, 0);
+		org1.getLocation().setX(10);
+		org1.getLocation().setY(10);
+		map.setOrganism(org1);
+		
+		Organism org2 = new Organism(true, 4, 0.0, 1);
+		org2.getLocation().setX(5);
+		org2.getLocation().setY(5);
+		map.setOrganism(org2);
+		
+		/*Organism org3 = new Organism(true, 4, 0.0, 1);
+		org3.getLocation().setX(10);
+		org3.getLocation().setY(5);
+		map.setOrganism(org3);*/
+		
+		Organism org4 = new Organism(true, 4, 0.0, 1);
+		org4.getLocation().setX(15);
+		org4.getLocation().setY(5);
+		map.setOrganism(org4);
+		
+		Organism org5 = new Organism(true, 4, 0.0, 1);
+		org5.getLocation().setX(15);
+		org5.getLocation().setY(10);
+		map.setOrganism(org5);
+		
+		Organism org6 = new Organism(true, 4, 0.0, 1);
+		org6.getLocation().setX(15);
+		org6.getLocation().setY(15);
+		map.setOrganism(org6);
+		
+		Organism org7 = new Organism(true, 4, 0.0, 1);
+		org7.getLocation().setX(10);
+		org7.getLocation().setY(15);
+		map.setOrganism(org7);
+		
+		Organism org8 = new Organism(true, 4, 0.0, 1);
+		org8.getLocation().setX(5);
+		org8.getLocation().setY(15);
+		map.setOrganism(org8);
+		
+		Organism org9 = new Organism(true, 4, 0.0, 1);
+		org9.getLocation().setX(5);
+		org9.getLocation().setY(10);
+		map.setOrganism(org9);
+		
+		Coordinate end = new Coordinate(34, 9);
+		StarQueue<Coordinate> sq = LocationMap.adjacentCoordinates(10, 10, 1,
+				end, org1.getId());
+		System.out.println("queue size: " + sq.size());
+		Coordinate coord = sq.remove();
+		System.out.println("To move to: " + coord.getX() + ", " + coord.getY());
+		assertEquals(10, coord.getX());
+		assertEquals(9, coord.getY());
 		map.clearLocations();
 	}
 	
 	@Test
-	public void distance() {
-		fail("not yet implemented");
+	public void shouldOnlyHaveWestMovementInStarQueue() {
+		LocationMap map = LocationMap.getInstance();
+		Organism org1 = new Organism(true, 4, 0.0, 0);
+		org1.getLocation().setX(10);
+		org1.getLocation().setY(10);
+		map.setOrganism(org1);
+		
+		Organism org2 = new Organism(true, 4, 0.0, 1);
+		org2.getLocation().setX(5);
+		org2.getLocation().setY(5);
+		map.setOrganism(org2);
+		
+		Organism org3 = new Organism(true, 4, 0.0, 1);
+		org3.getLocation().setX(10);
+		org3.getLocation().setY(5);
+		map.setOrganism(org3);
+		
+		Organism org4 = new Organism(true, 4, 0.0, 1);
+		org4.getLocation().setX(15);
+		org4.getLocation().setY(5);
+		map.setOrganism(org4);
+		
+		Organism org5 = new Organism(true, 4, 0.0, 1);
+		org5.getLocation().setX(15);
+		org5.getLocation().setY(10);
+		map.setOrganism(org5);
+		
+		Organism org6 = new Organism(true, 4, 0.0, 1);
+		org6.getLocation().setX(15);
+		org6.getLocation().setY(15);
+		map.setOrganism(org6);
+		
+		Organism org7 = new Organism(true, 4, 0.0, 1);
+		org7.getLocation().setX(10);
+		org7.getLocation().setY(15);
+		map.setOrganism(org7);
+		
+		Organism org8 = new Organism(true, 4, 0.0, 1);
+		org8.getLocation().setX(5);
+		org8.getLocation().setY(15);
+		map.setOrganism(org8);
+		
+		/*Organism org9 = new Organism(true, 4, 0.0, 1);
+		org9.getLocation().setX(5);
+		org9.getLocation().setY(10);
+		map.setOrganism(org9);*/
+		
+		Coordinate end = new Coordinate(26, 13);
+		StarQueue<Coordinate> sq = LocationMap.adjacentCoordinates(10, 10, 1,
+				end, org1.getId());
+		System.out.println("queue size: " + sq.size());
+		Coordinate coord = sq.remove();
+		System.out.println("To move to: " + coord.getX() + ", " + coord.getY());
+		assertEquals(9, coord.getX());
+		assertEquals(10, coord.getY());
+		map.clearLocations();
 	}
-
+	
 	@Test
-	public void objectsInSpaceTest() {
-		fail("not yet implemented");
+	public void shouldOnlyHaveWestMovementInStarQueueAfterFirstMoveThenMoveAgainMoveTwice() {
+		LocationMap map = LocationMap.getInstance();
+		Organism org1 = new Organism(true, 4, 0.0, 0);
+		org1.getLocation().setX(10);
+		org1.getLocation().setY(10);
+		map.setOrganism(org1);
+		
+		Organism org2 = new Organism(true, 4, 0.0, 1);
+		org2.getLocation().setX(5);
+		org2.getLocation().setY(5);
+		map.setOrganism(org2);
+		
+		Organism org3 = new Organism(true, 4, 0.0, 1);
+		org3.getLocation().setX(10);
+		org3.getLocation().setY(5);
+		map.setOrganism(org3);
+		
+		Organism org4 = new Organism(true, 4, 0.0, 1);
+		org4.getLocation().setX(15);
+		org4.getLocation().setY(5);
+		map.setOrganism(org4);
+		
+		Organism org5 = new Organism(true, 4, 0.0, 1);
+		org5.getLocation().setX(15);
+		org5.getLocation().setY(10);
+		map.setOrganism(org5);
+		
+		Organism org6 = new Organism(true, 4, 0.0, 1);
+		org6.getLocation().setX(15);
+		org6.getLocation().setY(15);
+		map.setOrganism(org6);
+		
+		Organism org7 = new Organism(true, 4, 0.0, 1);
+		org7.getLocation().setX(10);
+		org7.getLocation().setY(15);
+		map.setOrganism(org7);
+		
+		Organism org8 = new Organism(true, 4, 0.0, 1);
+		org8.getLocation().setX(5);
+		org8.getLocation().setY(15);
+		map.setOrganism(org8);
+		
+		/*Organism org9 = new Organism(true, 4, 0.0, 1);
+		org9.getLocation().setX(5);
+		org9.getLocation().setY(10);
+		map.setOrganism(org9);*/
+		
+		Coordinate end = new Coordinate(26, 13);
+		StarQueue<Coordinate> sq = LocationMap.adjacentCoordinates(10, 10, 1,
+				end, org1.getId());
+		System.out.println("queue size: " + sq.size());
+		Coordinate coord = sq.remove();
+		System.out.println("To move to: " + coord.getX() + ", " + coord.getY());
+		assertEquals(9, coord.getX());
+		assertEquals(10, coord.getY());
+		map.clearLocations();
 	}
 }

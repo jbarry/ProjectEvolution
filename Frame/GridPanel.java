@@ -1258,8 +1258,9 @@ public class GridPanel extends JPanel {
 		mainLoop: for (int i = 0; i < shuffleIds.size(); i++) { // mainLoop.
 			// Get an Organism corresponding the the ids in the shuffleIds list.
 			Organism org = organisms.get(shuffleIds.get(i));
-			for (int l = 0; l < numActions; l++) {
-				org.incHlthTot(); // sample for fitness function.
+			for (int l = 0; l < numActions; l++) { // numActions loop.
+				// Sample for fitness function.
+				org.incHlthTot(); 
 				// depleteValue is the value to decrease the Organism's health
 				// by at each time step.
 				double depleteValue = org.getMaxHealth()
@@ -1272,16 +1273,21 @@ public class GridPanel extends JPanel {
 					continue mainLoop;
 				}
 				Chromosome chrome = org.getChromosome();
-				Gene currentGene = chrome.getGene(0); // First Gene in Chromosome.
-				// The food source that will be the final destination of the Astar search.
+				// First Gene in Chromosome.
+				Gene currentGene = chrome.getGene(0);
 				// Get the first food.
 				Food foodDestination = food.get(0);
-				Pair<Integer, Double> bestEval = null;
-				bestEval = new Pair<Integer, Double>(0,
+				// bestEval is used to hold the value of the evaluation
+				// and the food source that the evaluation corresponds to.
+				Pair<Integer, Double> bestEval = new Pair<Integer, Double>(0,
 						evaluateGeneFoodInRangeAstar(org, currentGene,
 								foodDestination));
+				// Closed list.
+				ArrayList<Coordinate> closedList = new ArrayList<Coordinate>();
+				// lasFoodSourceIndex holds the index of the last food source
+				// that was visited.
+				Integer lastFoodSourceIndex = 0;
 				for (int k = 1; k < food.size(); k++) { // loopFood.
-					
 					double aResult = evaluateGeneFoodInRangeAstar(org, currentGene,
 							food.get(k));
 					/*System.out.println("on food" + k);
@@ -1295,8 +1301,19 @@ public class GridPanel extends JPanel {
 				} // End loopFood.
 				/*System.out.println("foodToMoveto id: " + foodDestination.getId());
 				System.out.println();*/
-				moveAstar(org, bestEval, foodDestination);
-			}
+				/*moveAstar(org, bestEval, foodDestination);*/
+				// This mechanism decides whether or not to clear the closed
+				// list. The closed list should clear if the organism has
+				// decided to make its way towards another food source. If it
+				// decides to stay on the path to the same food source, then it
+				// needs to keep its list of previously visited
+				// nodes.
+				if (lastFoodSourceIndex != bestEval.getFst()) {
+					closedList.clear();
+					lastFoodSourceIndex = bestEval.getFst();
+				}
+				moveAstarClosedList(org, bestEval, foodDestination, closedList);
+			} // End NumAction Loop.
 		} // End mainLoop.
 	}
 
@@ -1310,6 +1327,26 @@ public class GridPanel extends JPanel {
 			Food aFoodDestination) {
 		Coordinate nextMove = LocationMap.search(org.getLocation(),
 				aFoodDestination.getLocation(), org.getId());
+		org.printId();
+		org.printLocation();
+		System.out.println("Next move: " + nextMove.getX() + ", " + nextMove.getY());
+		org.moveTo(nextMove);
+		org.countStep();
+	}
+	
+	/**
+	 * Moves the organism using Astar.
+	 * @param org
+	 * @param bestEval
+	 * @param aFoodDestination
+	 */
+	private void moveAstarClosedList(Organism org, Pair<Integer, Double> bestEval,
+			Food aFoodDestination, ArrayList<Coordinate> aClosedList) {
+		Coordinate nextMove = LocationMap.search(org.getLocation(),
+				aFoodDestination.getLocation(), org.getId());
+		org.printId();
+		org.printLocation();
+		System.out.println("Next move: " + nextMove.getX() + ", " + nextMove.getY());
 		org.moveTo(nextMove);
 		org.countStep();
 	}

@@ -2,14 +2,16 @@ package Interactive;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.LinkedList;
-import java.util.Random;
-import java.util.ArrayList;
-import Frame.*;
+
+import Frame.Coordinate;
+import Frame.LocationMap;
 
 public class Organism extends Matter {
 	
