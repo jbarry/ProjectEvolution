@@ -69,10 +69,6 @@ import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.plaf.metal.DefaultMetalTheme;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.metal.MetalTheme;
-
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
-
 import Interactive.*;
 
 /**
