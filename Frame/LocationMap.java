@@ -362,6 +362,36 @@ public class LocationMap {
 			return adjacentList.remove();
 		return start;
 	}
+	
+	/**
+	 * Returns the next position produced by the Astar search algorithm.
+	 * 
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	public static StarQueue<Coordinate> searchWithList(Coordinate start, Coordinate end, int anId) {
+		// openList is a priority queue organized based
+		// on shortest distance to end node.
+		/* Coordinate endCoordinate = (Coordinate) end.spawnCoordinate(0); */
+		end.setPriority(0);
+		start.setPriority(distance(start.getX(), start.getY(), end.getX(),
+				end.getY()));
+		// for each surrounding position.
+		// assign priority, then add to queue.
+		Coordinate current = start;
+		StarQueue<Coordinate> adjacentList = adjacentCoordinates(
+				current.getX(), current.getY(), 1, end, anId);
+		/*StarQueue<Coordinate> adjacentList = adjacentCoordinatesByPixel(
+				current.getX(), current.getY(), end, anId);*/
+		// If there are available positions to move to.
+		// Then remove the top one. Which will be the best place to move to.
+		if (!adjacentList.isEmpty())
+			return adjacentList;
+		StarQueue<Coordinate> listWithSelfCoordinate = new StarQueue<Coordinate>();
+		listWithSelfCoordinate.add(start);
+		return listWithSelfCoordinate;
+	}
 
 	/**
 	 * Only adds the adjacent nodes that don't have obstacles in them.

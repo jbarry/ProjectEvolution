@@ -173,6 +173,10 @@ public class GEP {
 		System.out.println();
 		return fitness;
 	}
+	
+	public double fitnessDistanceTraveled(Organism org) {
+		return org.getSteps();
+	}
 	/**
 	 * This method assigns a double representing fitness of each organism.
 	 *
@@ -629,7 +633,7 @@ gep.printOrgListIdsAndFitness(afterTournOrgs);*/
 		while (!competitors.isEmpty()) {
 			Chromosome chrom1 = competitors.remove(ran.nextInt(competitors.size()));
 			Chromosome chrom2 = competitors.remove(ran.nextInt(competitors.size()));
-			System.out.println(chrom1.getId() + " <=> " + chrom2.getId());
+			/*System.out.println(chrom1.getId() + " <=> " + chrom2.getId());*/
 			pairList.add(new Pair<Chromosome, Chromosome>(chrom1, chrom2));
 		}
 		return pairList;

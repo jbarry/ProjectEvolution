@@ -548,9 +548,8 @@ public class Organism extends Matter {
 		healthyFood.clear();
 		poisonEatSuccess = 0;
 		healthyEatSuccess = 0;
-		numAttacked=0;
-		numPushed=0;
-
+		numAttacked = 0;
+		numPushed = 0;
 	}
 
 	public void goBack(int generation) {
@@ -685,5 +684,13 @@ public class Organism extends Matter {
 	@Override
 	public char getType() {
 		return 'o';
+	}
+	
+	public int getSteps() {
+		return steps;
+	}
+
+	public void setSteps(int steps) {
+		this.steps = steps;
 	}
 }

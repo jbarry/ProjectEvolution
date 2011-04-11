@@ -125,4 +125,8 @@ public class Coordinate implements Comparable<Coordinate>{
 			return 0;
 		else return -1;
 	}
+	
+	public void printLocation() {
+		System.out.println("Location: " + x + ", " + y);
+	}
 }
