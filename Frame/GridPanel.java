@@ -55,7 +55,7 @@ public class GridPanel extends JPanel {
 	private ArrayList<Integer> shuffleIds;
 	private ArrayList<String> shuffleStringIds;
 	private int lengthTimeStep = 100;
-	private int lengthGeneration = 100;
+	private int lengthGeneration = 10;
 	private int timePassed = 0;
 	private int trialsPerGen = 1;
 	public int trialNum = 1;
@@ -527,8 +527,7 @@ public class GridPanel extends JPanel {
 		if (!GUI.genPanel.resumeHasNotBeenClicked()) {
 			GUI.genPanel.enableResumeSimulation();
 			gui.toggleAllPauses(false);
-		} 
-		else {
+		} else {
 			t.start();
 			GUI.genPanel.newGeneration();
 			repaint();

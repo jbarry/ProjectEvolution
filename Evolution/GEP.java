@@ -253,36 +253,48 @@ public class GEP {
 		// List to hold the Elite individuals.
 		LinkedList<Chromosome> eliteList = new LinkedList<Chromosome>();
 		// Get the most elite indiv or individuals.
+		System.out.println("1st");
 		if (doElitism)
 			eliteList = (LinkedList<Chromosome>) assembleElites((LinkedList<Organism>) orgList
 					.clone()); // Called on a clone of the orgList because
 		// ordering the original list may be a
 		// detriment to randomization.
 		LinkedList<Chromosome> chromList = makeChromList(tournament(partnerSelect(orgList)));
+		System.out.println("2nd");
 		rotation(chromList);
+		System.out.println("3rd");
 		mutation(chromList);
 		// Pair up Chromosomes in preparation
 		// for 1-point cross over.
+		System.out.println("4th");
 		LinkedList<Pair<Chromosome, Chromosome>> pairList = mateSelect(chromList);
+		System.out.println("5th");
 		onePointCrossOver(pairList);
+		System.out.println("6th");
 		// Pair up Chromosomes again in preparation
 		// for 2-point cross over.
 		pairList = mateSelect(makeChrmListFrmPair(pairList));
+		System.out.println("7th");
 		// 2-point cross over.
 		onePointCrossOver(pairList);
+		System.out.println("8th");
 		onePointCrossOver(pairList);
+		System.out.println("9");
 		LinkedList<Chromosome> finalChromes = makeChrmListFrmPair(pairList);
-
+		System.out.println("10");
 		// Proceed with elitism if true.
 		if (eliteList.size() != 0)
 			transferElites(finalChromes, eliteList);
+		System.out.println("11");
 		// Update the evaluations of the genes.
 		for (Chromosome chrom : chromList)
 			for (Gene gene : chrom.subListGene(0, chrom.size()))
 				gene.updateEvaledList();
+		System.out.println("12");
 		// TODO: May have to put org id's and chrom id's back together.
 		for (int i = 0; i < orgList.size(); i++)
 			orgList.get(i).setChromosome(chromList.get(i));
+		System.out.println("13");
 		return orgList;
 	}
 
@@ -673,7 +685,6 @@ gep.printOrgListIdsAndFitness(afterTournOrgs);*/
 	 */
 	public void onePointCrossOver(
 			LinkedList<Pair<Chromosome, Chromosome>> aPairList) {
-
 		for (int i = 0; i < aPairList.size(); i++)
 			if (ran.nextDouble() < onePtProb)
 				aPairList.get(i).getFst().crossOver(aPairList.get(i).getSnd());
