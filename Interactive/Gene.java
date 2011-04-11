@@ -21,7 +21,7 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 	private Expr evaledList;
 	
 	
-	//Ctor that does not inform the init of the genes.
+	// Ctor that does not inform the init of the genes.
 	public Gene(boolean boo, int aLenGenes) {
 		lenGenes = aLenGenes;
 		symList = new LinkedList<Character>();
@@ -39,25 +39,42 @@ public class Gene<A extends Crossable> extends Genetic implements Crossable<Gene
 		symbols.add('e');
 		symbols.add('f');
 		symbols.add('g');
-		terminals.add('a'); //x distance
-		/*terminals.add('b');*/ //y distance
-		terminals.add('c'); //organisms near food source
-		terminals.add('d'); //organism's health
-		terminals.add('e'); //food remaining in food source
-		terminals.add('f'); //if poison = -1 normalized, otherwise 1 normalized
-		terminals.add('g'); //numOrganisms surrounding this organism
+		terminals.add('a'); // x distance
+		/*terminals.add('b');*/ // y distance
+		terminals.add('c'); // organisms near food source
+		terminals.add('d'); // organism's health
+		terminals.add('e'); // food remaining in food source
+		terminals.add('f'); // if poison = -1 normalized, otherwise 1 normalized
+		terminals.add('g'); // numOrganisms surrounding this organism
 		Collections.shuffle(symbols);
 		ran = new Random();
 		for (int i = 0; i < aLenGenes; i++) 
 			symList.add(symbols.get(ran.nextInt(symbols.size())));
-		//Ensure that there is always at least one variable
-		//in the Gene.
+		// Ensure that there is always at least one variable
+		// in the Gene.
 		int variable = 0;
-		for (int i = 0; i < aLenGenes; i++) 
-			if(symList.get(i).equals("a")) variable++;
+		for (int i = 0; i < aLenGenes; i++) {
+			if (symList.get(i).equals('a'))
+				variable++;
+			if (symList.get(i).equals('b'))
+				variable++;
+			if (symList.get(i).equals('c'))
+				variable++;
+			if (symList.get(i).equals('d'))
+				variable++;
+			if (symList.get(i).equals('e'))
+				variable++;
+			if (symList.get(i).equals('f'))
+				variable++;
+			if (symList.get(i).equals('g'))
+				variable++;
+		}
 		if (variable == 0) 
 			symList.set(ran.nextInt(symList.size()),
 				terminals.get(ran.nextInt(terminals.size())));
+		// Make the eval list into a string array.
+		// otherwise it cannot be handled.
+		// TODO: program to interfaces.
 		evaledList = Eval.evaluation(makeStringArray());
 	}
 	

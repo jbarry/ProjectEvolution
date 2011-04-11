@@ -55,7 +55,7 @@ public class GridPanel extends JPanel {
 	private ArrayList<Integer> shuffleIds;
 	private ArrayList<String> shuffleStringIds;
 	private int lengthTimeStep = 100;
-	private int lengthGeneration = 10;
+	private int lengthGeneration = 200;
 	private int timePassed = 0;
 	private int trialsPerGen = 1;
 	public int trialNum = 1;
@@ -98,7 +98,6 @@ public class GridPanel extends JPanel {
 				addMouseListener(new MouseListenerClass());
 				t = new javax.swing.Timer(lengthTimeStep, new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						System.out.println("running");
 						if (timePassed < lengthGeneration) {
 							timePassed++;
 							/* simulateStep(); */
@@ -111,7 +110,6 @@ public class GridPanel extends JPanel {
 						} else if (trialNum < trialsPerGen)
 							newTrial();
 						else {
-							System.out.println("newGen");
 							/*newGeneration();*/
 							newGenerationAstar();
 						}
@@ -1203,11 +1201,7 @@ public class GridPanel extends JPanel {
 		org.moveTo(nextMove);
 		aClosedList.add(nextMove);
 		/*System.out.println("Added to closedList: " + aClosedList.get(0));*/
-		
-		if (nextMove.getX() != org.getLocation().getX()
-				&& nextMove.getY() != org.getLocation().getY()) {
-			org.countStep();
-		}
+		org.countStep();
 	}
 
 	private boolean doActionAstar(Organism org, Pair<Integer, Double> bestEval,
