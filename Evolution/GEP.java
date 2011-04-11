@@ -254,9 +254,11 @@ public class GEP {
 		// List to hold the Elite individuals.
 		LinkedList<Chromosome> eliteList = new LinkedList<Chromosome>();
 		// Get the most elite indiv or individuals.
-		if (doElitism)
+		if (doElitism) {
+			// Called on a clone of the orgList because
 			eliteList = (LinkedList<Chromosome>) assembleElites((LinkedList<Organism>) orgList
-					.clone()); // Called on a clone of the orgList because
+					.clone()); 
+		}
 		// ordering the original list may be a
 		// detriment to randomization.
 		LinkedList<Chromosome> chromList = makeChromList(tournament(partnerSelect(orgList)));
@@ -274,7 +276,7 @@ public class GEP {
 		onePointCrossOver(pairList);
 		LinkedList<Chromosome> finalChromes = makeChrmListFrmPair(pairList);
 		// Proceed with elitism if true.
-		if (eliteList.size() != 0)
+		if (doElitism)
 			transferElites(finalChromes, eliteList);
 		// Update the evaluations of the genes.
 		for (Chromosome chrom : chromList)
@@ -293,19 +295,19 @@ public class GEP {
 	 */
 	public LinkedList<Organism> newGenerationTest() {
 		printOrgListIdsAndFitness(orgList);
+		System.out.println("The chromosomes in the original gene list.");
+		printGenes(makeChromList(orgList));
 		// List to hold the Elite individuals.
 		LinkedList<Chromosome> eliteList = new LinkedList<Chromosome>();
 		// Get the most elite indiv or individuals.
-		if (doElitism)
+		if (doElitism) {
 			eliteList = (LinkedList<Chromosome>) assembleElitesTest((LinkedList<Organism>) orgList
 					.clone()); // Called on a clone of the orgList because
-		// ordering the original list may be a
-		// detriment to randomization.
-
-		System.out.println("The elites are: ");
-		printChromeListIds(eliteList);
-		System.out.println("The elites genes are: ");
-		printChromGenes(eliteList);
+			System.out.println("The elites are: ");
+			printChromeListIds(eliteList);
+			System.out.println("The elites genes are: ");
+			printChromGenes(eliteList);
+		}
 
 		// PRINT ORIGINAL ORGLIST.
 		System.out.println("Original orgList");
@@ -314,7 +316,8 @@ public class GEP {
 		// TEST PARTNERSELECT.
 		System.out.println("Testing Partner Select");
 		System.out.println();
-		out.println("orgListSize" + getOrgList().size()); out.println();
+		out.println("orgListSize" + getOrgList().size()); 
+		out.println();
 		LinkedList<Pair<Organism, Organism>> partners = partnerSelect(getOrgList());
 
 		// PRINT THE IDS OF THE PAIR OF ORGS AFTER
@@ -327,15 +330,16 @@ public class GEP {
 		System.out.println("afterTournOrgs size: " + afterTournOrgs.size());
 
 		// TOURNAMENT WITH PRINT.
-		/*LinkedList<Organism> afterTournOrgs = gep.tournamentWithPrint(partners);
-System.out.println();
-System.out.println("afterTournOrgs size: " + afterTournOrgs.size());*/
+		/*LinkedList<Organism> afterTournOrgs =
+		gep.tournamentWithPrint(partners);
+		System.out.println();
+		System.out.println("afterTournOrgs size: " + afterTournOrgs.size());*/
 
 		// HANDICAP TOURNAMENT WITH PRINT.
 		/*LinkedList<Organism> afterTournOrgs =
-gep.tournamentHandicapWithPrint(partners);
-System.out.println("After the tournament");
-gep.printOrgListIdsAndFitness(afterTournOrgs);*/
+		gep.tournamentHandicapWithPrint(partners);
+		System.out.println("After the tournament");
+		gep.printOrgListIdsAndFitness(afterTournOrgs);*/
 
 		// TEST MATESELECT
 		// MAKE A NEW CHROMLIST.
@@ -347,11 +351,14 @@ gep.printOrgListIdsAndFitness(afterTournOrgs);*/
 		printChromeListIds(chromList);
 
 		// MUTATION AND ROTATION.
+		System.out.println("Before rotation");
+		printGenes(chromList);
 		rotation(chromList);
-		printChromeListIds(chromList);
+		System.out.println("After rotation");
+		printGenes(chromList);
 		mutation(chromList);
-		System.out.println("After rot and mut:");
-		printChromeListIds(chromList);
+		System.out.println("After mutation");
+		printGenes(chromList);
 
 
 		// Pair up Chromosomes in preparation
@@ -369,24 +376,24 @@ gep.printOrgListIdsAndFitness(afterTournOrgs);*/
 		// Pair up Chromosomes again in preparation
 		// for 2-point cross over.
 		pairList = mateSelect(makeChrmListFrmPair(pairList));
-		System.out.println("ids after 1 point");
-		printChromeListIds(makeChrmListFrmPair(pairList));
+		/*System.out.println("ids after 1 point");
+		printChromeListIds(makeChrmListFrmPair(pairList));*/
 
 		// 2-POINT CROSS OVER.
-		System.out.println("After 2-point");
 		onePointCrossOver(pairList);
 		onePointCrossOver(pairList);
 		LinkedList<Chromosome> finalChromes = makeChrmListFrmPair(pairList);
-
-		printChromeListIds(finalChromes);
+		System.out.println("After 2-point");
+		printGenes(finalChromes);
+		/*printChromeListIds(finalChromes);*/
 
 		// PROCEED WITH ELITISM IF TRUE.
-		if (eliteList.size() != 0)
+		if (doElitism) {
 			transferElites(finalChromes, eliteList);
-		printChromeListIds(finalChromes);
-		System.out.println("and the genes are");
-		printChromGenes(finalChromes);
-
+			printChromeListIds(finalChromes);
+			System.out.println("After tranferring the elites.");
+			printChromGenes(finalChromes);
+		}
 		// UPDATE THE EVALUATIONS OF THE GENES.
 		for (Chromosome chrom : chromList)
 			for (Gene gene : chrom.subListGene(0, chrom.size()))
@@ -518,12 +525,14 @@ gep.printOrgListIdsAndFitness(afterTournOrgs);*/
 			LinkedList<Organism> population) {
 		// pairList: list that will recieve the pairs
 		// of partners.
-		LinkedList<Pair<Organism, Organism>> pairList = new LinkedList<Pair<Organism, Organism>>();
+		LinkedList<Pair<Organism, Organism>> pairList =
+			new LinkedList<Pair<Organism, Organism>>();
 		// notSeenMap:
 		// key: Each org from population.
 		// val: A list of organisms that they have not
 		// seen yet.
-		HashMap<Organism, LinkedList<Organism>> notSeenMap = new HashMap<Organism, LinkedList<Organism>>();
+		HashMap<Organism, LinkedList<Organism>> notSeenMap =
+			new HashMap<Organism, LinkedList<Organism>>();
 		// Iterate through population, initializing the
 		// notSeenMap with keys, and making all the values
 		// a clone of the original population with
@@ -539,6 +548,8 @@ gep.printOrgListIdsAndFitness(afterTournOrgs);*/
 			// For the current org from the population list,
 			// get his notSeenList from the notSeenMap.
 			LinkedList<Organism> selection = notSeenMap.get(partner1);
+			if (selection.isEmpty())
+				selection = (LinkedList<Organism>) population.clone();
 			// Select a random individual from the notSeenList
 			// Then remove that individual.
 			Organism partner2 = selection.remove(ran.nextInt(selection.size()));
@@ -946,22 +957,25 @@ gep.printOrgListIdsAndFitness(afterTournOrgs);*/
 		LinkedList<Organism> orgList = new LinkedList<Organism>();
 		Random r = new Random();
 
-		// CASE: ODD NUMBER OF ORGANISMS.
-		/*for (int i = 0; i < 13; i++)
-		orgList.add(new Organism(true, 4, r.nextInt(20), i));*/
-
 		// CASE: EVEN NUMBER OF ORGANISMS.
-		for (int i = 0; i < 4; i++)
-			orgList.add(new Organism(true, 4, r.nextInt(20), i));
+		/*for (int i = 0; i < 4; i++)
+			orgList.add(new Organism(true, 4, r.nextInt(20), i));*/
 
 		/* GEP gep = new GEP(orgList, 0.75, 0.01, 0.01, 0.75, 0.75, true); */
 		/* GEP gep = new GEP(orgList, 0.10, 0.01, 0.01, 0.75, 0.75, true); */
 		/*GEP gep = new GEP(orgList, 0.10, 0.01, 0.01, 0.75, 0.75, true);*/
-		GEP gep = new GEP(orgList, 1.00, 1.00, 1.00, 1.00, 1.00, 2, false, true); // Elitism ctor.
-		/*gep.newGenerationTest();*/
-		gep.newGenerationTest2();
-		/*
-		// PRINT ORIGINAL ORGLIST.
+		/*GEP gep = new GEP(orgList, 1.00, 1.00, 1.00, 1.00, 1.00, 2, false, true); // Elitism ctor.
+		gep.newGenerationTest();*/
+		
+		// CASE: ODD NUMBER OF ORGANISMS.
+		LinkedList<Organism> orgList2 = new LinkedList<Organism>();
+		for (int i = 0; i < 5; i++)
+			orgList2.add(new Organism(true, 4, r.nextInt(20), i));
+		GEP gep2 = new GEP(orgList2, 1.00, 1.00, 1.00, 1.00, 1.00, 2, false, false); // Elitism ctor.
+		gep2.newGenerationTest();
+		/*gep.newGenerationTest2();*/
+		
+		/* // PRINT ORIGINAL ORGLIST.
 		System.out.println("Original orgList");
 		gep.printOrgListIdsAndFitness(gep.getOrgList());
 		// TEST PARTNERSELECT.

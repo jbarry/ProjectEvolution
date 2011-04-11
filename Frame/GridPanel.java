@@ -105,7 +105,7 @@ public class GridPanel extends JPanel {
 							/*simulateStep2Test(4);*/
 							/*simulateStepAstar(1);*/
 							/*simulateStepAstarWithoutEat(4);*/
-							simulateStepAstarWithoutEatWithClosedList(6);
+							simulateStepAstarWithoutEatWithClosedList(7);
 							repaint();
 						} else if (trialNum < trialsPerGen)
 							newTrial();
@@ -940,7 +940,7 @@ public class GridPanel extends JPanel {
 			else
 				food.add(new PoisonousFood(100.00, i, 2));
 		locationMap.placeFoods(food);
-		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
+		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75, 1, false, false);
 	}
 
 	private void simulateStepAstar(int numActions) {
