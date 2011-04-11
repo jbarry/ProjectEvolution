@@ -246,8 +246,8 @@ public class LocationMapTest {
 		Organism org2 = new Organism(true, 4, 0.0, 1);
 		org2.getLocation().setX(4);
 		org2.getLocation().setY(4);
-		map.placeOrganism(org1);
-		map.placeOrganism(org2);
+		map.setOrganism(org1);
+		map.setOrganism(org2);
 		Assert.assertTrue(!LocationMap.hasObstacle(9, 9, 0));
 		map.clearLocations();
 	}
@@ -258,42 +258,42 @@ public class LocationMapTest {
 		Organism org1 = new Organism(true, 4, 0.0, 0);
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
-		map.placeOrganism(org1);
+		map.setOrganism(org1);
 		
 		Organism org2 = new Organism(true, 4, 0.0, 1);
 		org2.getLocation().setX(5);
 		org2.getLocation().setY(5);
-		map.placeOrganism(org2);
+		map.setOrganism(org2);
 		
 		Organism org3 = new Organism(true, 4, 0.0, 1);
 		org3.getLocation().setX(10);
 		org3.getLocation().setY(5);
-		map.placeOrganism(org3);
+		map.setOrganism(org3);
 		
 		Organism org4 = new Organism(true, 4, 0.0, 1);
 		org4.getLocation().setX(15);
 		org4.getLocation().setY(5);
-		map.placeOrganism(org4);
+		map.setOrganism(org4);
 		
 		Organism org5 = new Organism(true, 4, 0.0, 1);
 		org5.getLocation().setX(15);
 		org5.getLocation().setY(10);
-		map.placeOrganism(org5);
+		map.setOrganism(org5);
 		
 		Organism org6 = new Organism(true, 4, 0.0, 1);
 		org6.getLocation().setX(15);
 		org6.getLocation().setY(15);
-		map.placeOrganism(org6);
+		map.setOrganism(org6);
 		
 		Organism org7 = new Organism(true, 4, 0.0, 1);
 		org7.getLocation().setX(5);
 		org7.getLocation().setY(15);
-		map.placeOrganism(org7);
+		map.setOrganism(org7);
 		
 		Organism org8 = new Organism(true, 4, 0.0, 1);
 		org8.getLocation().setX(5);
 		org8.getLocation().setY(10);
-		map.placeOrganism(org8);
+		map.setOrganism(org8);
 		
 		Coordinate end = new Coordinate(34, 9);
 		StarQueue<Coordinate> sq = LocationMap.adjacentCoordinates(10, 10, 1,
@@ -310,37 +310,37 @@ public class LocationMapTest {
 		Organism org1 = new Organism(true, 4, 0.0, 0);
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
-		map.placeOrganism(org1);
+		map.setOrganism(org1);
 		
 		Organism org2 = new Organism(true, 4, 0.0, 1);
 		org2.getLocation().setX(5);
 		org2.getLocation().setY(5);
-		map.placeOrganism(org2);
+		map.setOrganism(org2);
 		
 		Organism org3 = new Organism(true, 4, 0.0, 1);
 		org3.getLocation().setX(10);
 		org3.getLocation().setY(5);
-		map.placeOrganism(org3);
+		map.setOrganism(org3);
 		
 		Organism org4 = new Organism(true, 4, 0.0, 1);
 		org4.getLocation().setX(15);
 		org4.getLocation().setY(5);
-		map.placeOrganism(org4);
+		map.setOrganism(org4);
 		
 		Organism org5 = new Organism(true, 4, 0.0, 1);
 		org5.getLocation().setX(15);
 		org5.getLocation().setY(10);
-		map.placeOrganism(org5);
+		map.setOrganism(org5);
 		
 		Organism org6 = new Organism(true, 4, 0.0, 1);
 		org6.getLocation().setX(15);
 		org6.getLocation().setY(15);
-		map.placeOrganism(org6);
+		map.setOrganism(org6);
 		
 		Organism org7 = new Organism(true, 4, 0.0, 1);
 		org7.getLocation().setX(5);
 		org7.getLocation().setY(15);
-		map.placeOrganism(org7);
+		map.setOrganism(org7);
 		
 		/*Organism org8 = new Organism(true, 4, 0.0, 1);
 		org8.getLocation().setX(5);

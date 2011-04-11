@@ -282,7 +282,7 @@ public class LocationMap {
 	 * 
 	 * @param orgList
 	 */
-	public void placeOrganism(Organism org) {
+	public void setOrganism(Organism org) {
 		setWrapAround(org.getLocation(), org.getWidth(), org.getHeight());
 		setRange(org.getLocation(), org.getWidth(), org.getHeight(), 'o', org.getId());
 	}
@@ -293,7 +293,7 @@ public class LocationMap {
 	 * 
 	 * @param orgList
 	 */
-	public void setOrganism(Organism org, Coordinate c) {
+	public void placeOrganism(Organism org, Coordinate c) {
 		place(org.getLocation(), org.getWidth(), org.getHeight(), org.getId(),
 				org.getType());
 	}

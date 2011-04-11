@@ -175,8 +175,8 @@ public class Organism extends Matter {
 		// Set current location available.
 		map.setRangeToBlank(width, height, location.getX(), location.getY());
 		map.setWrapAround(location, width, height);
-		location.setY(c.getX());
-		location.setX(c.getY());
+		location.setX(c.getX());
+		location.setY(c.getY());
 		// Make current location unavailable.
 		map.setRange(location, width, height, 'o', id);
 	}

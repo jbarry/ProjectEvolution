@@ -1157,18 +1157,13 @@ public class GridPanel extends JPanel {
 			/*Organism o = new Organism(100.00, 11, i);*/
 			/*Organism o = new Organism(100.00, 2, i);*/
 			Organism o = new Organism(100.00, 1, i);
+			locationMap.placeOrganism(o, o.getLocation());
 			organisms.add(o);
 			shuffleIds.add(i);
 			/*o.addStartingLocation();*/
 			/*o.addChromosome();*/
 		}
-		locationMap.placeOrganisms(organisms);
-		for (Organism org : organisms)
-			if (org.getLocation().getX() > 590
-					|| org.getLocation().getY() > 590) {
-				System.out.println("x: " + org.getLocation().getX());
-				System.out.println("y: " + org.getLocation().getY());
-			}
+		/*locationMap.placeOrganisms(organisms);*/
 		for (int i = 0; i < numFoodSources * 2; i++)
 			if (ran.nextBoolean())
 				food.add(new HealthyFood(100.00, i, 2));
@@ -1311,17 +1306,11 @@ public class GridPanel extends JPanel {
 	 * @param bestEval
 	 * @param aFoodDestination
 	 */
-	// FOR TESTING.
 	private void moveAstar(Organism org, Pair<Integer, Double> bestEval,
 			Food aFoodDestination) {
-		
 		Coordinate nextMove = LocationMap.search(org.getLocation(),
 				aFoodDestination.getLocation(), org.getId());
-		/*System.out.println("current location");*/
-		/*org.printLocation();*/
-		/*System.out.println("nextMove: " + nextMove.getX() + ", " + nextMove.getY());*/
 		org.moveTo(nextMove);
-		/*org.printLocation();*/
 		org.countStep();
 	}
 
