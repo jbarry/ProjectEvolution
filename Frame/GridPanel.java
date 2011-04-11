@@ -1202,6 +1202,7 @@ public class GridPanel extends JPanel {
 		aClosedList.add(nextMove);
 		/*System.out.println("Added to closedList: " + aClosedList.get(0));*/
 		org.countStep();
+		repaint();
 	}
 
 	private boolean doActionAstar(Organism org, Pair<Integer, Double> bestEval,
