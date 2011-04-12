@@ -15,7 +15,6 @@
 package Frame;
 
 import java.applet.Applet;
-import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.FileDialog;
@@ -76,7 +75,7 @@ import Interactive.*;
  * perform any game logic.
  */
 @SuppressWarnings("all")
-public class GUI extends Container{
+public class GUI extends Container {
 	// ------------------------------------------------------------------------------------
 	// --globals--
 	// ------------------------------------------------------------------------------------
@@ -97,13 +96,13 @@ public class GUI extends Container{
 	private JMenuItem pause;
 	private JMenuItem exitApplication;
 	private JMenuItem about;
-	
+
 	private JMenu selectMapMenu;
 	private JMenuItem defaultMap;
-	private JMenuItem grassMap;	
-	private JMenuItem sandMap;		
-	private JMenuItem waterMap;			
-	private JMenuItem moonMap;			
+	private JMenuItem grassMap;
+	private JMenuItem sandMap;
+	private JMenuItem waterMap;
+	private JMenuItem moonMap;
 	private JMenuItem middleEarthMap;
 
 	private OptionsPanel optionsPanel;
@@ -114,73 +113,76 @@ public class GUI extends Container{
 	private MonitorPanel monitorPanel;
 	public static GenerationPanel genPanel;
 	private PercentagePanel percentagePanel;
-	
+
 	private boolean emptySimulation = true;
 
 	// ------------------------------------------------------------------------------------
 	// --constructors--
 	// ------------------------------------------------------------------------------------
-	public GUI(){
+	public GUI() {
 		/** Handle UI override for Frame */
-		UIManager ui = new UIManager();     
-		
-        try {
-    	    // Set System L&F.
-        	ui.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-            
-            //allow for fancy frame and dialog boxes.
-    		JFrame.setDefaultLookAndFeelDecorated(true);
-    		JDialog.setDefaultLookAndFeelDecorated(true);
-        } 
-        catch (UnsupportedLookAndFeelException e) {
-        }
-        catch (ClassNotFoundException e) {
-        }
-        catch (InstantiationException e) {
-        }
-        catch (IllegalAccessException e) {
-        }
-		
-        //Gradients
-        List<Object> gradients = new ArrayList<Object>(5);
-        gradients.add(0.00f);
-        gradients.add(0.00f);
-        gradients.add(new Color(0xC1C1C1));
-        gradients.add(new Color(0xFFFFFF));
-        gradients.add(new Color(0x5C5D5C));
-        
-        //UI HashMap Overrides
-        ui.put("Button.background", new Color(255, 255, 255));  
-        ui.put("Button.foreground", new Color(0, 0, 0));
-        ui.put("Button.gradient", gradients);
-        ui.put("Button.select", new Color(175, 175, 175));  
-        
-        ui.put("Label.foreground", new Color(0, 0, 0));
-        
+		UIManager ui = new UIManager();
+
+		try {
+			// Set System L&F.
+			ui.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+
+			// allow for fancy frame and dialog boxes.
+			JFrame.setDefaultLookAndFeelDecorated(true);
+			JDialog.setDefaultLookAndFeelDecorated(true);
+		} catch (UnsupportedLookAndFeelException e) {
+		} catch (ClassNotFoundException e) {
+		} catch (InstantiationException e) {
+		} catch (IllegalAccessException e) {
+		}
+
+		// Gradients
+		List<Object> gradients = new ArrayList<Object>(5);
+		gradients.add(0.00f);
+		gradients.add(0.00f);
+		gradients.add(new Color(0xC1C1C1));
+		gradients.add(new Color(0xFFFFFF));
+		gradients.add(new Color(0x5C5D5C));
+
+		// UI HashMap Overrides
+		ui.put("Button.background", new Color(255, 255, 255));
+		ui.put("Button.foreground", new Color(0, 0, 0));
+		ui.put("Button.gradient", gradients);
+		ui.put("Button.select", new Color(175, 175, 175));
+
+		ui.put("Label.foreground", new Color(0, 0, 0));
+
 		ui.put("Menu.selectionBackground", new Color(175, 175, 175));
 		ui.put("MenuBar.background", new Color(220, 220, 220));
 		ui.put("MenuBar.foreground", new Color(0, 0, 0));
 		ui.put("MenuItem.selectionBackground", new Color(175, 175, 175));
-		
+
 		ui.put("OptionPane.background", new Color(175, 175, 175));
-		ui.put("OptionPane.errorDialog.titlePane.background", new Color(255, 153, 153)); //redish
-		ui.put("OptionPane.questionDialog.titlePane.background", new Color(153, 204, 153)); //greenish
-		ui.put("OptionPane.warningDialog.titlePane.background", new Color(255, 204, 103)); //yellowish
-		
+		ui.put("OptionPane.errorDialog.titlePane.background", new Color(255,
+				153, 153)); // redish
+		ui.put("OptionPane.questionDialog.titlePane.background", new Color(153,
+				204, 153)); // greenish
+		ui.put("OptionPane.warningDialog.titlePane.background", new Color(255,
+				204, 103)); // yellowish
+
 		ui.put("Panel.background", new Color(175, 175, 175));
-		
+
 		ui.put("RadioButton.background", new Color(175, 175, 175));
 		ui.put("RadioButton.foreground", new Color(0, 0, 0));
-		
-		ui.put("RootPane.frameBorder", BorderFactory.createLineBorder(Color.BLACK, 2));
-        ui.put("RootPane.plainDialogBorder", BorderFactory.createLineBorder(Color.BLACK, 2));
-        ui.put("RootPane.questionDialogBorder", BorderFactory.createLineBorder(Color.BLACK, 2));
-        ui.put("RootPane.warningDialogBorder", BorderFactory.createLineBorder(Color.BLACK, 2));
-       
+
+		ui.put("RootPane.frameBorder",
+				BorderFactory.createLineBorder(Color.BLACK, 2));
+		ui.put("RootPane.plainDialogBorder",
+				BorderFactory.createLineBorder(Color.BLACK, 2));
+		ui.put("RootPane.questionDialogBorder",
+				BorderFactory.createLineBorder(Color.BLACK, 2));
+		ui.put("RootPane.warningDialogBorder",
+				BorderFactory.createLineBorder(Color.BLACK, 2));
+
 		ui.put("Slider.background", new Color(175, 175, 175));
-		
+
 		ui.put("TextArea.foreground", new Color(0, 0, 0));
-        
+
 		/** Create and set jframe attributes */
 		jframe = new JFrame();
 		jframe.setLayout(null);
@@ -190,9 +192,9 @@ public class GUI extends Container{
 		jframe.setFocusable(true);
 		jframe.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		jframe.setTitle("Project Evolution");
-		
+
 		Container pane = jframe.getContentPane();
-		
+
 		KeyListener frameKeyListener = new KeyListener() {
 			@Override
 			public void keyPressed(KeyEvent keyEvent) {
@@ -202,7 +204,7 @@ public class GUI extends Container{
 				case KeyEvent.VK_P: {
 					optionsPanel.eventPause(simulation);
 				}
-				break;
+					break;
 				}
 			}
 
@@ -241,7 +243,7 @@ public class GUI extends Container{
 		pane.addMouseListener(frameMouseListener);
 
 		map = new Map();
-		
+
 		simulation = new GridPanel(this);
 		simulation.setBackground(new Color(230, 230, 230));
 		pane.add(simulation);
@@ -257,7 +259,7 @@ public class GUI extends Container{
 		/** Create Generation Panel */
 		genPanel = new GenerationPanel(simulation, this);
 		pane.add(genPanel);
-		
+
 		/** Create Percentage Panel */
 		percentagePanel = new PercentagePanel(simulation);
 		pane.add(percentagePanel);
@@ -278,10 +280,10 @@ public class GUI extends Container{
 
 		jframe.setJMenuBar(menuBar);
 
-		// new simulation option
+		/** New Simulation Option */
 		newSimulation = new JMenuItem("New Simulation", KeyEvent.VK_N);
 		KeyStroke ctrlNKeyStroke = KeyStroke.getKeyStroke("control N");
-	    newSimulation.setAccelerator(ctrlNKeyStroke);
+		newSimulation.setAccelerator(ctrlNKeyStroke);
 		newSimulation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// initialize GridPanel.
@@ -299,103 +301,102 @@ public class GUI extends Container{
 			}
 		});
 		fileMenu.add(newSimulation);
-		
-		fileMenu.addSeparator();
 
-		//Select custom map
+		/** Select Custom Map */
 		selectMapMenu = new JMenu("Select Map");
-		fileMenu.add(selectMapMenu);
-		
-		//Default map
+		selectMapMenu.setMnemonic(KeyEvent.VK_M);
+		controlMenu.add(selectMapMenu);
+
+		// Default Map
 		defaultMap = new JMenuItem("Default");
-		defaultMap.setLabel("Default");
+		defaultMap.setText("Default");
 		defaultMap.setEnabled(false);
 		defaultMap.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				enableMapItems();
-				map.setCurrMap(defaultMap.getLabel());
+				map.setCurrMap(defaultMap.getText());
 				defaultMap.setEnabled(false);
 			}
 		});
 		selectMapMenu.add(defaultMap);
-		
-		//grass map
+
+		// Grass Map
 		grassMap = new JMenuItem("Grass");
-		grassMap.setLabel("Grass");
+		grassMap.setText("Grass");
 		grassMap.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				enableMapItems();
-				map.setCurrMap(grassMap.getLabel());
+				map.setCurrMap(grassMap.getText());
 				grassMap.setEnabled(false);
-				
+
 			}
 		});
 		selectMapMenu.add(grassMap);
-		
-		//sand map
+
+		// Sand Map
 		sandMap = new JMenuItem("Sand");
-		sandMap.setLabel("Sand");
+		sandMap.setText("Sand");
 		sandMap.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				enableMapItems();
-				map.setCurrMap(sandMap.getLabel());
+				map.setCurrMap(sandMap.getText());
 				sandMap.setEnabled(false);
-				
+
 			}
 		});
 		selectMapMenu.add(sandMap);
-		
-		//water map
+
+		// Water Map
 		waterMap = new JMenuItem("Water");
-		waterMap.setLabel("Water");
+		waterMap.setText("Water");
 		waterMap.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				enableMapItems();
-				map.setCurrMap(waterMap.getLabel());
+				map.setCurrMap(waterMap.getText());
 				waterMap.setEnabled(false);
-				
+
 			}
 		});
 		selectMapMenu.add(waterMap);
-		
-		//moon map
+
+		// Moon Map
 		moonMap = new JMenuItem("Moon");
-		moonMap.setLabel("Moon");
+		moonMap.setText("Moon");
 		moonMap.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				enableMapItems();
-				map.setCurrMap(moonMap.getLabel());
+				map.setCurrMap(moonMap.getText());
 				moonMap.setEnabled(false);
-				
+
 			}
 		});
 		selectMapMenu.add(moonMap);
-		
-		//Middle Earth map
+
+		// Middle Earth Map
 		middleEarthMap = new JMenuItem("Middle Earth");
-		middleEarthMap.setLabel("Middle Earth");
+		middleEarthMap.setText("Middle Earth");
 		middleEarthMap.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				enableMapItems();
-				map.setCurrMap(middleEarthMap.getLabel());
+				map.setCurrMap(middleEarthMap.getText());
 				middleEarthMap.setEnabled(false);
-				
+
 			}
 		});
 		selectMapMenu.add(middleEarthMap);
-		
+
 		fileMenu.addSeparator();
-		
-		// save genes to text file
+
+		/** Save Genes Option */
 		saveGenes = new JMenuItem("Save Genes", KeyEvent.VK_S);
 		KeyStroke ctrlSKeyStroke = KeyStroke.getKeyStroke("control S");
-	    saveGenes.setAccelerator(ctrlSKeyStroke);
+		saveGenes.setAccelerator(ctrlSKeyStroke);
 		saveGenes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (!simulation.isPaused()) {
@@ -407,7 +408,7 @@ public class GUI extends Container{
 		fileMenu.add(saveGenes);
 		saveGenes.setEnabled(false);
 
-		// save configuration from text file
+		/** Save Configuration Option */
 		saveConfig = new JMenuItem("Save Configuration");
 		saveConfig.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -423,10 +424,10 @@ public class GUI extends Container{
 		// separator between groups of JMenuItems
 		fileMenu.addSeparator();
 
-		// load genes from text file
+		/** Load Genes Option */
 		loadGenes = new JMenuItem("Load Genes", KeyEvent.VK_L);
 		KeyStroke ctrlLKeyStroke = KeyStroke.getKeyStroke("control L");
-	    loadGenes.setAccelerator(ctrlLKeyStroke);
+		loadGenes.setAccelerator(ctrlLKeyStroke);
 		loadGenes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (!simulation.isPaused() && !emptySimulation) {
@@ -438,7 +439,7 @@ public class GUI extends Container{
 		fileMenu.add(loadGenes);
 		loadGenes.setEnabled(true);
 
-		// load configuration from text file
+		/** Load Configuration Option */
 		loadConfig = new JMenuItem("Load Configuration");
 		loadConfig.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -454,8 +455,8 @@ public class GUI extends Container{
 
 		// separator between groups of JMenuItems
 		fileMenu.addSeparator();
-		
-		// pause/resume option
+
+		/** Pause/Resume Option */
 		pause = new JMenuItem("Pause/Resume", KeyEvent.VK_P);
 		pause.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -465,7 +466,7 @@ public class GUI extends Container{
 		controlMenu.add(pause);
 		pause.setEnabled(false);
 
-		// exit option
+		/** Exit Option */
 		exitApplication = new JMenuItem("Exit", KeyEvent.VK_X);
 		exitApplication.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -475,25 +476,25 @@ public class GUI extends Container{
 		});
 		fileMenu.add(exitApplication);
 
-		// about option
+		/** About Option */
 		about = new JMenuItem("About...", KeyEvent.VK_A);
 		about.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane
-				.showMessageDialog(
-						jframe,
-						"Project Evolution v. 1.0\n\n"
-						+ "Written By:\n"
-						+ "Justin Barry, Dwight Bell, Ian Gardea, Devin Lam, and Chris Jackey\n\n"
-						+ "This program will simulate basic Darwinism amongst \n"
-						+ "organisms with the same initial conditions. Intelligence is \n"
-						+ "represented through a Robust Gene Expression Program.",
-						"About...", JOptionPane.INFORMATION_MESSAGE);
+						.showMessageDialog(
+								jframe,
+								"Project Evolution v. 1.0\n\n"
+										+ "Written By:\n"
+										+ "Justin Barry, Dwight Bell, Ian Gardea, Devin Lam, and Chris Jackey\n\n"
+										+ "This program will simulate basic Darwinism amongst \n"
+										+ "organisms with the same initial conditions. Intelligence is \n"
+										+ "represented through a Robust Gene Expression Program.",
+								"About...", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		helpMenu.add(about);
 
-		/** set additional frame attributes */
+		/** Set Additional Frame Attributes */
 		jframe.setLocationRelativeTo(null);
 		jframe.setResizable(false);
 		jframe.addWindowListener(new WindowAdapter() {
@@ -501,8 +502,8 @@ public class GUI extends Container{
 				confirmExit();
 			}
 		});
-		
-		//apply LnF (Look and Feel)
+
+		/** Apply LnF (Look and Feel) */
 		SwingUtilities.updateComponentTreeUI(jframe);
 	}
 
@@ -585,53 +586,52 @@ public class GUI extends Container{
 	// ------------------------------------------------------------------------------------
 	// Enablers used in Options Panel
 	// ------------------------------------------------------------------------------------
-	
+
 	public void enableJMenuItemPause() {
 		pause.setEnabled(true);
 	}
-	
-	public void enableJMenuItemSaveGenes(){
+
+	public void enableJMenuItemSaveGenes() {
 		saveGenes.setEnabled(true);
 	}
-	
+
 	public void enableJMenuItemSaveConfig() {
 		saveConfig.setEnabled(true);
 	}
-	
-	public void toggleAllPauses(boolean b){
+
+	public void toggleAllPauses(boolean b) {
 		pause.setEnabled(b);
 		optionsPanel.togglePause(b);
 	}
 
-	
-	public void enableStopGenButton(){
+	public void enableStopGenButton() {
 		genPanel.enableButtons();
 	}
-	
-	public void toggleEmptySimulation(boolean b){
-		if(b){
+
+	public void toggleEmptySimulation(boolean b) {
+		if (b) {
 			emptySimulation = true;
-		}else{
+		} else {
 			emptySimulation = false;
 		}
 	}
-	
-	public boolean isSimulationEmpty(){
-		if (emptySimulation){
+
+	public boolean isSimulationEmpty() {
+		if (emptySimulation) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	public void updatePercentage(double d) {
 		percentagePanel.updatePercentage(d);
 	}
 
-	public Map getMap(){
+	public Map getMap() {
 		return map;
 	}
-	
-	public void enableMapItems(){
+
+	public void enableMapItems() {
 		defaultMap.setEnabled(true);
 		grassMap.setEnabled(true);
 		sandMap.setEnabled(true);
@@ -639,11 +639,11 @@ public class GUI extends Container{
 		moonMap.setEnabled(true);
 		middleEarthMap.setEnabled(true);
 	}
-	
+
 	private void confirmExit() {
 		// Display confirm dialog
-		int confirmed = JOptionPane.showConfirmDialog(jframe, "Exit Simulation?",
-				"Confirm", JOptionPane.YES_NO_OPTION,
+		int confirmed = JOptionPane.showConfirmDialog(jframe,
+				"Exit Simulation?", "Confirm", JOptionPane.YES_NO_OPTION,
 				JOptionPane.WARNING_MESSAGE);
 
 		// Close if user confirmed
@@ -658,8 +658,7 @@ public class GUI extends Container{
 
 		LinkedList<Organism> tempOrgs;
 		tempOrgs = simulation.getOrganisms();
-		int geneLength = tempOrgs.get(0).getChromosome().getGene(0)
-				.size();
+		int geneLength = tempOrgs.get(0).getChromosome().getGene(0).size();
 		int numGenes = tempOrgs.get(0).getChromosome().size();
 
 		String fileContents = "VALID_GEP_GENE_FILE" + " " + geneLength + " "
@@ -706,8 +705,7 @@ public class GUI extends Container{
 	public void saveConfig() {
 		LinkedList<Organism> tempOrgs;
 		tempOrgs = simulation.getOrganisms();
-		int geneLength = tempOrgs.get(0).getChromosome().getGene(0)
-				.size();
+		int geneLength = tempOrgs.get(0).getChromosome().getGene(0).size();
 		int numGenes = tempOrgs.get(0).getChromosome().size();
 
 		String fileContents = "";
@@ -832,15 +830,16 @@ public class GUI extends Container{
 						}
 					}
 					/*
-					 * Uncomment the following code to print the chromosomes
-					 * of each organism
+					 * Uncomment the following code to print the chromosomes of
+					 * each organism
 					 */
-//					 for(int h = 0 ; h < population.size(); h++){
-//						 System.out.println("Organism " + h);
-//						 for (int o = 0 ; o < population.get(h).getChromosome().size() ; o++){
-//							 System.out.println(population.get(h).getChromosome().getGene(o).getList());
-//						 }
-//					 }
+					// for(int h = 0 ; h < population.size(); h++){
+					// System.out.println("Organism " + h);
+					// for (int o = 0 ; o <
+					// population.get(h).getChromosome().size() ; o++){
+					// System.out.println(population.get(h).getChromosome().getGene(o).getList());
+					// }
+					// }
 					simulation.initializeFromGeneFile(population);
 				} else {
 					JOptionPane.showMessageDialog(jframe,
@@ -1006,38 +1005,38 @@ public class GUI extends Container{
 					 * chromosomes and data of all of the organisms that have
 					 * been loaded from the configuration file
 					 */
-//					 for (int h = 0; h < population.size(); h++) {
-//					 System.out.println("Organism " + (h + 1));
-//					 for (int o = 0; o < population.get(h).getChromosome()
-//					 .size(); o++) {
-//					 System.out.println(population.get(h).getChromosome()
-//					 .getGene(o).getList());
-//					
-//					 }
-//					 System.out.println("Id : " + population.get(h).getId());
-//					 System.out.println("Health: "
-//					 + population.get(h).getHealth());
-//					 System.out.println("Fitness: "
-//					 + population.get(h).getFitness());
-//					 System.out.println("X location: "
-//					 + population.get(h).getLocation().getX());
-//					 System.out.println("Y Location: "
-//					 + population.get(h).getLocation().getY());
-//					 System.out.println("Healthy Eats: "
-//					 + population.get(h).getHealthEat());
-//					 System.out.println("Poison Eats: "
-//					 + population.get(h).getPoisonEat());
-//					 System.out.println("Eat Fails: "
-//					 + population.get(h).getEatFail());
-//					 System.out.println("Num Attacked: "
-//					 + population.get(h).getNumAttacked());
-//					 System.out.println("Num Pushed: "
-//					 + population.get(h).getNumPushed());
-//					 System.out.println("Total Scans: "
-//					 + population.get(h).getTotalScans());
-//					 System.out.println();
-//					 }
-					//simulation.initializeFromConfigFile(population);
+					// for (int h = 0; h < population.size(); h++) {
+					// System.out.println("Organism " + (h + 1));
+					// for (int o = 0; o < population.get(h).getChromosome()
+					// .size(); o++) {
+					// System.out.println(population.get(h).getChromosome()
+					// .getGene(o).getList());
+					//
+					// }
+					// System.out.println("Id : " + population.get(h).getId());
+					// System.out.println("Health: "
+					// + population.get(h).getHealth());
+					// System.out.println("Fitness: "
+					// + population.get(h).getFitness());
+					// System.out.println("X location: "
+					// + population.get(h).getLocation().getX());
+					// System.out.println("Y Location: "
+					// + population.get(h).getLocation().getY());
+					// System.out.println("Healthy Eats: "
+					// + population.get(h).getHealthEat());
+					// System.out.println("Poison Eats: "
+					// + population.get(h).getPoisonEat());
+					// System.out.println("Eat Fails: "
+					// + population.get(h).getEatFail());
+					// System.out.println("Num Attacked: "
+					// + population.get(h).getNumAttacked());
+					// System.out.println("Num Pushed: "
+					// + population.get(h).getNumPushed());
+					// System.out.println("Total Scans: "
+					// + population.get(h).getTotalScans());
+					// System.out.println();
+					// }
+					// simulation.initializeFromConfigFile(population);
 				} else {
 					JOptionPane.showMessageDialog(jframe,
 							"Please select a valid saved configuration file.",
