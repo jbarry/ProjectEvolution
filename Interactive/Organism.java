@@ -482,17 +482,6 @@ public class Organism extends Matter {
 		return orgIsNextToOrg;
 	}
 
-	/*public void paint(Graphics g) {
-		g.setColor(Color.BLACK);*/
-		/*if (location == null)
-			System.out.println("loc at paint time is null");
-		else
-			System.out.println("org location at paint: " + location.getX()
-					+ ", " + location.getY());*/
-		/*g.fillRect((int) this.location.getX() - (width / 2),
-				(int) this.location.getY() - (height / 2), width, height);
-	}*/
-
 	//------------------------------------------------------------------------------------
 	//--overloaded functions--
 	//------------------------------------------------------------------------------------
@@ -772,6 +761,17 @@ public class Organism extends Matter {
 	}
 	
 	public void paint(Graphics g) {
+		g.setColor(Color.BLACK);
+		/*if (location == null)
+		System.out.println("loc at paint time is null");
+			else
+		System.out.println("org location at paint: " + location.getX()
+				+ ", " + location.getY());*/
+		g.fillRect((int) this.location.getX() - (width / 2),
+				(int) this.location.getY() - (height / 2), width, height);
+	}
+	
+	/*public void paint(Graphics g) {
 		if (facingRight) {
 			if (getHealth() <= 0) {
 				g.drawImage(ninja_dead, location.getX() - 2 * Organism.width
@@ -845,6 +845,6 @@ public class Organism extends Matter {
 			}
 		}
 		swapImage = !swapImage;
-	}
+	}*/
 }	
 

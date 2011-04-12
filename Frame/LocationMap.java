@@ -853,50 +853,25 @@ public class LocationMap {
 	 * @return boolean whether or not there are objects occupying the space.
 	 */
 	public static boolean hasObstacle(int x, int y, int anId) {
-		/*int edgeWidth = (int) Math.ceil((double) (Organism.width / 2));
-		int edgeHeight = (int) Math.ceil((double) (Organism.height / 2));*/
-		/*int edgeWidth = (Organism.width / 2) + 1;
-		int edgeHeight = (Organism.height / 2) + 1;*/
 		int edgeWidth = Organism.width / 2;
 		int edgeHeight = Organism.height / 2;
-		/*System.out.println(edgeWidth + " " + edgeHeight);
-		System.out.println("checking position: " + x + ", " + y);
-		System.out.println("y - edgeheight: " + (y - edgeHeight));
-		System.out.println("y + edgeHeight: " + (y + edgeHeight));*/
 		for (int i = x - edgeWidth; i <= x + edgeWidth; i++) {
-			checkObstacles: for (int j = y - edgeHeight; j <= y + edgeHeight; j++) {
-				/*System.out.println("i: " + i);
-				System.out.println("j: " + j);*/
+			for (int j = y - edgeHeight; j <= y + edgeHeight; j++) {
 				try {
 					Pair<Integer, Character> aPair = LocationMap.getInstance()
 							.get(i, j);
 					Character charType = aPair.getSnd();
 					Integer spaceId = aPair.getFst();
-					/*System.out.println("charType: " + charType);
-					System.out.println("spaceId: " + spaceId);
-					System.out.println("orgId: " + anId);
-					System.out.println();*/
-					// Count all occurrences of objects in location map.
-					if (charType == 'w') {
-						/*System.out.println("Is w");*/
-						continue checkObstacles;
-					}
-					// ignore self
-					if (charType == 'o' && spaceId == anId) {
-						/*System.out.println("is self");*/
-						continue checkObstacles;
-					} else {
-						/*System.out.println("encountered Obstacle");
-						System.out.println("At: " + i + ", " + j);*/
-						return true;
+					if (charType != 'w') {
+						if (charType == 'o' && spaceId != anId)
+							return true;
+						if (charType == 'h' || charType == 'p')
+							return true;
 					}
 				} catch (ArrayIndexOutOfBoundsException e) {
 				}
 			}
 		}
-		/*System.out.println("should move");*/
 		return false;
 	}
-	
-//	public static boolean hasObstacle(int x, int y, int anId) 
 }

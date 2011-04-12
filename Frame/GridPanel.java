@@ -40,8 +40,8 @@ public class GridPanel extends JPanel {
 	// ------------------------------------------------------------------------------------
 	// --globals--
 	// ------------------------------------------------------------------------------------
-	public final static int WIDTH = 600;
-	public final static int HEIGHT = 400;
+	public final static int WIDTH = 3*GUI.WIDTH/4;
+	public final static int HEIGHT = 2*GUI.HEIGHT/3;
 
 	/*public static Pair<Integer, Character>[][] locationMap;*/
 	private LocationMap locationMap;
@@ -909,6 +909,7 @@ public class GridPanel extends JPanel {
 	 * Sets the initial game state of the GridPanel.
 	 */
 	public void initializeAstar() {
+		
 		System.out.println("got to intiastar");
 		// Reset all generation info from previous simulations.
 		generationNum = 1;
