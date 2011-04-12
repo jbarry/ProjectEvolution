@@ -1,5 +1,7 @@
 package Interactive;
 
+import static java.lang.System.out;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -9,7 +11,7 @@ import java.util.Set;
 import Frame.Coordinate;
 import Frame.GridPanel;
 
-public abstract class Matter {
+public abstract class Matter{
 
 	protected Coordinate location;
 	protected double hlth;
@@ -17,9 +19,7 @@ public abstract class Matter {
 	protected int id;
 	protected Random r;
 	protected double fitness;
-	public int width = 5;
-	public int height = 5;
-
+	
 	public Matter() {
 		r = new Random();
 	}
@@ -37,7 +37,84 @@ public abstract class Matter {
 		place(type);
 	}
 
-	public void place(char type) {
+	public void deplete(double val) {
+		if (hlth - val < 0) hlth = 0;
+		else hlth-=val;
+		if(hlth==0){
+			setRange(this.getWidth(), this.getHeight(), 'w');
+		}
+	}
+	
+	/**
+	 * @param scanRange
+	 * @return number of surrounding objects, namely Food or Organism Instances
+	 */
+	public double numSurroundingObjects(int scanRange) {
+		double numObj = 0.0;
+		//create a square from cornerTop to cornerBottom of dimension scanRange+getWidth/2 X scanRange+getHeight/2 
+		Coordinate cornerTop = new Coordinate(location.getX()-(getWidth()/2-scanRange), location.getY()-(getHeight()/2)-scanRange);
+		Coordinate cornerBottom = new Coordinate(location.getX()+(getWidth()/2+scanRange), location.getY()+(getHeight()/2)+scanRange);
+		for(int i=cornerTop.getX(); i<=cornerBottom.getX(); i++){
+			for(int j=cornerTop.getY(); j<=cornerBottom.getY(); j++){
+				try{	
+					//count all occurrences of objects in location map
+					if(GridPanel.locationMap[i][j].getSnd() != 'w') {
+						numObj++;
+					}
+				}
+				catch(ArrayIndexOutOfBoundsException e){
+				}
+			}
+		}
+		//make sure that scanning object was not included in scan.
+		if(numObj >= getWidth()*getHeight())
+			numObj -= getWidth()*getHeight(); 
+		//return a normalized value. Will count "partially" discovered organisms
+		//as a whole number, does not include "wrapped" scan.
+		return Math.ceil(numObj/(getWidth()*getHeight()));
+	}
+
+	/**
+	 * @param scanRange
+	 * @param type
+	 * @return a list of id numbers of the surrounding objects of choice.
+	 */
+	public ArrayList<Integer> getSurroundingObjects(char type, int scanRange) {
+		Set<Integer> objectIds = new HashSet<Integer>();
+		//create a square from cornerTop to cornerBottom of 
+		//dimension scanRange+getWidth/2 X scanRange+getHeight/2 to be scanned.
+		int widthSub = location.getX() - (getWidth()/2);
+		int widthPlus = location.getX() + (getWidth()/2);
+		int heightSub = location.getY() - (getHeight()/2);
+		int heightPlus = location.getY() + (getHeight()/2);
+		
+		Coordinate cornerTop =
+			new Coordinate(widthSub - scanRange, heightSub - scanRange);
+		Coordinate cornerBottom =
+			new Coordinate(widthPlus + scanRange, heightPlus + scanRange);
+		
+		for(int i=cornerTop.getX(); i<=cornerBottom.getX(); i++){
+			for(int j=cornerTop.getY(); j<=cornerBottom.getY(); j++){
+				try{	
+					//count all occurrences of objects in location map
+					if(GridPanel.locationMap[i][j].getSnd() == type &&
+							GridPanel.locationMap[i][j].getFst() != this.getId()){
+						objectIds.add(GridPanel.locationMap[i][j].getFst());
+					}
+				}
+				catch(ArrayIndexOutOfBoundsException e){
+				}
+			}
+		}
+//		Test prints
+//		System.out.println("Organism " + this.getId() + " is scanning from" + location.getX() + ", " + location.getY());
+//		System.out.println("The scan range is " + scanRange + " and the square is from " + cornerTop.getX() + ", " + cornerBottom.getY() 
+//				+ "to " + cornerBottom.getX() + ", " + cornerBottom.getY());
+		
+		return new ArrayList<Integer>(objectIds);
+	}
+	
+	private void place(char type) {
 		//set location
 		int x = r.nextInt(GridPanel.WIDTH);
 		int y = r.nextInt(GridPanel.HEIGHT);
@@ -50,23 +127,9 @@ public abstract class Matter {
 		location = new Coordinate(x, y);
 
 		//set boundaries
-		setWrapAround(width, height);
-		setRange(width, height, type);
+		setWrapAround(getWidth(), getHeight());
+		setRange(getWidth(), getHeight(), type);
 	}
-
-	public void deplete(double val) {
-		if (hlth - val < 0) hlth = 0;
-		else hlth-=val;
-	}
-
-	
-
-	/**
-	 * @param scanRange
-	 * @param type
-	 * @return a list of id numbers of the surrounding objects of choice.
-	 */
-
 
 	/**
 	 * @param x - current x location if valid.
@@ -74,10 +137,10 @@ public abstract class Matter {
 	 * @return true if organism can spawn at given location.
 	 */
 	protected boolean canSpawn(int x, int y){
-		for(int i = x-width/2; i <= x+width/2; i++){
-			for(int j=y-height/2; j<=y+height/2; j++){
+		for(int i = x-getWidth()/2; i <= x+getWidth()/2; i++){
+			for(int j=y-getHeight()/2; j<=y+getHeight()/2; j++){
 				try{
-					if(GridPanel.locationMap[i][j].snd != 'w'){
+					if(GridPanel.locationMap[i][j].getSnd() != 'w'){
 						return false;
 					}
 				}
@@ -100,8 +163,8 @@ public abstract class Matter {
 		for(int i=(location.getX()-(x/2)); i<=(location.getX()+(x/2)); i++){
 			for(int j=(location.getY()-(y/2)); j<=(location.getY()+(y/2)); j++){
 				try{
-					GridPanel.locationMap[i][j].fst = id;
-					GridPanel.locationMap[i][j].snd = value;
+					GridPanel.locationMap[i][j].setLeft(this.getId());
+					GridPanel.locationMap[i][j].setRight(value);
 				}
 				catch(ArrayIndexOutOfBoundsException e){
 				}
@@ -117,25 +180,49 @@ public abstract class Matter {
 	protected void setWrapAround(int rightLeftBound, int topBottomBound){
 		if(location.getX() + (rightLeftBound/2) >= GridPanel.WIDTH){
 			//right
-			if(canSpawn(width/2+1, location.getY()))
-				location.setX((width/2)+1);
+			if(canSpawn(getWidth()/2+1, location.getY()))
+				location.setX((getWidth()/2)+1);
 		}
 		if(location.getX() - (rightLeftBound/2) <= 0){
 			//left
-			if(canSpawn(GridPanel.WIDTH - (width/2), location.getY()))
-				location.setX(GridPanel.WIDTH - (width/2));
+			if(canSpawn(GridPanel.WIDTH - (getWidth()/2), location.getY()))
+				location.setX(GridPanel.WIDTH - (getWidth()/2));
 		}
 		if(location.getY() + (topBottomBound/2) >= GridPanel.HEIGHT){
 			//bottom
-			if(canSpawn(location.getX(), height/2 + 1))
-				location.setY(height/2 + 1);
+			if(canSpawn(location.getX(), getHeight()/2 + 1))
+				location.setY(getHeight()/2 + 1);
 		}
 		if(location.getY() - (topBottomBound/2) <= 0){
 			//top
-			if(canSpawn(location.getX(), GridPanel.HEIGHT - (height/2)))
-				location.setY(GridPanel.HEIGHT - (height/2));
+			if(canSpawn(location.getX(), GridPanel.HEIGHT - (getHeight()/2)))
+				location.setY(GridPanel.HEIGHT - (getHeight()/2));
 		}
 	}
+	
+	protected boolean isAtTheTop(int topBottomBound){
+		if(location.getY() - ((int)Math.ceil((double)topBottomBound/2)) <= 0) return true;
+		return false;
+	}
+	
+	protected boolean isAtTheBottom(int topBottomBound){
+		if(location.getY() + ((int)Math.ceil((double)topBottomBound/2)) >= GridPanel.HEIGHT) return true;
+		return false;
+	}
+	
+	protected boolean isAtTheLeft(int rightLeftBound){
+		if(location.getX() - ((int)Math.ceil((double)rightLeftBound/2)) <= 0) return true;
+		return false;
+	}
+	
+	protected boolean isAtTheRight(int rightLeftBound){
+		if(location.getX() + ((int)Math.ceil((double)rightLeftBound/2)) >= GridPanel.WIDTH) return true;
+		return false;
+	}
+	
+	protected abstract int getHeight();	
+	
+	protected abstract int getWidth();
 
 	public void setMxHlth(double aMxHlth) {
 		mxHlth = aMxHlth;
@@ -165,12 +252,29 @@ public abstract class Matter {
 	public double getMaxHealth() {
 		return mxHlth;
 	}
+	
+	public void setMaxHealth(double val) {
+		mxHlth = val;
+	}
 
 	public Coordinate getLocation() {
 		return location;
 	}
+	
+	public void setLocation(Coordinate aCord) {
+		location = aCord;
+	}
 
 	public int getId() {
 		return id;
+	}
+	
+	public void setId(int val) {
+		id = val;
+	}
+	
+	public void printLocation() {
+		out.println("(" + location.getX() +
+				", " + location.getY() + ")");
 	}
 }

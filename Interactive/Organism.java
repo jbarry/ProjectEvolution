@@ -2,18 +2,25 @@ package Interactive;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.ArrayList;
+
+import javax.swing.ImageIcon;
+
 import Frame.*;
 
 public class Organism extends Matter{
 	//------------------------------------------------------------------------------------
 	//--globals--
 	//------------------------------------------------------------------------------------
+	private int signalingHealthy=0;
+	private int signalingPoison=0;
+	private boolean isSignaling=false;
 	private double avgHealth;
 	private double hlthTot;
 	private int samples;
@@ -27,25 +34,34 @@ public class Organism extends Matter{
 	private ArrayList<Coordinate> StartingLocation;
 	private ArrayList<Chromosome> chromosomeHistory;
 	private int eatFail=0;
-	public static int width = 5;
-	public static int height = 5;
+	private int healthyEatSuccess=0;
+	private int poisonEatSuccess=0;
+	private int numScans=0;
+	private int numAttacked=0;
+	private int numPushed=0;
+	private String action = "";
+	public static int width = 11;
+	public static int height = 11;
+	//for images/actions
+    private Image ninja_walk1;
+    private Image ninja_walk1_inv;
+    private Image ninja_walk2;
+    private Image ninja_walk2_inv;
+    private Image ninja_eat;
+    private Image ninja_eat_inv;
+    private Image ninja_attack;
+    private Image ninja_attack_inv;
+    private Image ninja_push;
+    private Image ninja_push_inv;
+    private Image ninja_dead;
+    private Image ninja_dead_inv;
+    private boolean swapImage;
+    private boolean facingRight;
+	private char currentAction;
+	
 	//------------------------------------------------------------------------------------
 	//--constructors--
 	//------------------------------------------------------------------------------------
-//	public Organism() {
-//		super(7500.0);
-//		samples = 0;
-//		avgHealth = 0;
-//		hlthTot = 0;
-//		steps = 0;
-//		chromosome = new Chromosome(9);
-//		fitness = 0.0;
-//		ActionList = new ArrayList<ArrayList<String>>();
-//		ActionList.add(new ArrayList<String>());
-//		StartingLocation = new ArrayList<Coordinate>();
-//		chromosomeHistory = new ArrayList<Chromosome>();
-//	}
-
 	public Organism(double aHealth, int chromSize, int anId, int aScanRange) {
 		super(aHealth, anId, 'o');
 		chromosome = new Chromosome(chromSize);
@@ -61,27 +77,53 @@ public class Organism extends Matter{
 		chromosomeHistory= new ArrayList<Chromosome>();
 		healthyFood = new TreeSet<Integer>();
 		poisonFood = new TreeSet<Integer>(); 
+		ninja_walk1 = new ImageIcon(getClass().getResource("sprites/ninja_walk1.gif")).getImage();
+		ninja_walk1_inv = new ImageIcon(getClass().getResource("sprites/ninja_walk1_inv.gif")).getImage();
+		ninja_walk2 = new ImageIcon(getClass().getResource("sprites/ninja_walk2.gif")).getImage();
+		ninja_walk2_inv = new ImageIcon(getClass().getResource("sprites/ninja_walk2_inv.gif")).getImage();
+		ninja_eat = new ImageIcon(getClass().getResource("sprites/ninja_eat.gif")).getImage();
+		ninja_eat_inv = new ImageIcon(getClass().getResource("sprites/ninja_eat_inv.gif")).getImage();
+		ninja_attack = new ImageIcon(getClass().getResource("sprites/ninja_attack.gif")).getImage();
+		ninja_attack_inv = new ImageIcon(getClass().getResource("sprites/ninja_attack_inv.gif")).getImage();
+		ninja_push = new ImageIcon(getClass().getResource("sprites/ninja_push.gif")).getImage();
+		ninja_push_inv = new ImageIcon(getClass().getResource("sprites/ninja_push_inv.gif")).getImage();
+		ninja_dead = new ImageIcon(getClass().getResource("sprites/ninja_dead.gif")).getImage();
+		ninja_dead_inv = new ImageIcon(getClass().getResource("sprites/ninja_dead_inv.gif")).getImage();
+		//create behavior tracking boolean variables
+		swapImage = true;
+		facingRight = true;
+		currentAction = ' ';
 	}
 	
-	//for testing purposes only.
-	//just removing the GridPanel call.
-	public Organism(boolean boo, int aChromSize) {
-		hlth = 7500.00;
-		r = new Random();
-		chromosome = new Chromosome(aChromSize);
-		fitness = 0.0;
+	public void signal(boolean isPoison){
+		if(isPoison){
+			signalingPoison=5;
+			signalingHealthy=0;
+			setAction("Signaling Poisonous Food");
+		}
+		else{
+			signalingHealthy=5;
+			signalingPoison=0;
+			setAction("Signaling Healthy Food");
+		}
 	}
 	
-	//This ctor is for testing purposes.
-	public Organism(double ahealth, Chromosome aChromosome) {
-		hlth = ahealth;
-		chromosome = aChromosome;
+	public void signalCheck(){
+		if(signalingPoison>0){
+			signalingPoison--;
+		}
+		if(signalingHealthy>0){
+			signalingHealthy--;
+		}
 	}
-
-	public Organism(Coordinate aLocation, Chromosome aChromosome) {
-		hlth = 7500.0;
-		location = aLocation;
-		chromosome = aChromosome;
+	
+	public Pair<Integer,Integer> isSignaling(){
+		return new Pair<Integer,Integer>(signalingHealthy,signalingPoison);
+	}
+	
+	public void removeSignals(){
+		signalingPoison=0;
+		signalingHealthy=0;
 	}
 	
 	public void newLocation() {
@@ -96,209 +138,434 @@ public class Organism extends Matter{
 		//set boundaries
 		setWrapAround(width, height);
 		setRange(width, height, 'o');
-	}
-	
-	
-	public double numSurroundingObjects(int scanRange) {
-		double numObj = 0.0;
-		for(int i=location.getX()-width/2-scanRange; i<=location.getX()+width/2+scanRange; i++){
-			for(int j=location.getY()-height/2-scanRange; j<=location.getY()+height/2+scanRange; j++){
-				try{	
-					//count all occurrences of objects in location map
-					if(GridPanel.locationMap[i][j].snd == 'f' ||
-							GridPanel.locationMap[i][j].snd == 'h' ||
-							GridPanel.locationMap[i][j].snd == 'o') {
-						numObj++;
-					}
-				}
-				catch(ArrayIndexOutOfBoundsException e){
-				}
-			}
-		}
-		//make sure that scanning object was not included in scan.
-		if(numObj >= width*height){
-			numObj -= width*height; 
-		}
-		//return a normalized value. Will count "partially" discovered organisms
-		//as a whole number, does not include "wrapped" scan.
-		return Math.ceil(numObj/(width*height));
-	}
-	
-	public ArrayList<Integer> getSurroundingObjects(char type, int scanRange) {
-		Set<Integer> objectIds = new HashSet<Integer>();
-		for(int i=location.getX()-width/2-scanRange; i<=location.getX()+width/2+scanRange; i++){
-			for(int j=location.getY()-height/2-scanRange; j<=location.getY()+height/2+scanRange; j++){
-				try{	
-					//count all occurrences of objects in location map
-					if(GridPanel.locationMap[i][j].snd == type){
-						objectIds.add(GridPanel.locationMap[i][j].fst);
-					}
-				}
-				catch(ArrayIndexOutOfBoundsException e){
-				}
-			}
-		}
-		//make sure that scanning object was not included in scan.
-		//TODO: will do this outside of class. In GridPanel probably.
-		//		if(numObj >= width*height){
-		//			numObj -= width*height; 
-		//		}
-		return new ArrayList<Integer>(objectIds);
-	}
+	}	
 	
 	public void eatFood(Food f, double fdVal){
+		currentAction = 'e';
 		f.deplete(fdVal);
 		if(f instanceof HealthyFood) {
 //			System.out.println("orgId: " + id);
 //			System.out.println("hlthy");
 //			System.out.println("orgHealth: " + hlth);
 //			System.out.println("FoodId: " + f.getId());
+//			System.out.println("OrgLoc: " + this.getLocation().getX() + ", " + this.getLocation().getY());
+//			System.out.println();
 			incHlth(fdVal);
+			setAction("Eating health food");
+			healthyEatSuccess++;
+			eatFail--;
 			healthyFood.add(f.getId());
 		}
 		else if(f instanceof PoisonousFood){
 //			System.out.println("orgId: " + id);
 //			System.out.println("pois");
-//			System.out.println("orgHealth: " + hlth);
-//			System.out.println("FoodId: " f+ f.getId());
+// 		    System.out.println("orgHealth: " + hlth);
+//			System.out.println("FoodId: " + f.getId());
+//			System.out.println("OrgLoc: " + this.getLocation().getX() + ", " + this.getLocation().getY());
+//			System.out.println();
 			poisonFood.add(f.getId());
+			setAction("Eating poisonous food");
+			poisonEatSuccess++;
+			eatFail--;
 			deplete(fdVal);
 		}
 	}
 	
-	public void moveNorth(LinkedList<Organism> organisms) {
+	public void moveNorth(LinkedList<Organism> organisms, boolean wasPushed) {
+		//System.out.println("org " + this.getId() + " is moving north");
+		boolean successfullyMoved = false;
+		
 		//make old location available.
 		setRange(width, height, 'w');
-		setWrapAround(width, height);
 		
 		//if the next move is available.
-		try{
-			if(canSpawn(location.getX(), location.getY() - 1)){
-				//move there.
-				location.setY(location.getY() - 1);
+		if(isAtTheTop(height)){
+			if(canSpawn(location.getX(), GridPanel.HEIGHT - (((int)Math.ceil((double)height/2)) + 1))){
+				location.setY(GridPanel.HEIGHT - (((int)Math.ceil((double)height/2)) + 1));
+				successfullyMoved = true;
 			}
 		}
-		catch(ArrayIndexOutOfBoundsException e){
-			
+		else{
+			try{
+				if(canSpawn(location.getX(), location.getY() - 1)){
+					//move there.
+					location.setY(location.getY() - 1);
+					successfullyMoved = true;
+				}
+			}
+			catch(ArrayIndexOutOfBoundsException e){}
 		}
+		
+		if(!wasPushed){
+			currentAction = 'm';
+			if(successfullyMoved){
+				setAction("Traveling North");
+			}
+			else{
+				setAction("Attempting to go North");
+			}
+		}
+		
 		//make current location unavailable
 		setRange(width, height, 'o');
 	}
 
-	public void moveNorthEast(LinkedList<Organism> organisms) {
+	public void moveNorthEast(LinkedList<Organism> organisms, boolean wasPushed) {
+		//System.out.println("org " + this.getId() + " is moving northeast");
+		facingRight = true;
+		boolean successfullyMoved = false;
+		
 		setRange(width, height, 'w');
-		setWrapAround(width, height);
-		try{
-			if(canSpawn(location.getX() + 1, location.getY() - 1)){
-				location.setX(location.getX() + 1);
-				location.setY(location.getY() - 1);
+
+		if(isAtTheTop(height) && isAtTheRight(width)){
+			if(canSpawn(((int)Math.ceil((double)width/2)) + 1, GridPanel.HEIGHT - (((int)Math.ceil((double)height/2)) + 1))){
+				location.setX(((int)Math.ceil((double)width/2)) + 1);
+				location.setY(GridPanel.HEIGHT - (((int)Math.ceil((double)height/2)) + 1));
+				successfullyMoved = true;
 			}
 		}
-		catch(ArrayIndexOutOfBoundsException e){
+		else if(isAtTheTop(height)){
+			if(canSpawn(location.getX() + 1, GridPanel.HEIGHT - (((int)Math.ceil((double)height/2)) + 1))){
+				location.setX(location.getX() + 1);
+				location.setY(GridPanel.HEIGHT - (((int)Math.ceil((double)height/2)) + 1));
+				successfullyMoved = true;
+			}
+		}
+		else if(isAtTheRight(width)){
+			if(canSpawn(((int)Math.ceil((double)width/2)) + 1, location.getY() - 1)){
+				location.setX(((int)Math.ceil((double)width/2)) + 1);
+				location.setY(location.getY() - 1);
+				successfullyMoved = true;
+			}
+		}
+		else{
+			try{
+				if(canSpawn(location.getX() + 1, location.getY() - 1)){
+					location.setX(location.getX() + 1);
+					location.setY(location.getY() - 1);
+					successfullyMoved = true;
+				}
+			}
+			catch(ArrayIndexOutOfBoundsException e){}
+		}
 		
+		if(!wasPushed){
+			currentAction = 'm';
+			if(successfullyMoved){
+				setAction("Traveling Northeast");
+			}
+			else{
+				setAction("Attempting to go Northeast");
+			}
 		}
 		setRange(width, height, 'o');
 	}
 
-	public void moveEast(LinkedList<Organism> organisms) {
+	public void moveEast(LinkedList<Organism> organisms, boolean wasPushed) {
+		//System.out.println("org " + this.getId() + " is moving east");
+		facingRight = true;
+		boolean successfullyMoved = false;
+		
 		setRange(width, height, 'w');
-		setWrapAround(width, height);
-		try{
-			if(location.getX() + 1 + width/2 >= GridPanel.WIDTH){
-				if(canSpawn(width/2, location.getY()))
-					location.setX(width/2);
-			}
-			if(canSpawn(location.getX() + 1, location.getY())){
-				location.setX(location.getX() + 1);
+		
+		if(isAtTheRight(width)){
+			if(canSpawn(((int)Math.ceil((double)width/2))+1, location.getY())){
+				location.setX(((int)Math.ceil((double)width/2)) + 1);
+				successfullyMoved = true;
 			}
 		}
-		catch(ArrayIndexOutOfBoundsException e){
-		
+		else{
+			try{
+				if(canSpawn(location.getX() + 1, location.getY())){
+					location.setX(location.getX() + 1);
+					successfullyMoved = true;
+				}
+			}
+			catch(ArrayIndexOutOfBoundsException e){}
 		}	
+		
+		if(!wasPushed){
+			currentAction = 'm';
+			if(successfullyMoved){
+				setAction("Traveling East");
+			}
+			else{
+				setAction("Attempting to go East");
+			}
+		}
 		setRange(width, height, 'o');
 	}
 
-	public void moveSouthEast(LinkedList<Organism> organisms) {
+	public void moveSouthEast(LinkedList<Organism> organisms, boolean wasPushed) {
+		//System.out.println("org " + this.getId() + " is moving southeast");
+		facingRight = true;
+		boolean successfullyMoved = false; 
+		
 		setRange(width, height, 'w');
-		setWrapAround(width, height);
-		try{
-			if(location.getY() + 1 + height/2>= GridPanel.HEIGHT){
-				if(canSpawn(location.getX(), height/2))
-					location.setY(height/2);
+		
+		if(isAtTheBottom(height) && isAtTheRight(width)){
+			if(canSpawn(((int)Math.ceil((double)width/2))+1, ((int)Math.ceil((double)height/2))+1)){
+				location.setX(((int)Math.ceil((double)width/2))+1);
+				location.setY(((int)Math.ceil((double)height/2))+1);
+				successfullyMoved = true;
 			}
-			if(canSpawn(location.getX() + 1, location.getY() + 1)){
+		}
+		else if(isAtTheBottom(height)){
+			if(canSpawn(location.getX() + 1, ((int)Math.ceil((double)height/2))+1)){
 				location.setX(location.getX() + 1);
-				location.setY(location.getY() + 1);
+				location.setY(((int)Math.ceil((double)height/2))+1);
+				successfullyMoved = true;
 			}
 		}
-		catch(ArrayIndexOutOfBoundsException e){
-			
+		else if(isAtTheRight(width)){
+			if(canSpawn(((int)Math.ceil((double)width/2))+1, location.getY()+1)){
+				location.setX(((int)Math.ceil((double)width/2))+1);
+				location.setY(location.getY()+1);
+				successfullyMoved = true;
+			}
+		}
+		else{
+			try{
+				if(canSpawn(location.getX() + 1, location.getY() + 1)){
+					location.setX(location.getX() + 1);
+					location.setY(location.getY() + 1);
+					successfullyMoved = true;
+				}
+			}
+			catch(ArrayIndexOutOfBoundsException e){}
+		}
+		
+		if(!wasPushed){
+			currentAction = 'm';
+			if(successfullyMoved){
+				setAction("Traveling Southeast");
+			}
+			else{
+				setAction("Attempting to go Southeast");
+			}
 		}
 		setRange(width, height, 'o');
 	}
 
-	public void moveSouth(LinkedList<Organism> organisms) {
+	public void moveSouth(LinkedList<Organism> organisms, boolean wasPushed) {
+		//System.out.println("org " + this.getId() + " is moving south");
+		boolean successfullyMoved = false; 
+		
 		setRange(width, height, 'w');
-		setWrapAround(width, height);
-		try{
-			if(canSpawn(location.getX(), location.getY() + 1)){
-				location.setY(location.getY() + 1);
+		
+		if(isAtTheBottom(height)){
+			if(canSpawn(location.getX(), ((int)Math.ceil((double)height/2)) + 1)){
+				location.setY(((int)Math.ceil((double)height/2)) + 1);
+				successfullyMoved = true;
 			}
 		}
-		catch(ArrayIndexOutOfBoundsException e){
-			
+		else{
+			try{
+				if(canSpawn(location.getX(), location.getY() + 1)){
+					location.setY(location.getY() + 1);
+					successfullyMoved = true;
+				}
+			}
+			catch(ArrayIndexOutOfBoundsException e){}
+		}
+		
+		if(!wasPushed){
+			currentAction = 'm';
+			if(successfullyMoved){
+				setAction("Traveling South");
+			}
+			else{
+				setAction("Attempting to go South");
+			}
 		}
 		setRange(width, height, 'o');
 
 	}
 
-	public void moveSouthWest(LinkedList<Organism> organisms) {
+	public void moveSouthWest(LinkedList<Organism> organisms, boolean wasPushed) {
+		//System.out.println("org " + this.getId() + " is moving southwest");
+		facingRight = false;
+		boolean successfullyMoved = false; 
+		
 		setRange(width, height, 'w');
-		setWrapAround(width, height);
-		try{
-			if(canSpawn(location.getX() - 1, location.getY() + 1)){
+		if(isAtTheBottom(height) && isAtTheLeft(width)){
+			if(canSpawn(GridPanel.WIDTH - (((int)Math.ceil((double)width/2)) + 1), ((int)Math.ceil((double)height/2)) + 1)){
+				location.setX(GridPanel.WIDTH - (((int)Math.ceil((double)width/2)) + 1));
+				location.setY(((int)Math.ceil((double)height/2)) + 1);
+				successfullyMoved = true;
+			}
+		}
+		else if(isAtTheBottom(height)){
+			if(canSpawn(location.getX() - 1, ((int)Math.ceil((double)height/2)) + 1)){
 				location.setX(location.getX() - 1);
+				location.setY(((int)Math.ceil((double)height/2)) + 1);
+				successfullyMoved = true;
+			}
+		}
+		else if(isAtTheLeft(width)){
+			if(canSpawn(GridPanel.WIDTH - (((int)Math.ceil((double)width/2)) + 1), location.getY() + 1)){
+				location.setX(GridPanel.WIDTH - (((int)Math.ceil((double)width/2)) + 1));
 				location.setY(location.getY() + 1);
+				successfullyMoved = true;
 			}
 		}
-		catch(ArrayIndexOutOfBoundsException e){
-			
+		else{
+			try{
+				if(canSpawn(location.getX() - 1, location.getY() + 1)){
+					location.setX(location.getX() - 1);
+					location.setY(location.getY() + 1);
+					successfullyMoved = true;
+				}
+			}
+			catch(ArrayIndexOutOfBoundsException e){}
+		}
+		
+		if(!wasPushed){
+			currentAction = 'm';
+			if(successfullyMoved){
+				setAction("Traveling Southwest");
+			}
+			else{
+				setAction("Attempting to go Southwest");
+			}
+		}
+
+		setRange(width, height, 'o');
+	}
+
+	public void moveWest(LinkedList<Organism> organisms, boolean wasPushed) {
+		//System.out.println("org " + this.getId() + " is moving west");
+		facingRight = false;
+		boolean successfullyMoved = false;
+		
+		setRange(width, height, 'w');
+		if(isAtTheLeft(width)){
+			if(canSpawn(GridPanel.WIDTH - (((int)Math.ceil((double)width/2)) + 1), location.getY())){
+				location.setX(GridPanel.WIDTH - (((int)Math.ceil((double)width/2)) + 1));
+				successfullyMoved = true;
+			}
+		}
+		else{
+			try{
+				if(canSpawn(location.getX() - 1, location.getY())){
+					location.setX(location.getX() - 1);
+					successfullyMoved = true;
+				}
+			}
+			catch(ArrayIndexOutOfBoundsException e){}
+		}
+		
+		if(!wasPushed){
+			currentAction = 'm';
+			if(successfullyMoved){
+				setAction("Traveling West");
+			}
+			else{
+				setAction("Attempting to go West");
+			}
 		}
 		setRange(width, height, 'o');
 	}
 
-	public void moveWest(LinkedList<Organism> organisms) {
+	public void moveNorthWest(LinkedList<Organism> organisms, boolean wasPushed) {
+		//System.out.println("org " + this.getId() + " is moving northwest");
+		facingRight = false;
+		boolean successfullyMoved = false;
+		
 		setRange(width, height, 'w');
-		setWrapAround(width, height);
-		try{
-			if(canSpawn(location.getX() - 1, location.getY())){
-				location.setX(location.getX() - 1);
+		if(isAtTheTop(height) && isAtTheLeft(width)){
+			if(canSpawn(GridPanel.WIDTH - (((int)Math.ceil((double)width/2)) + 1), GridPanel.HEIGHT - (((int)Math.ceil((double)height/2)) + 1))){
+				location.setX(GridPanel.WIDTH - (((int)Math.ceil((double)width/2)) + 1));
+				location.setY(GridPanel.HEIGHT - (((int)Math.ceil((double)height/2)) + 1));
+				successfullyMoved = true;
 			}
 		}
-		catch(ArrayIndexOutOfBoundsException e){
-			
-		}
-		setRange(width, height, 'o');
-	}
-
-	public void moveNorthWest(LinkedList<Organism> organisms) {
-		setRange(width, height, 'w');
-		setWrapAround(width, height);
-		try{
-			if(canSpawn(location.getX() - 1, location.getY() - 1)){
+		else if(isAtTheTop(height)){
+			if(canSpawn(location.getX() - 1, GridPanel.HEIGHT - (((int)Math.ceil((double)height/2)) + 1))){
 				location.setX(location.getX() - 1);
+				location.setY(GridPanel.HEIGHT - (((int)Math.ceil((double)height/2)) + 1));
+				successfullyMoved = true;
+			}
+		}
+		else if(isAtTheLeft(width)){
+			if(canSpawn(GridPanel.WIDTH - (((int)Math.ceil((double)width/2)) + 1), location.getY() - 1)){
+				location.setX(GridPanel.WIDTH - (((int)Math.ceil((double)width/2)) + 1));
 				location.setY(location.getY() - 1);
+				successfullyMoved = true;
 			}
 		}
-		catch(ArrayIndexOutOfBoundsException e){}
+		else{
+			try{
+				if(canSpawn(location.getX() - 1, location.getY() - 1)){
+					location.setX(location.getX() - 1);
+					location.setY(location.getY() - 1);
+					successfullyMoved = true;
+				}
+			}
+			catch(ArrayIndexOutOfBoundsException e){}
+		}
+		
+		if(!wasPushed){
+			currentAction = 'm';
+			if(successfullyMoved){
+				setAction("Traveling Northwest");
+			}
+			else{
+				setAction("Attempting to go Northwest");
+			}
+		}
 		setRange(width, height, 'o');
 	}
 	
-	public void paint(Graphics g) {
-		g.setColor(Color.BLACK);
-		g.fillRect((int)this.location.getX()-(width/2), 
-				   (int)this.location.getY()-(height/2), 
-				   width, height);
+		public void attack(int orgIndex, LinkedList<Organism> organisms){
+			currentAction = 'a';
+//			System.out.print("Attacking org " + orgIndex + "(" + organisms.get(orgIndex).getLocation().getX() + " " + organisms.get(orgIndex).getLocation().getY() + "). Health: " + organisms.get(orgIndex).getHealth());
+			organisms.get(orgIndex).deplete(.5);
+			numAttacked++;
+			organisms.get(this.getId()).setAction("Attacking org " + orgIndex);
+//			System.out.print(". Health: " + organisms.get(orgIndex).getHealth());
+//			System.out.println(". Attacked by org " + this.id);
+	}
+	
+		public void pushOrg(int orgIndex, LinkedList<Organism> organisms){
+			currentAction = 'p';
+			
+			int xPushing = this.getLocation().getX();
+			int yPushing = this.getLocation().getY();
+			int xGettingPushed = organisms.get(orgIndex).getLocation().getX();
+			int yGettingPushed = organisms.get(orgIndex).getLocation().getY();
+			
+//			System.out.print("Pushing org " + orgIndex + "(" + organisms.get(orgIndex).getLocation().getX() + " " + organisms.get(orgIndex).getLocation().getY() + ")");
+			
+			if(xGettingPushed < xPushing){
+				organisms.get(orgIndex).moveWest(organisms, true);
+			}
+			else if(xGettingPushed > xPushing){
+				organisms.get(orgIndex).moveEast(organisms,true);
+			}
+			
+			if(yGettingPushed < yPushing){
+				organisms.get(orgIndex).moveNorth(organisms,true);
+			}
+			else if(yGettingPushed > yPushing){
+				organisms.get(orgIndex).moveSouth(organisms,true);
+			}
+			numPushed++;
+			organisms.get(this.getId()).setAction("Pushing org " + orgIndex);
+//			System.out.print("(" + organisms.get(orgIndex).getLocation().getX() + " " + organisms.get(orgIndex).getLocation().getY() + ")");
+//			System.out.println(". Pushed by org " + getId());
+		
+	}
+	
+		public boolean currOrgIsNextToSpecifiedOrg(int orgIndex){
+		ArrayList<Integer> surroundingOrgs = new ArrayList<Integer>();
+		surroundingOrgs = this.getSurroundingObjects('o', 1);
+		boolean orgIsNextToOrg = false;
+		for(Integer o: surroundingOrgs){
+			if(orgIndex == o) orgIsNextToOrg = true;
+		}
+		
+		return orgIsNextToOrg;
 	}
 	
 	//------------------------------------------------------------------------------------
@@ -310,16 +577,27 @@ public class Organism extends Matter{
 	 */
 	public String toString(){
 		String str = "";
-		str += " I am an Organism. Fear me."
+		str += " I am an Organism " + this.getId()+ ". Fear me."
 			+  "\n Location: " + location
 			+  "\n Health: " + hlth
-			+  "\n ID: " + this.getId();
+			+  "\n Status: " + getAction();
 		return str;
 	}
 	
 	//------------------------------------------------------------------------------------
 	//--getters/setters--
 	//------------------------------------------------------------------------------------
+	public String getAction(){
+		return action;
+	}
+	
+	public void setAction(String s){
+		action += s + "\n               ";
+	}
+	
+	public void clearAction(){
+		action = "";
+	}
 	
 	public Chromosome getChromosome() {
 		return chromosome;
@@ -336,6 +614,10 @@ public class Organism extends Matter{
 	
 	public double getHlthTot() {
 		return hlthTot;
+	}
+	
+	public void setHlthTot(double val) {
+		hlthTot = val;
 	}
 	
 	public void countStep() {
@@ -380,24 +662,165 @@ public class Organism extends Matter{
 		return poisonFood.size();
 	}
 
-	public void addEatFail() {
-		eatFail++;
-	}
-	
-	public void subEatFail(){
-		eatFail--;
-	}
-	
 	public int getEatFail(){
 		return eatFail;
 	}
-
-	public void clearEatFail() {
-		eatFail=0;
+	
+	public void setEatFail(int val) {
+		eatFail = val;
 	}
 	
-	public void clearFoodList(){
+	public void addEatFail(){
+		eatFail++;
+	}
+	
+	public int getHealthEat(){
+		return healthyEatSuccess;
+	}
+	
+	public void setHealthyEat(int val) {
+		healthyEatSuccess = val;
+	}
+	
+	public int getPoisonEat(){
+		return poisonEatSuccess;
+	}
+	
+	public void setPoisonEat(int val) {
+		poisonEatSuccess = val;
+	}
+
+	public int getTotalScans() {
+		return numScans;
+	}
+	
+	public void addScan(int scans){
+		numScans += scans;
+	}
+	
+	public void setTotalScans(int val) {
+		numScans = val;
+	}
+	
+	public int getScanRange(){
+		return scanRange;
+	}
+	
+	@Override
+	
+	public int getHeight() {
+		return height;
+	}
+	@Override
+	public int getWidth(){
+		return width;
+	}
+
+	public int getNumPushed() {
+		return numPushed;
+	}
+	
+	public void setNumPushed(int val) {
+		numPushed = val;
+	}
+
+	public int getNumAttacked() {
+		return numAttacked;
+	}
+	
+	public void setNumAttacked(int val) {
+		numAttacked = val;
+	}
+	
+	public void clear(){
+		eatFail = 0;
+		numScans = 0;
+		steps = 0;
+		samples = 0;
+		hlthTot = 0;
 		poisonFood.clear();
 		healthyFood.clear();
+		poisonEatSuccess = 0;
+		healthyEatSuccess = 0;
+		numAttacked=0;
+		numPushed=0;
+		
+	}
+	
+	public void goBack(int generation){
+		newLocation();
+		chromosome = chromosomeHistory.get(generation-1);
+		for(int i=generation;i<chromosomeHistory.size();i++){
+			chromosomeHistory.remove(i);
+		}
+		clear();
+	}
+	
+	public void paint(Graphics g) {
+		if(facingRight){
+			if(getHealth() <= 0){
+				g.drawImage(ninja_dead, location.getX()-2*Organism.width/2, location.getY()-2*Organism.height/2, 2*Organism.width, 2*Organism.height, null);
+			}
+			else{
+				if(signalingPoison>0){
+					g.setColor(Color.ORANGE);
+					g.drawRect(location.getX()-Organism.width/2,location.getY()-Organism.height/2,Organism.width,Organism.height);
+				}
+				if(signalingHealthy>0){
+					g.setColor(Color.CYAN);
+					g.drawRect(location.getX()-Organism.width/2,location.getY()-Organism.height/2,Organism.width,Organism.height);
+				}
+				if(currentAction == 'e'){
+					g.drawImage(ninja_eat, location.getX()-2*Organism.width/2, location.getY()-2*Organism.height/2, 2*Organism.width, 2*Organism.height, null);
+				}
+				else if(currentAction == 'a'){
+					g.drawImage(ninja_attack, location.getX()-2*Organism.width/2, location.getY()-2*Organism.height/2, 2*Organism.width, 2*Organism.height, null);
+				}
+				else if(currentAction == 'p'){
+					g.drawImage(ninja_push, location.getX()-2*Organism.width/2, location.getY()-2*Organism.height/2, 2*Organism.width, 2*Organism.height, null);
+				}
+				else{
+					if(swapImage){
+						g.drawImage(ninja_walk1, location.getX()-2*Organism.width/2, location.getY()-2*Organism.height/2, 2*Organism.width, 2*Organism.height, null);
+					}
+					else{
+						g.drawImage(ninja_walk2, location.getX()-2*Organism.width/2, location.getY()-2*Organism.height/2, 2*Organism.width, 2*Organism.height, null);
+					}
+				}
+			}
+		}
+		else{
+			if(getHealth() <= 0){
+				g.drawImage(ninja_dead_inv, location.getX()-2*Organism.width/2, location.getY()-2*Organism.height/2, 2*Organism.width, 2*Organism.height, null);
+			}
+			else{
+				if(signalingPoison>0){
+					g.setColor(Color.ORANGE);
+					g.drawRect(location.getX()-Organism.width/2,location.getY()-Organism.height/2,Organism.width,Organism.height);
+				}
+				if(signalingHealthy>0){
+					g.setColor(Color.CYAN);
+					g.drawRect(location.getX()-Organism.width/2,location.getY()-Organism.height/2,Organism.width,Organism.height);
+				}
+				if(currentAction == 'e'){
+					g.drawImage(ninja_eat_inv, location.getX()-2*Organism.width/2, location.getY()-2*Organism.height/2, 2*Organism.width, 2*Organism.height, null);
+				}
+				else if(currentAction == 'a'){
+					g.drawImage(ninja_attack_inv, location.getX()-2*Organism.width/2, location.getY()-2*Organism.height/2, 2*Organism.width, 2*Organism.height, null);
+				}
+				else if(currentAction == 'p'){
+					g.drawImage(ninja_push_inv, location.getX()-2*Organism.width/2, location.getY()-2*Organism.height/2, 2*Organism.width, 2*Organism.height, null);
+				}
+				else{
+					if(swapImage){
+						g.drawImage(ninja_walk1_inv, location.getX()-2*Organism.width/2, location.getY()-2*Organism.height/2, 2*Organism.width, 2*Organism.height, null);
+					}
+					else{
+						g.drawImage(ninja_walk2_inv, location.getX()-2*Organism.width/2, location.getY()-2*Organism.height/2, 2*Organism.width, 2*Organism.height, null);
+					}
+				}
+			}
+		}
+		swapImage = !swapImage;
 	}
 }	

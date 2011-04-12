@@ -28,8 +28,8 @@ import javax.swing.text.AttributeSet;
 
 @SuppressWarnings("all")
 public class OptionsPanel extends JPanel implements Runnable{
-	public final static int WIDTH  = 200;
-	public final static int HEIGHT = 400;
+	public final static int WIDTH  = GUI.WIDTH/4;
+	public final static int HEIGHT = 2*GUI.HEIGHT/3;
 	
 	public static int numOrganisms = 0;
 	
