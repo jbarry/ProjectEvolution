@@ -149,108 +149,7 @@ public class GridPanel extends JPanel {
 
 	}
 
-	/*public void clearLocations() {
-		for (int i = 0; i < locationMap.length(); i++) {
-			for (int j = 0; j < locationMap.colLength(i); j++) {
-				// mark available
-				locationMap.set(i, j, new Pair<Integer, Character>(0, 'w'));
-			}
-		}
-	}*/
-
-	/**
-	 * Sets the initial game state of the GridPanel.
-	 */
-	public void initialize() {
-		System.out.println("called original init");
-		// reset all generation info from previous simulations.
-		generationNum = 1;
-		trialNum = 1;
-		GUI.genPanel.resetGenInformation();
-		ran = new Random();
-		timePassed = 0;
-		shuffleIds = new ArrayList<Integer>();
-		/*shuffleStringIds = new ArrayList<String>();*/
-		// Location map will consist of: key: current instance number of object
-		// value: 'w' for white space or available. 'o' for organism. 'h' for
-		//healthy food. 'p' for poisonous food.
-		locationMap = LocationMap.getInstance();
-		norm = new Normalizer(new Pair<Double, Double>(-600.0, 600.0),
-				new Pair<Double, Double>(-50.0, 50.0));
-		organisms.clear();
-		healthFd.clear();
-		poisFood.clear();
-		shuffleIds.clear();
-		numFoodSources = OptionsPanel.numOrganisms / 5;
-		for (int i = 0; i < OptionsPanel.numOrganisms; i++) {
-			Organism o = new Organism(100.00, 9, i);
-			/*Organism o = new Organism(100.00, 11, i);*/
-			organisms.add(o);
-			shuffleIds.add(i);
-			/*shuffleStringIds.add(Integer.toString(i));*/
-			o.addStartingLocation();
-			o.addChromosome();
-		}
-		for (int i = 0; i < numFoodSources*2; i++) {
-			if (ran.nextBoolean())
-				food.add(new HealthyFood(100.00, i, 2));
-			else
-				food.add(new PoisonousFood(100.00, i, 2));
-			/*HealthyFood h = new HealthyFood(100.0, i, 2);
-			PoisonousFood f = new PoisonousFood(100.0, i, 2);*/
-			/*healthFd.add(h);
-			poisFood.add(f);*/
-		}
-		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
-	}
-
-	/**
-	 * Sets the initial game state of the GridPanel.
-	 */
-	public void initialize2() {
-		// reset all generation info from previous simulations.
-		generationNum = 1;
-		trialNum = 1;
-		GUI.genPanel.resetGenInformation();
-		ran = new Random();
-		timePassed = 0;
-		/* orgsData = new ArrayList<OrgData>(); */
-		// Location map will consist of: key: current instance number of object
-		// value: 'w' for white space or available. 'o' for organism. 'h' for
-		// healthy food. 'p' for poisonous food.
-		/*locationMap = new LocationMap();*/
-		locationMap.clearLocations();
-		norm = new Normalizer(new Pair<Double, Double>(-600.0, 600.0),
-				new Pair<Double, Double>(-50.0, 50.0));
-		organisms.clear();
-		healthFd.clear();
-		poisFood.clear();
-		shuffleIds.clear();
-		numFoodSources = OptionsPanel.numOrganisms / 4;
-		// Create organisms and orgdata.
-		for (int i = 0; i < OptionsPanel.numOrganisms; i++) {
-			Organism o = new Organism(100.00, 11, i);
-			organisms.add(o);
-			/* orgsData.add(new OrgData(o.getMaxHealth(), i)); */
-			o.addStartingLocation();
-			o.addChromosome();
-		}
-		/*orgsUsed = (LinkedList<Organism>) organisms.clone();*/
-		if (orgsUsed != null)
-			System.out.println(orgsUsed.size());
-		else
-			System.out.println("Is null");
-		// Create healthyfood and poisonous food.
-		for (int i = 0; i < numFoodSources; i++) {
-			HealthyFood h = new HealthyFood(100.0, i, 2);
-			PoisonousFood f = new PoisonousFood(100.0, i, 2);
-			healthFd.add(h);
-			poisFood.add(f);
-		}
-		g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75);
-	}
-	
-	private boolean doAction(Organism org, Pair<Integer, Double> bestEval) {
+	public boolean doAction(Organism org, Pair<Integer, Double> bestEval) {
 
 		switch (bestEval.left()) {
 		case 0:
@@ -305,63 +204,7 @@ public class GridPanel extends JPanel {
 		return false;
 	}
 
-	private void doAction(Organism org, ArrayList<Organism> orgsUsed,
-			Pair<Integer, Double> bestEval) {
-
-		switch (bestEval.left()) {
-		case 0:
-			org.moveNorth(organisms, false);
-			// org.addAction("N", orgIndex);
-			org.countStep();
-			break;
-		/*case 1:
-			org.moveSouth(organisms, false);
-			// org.addAction("S", orgIndex);
-			org.countStep();
-			break;
-		case 2:
-			org.moveEast(organisms, false);
-			// org.addAction("E", orgIndex);
-			org.countStep();
-			break;
-		case 3:
-			org.moveWest(organisms, false);
-			// org.addAction("W", orgIndex);
-			org.countStep();
-			break;
-		case 4:
-			org.moveNorthEast(organisms, false);
-			// org.addAction("NE", orgIndex);
-			org.countStep();
-			break;
-		case 5:
-			org.moveNorthWest(organisms, false);
-			// org.addAction("NW", orgIndex);
-			org.countStep();
-			break;
-		case 6:
-			org.moveSouthEast(organisms, false);
-			// org.addAction("SE", orgIndex);
-			org.countStep();
-			break;
-		case 7:
-			org.moveSouthWest(organisms, false);
-			// org.addAction("SW", orgIndex);
-			org.countStep();
-			break;*/
-		case 8:
-			// doEat(org);
-			eat(org);
-			break;
-		case 9:
-			attack2(org, orgsUsed);
-			break;
-		case 10:
-			push(org);
-		}
-	}
-	
-	private void attack2(Organism org, ArrayList<Organism> aOrgsUsed) {
+	public void attack2(Organism org, ArrayList<Organism> aOrgsUsed) {
 		ArrayList<Integer> surroundingOrganisms = org.getSurroundingObjects(
 				'o', 1);
 		surroundingOrganisms.remove((Integer) org.getId());
@@ -374,16 +217,7 @@ public class GridPanel extends JPanel {
 		}
 	}
 
-	private void doEat(Organism org) {
-		if (organismIsNextToHealthyFood(org)
-				|| organismIsNextToPoisonousFood(org)) {
-		} else {
-			org.addEatFail();
-			org.setAction("Attempted to eat");
-		}
-	}
-
-	private boolean eat(Organism org) {
+	public boolean eat(Organism org) {
 		LinkedList<Food> foodToEatList = (LinkedList<Food>) collectFoodInRange2(
 				org, 2);
 		Food foodToEat;
@@ -398,7 +232,7 @@ public class GridPanel extends JPanel {
 		return org.changeHealth(5 * foodToEat.getType());
 	}
 
-	private void attack(Organism org) {
+	public void attack(Organism org) {
 	ArrayList<Integer> surroundingOrganisms = org.getSurroundingObjects(
 				'o', 1);
 		surroundingOrganisms.remove((Integer) org.getId());
@@ -410,7 +244,7 @@ public class GridPanel extends JPanel {
 			org.setAction("Attempted to attack");
 	}
 
-	private void push(Organism org) {
+	public void push(Organism org) {
 		ArrayList<Integer> surroundingOrganismsPush = org
 				.getSurroundingObjects('o', 1);
 		surroundingOrganismsPush.remove((Integer) org.getId());
@@ -423,7 +257,7 @@ public class GridPanel extends JPanel {
 			org.setAction("Attempted to push");
 	}
 
-	private void newTrial() {
+	public void newTrial() {
 		t.stop();
 		shuffleIds.clear();
 		for (Organism o : organisms) {
@@ -452,45 +286,7 @@ public class GridPanel extends JPanel {
 		}
 	}
 
-	private void newGeneration() {
-		timePassed = 0;
-		double sum = 0;
-		g.setOrgList(organisms);
-		organisms = g.newGeneration();
-		healthFd.clear();
-		poisFood.clear();
-		locationMap.clearLocations();
-		shuffleIds.clear();
-		for (Organism o : organisms) {
-			sum += g.fitnessTest(o);
-			o.newLocation();
-			o.addChromosome();
-			o.setHealth(o.getMaxHealth());
-			o.clear();
-			shuffleIds.add(o.getId());
-		}
-		lastAvg = sum / OptionsPanel.numOrganisms;
-		for (int i = 0; i < numFoodSources; i++) {
-			HealthyFood h = new HealthyFood(100.0, i, 2);
-			PoisonousFood f = new PoisonousFood(100.0, i, 2);
-			healthFd.add(h);
-			poisFood.add(f);
-		}
-		trialNum = 1;
-		generationNum++;
-
-		GUI.genPanel.addGeneration();
-		if (!GUI.genPanel.resumeHasNotBeenClicked()) {
-			GUI.genPanel.enableResumeSimulation();
-			gui.toggleAllPauses(false);
-		} else {
-			t.start();
-			GUI.genPanel.newGeneration();
-			repaint();
-		}
-	}
-	
-	private void newGenerationAstar() {
+	public void newGenerationAstar() {
 		timePassed = 0;
 		double sum = 0;
 		trialNum = 1;
@@ -532,103 +328,6 @@ public class GridPanel extends JPanel {
 			repaint();
 			System.out.println("restarting");
 		}
-	}
-
-	/**
-	 * Determines whether of not the passed Organism is next to a food source.
-	 * 
-	 * @param org
-	 *            The Organism that is being compared to the food sources.
-	 * @return (true/false) whether or not the organism is next to food.
-	 */
-	private boolean organismIsNextToHealthyFood(Organism org) {
-		int leftBoundary = org.getLocation().getX() - Food.width / 2;
-		int rightBoundary = org.getLocation().getX() + Food.width / 2;
-		int lowerBoundary = org.getLocation().getY() + Food.height / 2;
-		int upperBoundary = org.getLocation().getY() - Food.height / 2;
-
-		boolean isNextToFood = false;
-		for (HealthyFood food : healthFd) {
-			if (food != null) {
-				int leftBoundary2 = food.getLocation().getX() - Organism.width
-						/ 2 - 1;
-				int rightBoundary2 = food.getLocation().getX() + Organism.width
-						/ 2 + 1;
-				int lowerBoundary2 = food.getLocation().getY()
-						+ Organism.height / 2 + 1;
-				int upperBoundary2 = food.getLocation().getY()
-						- Organism.height / 2 - 1;
-
-				if ((leftBoundary >= leftBoundary2
-						&& leftBoundary <= rightBoundary2 && ((upperBoundary >= upperBoundary2 && upperBoundary <= lowerBoundary2) || (lowerBoundary >= upperBoundary2 && lowerBoundary <= lowerBoundary2)))
-						|| (rightBoundary >= leftBoundary2
-								&& rightBoundary <= rightBoundary2 && ((upperBoundary >= upperBoundary2 && upperBoundary <= lowerBoundary2) || (lowerBoundary >= upperBoundary2 && lowerBoundary <= lowerBoundary2)))) {
-					/*
-					 * Organism is next to food
-					 */
-					org.eatFood(food, 5);
-					if (food.getHealth() <= 0) {
-						// Delete food source if it is depleted
-						Coordinate c = food.getLocation();
-						locationMap.setRange(c, food.getWidth(),
-								food.getHeight(), food.getType(), food.getId());
-						healthFd.set(food.getId(), null);
-					}
-					isNextToFood = true;
-					break;
-				}
-			}
-		}
-		return isNextToFood;
-	}
-
-	/**
-	 * Determines whether of not the passed Organism is next to a food source.
-	 * 
-	 * @param org
-	 *            The Organism that is being compared to the food sources.
-	 * @return (true/false) whether or not the organism is next to food.
-	 */
-	private boolean organismIsNextToPoisonousFood(Organism org) {
-		int leftBoundary = org.getLocation().getX() - Food.width / 2;
-		int rightBoundary = org.getLocation().getX() + Food.width / 2;
-		int lowerBoundary = org.getLocation().getY() + Food.height / 2;
-		int upperBoundary = org.getLocation().getY() - Food.height / 2;
-
-		boolean isNextToFood = false;
-		for (PoisonousFood food : poisFood) {
-			if (food != null) {
-				int leftBoundary2 = food.getLocation().getX()
-						- Organism.width / 2 - 1;
-				int rightBoundary2 = food.getLocation().getX()
-						+ Organism.width / 2 + 1;
-				int lowerBoundary2 = food.getLocation().getY()
-						+ Organism.height / 2 + 1;
-				int upperBoundary2 = food.getLocation().getY()
-						- Organism.height / 2 - 1;
-
-				if ((leftBoundary >= leftBoundary2
-						&& leftBoundary <= rightBoundary2 && ((upperBoundary >= upperBoundary2 && upperBoundary <= lowerBoundary2) || (lowerBoundary >= upperBoundary2 && lowerBoundary <= lowerBoundary2)))
-						|| (rightBoundary >= leftBoundary2
-								&& rightBoundary <= rightBoundary2 && ((upperBoundary >= upperBoundary2 && upperBoundary <= lowerBoundary2) || (lowerBoundary >= upperBoundary2 && lowerBoundary <= lowerBoundary2)))) {
-					/*
-					 * Organism is next to food
-					 */
-					org.eatFood(food, 2);
-					if (food.getHealth() <= 0) {
-						Coordinate c = food.getLocation();
-						// Delete food source if it is depleted
-						locationMap.setRange(c, food.getWidth(),
-								food.getHeight(), food.getType(), food.getId());
-						poisFood.set(food.getId(), null);
-					}
-					isNextToFood = true;
-					break;
-				}
-			}
-		}
-
-		return isNextToFood;
 	}
 
 	/**
@@ -1294,34 +993,6 @@ public class GridPanel extends JPanel {
 		return result.evaluate(environment);
 	}
 	
-	/**
-	 * This method gets all returns a list of all the Food objects that are in
-	 * the org's sight range.
-	 * 
-	 * @param org
-	 * @return
-	 */
-	private List<Food> collectFoodInRange(Organism org) {
-		ArrayList<Integer> healthyFoodInRangeIds = org.getSurroundingObjects(
-				'h', 20);
-		// List to be filled with actual food objects.
-		LinkedList<Food> foodInRange = new LinkedList<Food>();
-		// Fill the healthyFoodInRange list with food objects obtained from
-		// ids.
-		if (!healthyFoodInRangeIds.isEmpty())
-			for (Integer integer : healthyFoodInRangeIds)
-				foodInRange.add(healthFd.get(integer));
-		// Pois food ids.
-		ArrayList<Integer> poisFoodInRangeIds = org.getSurroundingObjects('p',
-				20);
-		// Fill the poisFoodInRange list with food objects obtained from
-		// ids.
-		if (!poisFoodInRangeIds.isEmpty())
-			for (Integer integer : poisFoodInRangeIds)
-				foodInRange.add(poisFood.get(integer));
-		return foodInRange;
-	}
-
 	/**
 	 * This method gets all returns a list of all the Food objects that are in
 	 * the org's sight range.

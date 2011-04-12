@@ -862,12 +862,10 @@ public class LocationMap {
 							.get(i, j);
 					Character charType = aPair.getSnd();
 					Integer spaceId = aPair.getFst();
-					if (charType != 'w') {
-						if (charType == 'o' && spaceId != anId)
-							return true;
-						if (charType == 'h' || charType == 'p')
-							return true;
-					}
+					if (charType == 'o' && spaceId != anId)
+						return true;
+					if (charType == 'h' || charType == 'p')
+						return true;
 				} catch (ArrayIndexOutOfBoundsException e) {
 				}
 			}
