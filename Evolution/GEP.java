@@ -870,35 +870,31 @@ public class GEP {
 		  out.println();
 	 }
 
-	 /*public static void main(String[] args) {
+	 public static void main(String[] args) {
 		  LinkedList<Organism> orgList = new LinkedList<Organism>();
 		  Random r = new Random();
 
 		  // CASE: EVEN NUMBER OF ORGANISMS.
 		  for (int i = 0; i < 4; i++)
 		     orgList.add(new Organism(true, 4, r.nextInt(20), i));
-
-		  GEP gep = new GEP(orgList, 0.75, 0.01, 0.01, 0.75, 0.75, true);
-		  GEP gep = new GEP(orgList, 0.10, 0.01, 0.01, 0.75, 0.75, true);
-		  GEP gep = new GEP(orgList, 0.10, 0.01, 0.01, 0.75, 0.75, true);
-
-		  GEP gep = new GEP(orgList, 1.00, 1.00, 1.00, 1.00, 1.00, 2, false,
-		  	    true);// Elitism ctor. gep.newGenerationTest();
-
+		  GEP gep = new GEP(1.00, 1.00, 1.00, 1.00, 1.00, 2, false,
+		  	    true);
+		  gep.newGenerationTest(orgList);
+		  
 		  // CASE: ODD NUMBER OF ORGANISMS.
 		  LinkedList<Organism> orgList2 = new LinkedList<Organism>();
 		  for (int i = 0; i < 5; i++)
 			   orgList2.add(new Organism(true, 4, r.nextInt(20), i));
-		  GEP gep2 = new GEP(orgList2, 1.00, 1.00, 1.00, 1.00, 1.00, 2,
+		  GEP gep2 = new GEP(1.00, 1.00, 1.00, 1.00, 1.00, 2,
 				    false, false); // Elitism ctor.
-		  gep2.newGenerationTest();
+		  gep2.newGenerationTest(orgList2);
 		  
+		  // CASE USING NEW PARAMETERIZED NEW GENERATION.
 		  LinkedList<Organism> orgList3 = new LinkedList<Organism>();
 		  for (int i = 0; i < 5; i++)
 			   orgList3.add(new Organism(true, 4, r.nextInt(20), i));
 		  GEP gep3 = new GEP(1.00, 1.00, 1.00, 1.00, 1.00, 2,
 				    false, false); // Elitism ctor.
 		  gep3.newGenerationTest(orgList3);
-		   gep.newGenerationTest2(); 
-	 }*/
+	 }
 }

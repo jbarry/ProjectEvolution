@@ -32,7 +32,7 @@ public class GEPTest {
 	@Before
 	public void setUp() throws Exception {
 		r = new Random();
-		gep = new GEP(null, 0.75, 0.01, 0.01, 0.75, 0.75, 3, false, true);
+		gep = new GEP(0.75, 0.01, 0.01, 0.75, 0.75, 3, false, true);
 		//
 		/*
 		 * LinkedList<Organism> orgList = new LinkedList<Organism>(); for (int i
