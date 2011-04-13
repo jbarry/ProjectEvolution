@@ -669,8 +669,9 @@ public class GUI extends Container{
 
 		for (int i = 0; i < tempOrgs.size(); i++) {
 			for (int k = 0; k < tempOrgs.get(i).getChromosome().size(); k++) {
-				ArrayList<String> tempArray = tempOrgs.get(i).getChromosome()
-						.getGene(k).makeStringArray();
+				 Gene gene = tempOrgs.get(i).getChromosome()
+					.getGene(k);
+				ArrayList<String> tempArray = gene.makeStringArray(gene.getSymList());
 				for (int j = 0; j < tempArray.size(); j++) {
 					fileContents += tempArray.get(j);
 				}
@@ -718,13 +719,14 @@ public class GUI extends Container{
 				+ numGenes + " " + tempOrgs.get(0).getMaxHealth() + "&";
 
 		for (int i = 0; i < tempOrgs.size(); i++) {
-			for (int k = 0; k < tempOrgs.get(i).getChromosome().size(); k++) {
-				ArrayList<String> tempArray = tempOrgs.get(i).getChromosome()
-						.getGene(k).makeStringArray();
-				for (int j = 0; j < tempArray.size(); j++) {
-					fileContents += tempArray.get(j);
-				}
-			}
+			   for (int k = 0; k < tempOrgs.get(i).getChromosome().size(); k++) {
+				    Gene gene = tempOrgs.get(i).getChromosome().getGene(k);
+				    ArrayList<String> tempArray = gene.makeStringArray(gene
+							 .getSymList());
+				    for (int j = 0; j < tempArray.size(); j++) {
+						fileContents += tempArray.get(j);
+				    }
+			   }
 			fileContents += "@" + simulation.getOrganismData(i) + "&";
 		}
 

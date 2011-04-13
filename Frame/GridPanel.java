@@ -54,7 +54,7 @@ public class GridPanel extends JPanel {
 	 private ArrayList<Integer> shuffleIds;
 	 private ArrayList<String> shuffleStringIds;
 	 private int lengthTimeStep = 100;
-	 private int lengthGeneration = 300;
+	 private int lengthGeneration = 100;
 	 private int timePassed = 0;
 	 private int trialsPerGen = 1;
 	 public int trialNum = 1;
@@ -153,62 +153,6 @@ public class GridPanel extends JPanel {
 		  }
 
 	 }
-
-	 public boolean doAction(Organism org, Pair<Integer, Double> bestEval) {
-
-		  switch (bestEval.left()) {
-			   case 0:
-				    org.moveNorth(organisms, false);
-				    // org.addAction("N", orgIndex);
-				    org.countStep();
-				    break;
-			   /*case 1:
-			   	org.moveSouth(organisms, false);
-			   	// org.addAction("S", orgIndex);
-			   	org.countStep();
-			   	break;
-			   case 2:
-			   	org.moveEast(organisms, false);
-			   	// org.addAction("E", orgIndex);
-			   	org.countStep();
-			   	break;
-			   case 3:
-			   	org.moveWest(organisms, false);
-			   	// org.addAction("W", orgIndex);
-			   	org.countStep();
-			   	break;
-			   case 4:
-			   	org.moveNorthEast(organisms, false);
-			   	// org.addAction("NE", orgIndex);
-			   	org.countStep();
-			   	break;
-			   case 5:
-			   	org.moveNorthWest(organisms, false);
-			   	// org.addAction("NW", orgIndex);
-			   	org.countStep();
-			   	break;
-			   case 6:
-			   	org.moveSouthEast(organisms, false);
-			   	// org.addAction("SE", orgIndex);
-			   	org.countStep();
-			   	break;
-			   case 7:
-			   	org.moveSouthWest(organisms, false);
-			   	// org.addAction("SW", orgIndex);
-			   	org.countStep();
-			   	break;*/
-			   case 8:
-				    // doEat(org);
-				    return eatFoodInRange(org);
-			   case 9:
-				    attack(org);
-				    break;
-			   case 10:
-				    push(org);
-		  }
-		  return false;
-	 }
-
 	 public void attack2(Organism org, ArrayList<Organism> aOrgsUsed) {
 		  ArrayList<Integer> surroundingOrganisms = org
 				    .getSurroundingObjects('o', 1);
@@ -231,7 +175,7 @@ public class GridPanel extends JPanel {
 			   org.printInfo();
 			   System.out.println("Ate food");
 			   foodToEat.printInfo();
-			   return org.changeHealth(5 * foodToEat.getFoodType());
+			   return org.eatFood(5 * foodToEat.getFoodType());
 		  } else {
 			   return false;
 		  }
@@ -296,15 +240,13 @@ public class GridPanel extends JPanel {
 		  double sum = 0;
 		  trialNum = 1;
 		  generationNum++;
-		  g.setOrgList(organisms);
-		  organisms = g.newGeneration(organisms);
 		  locationMap.clearLocations();
 		  shuffleIds.clear();
 		  // Assign organism fitness and reinitialize organisms.
 		  for (int i = 0; i < organisms.size(); i++) {
 			   Organism o = organisms.get(i);
 			   OrgData od = orgDataList.get(i);
-			   od.setFitness(g.fitnessAverageHealthTimeOfDeathNumSteps(od));
+			   od.setFitness(g.fitnessAverageHealthTimeOfDeathNumSteps(od, o));
 			   sum += o.getFitness();
 			   od.clear();
 			   o.clear();
@@ -325,6 +267,7 @@ public class GridPanel extends JPanel {
 				    food.add(new PoisonousFood(100.00, i, 2));
 		  // Place food on locationMap.
 		  locationMap.placeFoods(food);
+		  organisms = g.newGeneration(organisms);
 		  // Set the generation panel data information.
 		  GUI.genPanel.addGeneration();
 		  if (!GUI.genPanel.resumeHasNotBeenClicked()) {
@@ -515,8 +458,8 @@ public class GridPanel extends JPanel {
 									   }
 								  }
 							 }
-							 doAction(org, bestEval1);
-							 doAction(org, bestEval2);
+							 /*doAction(org, bestEval1);
+							 doAction(org, bestEval2);*/
 						}
 						orgIndex++;
 				    }
@@ -825,7 +768,7 @@ public class GridPanel extends JPanel {
 						closedList.clear();
 						lastFoodSourceIndex = bestEval.getFst();
 				    }
-				    moveAstarClosedList(org, foodDestination, closedList);
+				    moveAstarClosedList(org, orgData, foodDestination, closedList);
 			   } // End NumAction Loop.
 		  } // End mainLoop.
 	 }
@@ -838,6 +781,7 @@ public class GridPanel extends JPanel {
 	  *              The number of actions that an organism will do at each
 	  *              time step.
 	  */
+	 // TODO: Only take data if Organism is alive.
 	 private void simulateStepAstarClosedListOrgData(int numActions) {
 
 		  Collections.shuffle(shuffleIds);
@@ -864,7 +808,7 @@ public class GridPanel extends JPanel {
 				    // health
 				    // by at each time step.
 				    double depleteValue = org.getMaxHealth()
-							 / ((lengthGeneration / 5) * numActions);
+							 / ((lengthGeneration - 30) * numActions);
 				    // Check to see if the Organism is dead, if so remove
 				    // that org
 				    // from the shuffleIds list.
@@ -872,6 +816,7 @@ public class GridPanel extends JPanel {
 						System.out.println("removing on deplete");
 						orgData.setTimeOfDeath(timePassed);
 						shuffleIds.remove(new Integer(org.getId()));
+						// TODO: Remove orgData objects from list.
 						continue mainLoop;
 				    }
 				    Chromosome chrome = org.getChromosome();
@@ -929,7 +874,7 @@ public class GridPanel extends JPanel {
 	  * @param bestEval
 	  * @param aFoodDestination
 	  */
-	 private void moveAstarClosedList(Organism org, Food aFoodDestination,
+	 private void moveAstarClosedList(Organism org, OrgData od, Food aFoodDestination,
 			   ArrayList<Coordinate> aClosedList) {
 
 		  StarQueue<Coordinate> sq = LocationMap.searchWithList(
@@ -970,7 +915,7 @@ public class GridPanel extends JPanel {
 		  } while (!sq.isEmpty());
 		  if (canMove) {
 			   org.moveTo(nextMove);
-			   org.countStep();
+			   od.countStep();
 			   aClosedList.add(nextMove);
 		  }
 		  /*System.out.println("Added to closedList: " + aClosedList.get(0));*/
@@ -982,7 +927,7 @@ public class GridPanel extends JPanel {
 
 		  switch (bestEval.left()) {
 			   case 0:
-				    moveAstarClosedList(org, aFoodDestination,
+				    moveAstarClosedList(org, anOrgData, aFoodDestination,
 							 (ArrayList<Coordinate>) anOrgData
 									   .getClosedList());
 			   case 1:

@@ -169,14 +169,19 @@ public class GEP {
 	  * @param org
 	  * @return
 	  */
-	 public double fitnessAverageHealthTimeOfDeathNumSteps(OrgData orgData) {
+	 public double fitnessAverageHealthTimeOfDeathNumSteps(OrgData orgData, Organism o) {
 		  int numSteps = orgData.getNumSteps();
+		  System.out.println("numsteps: " + orgData.getNumSteps());
 		  System.out.println("timeofdeath: " + orgData.getTimeOfDeath());
+		  System.out.println("healthtotal: " + orgData.getHlthTot());
 		  orgData.setAverageHealth(orgData.getHlthTot()
 				    / orgData.getTimeOfDeath());
+		  System.out.println("avghealth: " + orgData.getAverageHealth());
 		  double fitness = (orgData.getAverageHealth() / numSteps)
 				    + orgData.getTimeOfDeath();
 		  System.out.println("fit: " + fitness);
+		  System.out.println();
+		  o.setFitness(fitness);
 		  return fitness;
 	 }
 
@@ -870,7 +875,7 @@ public class GEP {
 		  out.println();
 	 }
 
-	 public static void main(String[] args) {
+	 /*public static void main(String[] args) {
 		  LinkedList<Organism> orgList = new LinkedList<Organism>();
 		  Random r = new Random();
 
@@ -896,5 +901,5 @@ public class GEP {
 		  GEP gep3 = new GEP(1.00, 1.00, 1.00, 1.00, 1.00, 2,
 				    false, false); // Elitism ctor.
 		  gep3.newGenerationTest(orgList3);
-	 }
+	 }*/
 }

@@ -89,7 +89,7 @@ public class Gene<A extends Crossable<?>> extends Genetic implements
 		  return lenGenes;
 	 }
 
-	 public List<Character> getList() {
+	 public List<Character> getSymList() {
 		  return symList;
 	 }
 

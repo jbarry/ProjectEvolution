@@ -38,7 +38,7 @@ public class OrgData {
 		  fitness = 0;
 		  hlthTot = 0;
 		  samples = 0;
-		  steps = -1;
+		  steps = 1;
 		  timeOfDeath = 0;
 		  closedList = new ArrayList<Coordinate>();
 		  previousPosition = new Coordinate(-1, -1);
@@ -91,7 +91,7 @@ public class OrgData {
 	 public void clear() {
 		  eatFail = 0;
 		  numScans = 0;
-		  steps = 0;
+		  steps = 1;
 		  samples = 0;
 		  hlthTot = 0;
 		  poisonEatSuccess = 0;

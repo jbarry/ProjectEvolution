@@ -8,7 +8,6 @@ import java.util.Random;
 import java.util.Set;
 
 import Frame.Coordinate;
-import Frame.GridPanel;
 import Frame.LocationMap;
 
 public abstract class Matter implements Comparable<Matter>{
@@ -54,16 +53,6 @@ public abstract class Matter implements Comparable<Matter>{
 		return false;
 	}
 	
-	public boolean changeHealth(double val) {
-		hlth+=val;
-		if (hlth <= 0) {
-			hlth = 0;
-			return true;
-		} else if (hlth > mxHlth)
-			hlth = mxHlth;
-		return false;
-	}
-
 	public void decreaseHealth(double val) {
 		if (hlth - val < 0) {
 			hlth = 0;
