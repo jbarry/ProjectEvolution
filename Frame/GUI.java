@@ -44,6 +44,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.media.Manager;
+import javax.media.Player;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
@@ -104,11 +106,14 @@ public class GUI extends Container {
 	private JMenuItem waterMap;
 	private JMenuItem moonMap;
 	private JMenuItem middleEarthMap;
+	private JMenuItem sawMap;
+	private JMenuItem dexterMap;
 
 	private OptionsPanel optionsPanel;
 	private Chromosome chromosome;
 	private Organism organism;
 	private Map map;
+	private Audio audio;
 	private GridPanel simulation;
 	private MonitorPanel monitorPanel;
 	public static GenerationPanel genPanel;
@@ -243,7 +248,8 @@ public class GUI extends Container {
 		pane.addMouseListener(frameMouseListener);
 
 		map = new Map();
-
+		audio = new Audio();
+		
 		simulation = new GridPanel(this);
 		simulation.setBackground(new Color(230, 230, 230));
 		pane.add(simulation);
@@ -315,7 +321,8 @@ public class GUI extends Container {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				enableMapItems();
-				map.setCurrMap(defaultMap.getText());
+				map.setCurrMap(defaultMap.getText());		
+				audio.stopAudio();
 				defaultMap.setEnabled(false);
 			}
 		});
@@ -329,6 +336,9 @@ public class GUI extends Container {
 			public void actionPerformed(ActionEvent e) {
 				enableMapItems();
 				map.setCurrMap(grassMap.getText());
+				audio.stopAudio();
+				audio = new Audio("grass.wav");			
+				audio.playAudio();
 				grassMap.setEnabled(false);
 
 			}
@@ -343,6 +353,9 @@ public class GUI extends Container {
 			public void actionPerformed(ActionEvent e) {
 				enableMapItems();
 				map.setCurrMap(sandMap.getText());
+				audio.stopAudio();
+				audio = new Audio("sand.wav");			
+				audio.playAudio();
 				sandMap.setEnabled(false);
 
 			}
@@ -357,6 +370,9 @@ public class GUI extends Container {
 			public void actionPerformed(ActionEvent e) {
 				enableMapItems();
 				map.setCurrMap(waterMap.getText());
+				audio.stopAudio();
+				audio = new Audio("water.wav");			
+				audio.playAudio();
 				waterMap.setEnabled(false);
 
 			}
@@ -371,8 +387,10 @@ public class GUI extends Container {
 			public void actionPerformed(ActionEvent e) {
 				enableMapItems();
 				map.setCurrMap(moonMap.getText());
+				audio.stopAudio();
+				audio = new Audio("moon.wav");			
+				audio.playAudio();
 				moonMap.setEnabled(false);
-
 			}
 		});
 		selectMapMenu.add(moonMap);
@@ -385,12 +403,48 @@ public class GUI extends Container {
 			public void actionPerformed(ActionEvent e) {
 				enableMapItems();
 				map.setCurrMap(middleEarthMap.getText());
-				middleEarthMap.setEnabled(false);
-
+				audio.stopAudio();
+				audio = new Audio("middleEarth.wav");			
+				audio.playAudio();
+				middleEarthMap.setEnabled(false);		
 			}
 		});
 		selectMapMenu.add(middleEarthMap);
 
+		// Saw Map
+		sawMap = new JMenuItem("Saw");
+		sawMap.setText("Saw");
+		sawMap.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				enableMapItems();
+				map.setCurrMap(sawMap.getText());
+				audio.stopAudio();
+				audio = new Audio("saw.wav");			
+				audio.playAudio();
+				sawMap.setEnabled(false);
+
+			}
+		});
+		selectMapMenu.add(sawMap);
+		
+		// Dexter Map
+		dexterMap = new JMenuItem("Dexter");
+		dexterMap.setText("Dexter");
+		dexterMap.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				enableMapItems();
+				map.setCurrMap(dexterMap.getText());
+				audio.stopAudio();
+				audio = new Audio("dexter.wav");			
+				audio.playAudio();
+				dexterMap.setEnabled(false);
+
+			}
+		});
+		selectMapMenu.add(dexterMap);
+		
 		fileMenu.addSeparator();
 
 		/** Save Genes Option */
