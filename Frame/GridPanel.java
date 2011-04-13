@@ -228,9 +228,9 @@ public class GridPanel extends JPanel {
 		  Food foodToEat;
 		  if (!foodToEatList.isEmpty()) {
 			   foodToEat = foodToEatList.get(0);
-			   /*org.printInfo();
+			   org.printInfo();
 			   System.out.println("Ate food");
-			   foodToEat.printInfo();*/
+			   foodToEat.printInfo();
 			   return org.changeHealth(5 * foodToEat.getFoodType());
 		  } else {
 			   return false;
@@ -297,14 +297,14 @@ public class GridPanel extends JPanel {
 		  trialNum = 1;
 		  generationNum++;
 		  g.setOrgList(organisms);
-		  organisms = g.newGeneration();
+		  organisms = g.newGeneration(organisms);
 		  locationMap.clearLocations();
 		  shuffleIds.clear();
 		  // Assign organism fitness and reinitialize organisms.
 		  for (int i = 0; i < organisms.size(); i++) {
 			   Organism o = organisms.get(i);
 			   OrgData od = orgDataList.get(i);
-			   od.setFitness(g.fitnessJustin(od));
+			   od.setFitness(g.fitnessAverageHealthTimeOfDeathNumSteps(od));
 			   sum += o.getFitness();
 			   od.clear();
 			   o.clear();
@@ -545,13 +545,13 @@ public class GridPanel extends JPanel {
 				    timePassed = 0;
 				    double sum = 0;
 				    g.setOrgList(organisms);
-				    organisms = g.newGeneration();
+				    organisms = g.newGeneration(organisms);
 				    healthFd.clear();
 				    poisFood.clear();
 				    locationMap.clearLocations();
 				    shuffleIds.clear();
 				    for (Organism o : organisms) {
-						sum += g.fitness(o);
+						sum += g.fitnessIan(o);
 						o.newLocation();
 						o.addChromosome();
 						o.setHealth(o.getMaxHealth());
@@ -691,7 +691,7 @@ public class GridPanel extends JPanel {
 			   else
 				    food.add(new PoisonousFood(100.00, i, 2));
 		  locationMap.placeFoods(food);
-		  g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75, 1, false,
+		  g = new GEP(0.75, 0.01, 0.01, 0.75, 0.75, 1, false,
 				    false);
 	 }
 
@@ -737,7 +737,7 @@ public class GridPanel extends JPanel {
 			   else
 				    food.add(new PoisonousFood(100.00, i, 2));
 		  locationMap.placeFoods(food);
-		  g = new GEP(organisms, 0.75, 0.01, 0.01, 0.75, 0.75, 1, false,
+		  g = new GEP(0.75, 0.01, 0.01, 0.75, 0.75, 1, false,
 				    false);
 	 }
 

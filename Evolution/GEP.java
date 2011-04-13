@@ -40,92 +40,6 @@ public class GEP {
 	 public static double twoPtProb;
 
 	 /**
-	  * @param anOrgList
-	  * @param aTournProb
-	  * @param aMutProb
-	  * @param aRotProb
-	  * @param aOnePtProb
-	  * @param aTwoPtProb
-	  */
-	 public GEP(LinkedList<Organism> anOrgList, double aTournProb,
-			   double aMutProb, double aRotProb, double aOnePtProb,
-			   double aTwoPtProb) {
-
-		  orgList = anOrgList;
-		  tournProb = aTournProb;
-		  mutProb = aMutProb;
-		  rotProb = aRotProb;
-		  onePtProb = aOnePtProb;
-		  twoPtProb = aTwoPtProb;
-		  handicap = false;
-		  ran = new Random();
-		  doElitism = false;
-		  numElites = 0;
-	 }
-
-	 /**
-	  * @param anOrgList
-	  * @param aTournProb
-	  * @param aMutProb
-	  * @param aRotProb
-	  * @param aOnePtProb
-	  * @param aTwoPtProb
-	  * @param aHandicap
-	  */
-	 public GEP(LinkedList<Organism> anOrgList, double aTournProb,
-			   double aMutProb, double aRotProb, double aOnePtProb,
-			   double aTwoPtProb, boolean aHandicap) {
-
-		  orgList = anOrgList;
-		  tournProb = aTournProb;
-		  mutProb = aMutProb;
-		  rotProb = aRotProb;
-		  onePtProb = aOnePtProb;
-		  twoPtProb = aTwoPtProb;
-		  handicap = aHandicap;
-		  ran = new Random();
-		  doElitism = false;
-		  numElites = 0;
-	 }
-
-	 /**
-	  * 
-	  * Similar to the previous ctor except that elitism occurs in this form of
-	  * GEP.
-	  * 
-	  * @param anOrgList
-	  * @param aTournProb
-	  * @param aMutProb
-	  * @param aRotProb
-	  * @param aOnePtProb
-	  * @param aTwoPtProb
-	  * @param aNumElitists
-	  *              The number of elite organisms that we want to transcend
-	  *              each generation.
-	  * @param aHandicap
-	  * @param aDoElitism
-	  *              If true then elitism occurs. Otherwise elitism is not
-	  *              practiced.
-	  */
-	 public GEP(LinkedList<Organism> anOrgList, double aTournProb,
-			   double aMutProb, double aRotProb, double aOnePtProb,
-			   double aTwoPtProb, int aNumElitists, boolean aHandicap,
-			   boolean aDoElitism) {
-
-		  orgList = anOrgList;
-		  tournProb = aTournProb;
-		  mutProb = aMutProb;
-		  rotProb = aRotProb;
-		  onePtProb = aOnePtProb;
-		  twoPtProb = aTwoPtProb;
-		  handicap = aHandicap;
-		  doElitism = aDoElitism;
-		  numElites = aNumElitists;
-
-		  ran = new Random();
-	 }
-
-	 /**
 	  * 
 	  * Similar to the previous ctor except that elitism occurs in this form of
 	  * GEP.
@@ -167,7 +81,7 @@ public class GEP {
 	  *              - a single organism to be assessed.
 	  * @return a double representing the evaluated fitness of the organism.
 	  */
-	 public double fitness(Organism org) {
+	 public double fitnessIan(Organism org) {
 		  double avgHealth = org.getHlthTot() / org.getSamples();
 		  double activity = (double) org.getNumSteps();
 		  double goodEating = (double) org.getHealthEat()
@@ -190,7 +104,7 @@ public class GEP {
 	  * @param org
 	  * @return
 	  */
-	 public double fitnessTest(Organism org) {
+	 public double fitnessIanTest(Organism org) {
 		  double avgHealth = org.getHlthTot() / org.getSamples();
 		  System.out.println("avgHealth: " + avgHealth);
 		  double activity = (double) org.getNumSteps();
@@ -217,38 +131,6 @@ public class GEP {
 		  System.out.println(org.getSteps());
 		  return org.getSteps();
 	 }
-
-	 /**
-	  * This method assigns a double representing fitness of each organism.
-	  * 
-	  * @param org
-	  *              - a single organism to be assessed.
-	  * @return a double representing the evaluated fitness of the organism.
-	  */
-	 public double fitnessIan(Organism org) {
-		  double avgHealth = org.getHlthTot() / org.getSamples();
-		  double activity = (double) org.getNumSteps();
-		  double goodEating = (double) org.getHealthEat()
-				    * (org.getHealthEat() + org.getPoisonEat() + org
-							 .getTotalScans())
-				    / (GridPanel.numFoodSources);
-		  double assertion = (double) (org.getNumSteps()
-				    + org.getNumAttacked() + org.getNumPushed())
-				    / (org.getHealthEat() + 1);
-		  double badEating = (double) org.getPoisonEat() + 1;
-		  double fitness = (avgHealth * (activity + goodEating + assertion))
-				    / badEating;
-		  org.setFitness(fitness);
-		  return fitness;
-	 }
-
-	 /**
-	  * @param org
-	  * @return
-	  */
-	 /*
-	  * public double fitnessAvgHealth(Organism org) { }
-	  */
 
 	 /**
 	  * @param org
@@ -287,10 +169,13 @@ public class GEP {
 	  * @param org
 	  * @return
 	  */
-	 public double fitnessJustin(OrgData orgData) {
+	 public double fitnessAverageHealthTimeOfDeathNumSteps(OrgData orgData) {
 		  int numSteps = orgData.getNumSteps();
-		  orgData.setAverageHealth(orgData.getHlthTot()/orgData.getTimeOfDeath());
-		  double fitness = (orgData.getAverageHealth() / numSteps) + orgData.getTimeOfDeath();
+		  System.out.println("timeofdeath: " + orgData.getTimeOfDeath());
+		  orgData.setAverageHealth(orgData.getHlthTot()
+				    / orgData.getTimeOfDeath());
+		  double fitness = (orgData.getAverageHealth() / numSteps)
+				    + orgData.getTimeOfDeath();
 		  System.out.println("fit: " + fitness);
 		  return fitness;
 	 }
@@ -312,8 +197,8 @@ public class GEP {
 		  // Get the most elite indiv or individuals.
 		  if (doElitism) {
 			   // Called on a clone of the orgList because
-			   eliteList = (LinkedList<Chromosome>) assembleElites((LinkedList<Organism>) anOrgList
-						.clone());
+			   eliteList = (LinkedList<Chromosome>) assembleElites(
+						(LinkedList<Organism>) anOrgList.clone());
 		  }
 		  // ordering the original list may be a
 		  // detriment to randomization.
@@ -359,9 +244,10 @@ public class GEP {
 		  LinkedList<Chromosome> eliteList = new LinkedList<Chromosome>();
 		  // Get the most elite indiv or individuals.
 		  if (doElitism) {
-			   eliteList = (LinkedList<Chromosome>) assembleElitesTest((LinkedList<Organism>) anOrgList
-						.clone()); // Called on a clone of the
-								 // orgList because
+			// Called on a clone of the
+				 // orgList because
+			   eliteList = (LinkedList<Chromosome>) assembleElitesTest(
+						(LinkedList<Organism>) anOrgList.clone());
 			   System.out.println("The elites are: ");
 			   printChromeListIds(eliteList);
 			   System.out.println("The elites genes are: ");
@@ -377,7 +263,8 @@ public class GEP {
 		  System.out.println();
 		  out.println("orgListSize" + anOrgList.size());
 		  out.println();
-		  LinkedList<Pair<Organism, Organism>> partners = partnerSelect(anOrgList);
+		  LinkedList<Pair<Organism, Organism>> partners =
+			   partnerSelect(anOrgList);
 
 		  // PRINT THE IDS OF THE PAIR OF ORGS AFTER
 		  // PARTNERSELECT IS CALLED.
@@ -386,7 +273,8 @@ public class GEP {
 
 		  // TEST TOURNAMENT.
 		  LinkedList<Organism> afterTournOrgs = tournament(partners);
-		  System.out.println("afterTournOrgs size: " + afterTournOrgs.size());
+		  System.out.println("afterTournOrgs size: " +
+				    afterTournOrgs.size());
 
 		  // TOURNAMENT WITH PRINT.
 		  /*
@@ -424,7 +312,8 @@ public class GEP {
 
 		  // Pair up Chromosomes in preparation
 		  // for 1-point cross over.
-		  LinkedList<Pair<Chromosome, Chromosome>> pairList = mateSelect(chromList);
+		  LinkedList<Pair<Chromosome, Chromosome>> pairList =
+			   mateSelect(chromList);
 		  printMateListIds(pairList);
 
 		  // ONE POINT CROSS OVER.
@@ -445,7 +334,8 @@ public class GEP {
 		  // 2-POINT CROSS OVER.
 		  onePointCrossOver(pairList);
 		  onePointCrossOver(pairList);
-		  LinkedList<Chromosome> finalChromes = makeChrmListFrmPair(pairList);
+		  LinkedList<Chromosome> finalChromes =
+			   makeChrmListFrmPair(pairList);
 		  System.out.println("After 2-point");
 		  printGenes(finalChromes);
 		  /* printChromeListIds(finalChromes); */
@@ -476,49 +366,6 @@ public class GEP {
 		  return anOrgList;
 	 }
 	 
-	 public LinkedList<Organism> newGenerationTest2() {
-
-		  // List to hold the Elite individuals.
-		  LinkedList<Chromosome> eliteList = new LinkedList<Chromosome>();
-		  // Get the most elite indiv or individuals.
-		  if (doElitism)
-			   eliteList = (LinkedList<Chromosome>) assembleElites((LinkedList<Organism>) orgList
-						.clone()); // Called on a clone of the
-								 // orgList because
-		  // ordering the original list may be a
-		  // detriment to randomization.
-		  LinkedList<Chromosome> chromList = makeChromList(tournament(partnerSelect(orgList)));
-		  System.out.println("Before rotation");
-		  printGenes(chromList);
-		  rotation(chromList);
-		  System.out.println("After rotation");
-		  printGenes(chromList);
-		  mutation(chromList);
-		  System.out.println("After mutation");
-		  printGenes(chromList);
-		  // Pair up Chromosomes in preparation
-		  // for 1-point cross over.
-		  LinkedList<Pair<Chromosome, Chromosome>> pairList = mateSelect(chromList);
-		  onePointCrossOver(pairList);
-		  // Pair up Chromosomes again in preparation
-		  // for 2-point cross over.
-		  pairList = mateSelect(makeChrmListFrmPair(pairList));
-		  // 2-point cross over.
-		  onePointCrossOver(pairList);
-		  onePointCrossOver(pairList);
-		  LinkedList<Chromosome> finalChromes = makeChrmListFrmPair(pairList);
-		  // Proceed with elitism if true.
-		  if (eliteList.size() != 0)
-			   transferElites(finalChromes, eliteList);
-		  // Update the evaluations of the genes.
-		  for (Chromosome chrom : chromList)
-			   for (Gene gene : chrom.subListGene(0, chrom.size()))
-				    gene.updateEvaledList();
-		  for (int i = 0; i < orgList.size(); i++)
-			   orgList.get(i).setChromosome(chromList.get(i));
-		  return orgList;
-	 }
-
 	 /**
 	  * This method retreives the most elite members of the organism list. The
 	  * number of individuals depends on what the numElites feild is set to.
@@ -591,12 +438,14 @@ public class GEP {
 			   LinkedList<Organism> population) {
 		  // pairList: list that will recieve the pairs
 		  // of partners.
-		  LinkedList<Pair<Organism, Organism>> pairList = new LinkedList<Pair<Organism, Organism>>();
+		  LinkedList<Pair<Organism, Organism>> pairList =
+			   new LinkedList<Pair<Organism, Organism>>();
 		  // notSeenMap:
 		  // key: Each org from population.
 		  // val: A list of organisms that they have not
 		  // seen yet.
-		  HashMap<Organism, LinkedList<Organism>> notSeenMap = new HashMap<Organism, LinkedList<Organism>>();
+		  HashMap<Organism, LinkedList<Organism>> notSeenMap =
+			   new HashMap<Organism, LinkedList<Organism>>();
 		  // Iterate through population, initializing the
 		  // notSeenMap with keys, and making all the values
 		  // a clone of the original population with
@@ -745,10 +594,11 @@ public class GEP {
 	 public LinkedList<Pair<Chromosome, Chromosome>> mateSelect(
 			   LinkedList<Chromosome> aChromList) {
 		  // This is the list of pairs to return.
-		  LinkedList<Pair<Chromosome, Chromosome>> pairList = new LinkedList<Pair<Chromosome, Chromosome>>();
+		  LinkedList<Pair<Chromosome, Chromosome>> pairList =
+			   new LinkedList<Pair<Chromosome, Chromosome>>();
 		  // This is the clone of the chromList to be decreased.
-		  LinkedList<Chromosome> competitors = (LinkedList<Chromosome>) aChromList
-				    .clone();
+		  LinkedList<Chromosome> competitors =
+			   (LinkedList<Chromosome>) aChromList.clone();
 		  // If Competitors has an odd cardinality, then just append a random
 		  // member to the end.
 		  if (competitors.size() % 2 == 1)
@@ -760,7 +610,8 @@ public class GEP {
 			   Chromosome chrom2 = competitors.remove(ran
 						.nextInt(competitors.size()));
 			   /* System.out.println(chrom1.getId() + " <=> " + chrom2.getId()); */
-			   pairList.add(new Pair<Chromosome, Chromosome>(chrom1, chrom2));
+			   pairList.add(new Pair<Chromosome, Chromosome>(
+						chrom1, chrom2));
 		  }
 		  return pairList;
 	 }
@@ -804,13 +655,6 @@ public class GEP {
 				    aPairList.get(i).getFst()
 							 .crossOver(aPairList.get(i).getSnd());
 	 }
-
-	 /*
-	  * private void assembleElites(LinkedList<Organism> orgList) {
-	  * Collections.sort(orgList); List<Chromosome> eliteList = new
-	  * ArrayList<Chromosome>(); for (int i = 0; i < numElites; i++)
-	  * orgList.add(orgList.pop().getChromosome()); }
-	  */
 
 	 public LinkedList<Organism> getOrgList() {
 		  return orgList;
@@ -870,6 +714,14 @@ public class GEP {
 
 	 public void setElitismNumber(int aNumElites) {
 		  numElites = aNumElites;
+	 }
+
+	 public void setNumElites(int numElites) {
+	       this.numElites = numElites;
+	 }
+
+	 public int getNumElites() {
+	       return numElites;
 	 }
 
 	 // Used for debugging. Prints the line number.
@@ -1018,20 +870,12 @@ public class GEP {
 		  out.println();
 	 }
 
-	 public int getNumElites() {
-		  return numElites;
-	 }
-
-	 public void setNumElites(int numElites) {
-		  this.numElites = numElites;
-	 }
-
-	 public static void main(String[] args) {
+	 /*public static void main(String[] args) {
 		  LinkedList<Organism> orgList = new LinkedList<Organism>();
 		  Random r = new Random();
 
 		  // CASE: EVEN NUMBER OF ORGANISMS.
-		  /*for (int i = 0; i < 4; i++)
+		  for (int i = 0; i < 4; i++)
 		     orgList.add(new Organism(true, 4, r.nextInt(20), i));
 
 		  GEP gep = new GEP(orgList, 0.75, 0.01, 0.01, 0.75, 0.75, true);
@@ -1039,15 +883,15 @@ public class GEP {
 		  GEP gep = new GEP(orgList, 0.10, 0.01, 0.01, 0.75, 0.75, true);
 
 		  GEP gep = new GEP(orgList, 1.00, 1.00, 1.00, 1.00, 1.00, 2, false,
-		  	    true);*/// Elitism ctor. gep.newGenerationTest();
+		  	    true);// Elitism ctor. gep.newGenerationTest();
 
 		  // CASE: ODD NUMBER OF ORGANISMS.
-		 /* LinkedList<Organism> orgList2 = new LinkedList<Organism>();
+		  LinkedList<Organism> orgList2 = new LinkedList<Organism>();
 		  for (int i = 0; i < 5; i++)
 			   orgList2.add(new Organism(true, 4, r.nextInt(20), i));
 		  GEP gep2 = new GEP(orgList2, 1.00, 1.00, 1.00, 1.00, 1.00, 2,
 				    false, false); // Elitism ctor.
-		  gep2.newGenerationTest();*/
+		  gep2.newGenerationTest();
 		  
 		  LinkedList<Organism> orgList3 = new LinkedList<Organism>();
 		  for (int i = 0; i < 5; i++)
@@ -1055,6 +899,6 @@ public class GEP {
 		  GEP gep3 = new GEP(1.00, 1.00, 1.00, 1.00, 1.00, 2,
 				    false, false); // Elitism ctor.
 		  gep3.newGenerationTest(orgList3);
-		  /* gep.newGenerationTest2(); */
-	 }
+		   gep.newGenerationTest2(); 
+	 }*/
 }
