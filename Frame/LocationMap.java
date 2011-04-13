@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Random;
 
 import Interactive.Food;
 import Interactive.Organism;
 import Interactive.Pair;
-import Searching.StarQueue;
 
 public class LocationMap {
-	
+
 	private Pair<Integer, Character>[][] locationMap;
 	private Random r;
 	private static LocationMap instance;
@@ -38,13 +38,14 @@ public class LocationMap {
 	/**
 	 * @param type
 	 */
-	public void placeTest(Coordinate c, int width, int height, int anId, Character aType) {
+	public void placeTest(Coordinate c, int width, int height, int anId,
+			Character aType) {
 		// Set location.
 		int x = r.nextInt(GridPanel.WIDTH);
 		int y = r.nextInt(GridPanel.HEIGHT);
 
 		// Check for collisions.
-		spawn: while(!canSpawn(x, y, width, height)) {
+		spawn: while (!canSpawn(x, y, width, height)) {
 			x = r.nextInt(GridPanel.WIDTH);
 			y = r.nextInt(GridPanel.HEIGHT);
 			if (x == 0 || y == 0)
@@ -54,21 +55,23 @@ public class LocationMap {
 		c.setY(y);
 		// Set boundaries.
 		setWrapAround(c, width, height);
-		System.out.println("After wrapAround: (" + c.getX() + ", " + c.getY() + ")");
+		System.out.println("After wrapAround: (" + c.getX() + ", " + c.getY()
+				+ ")");
 		/*setWrapAround(getWidth(), getHeight());*/
 		setRange(c, width, height, aType, anId);
 	}
-	
+
 	/**
 	 * @param type
 	 */
-	public void place(Coordinate c, int width, int height, int anId, Character aType) {
-		//set location
+	public void place(Coordinate c, int width, int height, int anId,
+			Character aType) {
+		// set location
 		int x = r.nextInt(GridPanel.WIDTH);
 		int y = r.nextInt(GridPanel.HEIGHT);
 
-		//check for collisions
-		spawn: while(!canSpawn(x, y, width, height)) {
+		// check for collisions
+		spawn: while (!canSpawn(x, y, width, height)) {
 			x = r.nextInt(GridPanel.WIDTH);
 			y = r.nextInt(GridPanel.HEIGHT);
 			if (x == 0 || y == 0)
@@ -78,17 +81,18 @@ public class LocationMap {
 		c.setY(y);
 		setWrapAround(c, width, height);
 
-		//set boundaries
+		// set boundaries
 		/*setWrapAround(getWidth(), getHeight());*/
 		setRange(c, width, height, aType, anId);
 	}
-	
+
 	// CLOSER TO THE ORIGINAL THAN THE OTHER NEW LOCATION.
-	public void newLocation(Coordinate c, int width, int height, int anId, Character aType) {
+	public void newLocation(Coordinate c, int width, int height, int anId,
+			Character aType) {
 		setRangeToBlank(width, height, c.getX(), c.getY());
 		int newX = r.nextInt(GridPanel.WIDTH);
 		int newY = r.nextInt(GridPanel.HEIGHT);
-		spawn: while(!canSpawn(newX, newY, width, height)) {
+		spawn: while (!canSpawn(newX, newY, width, height)) {
 			newX = r.nextInt(GridPanel.WIDTH);
 			newY = r.nextInt(GridPanel.HEIGHT);
 			if (newX == 0 || newY == 0)
@@ -97,11 +101,11 @@ public class LocationMap {
 		c.setX(newX);
 		c.setY(newY);
 		setWrapAround(c, width, height);
-		//set boundaries
+		// set boundaries
 		/*setWrapAround(newLocation, width, height);*/
 		setRange(c, width, height, aType, anId);
 	}
-	
+
 	/*public void newLocation(Matter m) {
 		int width = m.getWidth();
 		int height = m.getHeight();
@@ -154,7 +158,8 @@ public class LocationMap {
 	 * @param x
 	 * @param y
 	 */
-	public void setRange(Coordinate c, int width, int height, Character value, int id) {
+	public void setRange(Coordinate c, int width, int height, Character value,
+			int id) {
 		int x = c.getX();
 		int y = c.getY();
 		for (int i = (x - (width / 2)); i <= (x + (width / 2)); i++) {
@@ -167,7 +172,7 @@ public class LocationMap {
 			}
 		}
 	}
-	
+
 	/**
 	 * @param width
 	 * @param height
@@ -191,10 +196,13 @@ public class LocationMap {
 
 	/**
 	 * Handles objects that stray off of the GridPanel and wraps their location.
-	 * @param rightLeftBound   - right and left boundary to trigger wrap
-	 * @param topBottomBound   - top and bottom boundary to trigger wrap
+	 * 
+	 * @param rightLeftBound
+	 *            - right and left boundary to trigger wrap
+	 * @param topBottomBound
+	 *            - top and bottom boundary to trigger wrap
 	 */
-	public void setWrapAround(Coordinate c, int width, int height){
+	public void setWrapAround(Coordinate c, int width, int height) {
 		int x = c.getX();
 		int y = c.getY();
 		if (x + (width / 2) >= GridPanel.WIDTH) // right.
@@ -210,14 +218,17 @@ public class LocationMap {
 			if (canSpawn(x, GridPanel.HEIGHT - (height / 2), width, height))
 				c.setY(GridPanel.HEIGHT - (height / 2));
 	}
-	
+
 	/**
 	 * Handles objects that stray off of the GridPanel and wraps their location.
-	 * @param rightLeftBound   - right and left boundary to trigger wrap
-	 * @param topBottomBound   - top and bottom boundary to trigger wrap
+	 * 
+	 * @param rightLeftBound
+	 *            - right and left boundary to trigger wrap
+	 * @param topBottomBound
+	 *            - top and bottom boundary to trigger wrap
 	 */
 	// FOR TESTING OF THE SET WRAP AROUND METHOD.
-	public void setWrapAroundTest(Coordinate c, int width, int height){
+	public void setWrapAroundTest(Coordinate c, int width, int height) {
 		int x = c.getX();
 		int y = c.getY();
 		if (x + (width / 2) >= GridPanel.WIDTH) // right.
@@ -232,10 +243,10 @@ public class LocationMap {
 		if (y - (height / 2) <= 0) // top.
 			if (canSpawn(x, GridPanel.HEIGHT - (height / 2), width, height))
 				c.setY(GridPanel.HEIGHT - (height / 2));
-		System.out.println("InSetWrap the location is: " + c.getX()
-				+ ", " + c.getY());
+		System.out.println("InSetWrap the location is: " + c.getX() + ", "
+				+ c.getY());
 	}
-	
+
 	public void clearLocations() {
 		for (int i = 0; i < locationMap.length; i++) {
 			for (int j = 0; j < locationMap[i].length; j++) {
@@ -245,19 +256,19 @@ public class LocationMap {
 			}
 		}
 	}
-	
+
 	public int length() {
 		return locationMap.length;
 	}
-	
+
 	public int colLength(int i) {
 		return locationMap[i].length;
 	}
-	
+
 	public void set(int i, int j, Pair<Integer, Character> aPair) {
 		locationMap[i][j] = aPair;
 	}
-	
+
 	public Pair<Integer, Character> get(int i, int j) {
 		return locationMap[i][j];
 	}
@@ -286,18 +297,19 @@ public class LocationMap {
 		place(org.getLocation(), org.getWidth(), org.getHeight(), org.getId(),
 				org.getType());
 	}
-	
+
 	/**
-	 * Places the organism on
-	 * the map in the position that is passed as a parameter, and sets the organisms location field.
+	 * Places the organism on the map in the position that is passed as a
+	 * parameter, and sets the organisms location field.
 	 * 
 	 * @param orgList
 	 */
 	public void setOrganism(Organism org) {
 		setWrapAround(org.getLocation(), org.getWidth(), org.getHeight());
-		setRange(org.getLocation(), org.getWidth(), org.getHeight(), 'o', org.getId());
+		setRange(org.getLocation(), org.getWidth(), org.getHeight(), 'o',
+				org.getId());
 	}
-	
+
 	/**
 	 * @param orgList
 	 */
@@ -305,8 +317,8 @@ public class LocationMap {
 	public void placeOrganismsTest(LinkedList<Organism> orgList) {
 		for (int i = 0; i < orgList.size(); i++) {
 			Organism org = orgList.get(i);
-			placeTest(org.getLocation(), org.getWidth(), org.getHeight(), org.getId(),
-					org.getType());
+			placeTest(org.getLocation(), org.getWidth(), org.getHeight(),
+					org.getId(), org.getType());
 		}
 	}
 
@@ -323,7 +335,7 @@ public class LocationMap {
 					f.getType());
 		}
 	}
-	
+
 	/**
 	 * Receives a foodList and places all of the food onto the map and sets
 	 * their location fields.
@@ -334,7 +346,7 @@ public class LocationMap {
 		place(f.getLocation(), f.getWidth(), f.getHeight(), f.getId(),
 				f.getType());
 	}
-	
+
 	/**
 	 * Returns the next position produced by the Astar search algorithm.
 	 * 
@@ -352,7 +364,7 @@ public class LocationMap {
 		// for each surrounding position.
 		// assign priority, then add to queue.
 		Coordinate current = start;
-		StarQueue<Coordinate> adjacentList = adjacentCoordinates(
+		PriorityQueue<Coordinate> adjacentList = adjacentCoordinates(
 				current.getX(), current.getY(), 3, end, anId);
 		/*StarQueue<Coordinate> adjacentList = adjacentCoordinatesByPixel(
 				current.getX(), current.getY(), end, anId);*/
@@ -362,7 +374,7 @@ public class LocationMap {
 			return adjacentList.remove();
 		return start;
 	}
-	
+
 	/**
 	 * Returns the next position produced by the Astar search algorithm.
 	 * 
@@ -370,7 +382,8 @@ public class LocationMap {
 	 * @param end
 	 * @return
 	 */
-	public static StarQueue<Coordinate> searchWithList(Coordinate start, Coordinate end, int anId) {
+	public static PriorityQueue<Coordinate> searchWithList(Coordinate start,
+			Coordinate end, int anId) {
 		// openList is a priority queue organized based
 		// on shortest distance to end node.
 		/* Coordinate endCoordinate = (Coordinate) end.spawnCoordinate(0); */
@@ -380,26 +393,28 @@ public class LocationMap {
 		// for each surrounding position.
 		// assign priority, then add to queue.
 		Coordinate current = start;
-		StarQueue<Coordinate> adjacentList = adjacentCoordinates(
-				current.getX(), current.getY(), 1, end, anId);
+		PriorityQueue<Coordinate> adjacentList =
+			adjacentCoordinates(current.getX(), current.getY(), 1, end, anId);
 		/*StarQueue<Coordinate> adjacentList = adjacentCoordinatesByPixel(
 				current.getX(), current.getY(), end, anId);*/
 		// If there are available positions to move to.
 		// Then remove the top one. Which will be the best place to move to.
 		if (!adjacentList.isEmpty())
 			return adjacentList;
-		StarQueue<Coordinate> listWithSelfCoordinate = new StarQueue<Coordinate>();
+		PriorityQueue<Coordinate> listWithSelfCoordinate =
+			new PriorityQueue<Coordinate>();
 		listWithSelfCoordinate.add(start);
 		return listWithSelfCoordinate;
 	}
 
 	/**
 	 * Only adds the adjacent nodes that don't have obstacles in them.
+	 * 
 	 * @return
 	 */
-	public static StarQueue<Coordinate> adjacentCoordinates(int x, int y,
+	public static PriorityQueue<Coordinate> adjacentCoordinates(int x, int y,
 			int stepSize, Coordinate end, int anId) {
-		StarQueue<Coordinate> adj = new StarQueue<Coordinate>();
+		PriorityQueue<Coordinate> adj = new PriorityQueue<Coordinate>();
 		/*System.out.println("original position" + x + ", " + y);*/
 		int moveWidth = stepSize;
 		int moveHeight = stepSize;
@@ -442,353 +457,7 @@ public class LocationMap {
 					- moveWidth, y + moveHeight, endX, endY)));
 		return adj;
 	}
-	
-	/**
-	 * Only adds the adjacent nodes that don't have obstacles in them.
-	 * @return
-	 */
-	public static StarQueue<Coordinate> adjacentCoordinatesByPixel(int x,
-			int y, Coordinate end, int anId) {
-		StarQueue<Coordinate> adj = new StarQueue<Coordinate>();
-		int x2 = end.getX();
-		int y2 = end.getY();
-		// W
-		if (!hasObstacleWest(x, y, anId))
-			adj.add(new Coordinate(x - 1, y, distance(x - 1, y,
-					x2, y2)));
-		// NW
-		if (!hasObstacleNorthWest(x, y, anId))
-			adj.add(new Coordinate(x - 1, y - 1, distance(x
-					- 1, y - 1, x2, y2)));
-		// N
-		if (!hasObstacleNorth(x, y, anId))
-			adj.add(new Coordinate(x, y - 1, distance(x, y
-					- 1, x2, y2)));
-		// NE
-		if (!hasObstacleNorthEast(x, y, anId))
-			adj.add(new Coordinate(x + 1, y - 1, distance(x
-					+ 1, y - 1, x2, y2)));
-		// E
-		if (!hasObstacleEast(x, y, anId))
-			adj.add(new Coordinate(x + 1, y, distance(x + 1, y,
-					x2, y2)));
-		// SE
-		if (!hasObstacleSouthEast(x, y, anId)) {
-			adj.add(new Coordinate(x + 1, y + 1, distance(x
-					+ 1, y + 1, x2, y2)));
-		}
-		// S
-		if (!hasObstacleSouth(x, y, anId))
-			adj.add(new Coordinate(x, y + 1, distance(x, y
-					+ 1, x2, y2)));
-		// SW
-		if (!hasObstacleSouthWest(x, y, anId))
-			adj.add(new Coordinate(x - 1, y + 1, distance(x
-					- 1, y + 1, x2, y2)));
-		return adj;
-	}
 
-	public static boolean hasObstacleSouthWest(int x, int y, int anId) {
-		int startX = x - (Organism.width / 2);
-		int startY = y - (Organism.height / 2);
-		for (int i = startY + 1; i < startY + 6; i++) {
-			try {
-				Pair<Integer, Character> aPair = LocationMap.getInstance().get(
-						startX - 1, i);
-				Character charType = aPair.getSnd();
-				Integer spaceId = aPair.getFst();
-				if (charType != 'w' && (charType == 'o' && spaceId != anId))
-					return true;
-			} catch (ArrayIndexOutOfBoundsException e) {
-			}
-		}
-		for (int i = startX; i < startX + 4; i++) {
-			try {
-				Pair<Integer, Character> aPair = LocationMap.getInstance().get(
-						i, startY + 6);
-				/*System.out.println("indeces: " + i + ", " + startY);*/
-				Character charType = aPair.getSnd();
-				Integer spaceId = aPair.getFst();
-				/*System.out.println("charType: " + charType);
-				System.out.println("spaceId: " + spaceId);
-				System.out.println("orgId: " + anId);
-				System.out.println();*/
-				// Count all occurrences of objects in location map.
-				if (charType != 'w' || (charType == 'o' && spaceId != anId))
-					return true;
-			} catch (ArrayIndexOutOfBoundsException e) {
-			}
-		}
-		return false;
-	}
-
-	public static boolean hasObstacleSouth(int x, int y, int anId) {
-		int startX = x - (Organism.width / 2);
-		int startY = (y + (Organism.height / 2)) + 1;
-		Pair<Integer, Character> aPair1 = LocationMap.getInstance().get(startX, startY);
-		Character charType1 = aPair1.getSnd();
-		Integer spaceId1 = aPair1.getFst();
-		if (charType1 != 'w' || (charType1 == 'o' && spaceId1 != anId))
-			return true;
-		Pair<Integer, Character> aPair2 = LocationMap.getInstance().get(startX + 1, startY);
-		Character charType2 = aPair2.getSnd();
-		Integer spaceId2 = aPair2.getFst();
-		if (charType2 != 'w' || (charType2 == 'o' && spaceId2 != anId))
-			return true;
-		Pair<Integer, Character> aPair3 = LocationMap.getInstance().get(startX + 2, startY);
-		Character charType3 = aPair3.getSnd();
-		Integer spaceId3 = aPair3.getFst();
-		if (charType3 != 'w' || (charType3 == 'o' && spaceId3 != anId))
-			return true;
-		Pair<Integer, Character> aPair4 = LocationMap.getInstance().get(startX + 3, startY);
-		Character charType4 = aPair4.getSnd();
-		Integer spaceId4 = aPair4.getFst();
-		if (charType4 != 'w' || (charType4 == 'o' && spaceId4 != anId))
-			return true;
-		Pair<Integer, Character> aPair5 = LocationMap.getInstance().get(startX + 4, startY);
-		Character charType5 = aPair5.getSnd();
-		Integer spaceId5 = aPair5.getFst();
-		if (charType5 != 'w' || (charType5 == 'o' && spaceId5 != anId))
-			return true;
-		return false;
-	}
-
-	public static boolean hasObstacleSouthEast(int x, int y, int anId) {
-		int startX = x - (Organism.width / 2);
-		int startY = (y + (Organism.height / 2)) + 1;
-		Pair<Integer, Character> aPair2 = LocationMap.getInstance().get(startX + 1, startY);
-		Character charType2 = aPair2.getSnd();
-		Integer spaceId2 = aPair2.getFst();
-		if (charType2 != 'w' || (charType2 == 'o' && spaceId2 != anId))
-			return true;
-		Pair<Integer, Character> aPair3 = LocationMap.getInstance().get(startX + 2, startY);
-		Character charType3 = aPair3.getSnd();
-		Integer spaceId3 = aPair3.getFst();
-		if (charType3 != 'w' || (charType3 == 'o' && spaceId3 != anId))
-			return true;
-		Pair<Integer, Character> aPair4 = LocationMap.getInstance().get(startX + 3, startY);
-		Character charType4 = aPair4.getSnd();
-		Integer spaceId4 = aPair4.getFst();
-		if (charType4 != 'w' || (charType4 == 'o' && spaceId4 != anId))
-			return true;
-		Pair<Integer, Character> aPair5 = LocationMap.getInstance().get(startX + 4, startY);
-		Character charType5 = aPair5.getSnd();
-		Integer spaceId5 = aPair5.getFst();
-		if (charType5 != 'w' || (charType5 == 'o' && spaceId5 != anId))
-			return true;
-		
-		startX = (x + (Organism.width / 2)) + 1;
-		startY = y - (Organism.height / 2);
-		aPair2 = LocationMap.getInstance().get(startX, startY + 1);
-		charType2 = aPair2.getSnd();
-		spaceId2 = aPair2.getFst();
-		if (charType2 != 'w' || (charType2 == 'o' && spaceId2 != anId))
-			return true;
-		aPair3 = LocationMap.getInstance().get(startX, startY + 2);
-		charType3 = aPair3.getSnd();
-		spaceId3 = aPair3.getFst();
-		if (charType3 != 'w' || (charType3 == 'o' && spaceId3 != anId))
-			return true;
-		aPair4 = LocationMap.getInstance().get(startX, startY + 3);
-		charType4 = aPair4.getSnd();		spaceId4 = aPair4.getFst();
-		if (charType4 != 'w' || (charType4 == 'o' && spaceId4 != anId))
-			return true;
-		aPair5 = LocationMap.getInstance().get(startX, startY + 4);
-		charType5 = aPair5.getSnd();
-		spaceId5 = aPair5.getFst();
-		if (charType5 != 'w' || (charType5 == 'o' && spaceId5 != anId))
-			return true;
-		return false;
-	}
-
-	public static boolean hasObstacleEast(int x, int y, int anId) {
-		int startX = (x + (Organism.width / 2)) + 1;
-		int startY = y - (Organism.height / 2);
-		Pair<Integer, Character> aPair1 = LocationMap.getInstance().get(startX, startY);
-		Character charType1 = aPair1.getSnd();
-		Integer spaceId1 = aPair1.getFst();
-		if (charType1 != 'w' || (charType1 == 'o' && spaceId1 != anId))
-			return true;
-		Pair<Integer, Character> aPair2 = LocationMap.getInstance().get(startX, startY + 1);
-		Character charType2 = aPair2.getSnd();
-		Integer spaceId2 = aPair2.getFst();
-		if (charType2 != 'w' || (charType2 == 'o' && spaceId2 != anId))
-			return true;
-		Pair<Integer, Character> aPair3 = LocationMap.getInstance().get(startX, startY + 2);
-		Character charType3 = aPair3.getSnd();
-		Integer spaceId3 = aPair3.getFst();
-		if (charType3 != 'w' || (charType3 == 'o' && spaceId3 != anId))
-			return true;
-		Pair<Integer, Character> aPair4 = LocationMap.getInstance().get(startX, startY + 3);
-		Character charType4 = aPair4.getSnd();
-		Integer spaceId4 = aPair4.getFst();
-		if (charType4 != 'w' || (charType4 == 'o' && spaceId4 != anId))
-			return true;
-		Pair<Integer, Character> aPair5 = LocationMap.getInstance().get(startX, startY + 4);
-		Character charType5 = aPair5.getSnd();
-		Integer spaceId5 = aPair5.getFst();
-		if (charType5 != 'w' || (charType5 == 'o' && spaceId5 != anId))
-			return true;
-		return false;
-	}
-
-	public static boolean hasObstacleNorthEast(int x, int y, int anId) {
-		int startX = x - (Organism.width / 2);
-		int startY = (y - (Organism.height / 2)) - 1;
-		Pair<Integer, Character> aPair2 = LocationMap.getInstance().get(startX + 1, startY);
-		Character charType2 = aPair2.getSnd();
-		Integer spaceId2 = aPair2.getFst();
-		if (charType2 != 'w' || (charType2 == 'o' && spaceId2 != anId))
-			return true;
-		Pair<Integer, Character> aPair3 = LocationMap.getInstance().get(startX + 2, startY);
-		Character charType3 = aPair3.getSnd();
-		Integer spaceId3 = aPair3.getFst();
-		if (charType3 != 'w' || (charType3 == 'o' && spaceId3 != anId))
-			return true;
-		Pair<Integer, Character> aPair4 = LocationMap.getInstance().get(startX + 3, startY);
-		Character charType4 = aPair4.getSnd();
-		Integer spaceId4 = aPair4.getFst();
-		if (charType4 != 'w' || (charType4 == 'o' && spaceId4 != anId))
-			return true;
-		Pair<Integer, Character> aPair5 = LocationMap.getInstance().get(startX + 4, startY);
-		Character charType5 = aPair5.getSnd();
-		Integer spaceId5 = aPair5.getFst();
-		if (charType5 != 'w' || (charType5 == 'o' && spaceId5 != anId))
-			return true;
-		startX = (x + (Organism.width / 2)) + 1;
-		startY = y - (Organism.height / 2);
-		Pair<Integer, Character> aPair1 = LocationMap.getInstance().get(startX, startY);
-		Character charType1 = aPair1.getSnd();
-		Integer spaceId1 = aPair1.getFst();
-		if (charType1 != 'w' || (charType1 == 'o' && spaceId1 != anId))
-			return true;
-		aPair2 = LocationMap.getInstance().get(startX, startY + 1);
-		charType2 = aPair2.getSnd();
-		spaceId2 = aPair2.getFst();
-		if (charType2 != 'w' || (charType2 == 'o' && spaceId2 != anId))
-			return true;
-		aPair3 = LocationMap.getInstance().get(startX, startY + 2);
-		charType3 = aPair3.getSnd();
-		spaceId3 = aPair3.getFst();
-		if (charType3 != 'w' || (charType3 == 'o' && spaceId3 != anId))
-			return true;
-		aPair4 = LocationMap.getInstance().get(startX, startY + 3);
-		charType4 = aPair4.getSnd();
-		spaceId4 = aPair4.getFst();
-		if (charType4 != 'w' || (charType4 == 'o' && spaceId4 != anId))
-			return true;
-		return false;
-	}
-
-	public static boolean hasObstacleNorth(int x, int y, int anId) {
-		int startX = x - (Organism.width / 2);
-		int startY = (y - (Organism.height / 2)) - 1;
-		Pair<Integer, Character> aPair1 = LocationMap.getInstance().get(startX, startY);
-		Character charType1 = aPair1.getSnd();
-		Integer spaceId1 = aPair1.getFst();
-		if (charType1 != 'w' || (charType1 == 'o' && spaceId1 != anId))
-			return true;
-		Pair<Integer, Character> aPair2 = LocationMap.getInstance().get(startX + 1, startY);
-		Character charType2 = aPair2.getSnd();
-		Integer spaceId2 = aPair2.getFst();
-		if (charType2 != 'w' || (charType2 == 'o' && spaceId2 != anId))
-			return true;
-		Pair<Integer, Character> aPair3 = LocationMap.getInstance().get(startX + 2, startY);
-		Character charType3 = aPair3.getSnd();
-		Integer spaceId3 = aPair3.getFst();
-		if (charType3 != 'w' || (charType3 == 'o' && spaceId3 != anId))
-			return true;
-		Pair<Integer, Character> aPair4 = LocationMap.getInstance().get(startX + 3, startY);
-		Character charType4 = aPair4.getSnd();
-		Integer spaceId4 = aPair4.getFst();
-		if (charType4 != 'w' || (charType4 == 'o' && spaceId4 != anId))
-			return true;
-		Pair<Integer, Character> aPair5 = LocationMap.getInstance().get(startX + 4, startY);
-		Character charType5 = aPair5.getSnd();
-		Integer spaceId5 = aPair5.getFst();
-		if (charType5 != 'w' || (charType5 == 'o' && spaceId5 != anId))
-			return true;
-		return false;
-	}
-
-	public static boolean hasObstacleNorthWest(int x, int y, int anId) {
-		int startX = x - (Organism.width / 2);
-		int startY = (y - (Organism.height / 2)) - 1;
-		Pair<Integer, Character> aPair1 = LocationMap.getInstance().get(startX, startY);
-		Character charType1 = aPair1.getSnd();
-		Integer spaceId1 = aPair1.getFst();
-		if (charType1 != 'w' || (charType1 == 'o' && spaceId1 != anId))
-			return true;
-		Pair<Integer, Character> aPair2 = LocationMap.getInstance().get(startX + 1, startY);
-		Character charType2 = aPair2.getSnd();
-		Integer spaceId2 = aPair2.getFst();
-		if (charType2 != 'w' || (charType2 == 'o' && spaceId2 != anId))
-			return true;
-		Pair<Integer, Character> aPair3 = LocationMap.getInstance().get(startX + 2, startY);
-		Character charType3 = aPair3.getSnd();
-		Integer spaceId3 = aPair3.getFst();
-		if (charType3 != 'w' || (charType3 == 'o' && spaceId3 != anId))
-			return true;
-		Pair<Integer, Character> aPair4 = LocationMap.getInstance().get(startX + 3, startY);
-		Character charType4 = aPair4.getSnd();
-		Integer spaceId4 = aPair4.getFst();
-		if (charType4 != 'w' || (charType4 == 'o' && spaceId4 != anId))
-			return true;
-		startX = (x - (Organism.width / 2)) - 1;
-		startY = y - (Organism.height / 2);
-		aPair1 = LocationMap.getInstance().get(startX, startY);
-		charType1 = aPair1.getSnd();
-		spaceId1 = aPair1.getFst();
-		if (charType1 != 'w' || (charType1 == 'o' && spaceId1 != anId))
-			return true;
-		aPair2 = LocationMap.getInstance().get(startX, startY + 1);
-		charType2 = aPair2.getSnd();
-		spaceId2 = aPair2.getFst();
-		if (charType2 != 'w' || (charType2 == 'o' && spaceId2 != anId))
-			return true;
-		aPair3 = LocationMap.getInstance().get(startX, startY + 2);
-		charType3 = aPair3.getSnd();
-		spaceId3 = aPair3.getFst();
-		if (charType3 != 'w' || (charType3 == 'o' && spaceId3 != anId))
-			return true;
-		aPair4 = LocationMap.getInstance().get(startX, startY + 3);
-		charType4 = aPair4.getSnd();
-		spaceId4 = aPair4.getFst();
-		if (charType4 != 'w' || (charType4 == 'o' && spaceId4 != anId))
-			return true;
-		return false;
-	}
-
-	public static boolean hasObstacleWest(int x, int y, int anId) {
-		int startX = (x - (Organism.width / 2)) - 1;
-		int startY = y - (Organism.height / 2);
-		Pair<Integer, Character> aPair1 = LocationMap.getInstance().get(startX, startY);
-		Character charType1 = aPair1.getSnd();
-		Integer spaceId1 = aPair1.getFst();
-		if (charType1 != 'w' || (charType1 == 'o' && spaceId1 != anId))
-			return true;
-		Pair<Integer, Character> aPair2 = LocationMap.getInstance().get(startX, startY + 1);
-		Character charType2 = aPair2.getSnd();
-		Integer spaceId2 = aPair2.getFst();
-		if (charType2 != 'w' || (charType2 == 'o' && spaceId2 != anId))
-			return true;
-		Pair<Integer, Character> aPair3 = LocationMap.getInstance().get(startX, startY + 2);
-		Character charType3 = aPair3.getSnd();
-		Integer spaceId3 = aPair3.getFst();
-		if (charType3 != 'w' || (charType3 == 'o' && spaceId3 != anId))
-			return true;
-		Pair<Integer, Character> aPair4 = LocationMap.getInstance().get(startX, startY + 3);
-		Character charType4 = aPair4.getSnd();
-		Integer spaceId4 = aPair4.getFst();
-		if (charType4 != 'w' || (charType4 == 'o' && spaceId4 != anId))
-			return true;
-		Pair<Integer, Character> aPair5 = LocationMap.getInstance().get(startX, startY + 4);
-		Character charType5 = aPair5.getSnd();
-		Integer spaceId5 = aPair5.getFst();
-		if (charType5 != 'w' || (charType5 == 'o' && spaceId5 != anId))
-			return true;
-		return false;
-	}
 
 	/**
 	 * Calculates the priority of a given coordinate start o the coordinate end.
@@ -818,7 +487,8 @@ public class LocationMap {
 				+ Organism.width / 2; i++) {
 			for (int j = y - Organism.height / 2; j <= y + Organism.height / 2; j++) {
 				try {
-					Pair<Integer, Character> object = LocationMap.getInstance().get(i, j);
+					Pair<Integer, Character> object = LocationMap.getInstance()
+							.get(i, j);
 					// count all occurrences of objects in location map
 					if (object.getSnd() == 'w')
 						continue checkObstacles;
