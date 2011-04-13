@@ -353,7 +353,7 @@ public class LocationMap {
 		// assign priority, then add to queue.
 		Coordinate current = start;
 		StarQueue<Coordinate> adjacentList = adjacentCoordinates(
-				current.getX(), current.getY(), 1, end, anId);
+				current.getX(), current.getY(), 3, end, anId);
 		/*StarQueue<Coordinate> adjacentList = adjacentCoordinatesByPixel(
 				current.getX(), current.getY(), end, anId);*/
 		// If there are available positions to move to.
