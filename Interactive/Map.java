@@ -10,11 +10,14 @@ import Frame.GridPanel;
 public class Map {
 
 	private String currMap;
-	private Image middleEarth;
 	private Image grassMap;
 	private Image sandMap;
 	private Image waterMap;
 	private Image moonMap;
+	private Image middleEarth;
+	private Image sawMap;
+	private Image dexterMap;
+	
 	
 	public Map(){
 		currMap = "Default";
@@ -23,6 +26,8 @@ public class Map {
 		waterMap = new ImageIcon(getClass().getResource("maps/water.jpg")).getImage();
 		moonMap = new ImageIcon(getClass().getResource("maps/moon.jpg")).getImage();
 		middleEarth = new ImageIcon(getClass().getResource("maps/middle-earth-map.jpg")).getImage();
+		sawMap = new ImageIcon(getClass().getResource("maps/saw.jpg")).getImage();
+		dexterMap = new ImageIcon(getClass().getResource("maps/dexter.jpg")).getImage();
 	}
 	
 	public void setCurrMap(String s){
@@ -42,5 +47,9 @@ public class Map {
 			g.drawImage(moonMap, 0, 0, GridPanel.WIDTH, GridPanel.HEIGHT, null);
 		else if(currMap.equals("Middle Earth"))
 			g.drawImage(middleEarth, 0, 0, GridPanel.WIDTH, GridPanel.HEIGHT, null);
+		else if(currMap.equals("Saw"))
+			g.drawImage(sawMap, 0, 0, GridPanel.WIDTH, GridPanel.HEIGHT, null);
+		else if(currMap.equals("Dexter"))
+			g.drawImage(dexterMap, 0, 0, GridPanel.WIDTH, GridPanel.HEIGHT, null);
 	}
 }
