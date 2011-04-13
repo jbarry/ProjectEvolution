@@ -13,6 +13,7 @@ import java.util.Random;
 import Frame.GridPanel;
 import Interactive.Chromosome;
 import Interactive.Gene;
+import Interactive.OrgData;
 import Interactive.Organism;
 import Interactive.Pair;
 
@@ -278,6 +279,22 @@ public class GEP {
 		  if (numSteps > 0)
 			   return 0.0;
 		  return (org.getHlthTot() / org.getSamples()) / org.getNumSteps();
+	 }
+	 
+	 /**
+	  * This fitness function evaluates the fitness of an Organism based on its
+	  * average health per the number of steps that it had taken over a
+	  * generation.
+	  * 
+	  * @param org
+	  * @return
+	  */
+	 public double fitnessJustin(OrgData orgData) {
+		  int numSteps = orgData.getNumSteps();
+		  orgData.setAverageHealth(orgData.getHlthTot()/orgData.getTimeOfDeath());
+		  double fitness = (orgData.getAverageHealth() / numSteps) + orgData.getTimeOfDeath();
+		  System.out.println("fit: " + fitness);
+		  return fitness;
 	 }
 
 	 /**

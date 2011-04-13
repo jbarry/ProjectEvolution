@@ -16,7 +16,7 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 		ran = new Random();
 		chromosome = new LinkedList<Gene>();
 		for (int i = 0; i < numGenes; i++)
-			chromosome.add(new Gene(true, 30));
+			chromosome.add(new Gene(true, 60));
 	}
 	
 	// For testing purposes of the GEP class.

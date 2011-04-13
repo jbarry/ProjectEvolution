@@ -1,9 +1,6 @@
 package Searching;
 
-import java.util.Comparator;
 import java.util.PriorityQueue;
-
-import Frame.Coordinate;
 
 public class StarQueue<Coordinate> {
 

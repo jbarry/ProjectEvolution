@@ -54,7 +54,7 @@ public class GridPanel extends JPanel {
 	 private ArrayList<Integer> shuffleIds;
 	 private ArrayList<String> shuffleStringIds;
 	 private int lengthTimeStep = 100;
-	 private int lengthGeneration = 200;
+	 private int lengthGeneration = 300;
 	 private int timePassed = 0;
 	 private int trialsPerGen = 1;
 	 public int trialNum = 1;
@@ -109,8 +109,9 @@ public class GridPanel extends JPanel {
 										    gui.updatePercentage((double) timePassed
 													 / lengthGeneration);
 										    /*simulateStepAstarWithoutEatWithClosedList(7);*/
-										    simulateStepAstarWithoutEatWithClosedListOrgData(5);
+										    /*simulateStepAstarWithoutEatWithClosedListOrgData(5);*/
 										    /*simulateStepAstarWithoutEatWithPreviousPosition(2);*/
+										    simulateStepAstarClosedListOrgData(1);
 										    repaint();
 									   } else if (trialNum < trialsPerGen)
 										    newTrial();
@@ -222,17 +223,16 @@ public class GridPanel extends JPanel {
 	 }
 
 	 public boolean eatFoodInRange(Organism org) {
-		  LinkedList<Food> foodToEatList = (LinkedList<Food>) collectFoodInRange2(
-				    org, 2);
+		  LinkedList<Food> foodToEatList = (LinkedList<Food>) collectFoodInRange(
+				    org, 3);
 		  Food foodToEat;
 		  if (!foodToEatList.isEmpty()) {
 			   foodToEat = foodToEatList.get(0);
-			   org.printInfo();
+			   /*org.printInfo();
 			   System.out.println("Ate food");
-			   foodToEat.printInfo();
-			   return org.changeHealth(5 * foodToEat.getType());
+			   foodToEat.printInfo();*/
+			   return org.changeHealth(5 * foodToEat.getFoodType());
 		  } else {
-			   System.out.println("Fired Gene without any food in range.");
 			   return false;
 		  }
 	 }
@@ -301,20 +301,19 @@ public class GridPanel extends JPanel {
 		  locationMap.clearLocations();
 		  shuffleIds.clear();
 		  // Assign organism fitness and reinitialize organisms.
-		  for (Organism o : organisms) {
-			   o.setFitness(g.fitnessDistanceTraveled(o)); // TODO: New
-			   // fitness travel
-			   // distance.
+		  for (int i = 0; i < organisms.size(); i++) {
+			   Organism o = organisms.get(i);
+			   OrgData od = orgDataList.get(i);
+			   od.setFitness(g.fitnessJustin(od));
 			   sum += o.getFitness();
-			   // TODO: change the gene checking.
-			   /*o.newLocation();*/
-			   /*o.addChromosome();*/
+			   od.clear();
+			   o.clear();
+			   o.newLocation();
+			   o.addChromosome();
 			   o.setHealth(o.getMaxHealth());
 			   o.clear();
 			   shuffleIds.add(o.getId());
 		  }
-		  for (OrgData od : orgDataList)
-			   od.clear();
 		  // Place the organisms on the locationMap.
 		  locationMap.placeOrganisms(organisms);
 		  lastAvg = sum / OptionsPanel.numOrganisms;
@@ -723,8 +722,8 @@ public class GridPanel extends JPanel {
 		  shuffleIds.clear();
 		  numFoodSources = OptionsPanel.numOrganisms / 5;
 		  for (int i = 0; i < OptionsPanel.numOrganisms; i++) {
-			   /*Organism o = new Organism(100.00, 2, i);*/
-			   Organism o = new Organism(100.00, 1, i);
+			   Organism o = new Organism(100.00, 2, i);
+			   /*Organism o = new Organism(100.00, 1, i);*/
 			   orgDataList.add(new OrgData(o.getMaxHealth(), i));
 			   organisms.add(o);
 			   shuffleIds.add(i);
@@ -732,7 +731,7 @@ public class GridPanel extends JPanel {
 			   /*o.addChromosome();*/
 		  }
 		  locationMap.placeOrganisms(organisms);
-		  for (int i = 0; i < numFoodSources * 2; i++)
+		  for (int i = 0; i < numFoodSources * 3; i++)
 			   if (ran.nextBoolean())
 				    food.add(new HealthyFood(100.00, i, 2));
 			   else
@@ -850,6 +849,7 @@ public class GridPanel extends JPanel {
 			   // The orgData object holds all of the data for this specific
 			   // organism.
 			   OrgData orgData = orgDataList.get(shuffleIds.get(i));
+			   orgData.incrementSumHealth(org.getHealth());
 			   // Closed list.
 			   ArrayList<Coordinate> closedList = (ArrayList<Coordinate>) orgData
 						.getClosedList();
@@ -864,12 +864,13 @@ public class GridPanel extends JPanel {
 				    // health
 				    // by at each time step.
 				    double depleteValue = org.getMaxHealth()
-							 / ((lengthGeneration - 1) * numActions);
+							 / ((lengthGeneration / 5) * numActions);
 				    // Check to see if the Organism is dead, if so remove
 				    // that org
 				    // from the shuffleIds list.
 				    if (deplete(org, depleteValue)) {
 						System.out.println("removing on deplete");
+						orgData.setTimeOfDeath(timePassed);
 						shuffleIds.remove(new Integer(org.getId()));
 						continue mainLoop;
 				    }
@@ -914,6 +915,7 @@ public class GridPanel extends JPanel {
 							 foodDestination)) {
 						System.out.println("removing on action");
 						shuffleIds.remove(new Integer(org.getId()));
+						orgData.setTimeOfDeath(timePassed);
 						continue mainLoop;
 				    }
 			   } // End NumAction Loop.
@@ -975,7 +977,7 @@ public class GridPanel extends JPanel {
 		  repaint();
 	 }
 
-	 private boolean doActionAstar(Organism org, OrgData anOrgData,
+	 public boolean doActionAstar(Organism org, OrgData anOrgData,
 			   Pair<Integer, Double> bestEval, Food aFoodDestination) {
 
 		  switch (bestEval.left()) {
@@ -1068,7 +1070,7 @@ public class GridPanel extends JPanel {
 	  * @return
 	  */
 	 // Uses abstract Food class instead of HealthyFood and Poisonous Food.
-	 private List<Food> collectFoodInRange2(Organism org, int aRange) {
+	 private List<Food> collectFoodInRange(Organism org, int aRange) {
 		  // List of Ids of the food in range.
 		  ArrayList<Integer> foodInRangeIds = (ArrayList<Integer>) org
 				    .getFoodInRange(aRange);

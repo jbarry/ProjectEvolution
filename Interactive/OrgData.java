@@ -20,6 +20,8 @@ public class OrgData {
 	 private int steps;
 	 private double maxHealth;
 	 private int id;
+	 private int timeOfDeath;
+	 private double averageHealth;
 	 private List<Coordinate> closedList;
 	 private Coordinate previousPosition;
 
@@ -36,7 +38,8 @@ public class OrgData {
 		  fitness = 0;
 		  hlthTot = 0;
 		  samples = 0;
-		  steps = 0;
+		  steps = -1;
+		  timeOfDeath = 0;
 		  closedList = new ArrayList<Coordinate>();
 		  previousPosition = new Coordinate(-1, -1);
 	 }
@@ -187,7 +190,7 @@ public class OrgData {
 	 public void setHlthTot(double hlthTot) {
 		  this.hlthTot = hlthTot;
 	 }
-
+	 
 	 public void setSamples(int samples) {
 		  this.samples = samples;
 	 }
@@ -213,4 +216,23 @@ public class OrgData {
 		  previousPosition.setY(y);
 	 }
 
+	 public int getTimeOfDeath() {
+		  return timeOfDeath;
+	 }
+
+	 public void setTimeOfDeath(int timeOfDeath) {
+		  this.timeOfDeath = timeOfDeath;
+	 }
+
+	 public void setAverageHealth(double averageHealth) {
+		  this.averageHealth = averageHealth;
+	 }
+
+	 public double getAverageHealth() {
+		  return averageHealth;
+	 }
+
+	 public void incrementSumHealth(double currentHealth) {
+		  hlthTot+=currentHealth;
+	 }
 }
