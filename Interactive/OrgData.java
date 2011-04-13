@@ -1,8 +1,11 @@
 package Interactive;
 
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 
-public class OrgData{
+import Frame.Coordinate;
+
+public class OrgData {
 	
 	private int eatFail;
 	private int healthyEatSuccess;
@@ -15,13 +18,13 @@ public class OrgData{
 	private double hlthTot;
 	private int samples;
 	private int steps;
-	private double health;
+	private double maxHealth;
 	private int id;
+	private List<Coordinate> closedList;
 	
-	public OrgData(double aHealth, int anId) {
-		health = aHealth;
+	public OrgData(double aMaxHealth, int anId) {
+		maxHealth = aMaxHealth;
 		id = anId;
-		
 		eatFail = 0;
 		healthyEatSuccess = 0;
 		poisonEatSuccess = 0;
@@ -90,11 +93,107 @@ public class OrgData{
 		
 	}
 	public void incHlthTot() {
-		hlthTot+=health;
+		hlthTot+=maxHealth;
 		samples++;
 	}
 	
 	public double getHlthTot() {
 		return hlthTot;
+	}
+	
+	public int getHealthyEatSuccess() {
+		return healthyEatSuccess;
+	}
+
+	public void setHealthyEatSuccess(int healthyEatSuccess) {
+		this.healthyEatSuccess = healthyEatSuccess;
+	}
+
+	public int getPoisonEatSuccess() {
+		return poisonEatSuccess;
+	}
+
+	public void setPoisonEatSuccess(int poisonEatSuccess) {
+		this.poisonEatSuccess = poisonEatSuccess;
+	}
+
+	public int getNumScans() {
+		return numScans;
+	}
+
+	public void setNumScans(int numScans) {
+		this.numScans = numScans;
+	}
+
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
+	}
+
+	public double getFitness() {
+		return fitness;
+	}
+
+	public void setFitness(double fitness) {
+		this.fitness = fitness;
+	}
+
+	public int getSteps() {
+		return steps;
+	}
+
+	public void setSteps(int steps) {
+		this.steps = steps;
+	}
+
+	public double getHealth() {
+		return maxHealth;
+	}
+
+	public void setHealth(double health) {
+		this.maxHealth = health;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setEatFail(int eatFail) {
+		this.eatFail = eatFail;
+	}
+
+	public void setNumAttacked(int numAttacked) {
+		this.numAttacked = numAttacked;
+	}
+
+	public void setNumPushed(int numPushed) {
+		this.numPushed = numPushed;
+	}
+
+	public void setHlthTot(double hlthTot) {
+		this.hlthTot = hlthTot;
+	}
+
+	public void setSamples(int samples) {
+		this.samples = samples;
+	}
+
+	public void setClosedList(List<Coordinate> closedList) {
+		this.closedList = closedList;
+	}
+
+	public List<Coordinate> getClosedList() {
+		return closedList;
+	}
+	
+	public void clearClosedList() {
+	      closedList.clear();
 	}
 }

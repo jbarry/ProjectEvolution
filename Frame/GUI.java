@@ -294,7 +294,8 @@ public class GUI extends Container{
 					loadGenes.setEnabled(true);
 					loadConfig.setEnabled(true);
 					/*simulation.initialize();*/
-					simulation.initializeAstar();
+					/*simulation.initializeAstar();*/
+					simulation.initializeAstarWithOrgData();
 					simulation.start();
 				}
 			}
