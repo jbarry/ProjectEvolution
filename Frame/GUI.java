@@ -331,7 +331,6 @@ public class GUI extends Container {
 		// Grass Map
 		grassMap = new JMenuItem("Grass");
 		grassMap.setText("Grass");
-		grassMap.setEnabled(true);
 		grassMap.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -349,7 +348,6 @@ public class GUI extends Container {
 		// Sand Map
 		sandMap = new JMenuItem("Sand");
 		sandMap.setText("Sand");
-		sandMap.setEnabled(true);
 		sandMap.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -367,7 +365,6 @@ public class GUI extends Container {
 		// Water Map
 		waterMap = new JMenuItem("Water");
 		waterMap.setText("Water");
-		waterMap.setEnabled(true);
 		waterMap.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -385,7 +382,6 @@ public class GUI extends Container {
 		// Moon Map
 		moonMap = new JMenuItem("Moon");
 		moonMap.setText("Moon");
-		moonMap.setEnabled(true);
 		moonMap.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -402,7 +398,6 @@ public class GUI extends Container {
 		// Middle Earth Map
 		middleEarthMap = new JMenuItem("Middle Earth");
 		middleEarthMap.setText("Middle Earth");
-		middleEarthMap.setEnabled(true);
 		middleEarthMap.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -419,7 +414,6 @@ public class GUI extends Container {
 		// Saw Map
 		sawMap = new JMenuItem("Saw");
 		sawMap.setText("Saw");
-		sawMap.setEnabled(true);
 		sawMap.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -429,7 +423,6 @@ public class GUI extends Container {
 				audio = new Audio("saw.wav");			
 				audio.playAudio();
 				sawMap.setEnabled(false);
-
 			}
 		});
 		selectMapMenu.add(sawMap);
@@ -447,7 +440,6 @@ public class GUI extends Container {
 				audio = new Audio("dexter.wav");			
 				audio.playAudio();
 				dexterMap.setEnabled(false);
-
 			}
 		});
 		selectMapMenu.add(dexterMap);
@@ -699,6 +691,8 @@ public class GUI extends Container {
 		waterMap.setEnabled(true);
 		moonMap.setEnabled(true);
 		middleEarthMap.setEnabled(true);
+		sawMap.setEnabled(true);
+		dexterMap.setEnabled(true);
 	}
 
 	private void confirmExit() {
