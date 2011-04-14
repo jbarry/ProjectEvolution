@@ -237,7 +237,8 @@ public class GridPanel extends JPanel {
 			GUI.genPanel.newTrial();
 		}
 	}
-
+	
+	// TODO: Organize the logic in this method. By logic I mean logical progression.
 	public void newGenerationAstar() {
 		timePassed = 0;
 		double sum = 0;

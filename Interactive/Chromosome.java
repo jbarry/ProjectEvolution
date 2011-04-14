@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class Chromosome extends Genetic implements Crossable<Chromosome> {
+public class Chromosome extends Genetic {
 
 	private List<Gene> chromosome;
 	private Random ran;
@@ -22,6 +22,7 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 	// For testing purposes of the GEP class.
 	public Chromosome(LinkedList<Gene> aChrom) {
 		chromosome = aChrom;
+		System.out.println("set chrom!!");
 		ran = new Random();
 	}
 
@@ -44,7 +45,7 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 	}
 	public void rotate(int gene) {
 		@SuppressWarnings("rawtypes")
-		Gene theGene = (Gene)chromosome.get(gene);
+		Gene theGene = chromosome.get(gene);
 		int rotNum = ran.nextInt(theGene.size());
 		while (rotNum == 0)
 			rotNum = ran.nextInt(theGene.size());
@@ -56,7 +57,6 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 		getGene(ran.nextInt(size())).mutate();
 	}
 	
-	@Override
 	public Pair<Chromosome, Chromosome> crossOver(Chromosome other) {
 		// Define the point where the crossover will occur.
 		int crossPoint = ran.nextInt(size());
@@ -116,7 +116,7 @@ public class Chromosome extends Genetic implements Crossable<Chromosome> {
 	}
 	
 	public Gene getGene(int index) {
-		return (Gene) chromosome.get(index);
+		return chromosome.get(index);
 	}
 	
 	public void setChrom(List<Gene> aChrom) {

@@ -12,6 +12,7 @@ import java.util.Random;
 
 import Frame.GridPanel;
 import Interactive.Chromosome;
+import Interactive.Crossable;
 import Interactive.Gene;
 import Interactive.OrgData;
 import Interactive.Organism;
@@ -28,7 +29,6 @@ public class GEP {
 	private Random ran;
 
 	private boolean handicap;
-	private boolean elitist;
 	private int numElites;
 	private boolean doElitism;
 
@@ -222,13 +222,10 @@ public class GEP {
 		LinkedList<Chromosome> finalChromes = makeChrmListFrmPair(pairList);
 		// Proceed with elitism if true.
 		if (doElitism)
-			transferElites(finalChromes, eliteList);
+			finalChromes = (LinkedList<Chromosome>) transferElites(
+					finalChromes, eliteList);
 		for (int i = 0; i < anOrgList.size(); i++)
-			anOrgList.get(i).setChromosome(chromList.get(i));
-		// Update the evaluations of the genes.
-		for (Chromosome chrom : chromList)
-			for (Gene gene : chrom.subListGene(0, chrom.size()))
-				gene.updateEvaledList();
+			anOrgList.get(i).setChromosome(finalChromes.get(i));
 		return anOrgList;
 	}
 
@@ -342,7 +339,10 @@ public class GEP {
 
 		// PROCEED WITH ELITISM IF TRUE.
 		if (doElitism) {
-			transferElites(finalChromes, eliteList);
+			System.out.println("printing elitelist");
+			printChromGenes(eliteList);
+			finalChromes = (LinkedList<Chromosome>) transferElites(
+					finalChromes, eliteList);
 			System.out.println("After tranferring the elites.");
 			printChromGenes(finalChromes);
 		}
@@ -354,15 +354,10 @@ public class GEP {
 		// objects
 		// themselves should be changed already.
 		for (int i = 0; i < anOrgList.size(); i++)
-			anOrgList.get(i).setChromosome(chromList.get(i));
+			anOrgList.get(i).setChromosome(finalChromes.get(i));
 
 		System.out.println("with set");
 		printChromGenes(makeChromList(anOrgList));
-		
-		// UPDATE THE EVALUATIONS OF THE GENES.
-		for (Chromosome chrom : chromList)
-			for (Gene gene : chrom.subListGene(0, chrom.size()))
-				gene.updateEvaledList();
 		return anOrgList;
 	}
 
@@ -374,17 +369,54 @@ public class GEP {
 	 *            An organism list to find the most fit individuals from.
 	 */
 	public List<Chromosome> assembleElites(LinkedList<Organism> anOrgList) {
-		LinkedList<Organism> tempOrgList = (LinkedList<Organism>) anOrgList
+		LinkedList<Organism> orderedOrgList = (LinkedList<Organism>) anOrgList
 				.clone();
-		Collections.sort(tempOrgList);
+		Collections.sort(orderedOrgList);
 		System.out.println("In assembleelites method");
-		for (Organism organism : tempOrgList) {
+		for (Organism organism : orderedOrgList) {
 			System.out.println("Id: " + organism.getId() + " fitness: "
 					+ organism.getFitness());
 		}
+		return deepCopyEliteList(orderedOrgList);
+	}
+	
+	public List<Chromosome> deepCopyEliteList(List<Organism> orderedOrgList) {
+		System.out.println("indeepcopy");
+		// The list of deep copied elites to be returned.
 		List<Chromosome> eliteList = new LinkedList<Chromosome>();
-		for (int i = 0; i < numElites; i++)
-			eliteList.add(tempOrgList.pollLast().getChromosome());
+		// Perform a deep copy of the eliteList;
+		for (int i = 0; i < numElites; i++) {
+			// Get the Chromosomes from the ordered organism list.
+			Chromosome chrom = ((LinkedList<Organism>) orderedOrgList)
+					.pollLast().getChromosome();
+			// The new gene list to hold the deep copied genes.
+			LinkedList<Gene> geneList = new LinkedList<Gene>();
+			for (int j = 0; j < chrom.size(); j++) {
+				System.out.println("j: " + j);
+				// Gene from which to get the symbol list we will copy.
+				Gene g = chrom.getGene(j);
+				// Symbol list to copy.
+				List<Character> aSymList = g.getSymList();
+				System.out.println("printlist symlist to be cop");
+				g.printSymList();
+				System.out.println();
+				// The new symbol list to hold the copied symbols.
+				LinkedList<Character> aSymListCopy = new LinkedList<Character>();
+				// Loop to copy the symbols.
+				for (int k = 0; k < aSymList.size(); k++) {
+					aSymListCopy.add(aSymList.get(k));
+				}
+				// Add the deep copied symbol list to the new gene list.
+				geneList.add(new Gene(aSymListCopy));
+				System.out.println("print cop symList");
+				geneList.get(j).printSymList();
+				System.out.println();
+			}
+			// Add the deep copied gene list to the eliteList to be returned.
+			eliteList.add(new Chromosome(geneList));
+		}
+		System.out.println("test deepcopy print chromes");
+		printChromGenes((LinkedList<Chromosome>) eliteList);
 		return eliteList;
 	}
 
@@ -417,7 +449,7 @@ public class GEP {
 	 * @param aFinalChromes
 	 * @param anEliteList
 	 */
-	public void transferElites(LinkedList<Chromosome> aFinalChromes,
+	public List<Chromosome> transferElites(LinkedList<Chromosome> aFinalChromes,
 			LinkedList<Chromosome> anEliteList) {
 
 		HashSet<Integer> indeces = new HashSet<Integer>();
@@ -427,6 +459,7 @@ public class GEP {
 		LinkedList<Integer> indexList = new LinkedList<Integer>(indeces);
 		while (!indexList.isEmpty())
 			aFinalChromes.set(indexList.pop(), anEliteList.pop());
+		return aFinalChromes;
 	}
 
 	/**
