@@ -262,36 +262,40 @@ public class GridPanel extends JPanel {
 		// Perform the evolutionary process on the organism's in the organism
 		// list.
 		organisms = g.newGeneration(organisms);
+		// Reinitialize food list.
+		for (int i = 0; i < numFoodSources * 2; i++) {
+			if (ran.nextBoolean())
+				food.add(new HealthyFood(100.00, i, 2));
+			else
+				food.add(new PoisonousFood(100.00, i, 2));
+			// Place food on locationMap.
+			locationMap.placeFood(food.get(i));
+		}
+		// Re-initialization of the organisms and the OrgData objects are done in
+		// this loop. New positions for organisms and food objects are done as
+		// well.
 		for (int i = 0; i < organisms.size(); i++) {
 			// An organism.
 			Organism org = organisms.get(i);
 			// organisms corresponding data object.
 			OrgData orgData = orgDataList.get(i);
+			Chromosome chrom = org.getChromosome();
+			// Update the new symLists to an evaluated expression.
+			// TODO: Make Gene and Chromosome implement iterable.
+			for (int j = 0; j < chrom.size(); j++)
+				chrom.getGene(j).updateEvaledList();
+			// Re-initialize all of the organism's data.
 			orgData.clear();
 			orgData.addChromosome(org.getChromosome());
-			// Give the organism a new position.
-			locationMap.newLocation(org.getLocation(), Organism.width,
-					Organism.height, org.getId(), 'o');
+			// Place the organisms on the locationMap.
+			locationMap.placeOrganism(org);
+			/*locationMap.newLocation(org.getLocation(), Organism.width,
+					Organism.height, org.getId(), 'o');*/
 			org.setHealth(orgData.getMaxHealth());
 			shuffleIds.add(org.getId());
 		}
-		// Update the new symLists to an evaluated expression.
-		// TODO: Make Gene and Chromosome implement iterable.
-		for (Organism org : organisms) {
-			Chromosome chrom = org.getChromosome();
-			for (int i = 0; i < chrom.size(); i++)
-				chrom.getGene(i).updateEvaledList();
-		}
-		// Place the organisms on the locationMap.
-		locationMap.placeOrganisms(organisms);
-		// Reinitialize food list.
-		for (int i = 0; i < numFoodSources * 2; i++)
-			if (ran.nextBoolean())
-				food.add(new HealthyFood(100.00, i, 2));
-			else
-				food.add(new PoisonousFood(100.00, i, 2));
-		// Place food on locationMap.
-		locationMap.placeFoods(food);
+		
+		/*locationMap.placeOrganisms(organisms);*/
 		// Calculate lastAvg for the Generation Panel.
 		lastAvg = sum / OptionsPanel.numOrganisms;
 		// Set the generation panel data information.

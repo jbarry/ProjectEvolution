@@ -34,19 +34,26 @@ public class OrgData {
 	public OrgData(double aMaxHealth, int anId) {
 		maxHealth = aMaxHealth;
 		id = anId;
-		eatFail = 0;
-		healthyEatSuccess = 0;
-		poisonEatSuccess = 0;
-		numScans = 0;
-		numAttacked = 0;
-		numPushed = 0;
+		eatFail = 1;
+		healthyEatSuccess = 1;
+		poisonEatSuccess = 1;
+		numScans = 1;
+		numAttacked = 1;
+		numPushed = 1;
 		String action = "";
-		hlthTot = 0;
-		samples = 0;
+		hlthTot = 1;
+		samples = 1;
 		steps = 1;
-		timeOfDeath = 0;
+		timeOfDeath = 1;
 		closedList = new ArrayList<Coordinate>();
-		previousPosition = new Coordinate(-1, -1);
+		lastFoodSourceIndex = 0;
+		averageHealth = 1;
+		previousPosition = new Coordinate(0, 0);
+		healthyFood = new TreeSet<Integer>();
+		poisonFood = new TreeSet<Integer>();
+		actionList = new ArrayList<ArrayList<String>>();
+		startingLocation = new ArrayList<Coordinate>();
+		chromosomeHistory = new ArrayList<Chromosome>();
 	}
 
 	public void countStep() {
@@ -94,17 +101,26 @@ public class OrgData {
 	}
 
 	public void clear() {
-		eatFail = 0;
-		numScans = 0;
+		eatFail = 1;
+		healthyEatSuccess = 1;
+		poisonEatSuccess = 1;
+		numScans = 1;
+		numAttacked = 1;
+		numPushed = 1;
+		String action = "";
+		hlthTot = 1;
+		samples = 1;
 		steps = 1;
-		samples = 0;
-		hlthTot = 0;
-		poisonEatSuccess = 0;
-		healthyEatSuccess = 0;
-		numAttacked = 0;
-		numPushed = 0;
-		closedList.clear();
-		previousPosition = new Coordinate(-1, -1);
+		timeOfDeath = 1;
+		closedList = new ArrayList<Coordinate>();
+		lastFoodSourceIndex = 0;
+		averageHealth = 1;
+		previousPosition = new Coordinate(0, 0);
+		healthyFood = new TreeSet<Integer>();
+		poisonFood = new TreeSet<Integer>();
+		actionList = new ArrayList<ArrayList<String>>();
+		startingLocation = new ArrayList<Coordinate>();
+		chromosomeHistory = new ArrayList<Chromosome>();
 	}
 
 	public void incHlthTot() {
