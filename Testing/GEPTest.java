@@ -63,32 +63,6 @@ public class GEPTest {
 	public void tearDown() throws Exception {
 	}
 
-	// DONE CASE: ELITE LIST SIZE 1.
-	// DONE CASE:
-	// TODO CASE: NUM ELITES IS 0.
-	// TODO CASE: ALL SAME FITNESS.
-	@Test
-	public void assembleElitesListEvenOrgListTest() {
-		// Even number of Organisms.
-		LinkedList<Organism> orgList = new LinkedList<Organism>();
-		orgList.add(new Organism(true, 7, 10.0, 0));
-		orgList.add(new Organism(true, 7, 4.0, 1));
-		orgList.add(new Organism(true, 7, 11.0, 2));
-		orgList.add(new Organism(true, 7, 3.0, 3));
-		orgList.add(new Organism(true, 7, 10.0, 4));
-		orgList.add(new Organism(true, 7, 13.0, 5));
-		orgList.add(new Organism(true, 7, 12.0, 6));
-		orgList.add(new Organism(true, 7, 10.0, 7));
-		LinkedList<Chromosome> eliteList = (LinkedList<Chromosome>) gep
-				.assembleElites(orgList);
-		System.out.println(eliteList.get(0).getId() + ", " + orgList.get(5).getId());
-		System.out.println(eliteList.get(1).getId() + ", " + orgList.get(6).getId());
-		System.out.println(eliteList.get(2).getId() + ", " + orgList.get(2).getId());
-		assertSame(eliteList.pop().getId(), orgList.get(5).getId());
-		assertSame(eliteList.pop().getId(), orgList.get(6).getId());
-		assertSame(eliteList.pop().getId(), orgList.get(2).getId());
-	}
-
 	@Test
 	public void partnerSelectTestOddPopulation() {
 		// CASE: ODD NUMBER OF ORGANISMS.
