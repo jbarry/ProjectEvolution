@@ -105,6 +105,8 @@ public abstract class Matter implements Comparable<Matter>{
 	public abstract int getHeight();	
 	
 	public abstract int getWidth();
+	
+	public abstract int getId();
 
 	public void setMxHlth(double aMxHlth) {
 		mxHlth = aMxHlth;
@@ -136,10 +138,6 @@ public abstract class Matter implements Comparable<Matter>{
 		location = newLocation;
 	}
 
-	public int getId() {
-		return id;
-	}
-	
 	public void setId(int anId) {
 		id = anId;
 	}

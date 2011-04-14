@@ -192,7 +192,8 @@ public class GridPanel extends JPanel {
 	 * @param aFood
 	 * @return
 	 */
-	public boolean eatFood(Organism org, Food aFood) {
+	public boolean eatFood(Organism org, int fdId) {
+		Food aFood = foodList.get(fdId);
 		if (org.matterInRange(aFood.getId(), aFood.getType(), 5)) {
 			System.out.println("Ate Food!!");
 			return org.eatFood(5 * aFood.getFoodType());
@@ -688,6 +689,11 @@ public class GridPanel extends JPanel {
 				foodList.add(new PoisonousFood(100.00, i, 2));
 			locationMap.placeFood(foodList.get(i));
 		}
+		
+		System.out.println("printingIds in foodList");
+		for (Food f : foodList) {
+			System.out.println(f.getId());
+		}
 		g = new GEP(0.75, 0.01, 0.01, 0.75, 0.75, 2, false, true);
 	}
 
@@ -737,7 +743,7 @@ public class GridPanel extends JPanel {
 				// First Gene in Chromosome.
 				Gene currentGene = chrome.getGene(0);
 				// Get the first food.
-				Food foodDestination = foodList.get(0);
+				int foodDestination = 0;
 				// bestEval is used to hold the value of the evaluation
 				// and the food source that the evaluation corresponds
 				// to.
@@ -746,11 +752,11 @@ public class GridPanel extends JPanel {
 								foodDestination));
 				for (int k = 1; k < foodList.size(); k++) { // loopFood.
 					double aResult = evaluateGeneFoodInRangeAstar(org,
-							currentGene, foodList.get(k));
+							currentGene, k);
 					/*System.out.println("on food" + k);
 					System.out.println("Result for eval: " + aResult);*/
 					if (aResult > bestEval.getSnd()) {
-						foodDestination = foodList.get(k);
+						foodDestination = k;
 						/*System.out.println("Replaced!! result");*/
 						bestEval.setLeft(k);
 						bestEval.setRight(aResult);
@@ -825,23 +831,27 @@ public class GridPanel extends JPanel {
 				// First Gene in Chromosome.
 				Gene currentGene = chrome.getGene(0);
 				// Get the first food.
-				Food foodDestination = foodList.get(0);
+				int foodDestination = 0;
 				// bestEval is used to hold the value of the evaluation
 				// and the food source that the evaluation corresponds
 				// to.
+				// TODO: 1st gene is only evaled once.
 				Pair<Integer, Double> bestEval = new Pair<Integer, Double>(0,
 						evaluateGeneFoodInRangeAstarNoNorm(org, currentGene,
-								foodDestination));
-
+								foodList.get(foodDestination)));
+				System.out.println("l: " + l);
 				for (int j = 1; j < chrome.size(); j++) { // loopGenes.
 					currentGene = chrome.getGene(j);
+					System.out.println("j: " + j);
 					/*System.out.println("onGene: " + j);*/
 					for (int k = 1; k < foodList.size(); k++) { // loopFood.
 						Food fd = foodList.get(k);
+						System.out.println("k: " + k);
 						double aResult = evaluateGeneFoodInRangeAstarNoNorm(org,
 								currentGene, fd);
 						if (aResult > bestEval.getSnd()) {
-							foodDestination = fd;
+							foodDestination = k;
+							/*System.out.println("replacedId: " + k);*/
 							bestEval.setLeft(j);
 							bestEval.setRight(aResult);
 						}
@@ -918,7 +928,7 @@ public class GridPanel extends JPanel {
 				// First Gene in Chromosome.
 				Gene currentGene = chrome.getGene(0);
 				// Get the first food.
-				Food foodDestination = foodList.get(0);
+				int foodDestination = 0;
 				// bestEval is used to hold the value of the evaluation
 				// and the food source that the evaluation corresponds
 				// to.
@@ -927,13 +937,13 @@ public class GridPanel extends JPanel {
 								foodDestination));
 				for (int k = 1; k < foodList.size(); k++) { // loopFood.
 					double aResult = evaluateGeneFoodInRangeAstar(org,
-							currentGene, foodList.get(k));
+							currentGene, k);
 					/*System.out.println("aResult: " + aResult);
 					System.out.println("prevResult: " + bestEval.getSnd());
 					System.out.println();*/
 					if (aResult > bestEval.getSnd()) {
 						/*System.out.println("aResult better than prev.");*/
-						foodDestination = foodList.get(k);
+						foodDestination = k;
 						/*System.out.println("Going to food source: " + k);*/
 						bestEval.setLeft(k);
 						bestEval.setRight(aResult);
@@ -970,10 +980,13 @@ public class GridPanel extends JPanel {
 	 * @param aFoodDestination
 	 */
 	private void moveAstarClosedList(Organism org, OrgData od,
-			Food aFoodDestination, ArrayList<Coordinate> aClosedList) {
+			int aFoodDestination, ArrayList<Coordinate> aClosedList) {
+		Food fd = foodList.get(aFoodDestination);
 		PriorityQueue<Coordinate> sq = LocationMap.getInstance().searchWithList(
-				org.getLocation(), aFoodDestination.getLocation(), org.getId());
+				org.getLocation(), fd.getLocation(), org.getId());
 		Coordinate nextMove;
+		System.out.println();
+		System.out.println("going to: " + fd.getId());
 		/*org.printId();
 		org.printLocation();
 		System.out.println("Next move: " + nextMove.getX() + ", "
@@ -1024,7 +1037,7 @@ public class GridPanel extends JPanel {
 	 *         performing an action.
 	 */
 	public boolean doActionAstar(Organism org, OrgData anOrgData,
-			Pair<Integer, Double> bestEval, Food aFoodDestination) {
+			Pair<Integer, Double> bestEval, int aFoodDestination) {
 		switch (bestEval.getFst()) {
 			case 0:
 				moveAstarClosedList(org, anOrgData, aFoodDestination,
@@ -1061,8 +1074,8 @@ public class GridPanel extends JPanel {
 	}
 
 	private double evaluateGeneFoodInRangeAstar(Organism org, Gene currentGene,
-			Food aFood) {
-
+			int fdId) {
+		Food aFood = foodList.get(fdId);
 		LocationMap map = LocationMap.getInstance();
 		HashMap<String, Double> environment = new HashMap<String, Double>();
 		double orgX = norm.normalize(org.getLocation().getX());

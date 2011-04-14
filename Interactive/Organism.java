@@ -493,6 +493,11 @@ public class Organism extends Matter {
 				(int) this.location.getY() - (height / 2), width, height);
 	}
 
+	@Override
+	public int getId() {
+		return id;
+	}
+
 	/*public void paint(Graphics g) {
 	  if (facingRight) {
 		   if (getHealth() <= 0) {

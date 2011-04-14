@@ -58,4 +58,9 @@ public class HealthyFood extends Food {
 	public Double getFoodType() {
 		return 1.0;
 	}
+
+	@Override
+	public int getId() {
+		return id;
+	}
 }
