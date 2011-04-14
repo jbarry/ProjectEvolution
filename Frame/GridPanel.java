@@ -271,6 +271,13 @@ public class GridPanel extends JPanel {
 		// Place food on locationMap.
 		locationMap.placeFoods(food);
 		organisms = g.newGeneration(organisms);
+		// Update the new symLists to an evaluated expression.
+		// TODO: Make Gene and Chromosome implement iterable.
+		for (Organism org : organisms) {
+			Chromosome chrom = org.getChromosome();
+			for (int i = 0; i < chrom.size(); i++)
+				chrom.getGene(i).updateEvaledList();
+		}
 		// Set the generation panel data information.
 		GUI.genPanel.addGeneration();
 		if (!GUI.genPanel.resumeHasNotBeenClicked()) {
