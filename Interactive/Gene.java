@@ -81,6 +81,30 @@ public class Gene<A extends Crossable<?>> extends Genetic {
 
 	 public Gene(LinkedList<Character> aSymList) {
 		  symList = aSymList;
+		  lenGenes = aSymList.size();
+		  ran = new Random();
+		  symbols = new LinkedList<Character>();
+		  terminals = new LinkedList<Character>();
+		  symbols.add('*');
+		  symbols.add('/');
+		  symbols.add('-');
+		  symbols.add('+');
+		  symbols.add('a');
+		  /*symbols.add('b');*/
+		  symbols.add('c');
+		  symbols.add('d');
+		  symbols.add('e');
+		  symbols.add('f');
+		  symbols.add('g');
+		  terminals.add('a'); // x distance.
+		  /*terminals.add('b');*/// y distance.
+		  terminals.add('c'); // Organisms near food source.
+		  terminals.add('d'); // Organism's health.
+		  terminals.add('e'); // Food remaining in food source.
+		  terminals.add('f'); // If poison = -1 normalized, otherwise 1
+						  // normalized.
+		  terminals.add('g'); // NumOrganisms surrounding this organism.
+		  Collections.shuffle(symbols);
 		  ran = new Random();
 	 }
 

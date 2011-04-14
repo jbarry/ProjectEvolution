@@ -173,7 +173,7 @@ public class GEP {
 		orgData.setAverageHealth(orgData.getHlthTot()
 				/ orgData.getTimeOfDeath());
 		System.out.println("avghealth: " + orgData.getAverageHealth());
-		double fitness = (orgData.getAverageHealth() / numSteps)
+		double fitness = (numSteps / orgData.getAverageHealth())
 				+ orgData.getTimeOfDeath();
 		System.out.println("fit: " + fitness);
 		System.out.println();
@@ -369,16 +369,16 @@ public class GEP {
 		LinkedList<Organism> orderedOrgList = (LinkedList<Organism>) anOrgList
 				.clone();
 		Collections.sort(orderedOrgList);
-		System.out.println("In assembleelites method");
-		for (Organism organism : orderedOrgList) {
+		/*System.out.println("In assembleelites method");*/
+		/*for (Organism organism : orderedOrgList) {
 			System.out.println("Id: " + organism.getId() + " fitness: "
 					+ organism.getFitness());
-		}
+		}*/
 		return deepCopyEliteList(orderedOrgList);
 	}
 	
 	public List<Chromosome> deepCopyEliteList(List<Organism> orderedOrgList) {
-		System.out.println("indeepcopy");
+		/*System.out.println("indeepcopy");*/
 		// The list of deep copied elites to be returned.
 		List<Chromosome> eliteList = new LinkedList<Chromosome>();
 		// Perform a deep copy of the eliteList;
@@ -389,14 +389,14 @@ public class GEP {
 			// The new gene list to hold the deep copied genes.
 			LinkedList<Gene> geneList = new LinkedList<Gene>();
 			for (int j = 0; j < chrom.size(); j++) {
-				System.out.println("j: " + j);
+				/*System.out.println("j: " + j);*/
 				// Gene from which to get the symbol list we will copy.
 				Gene g = chrom.getGene(j);
 				// Symbol list to copy.
 				List<Character> aSymList = g.getSymList();
-				System.out.println("printlist symlist to be cop");
+				/*System.out.println("printlist symlist to be cop");
 				g.printSymList();
-				System.out.println();
+				System.out.println();*/
 				// The new symbol list to hold the copied symbols.
 				LinkedList<Character> aSymListCopy = new LinkedList<Character>();
 				// Loop to copy the symbols.
@@ -405,15 +405,15 @@ public class GEP {
 				}
 				// Add the deep copied symbol list to the new gene list.
 				geneList.add(new Gene(aSymListCopy));
-				System.out.println("print cop symList");
+				/*System.out.println("print cop symList");
 				geneList.get(j).printSymList();
-				System.out.println();
+				System.out.println();*/
 			}
 			// Add the deep copied gene list to the eliteList to be returned.
 			eliteList.add(new Chromosome(geneList));
 		}
-		System.out.println("test deepcopy print chromes");
-		printChromGenes((LinkedList<Chromosome>) eliteList);
+		/*System.out.println("test deepcopy print chromes");
+		printChromGenes((LinkedList<Chromosome>) eliteList);*/
 		return eliteList;
 	}
 

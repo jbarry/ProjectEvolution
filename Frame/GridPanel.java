@@ -51,7 +51,7 @@ public class GridPanel extends JPanel {
 	private ArrayList<Integer> shuffleIds;
 	private ArrayList<String> shuffleStringIds;
 	private int lengthTimeStep = 100;
-	private int lengthGeneration = 10;
+	private int lengthGeneration = 500;
 	private int timePassed = 0;
 	private int trialsPerGen = 1;
 	public int trialNum = 1;
@@ -104,8 +104,8 @@ public class GridPanel extends JPanel {
 							gui.updatePercentage((double) timePassed
 									/ lengthGeneration);
 							/*simulateStepAstarWithoutEatWithClosedList(7);*/
-							simulateStepAstarWithoutEatWithClosedListOrgData(5);
-							/*simulateStepAstarClosedListOrgData(1);*/
+							/*simulateStepAstarWithoutEatWithClosedListOrgData(5);*/
+							simulateStepAstarClosedListOrgData(1);
 							repaint();
 						} else if (trialNum < trialsPerGen)
 							newTrial();
@@ -263,6 +263,7 @@ public class GridPanel extends JPanel {
 		// list.
 		organisms = g.newGeneration(organisms);
 		// Reinitialize food list.
+		food.clear();
 		for (int i = 0; i < numFoodSources * 2; i++) {
 			if (ran.nextBoolean())
 				food.add(new HealthyFood(100.00, i, 2));
@@ -671,7 +672,7 @@ public class GridPanel extends JPanel {
 			else
 				food.add(new PoisonousFood(100.00, i, 2));
 		locationMap.placeFoods(food);
-		g = new GEP(0.75, 0.01, 0.01, 0.75, 0.75, 1, false, false);
+		g = new GEP(0.75, 0.01, 0.01, 0.75, 0.75, 2, false, true);
 	}
 
 	/**
@@ -797,7 +798,7 @@ public class GridPanel extends JPanel {
 				// health
 				// by at each time step.
 				double depleteValue = orgData.getMaxHealth()
-						/ ((lengthGeneration - 30) * numActions);
+						/ ((lengthGeneration - 100) * numActions);
 				// Check to see if the Organism is dead, if so remove
 				// that org
 				// from the shuffleIds list.
