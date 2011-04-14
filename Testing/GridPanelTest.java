@@ -32,7 +32,7 @@ public class GridPanelTest {
 		locationMap.clearLocations();
 	}
 
-	public void initializeTest() {
+	public void simulateStepTest() {
 		
 	}
 }
