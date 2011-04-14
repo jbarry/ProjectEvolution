@@ -26,6 +26,7 @@ public class Organism extends Matter {
 	public static int width = 5;
 	public static int height = 5;
 	private String action;
+	private double fitness;
 	// For images/actions
 	private Image ninja_walk1;
 	private Image ninja_walk1_inv;
@@ -122,7 +123,7 @@ public class Organism extends Matter {
 		super(100.00, anId, 'o');
 		r = new Random();
 		chromosome = new Chromosome(numGenes, anId, true);
-		/*fitness = aFitness;*/
+		fitness = aFitness;
 		id = anId;
 	}
 
@@ -379,6 +380,14 @@ public class Organism extends Matter {
 		chromosome = aChrom;
 	}
 
+	public double getFitness() {
+		return fitness;
+	}
+
+	public void setFitness(double fitness) {
+		this.fitness = fitness;
+	}
+
 	@Override
 	public int getHeight() {
 		return height;
@@ -548,26 +557,24 @@ public class Organism extends Matter {
 	  }
 	  swapImage = !swapImage;
 	}*/
-	
+
 	/*public void addAction(String action, int index) {
 	actionList.get(actionList.size() - 1).add(action + " " + index);
 	}*/
 
+	/*public ArrayList<String> getActions(int generation) {
+		return ActionList.get(generation);
+	}*/
 
-    /*public ArrayList<String> getActions(int generation) {
-    	return ActionList.get(generation);
-    }*/
-    
-    /*public int getHealthyFoodSize() {
-    	return healthyFood.size();
-    }*/
-    
-    /*public int getPoisonFoodSize() {
-    	return poisonFood.size();
-    }*/
-     
-    
-    /*public void addEatFail() {
-    	eatFail++;
-    }*/
+	/*public int getHealthyFoodSize() {
+		return healthyFood.size();
+	}*/
+
+	/*public int getPoisonFoodSize() {
+		return poisonFood.size();
+	}*/
+
+	/*public void addEatFail() {
+		eatFail++;
+	}*/
 }

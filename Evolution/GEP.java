@@ -241,7 +241,9 @@ public class GEP {
 	  * 
 	  * @return
 	  */
-	 public LinkedList<Organism> newGenerationTest(LinkedList<Organism> anOrgList) {
+	public LinkedList<Organism> newGenerationTest(
+			LinkedList<Organism> anOrgList) {
+		
 		  printOrgListIdsAndFitness(anOrgList);
 		  System.out.println("The chromosomes in the original gene list.");
 		  printGenes(makeChromList(anOrgList));
@@ -251,7 +253,9 @@ public class GEP {
 		  if (doElitism) {
 			// Called on a clone of the
 				 // orgList because
-			   eliteList = (LinkedList<Chromosome>) assembleElitesTest(
+			// Took out the call to assembleElitesTest. Replaced with
+			// assembleElites.
+			   eliteList = (LinkedList<Chromosome>) assembleElites(
 						(LinkedList<Organism>) anOrgList.clone());
 			   System.out.println("The elites are: ");
 			   printChromeListIds(eliteList);
@@ -382,6 +386,10 @@ public class GEP {
 		  LinkedList<Organism> tempOrgList = (LinkedList<Organism>) anOrgList
 				    .clone();
 		  Collections.sort(tempOrgList);
+		  System.out.println("In assembleelites method");
+		  for (Organism organism : tempOrgList) {
+			  System.out.println("Id: " + organism.getId() + " fitness: " + organism.getFitness());
+		}
 		  List<Chromosome> eliteList = new LinkedList<Chromosome>();
 		  for (int i = 0; i < numElites; i++)
 			   eliteList.add(tempOrgList.pollLast().getChromosome());
@@ -394,7 +402,7 @@ public class GEP {
 	  * @param anOrgList
 	  * @return
 	  */
-	 public List<Chromosome> assembleElitesTest(LinkedList<Organism> anOrgList) {
+	 /*public List<Chromosome> assembleElitesTest(LinkedList<Organism> anOrgList) {
 		  System.out.println("before ordering: ");
 		  printOrgListIdsAndFitness(anOrgList);
 		  Collections.sort(anOrgList);
@@ -405,7 +413,7 @@ public class GEP {
 		  for (int i = 0; i < numElites; i++)
 			   eliteList.add(anOrgList.pollLast().getChromosome());
 		  return eliteList;
-	 }
+	 }*/
 
 	 /**
 	  * Takes in a chromosome list, aFinalChromes, and a list of the most elite
@@ -659,10 +667,6 @@ public class GEP {
 			   if (ran.nextDouble() < onePtProb)
 				    aPairList.get(i).getFst()
 							 .crossOver(aPairList.get(i).getSnd());
-	 }
-
-	 public LinkedList<Organism> getOrgList() {
-		  return orgList;
 	 }
 
 	 public double getTournProb() {

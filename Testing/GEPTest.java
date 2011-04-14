@@ -79,9 +79,11 @@ public class GEPTest {
 		orgList.add(new Organism(true, 7, 13.0, 5));
 		orgList.add(new Organism(true, 7, 12.0, 6));
 		orgList.add(new Organism(true, 7, 10.0, 7));
-		gep.setOrgList(orgList);
 		LinkedList<Chromosome> eliteList = (LinkedList<Chromosome>) gep
 				.assembleElites(orgList);
+		System.out.println(eliteList.get(0).getId() + ", " + orgList.get(5).getId());
+		System.out.println(eliteList.get(1).getId() + ", " + orgList.get(6).getId());
+		System.out.println(eliteList.get(2).getId() + ", " + orgList.get(2).getId());
 		assertSame(eliteList.pop().getId(), orgList.get(5).getId());
 		assertSame(eliteList.pop().getId(), orgList.get(6).getId());
 		assertSame(eliteList.pop().getId(), orgList.get(2).getId());
@@ -106,7 +108,6 @@ public class GEPTest {
 		orgList.add(new Organism(true, 7, 10.0, 12));
 		orgList.add(new Organism(true, 7, 10.0, 13));
 		orgList.add(new Organism(true, 7, 10.0, 14));
-		gep.setOrgList(orgList);
 		LinkedList<Pair<Organism, Organism>> partnerList = gep
 				.partnerSelect(orgList);
 		while (!partnerList.isEmpty()) {
@@ -146,7 +147,6 @@ public class GEPTest {
 		orgList.add(new Organism(true, 7, 10.0, 13));
 		orgList.add(new Organism(true, 7, 10.0, 14));
 		orgList.add(new Organism(true, 7, 10.0, 15));
-		gep.setOrgList(orgList);
 		LinkedList<Pair<Organism, Organism>> partnerList = gep
 				.partnerSelect(orgList);
 		while (!partnerList.isEmpty()) {
@@ -174,7 +174,6 @@ public class GEPTest {
 		LinkedList<Organism> orgList = new LinkedList<Organism>();
 		for (int i = 0; i < 13; i++)
 			orgList.add(new Organism(true, 4, r.nextInt(20), i));
-		gep.setOrgList(orgList);
 		LinkedList<Pair<Organism, Organism>> partnerList = gep
 				.partnerSelect(orgList);
 		LinkedList<Organism> tournOrgList = gep.tournament(partnerList);
@@ -182,7 +181,6 @@ public class GEPTest {
 			Organism firstOrg = partnerList.get(i).getFst();
 			Organism secOrg = partnerList.get(i).getSnd();
 			Organism tournListOrg = tournOrgList.get(i);
-			Double tournListOrgFitness = tournListOrg.getFitness();
 			Double firstFitness = firstOrg.getFitness();
 			Double secFitness = secOrg.getFitness();
 			if (firstFitness <= secFitness) {
@@ -199,7 +197,6 @@ public class GEPTest {
 		LinkedList<Organism> orgList = new LinkedList<Organism>();
 		for (int i = 0; i < 14; i++)
 			orgList.add(new Organism(true, 4, r.nextInt(20), i));
-		gep.setOrgList(orgList);
 		LinkedList<Pair<Organism, Organism>> partnerList = gep
 				.partnerSelect(orgList);
 		LinkedList<Organism> tournOrgList = gep.tournament(partnerList);
@@ -231,7 +228,6 @@ public class GEPTest {
 		LinkedList<Organism> orgList = new LinkedList<Organism>();
 		for (int i = 0; i < 14; i++)
 			orgList.add(new Organism(true, 4, r.nextInt(20), i));
-		gep.setOrgList(orgList);
 		LinkedList<Chromosome> chromList = gep.makeChromList(gep.tournament(gep
 				.partnerSelect(orgList)));
 		/* gep.printChromeListIds(chromList); */
