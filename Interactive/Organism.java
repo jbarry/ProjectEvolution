@@ -22,9 +22,10 @@ public class Organism extends Matter {
 	// --globals--
 	// ------------------------------------------------------------------------------------
 	private Chromosome chromosome;
-	private int scanRange;
+	/*private int scanRange;*/
 	public static int width = 5;
 	public static int height = 5;
+	private String action;
 	// For images/actions
 	private Image ninja_walk1;
 	private Image ninja_walk1_inv;
@@ -48,19 +49,7 @@ public class Organism extends Matter {
 	public Organism(double aHealth, int chromSize, int anId, int aScanRange) {
 		super(aHealth, anId, 'o');
 		chromosome = new Chromosome(chromSize);
-		samples = 0;
-		/* avgHealth = 0; */
-		hlthTot = 0;
-		scanRange = aScanRange;
-		steps = 0;
-		fitness = 0.0;
-		actionList = new ArrayList<ArrayList<String>>();
-		actionList.add(new ArrayList<String>());
-		StartingLocation = new ArrayList<Coordinate>();
-		chromosomeHistory = new ArrayList<Chromosome>();
-		healthyFood = new TreeSet<Integer>();
-		poisonFood = new TreeSet<Integer>();
-
+		/*scanRange = aScanRange;*/
 		ninja_walk1 = new ImageIcon(getClass().getResource(
 				"sprites/ninja_walk1.gif")).getImage();
 		ninja_walk1_inv = new ImageIcon(getClass().getResource(
@@ -94,18 +83,6 @@ public class Organism extends Matter {
 	public Organism(double aHealth, int chromSize, int anId) {
 		super(aHealth, anId, 'o');
 		chromosome = new Chromosome(chromSize);
-		samples = 0;
-		hlthTot = 0;
-		// scanRange = aScanRange;
-		steps = 0;
-		fitness = 0.0;
-		actionList = new ArrayList<ArrayList<String>>();
-		actionList.add(new ArrayList<String>());
-		StartingLocation = new ArrayList<Coordinate>();
-		chromosomeHistory = new ArrayList<Chromosome>();
-		healthyFood = new TreeSet<Integer>();
-		poisonFood = new TreeSet<Integer>();
-
 		ninja_walk1 = new ImageIcon(getClass().getResource(
 				"sprites/ninja_walk1.gif")).getImage();
 		ninja_walk1_inv = new ImageIcon(getClass().getResource(
@@ -143,7 +120,7 @@ public class Organism extends Matter {
 		/* hlth = 100.00; */
 		r = new Random();
 		chromosome = new Chromosome(numGenes, anId, true);
-		fitness = aFitness;
+		/*fitness = aFitness;*/
 		/* id = anId; */
 	}
 
@@ -209,8 +186,6 @@ public class Organism extends Matter {
 	}
 
 	public void newLocation() {
-		int x = location.getX();
-		int y = location.getY();
 		LocationMap.getInstance().newLocation(location, width, height, id, 'o');
 	}
 
@@ -314,7 +289,7 @@ public class Organism extends Matter {
 		currentAction = 'a';
 
 		organisms.get(orgIndex).decreaseHealth(5);
-		numAttacked++;
+		/*numAttacked++;*/
 		organisms.get(this.getId()).setAction("Attacking org " + orgIndex);
 		/*
 		 * System.out.print(". Health: " + organisms.get(orgIndex).getHealth());
@@ -353,6 +328,27 @@ public class Organism extends Matter {
 
 	}*/
 
+	/**
+	 * Takes an organism index and a list of Organisms and decreases the health
+	 * of the organism that is attacked.
+	 * 
+	 * @param orgIndex
+	 * @param anOrgList
+	 */
+	/*public void attack2(int orgIndex, ArrayList<Organism> anOrgList) {
+		System.out.print("Attacking org " + orgIndex + "("
+				+ organisms.get(orgIndex).getLocation().getX() + " "
+				+ organisms.get(orgIndex).getLocation().getY() + "). Health: "
+				+ organisms.get(orgIndex).getHealth());
+		Organism org = anOrgList.get(orgIndex);
+		org.decreaseHealth(5);
+
+		numAttacked++;
+		anOrgList.get(this.getId()).setAction("Attacking org " + orgIndex);
+		System.out.print(". Health: " + organisms.get(orgIndex).getHealth());
+		System.out.println(". Attacked by org " + this.id);
+	}*/
+
 	public boolean currOrgIsNextToSpecifiedOrg(int orgIndex) {
 		ArrayList<Integer> surroundingOrgs = new ArrayList<Integer>();
 		surroundingOrgs = this.getSurroundingObjects('o', 1);
@@ -383,74 +379,12 @@ public class Organism extends Matter {
 	// ------------------------------------------------------------------------------------
 	// --getters/setters--
 	// ------------------------------------------------------------------------------------
-	public String getAction() {
-		return action;
-	}
-
-	public void setAction(String s) {
-		action += s + "\n               ";
-	}
-
-	public void clearAction() {
-		action = "";
-	}
-
 	public Chromosome getChromosome() {
 		return chromosome;
 	}
 
 	public void setChromosome(Chromosome aChrom) {
 		chromosome = aChrom;
-	}
-
-	public void incHlthTot() {
-		hlthTot += hlth;
-		samples++;
-	}
-
-	public void countStep() {
-		steps++;
-	}
-
-	public void addAction(String action, int index) {
-		actionList.get(actionList.size() - 1).add(action + " " + index);
-	}
-
-	/*
-	 * public ArrayList<String> getActions(int generation){ return
-	 * ActionList.get(generation); }
-	 * 
-	 * public int getHealthyFoodSize(){ return healthyFood.size(); }
-	 * 
-	 * public int getPoisonFoodSize(){ return poisonFood.size(); }
-	 */
-
-	public void addEatFail() {
-		eatFail++;
-	}
-
-	/*
-	 * public ArrayList<String> getActions(int generation){ return
-	 * ActionList.get(generation); }
-	 * 
-	 * public int getHealthyFoodSize(){ return healthyFood.size(); }
-	 * 
-	 * public int getPoisonFoodSize(){ return poisonFood.size(); }
-	 */
-
-	public void addScan(int scans) {
-		numScans += scans;
-	}
-
-	public void goBack(int generation) {
-		int x = location.getX();
-		int y = location.getY();
-		LocationMap.getInstance().newLocation(location, width, height, id, 'o');
-		chromosome = chromosomeHistory.get(generation - 1);
-		for (int i = generation; i < chromosomeHistory.size(); i++) {
-			chromosomeHistory.remove(i);
-		}
-		/*clear();*/
 	}
 
 	@Override
@@ -463,50 +397,6 @@ public class Organism extends Matter {
 		return width;
 	}
 
-	public double getFitness() {
-		return fitness;
-	}
-
-	public void setFitness(double aFit) {
-		fitness = aFit;
-	}
-
-	public double getHlthTot() {
-		return hlthTot;
-	}
-
-	public int getNumSteps() {
-		return steps;
-	}
-
-	public int getSamples() {
-		return samples;
-	}
-
-	public int getEatFail() {
-		return eatFail;
-	}
-
-	public int getHealthEat() {
-		return healthyEatSuccess;
-	}
-
-	public int getPoisonEat() {
-		return poisonEatSuccess;
-	}
-
-	public int getTotalScans() {
-		return numScans;
-	}
-
-	public int getNumPushed() {
-		return numPushed;
-	}
-
-	public int getNumAttacked() {
-		return numAttacked;
-	}
-
 	@Override
 	public int compareTo(Matter o) {
 		Organism org = (Organism) o;
@@ -515,27 +405,6 @@ public class Organism extends Matter {
 		else if (fitness == org.getFitness())
 			return 0;
 		return 1;
-	}
-
-	/**
-	 * Takes an organism index and a list of Organisms and decreases the health
-	 * of the organism that is attacked.
-	 * 
-	 * @param orgIndex
-	 * @param anOrgList
-	 */
-	public void attack2(int orgIndex, ArrayList<Organism> anOrgList) {
-		/*System.out.print("Attacking org " + orgIndex + "("
-				+ organisms.get(orgIndex).getLocation().getX() + " "
-				+ organisms.get(orgIndex).getLocation().getY() + "). Health: "
-				+ organisms.get(orgIndex).getHealth());*/
-		Organism org = anOrgList.get(orgIndex);
-		org.decreaseHealth(5);
-
-		numAttacked++;
-		anOrgList.get(this.getId()).setAction("Attacking org " + orgIndex);
-		/*System.out.print(". Health: " + organisms.get(orgIndex).getHealth());
-		System.out.println(". Attacked by org " + this.id);*/
 	}
 
 	public void printInfo() {
@@ -557,36 +426,16 @@ public class Organism extends Matter {
 		return 'o';
 	}
 
-	public int getSteps() {
-		return steps;
+	public String getAction() {
+		return action;
 	}
 
-	public void setSteps(int steps) {
-		this.steps = steps;
+	public void setAction(String action) {
+		this.action = action;
 	}
-
-	public void setHealthyEat(int val) {
-		healthyEatSuccess = val;
-	}
-
-	public void setPoisonEat(int val) {
-		poisonEatSuccess = val;
-	}
-
-	public void setEatFail(int val) {
-		eatFail = val;
-	}
-
-	public void setNumPushed(int val) {
-		numPushed = val;
-	}
-
-	public void setNumAttacked(int val) {
-		numAttacked = val;
-	}
-
-	public void setTotalScans(int val) {
-		numScans = val;
+	
+	public void clearAction() {
+		action = "";
 	}
 
 	public void paint(Graphics g) {
