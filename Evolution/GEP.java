@@ -92,7 +92,6 @@ public class GEP {
 		double badEating = (double) orgData.getPoisonEat() + 1;
 		double fitness = (avgHealth * (activity + goodEating + assertion))
 				/ badEating;
-		orgData.setFitness(fitness);
 		return fitness;
 	}
 
@@ -119,7 +118,6 @@ public class GEP {
 		System.out.println("badEating: " + badEating);
 		double fitness = (avgHealth * (activity + goodEating + assertion))
 				/ badEating;
-		orgData.setFitness(fitness);
 		System.out.println();
 		return fitness;
 	}
@@ -179,7 +177,6 @@ public class GEP {
 				+ orgData.getTimeOfDeath();
 		System.out.println("fit: " + fitness);
 		System.out.println();
-		orgData.setFitness(fitness);
 		return fitness;
 	}
 

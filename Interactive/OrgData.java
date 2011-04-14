@@ -15,7 +15,6 @@ public class OrgData {
 	private int numScans;
 	private int numAttacked;
 	private int numPushed;
-	private double fitness;
 	private double hlthTot;
 	private int samples;
 	private int steps;
@@ -30,6 +29,7 @@ public class OrgData {
 	private ArrayList<ArrayList<String>> actionList;
 	private ArrayList<Coordinate> startingLocation;
 	private ArrayList<Chromosome> chromosomeHistory;
+	private int lastFoodSourceIndex;
 
 	public OrgData(double aMaxHealth, int anId) {
 		maxHealth = aMaxHealth;
@@ -41,7 +41,6 @@ public class OrgData {
 		numAttacked = 0;
 		numPushed = 0;
 		String action = "";
-		fitness = 0;
 		hlthTot = 0;
 		samples = 0;
 		steps = 1;
@@ -139,14 +138,6 @@ public class OrgData {
 
 	public void setNumScans(int numScans) {
 		this.numScans = numScans;
-	}
-
-	public double getFitness() {
-		return fitness;
-	}
-
-	public void setFitness(double fitness) {
-		this.fitness = fitness;
 	}
 
 	public int getSteps() {
@@ -282,6 +273,15 @@ public class OrgData {
 
 	public ArrayList<ArrayList<String>> getActionList() {
 		return actionList;
+	}
+
+	public int getLastFoodSourceIndex() {
+		// TODO Auto-generated method stub
+		return lastFoodSourceIndex;
+	}
+	
+	public void setLastFoodSourceIndex(int aLastFoodSourceIndex) {
+		lastFoodSourceIndex = aLastFoodSourceIndex;
 	}
 	
 	/*public void goBack(int generation) {

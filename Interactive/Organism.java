@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.TreeSet;
 
 import javax.swing.ImageIcon;
 
@@ -50,6 +49,7 @@ public class Organism extends Matter {
 	public Organism(double aHealth, int chromSize, int anId, int aScanRange) {
 		super(aHealth, anId, 'o');
 		chromosome = new Chromosome(chromSize);
+		fitness = 0.0;
 		/*scanRange = aScanRange;*/
 		// Image initialization.
 		ninja_walk1 = new ImageIcon(getClass().getResource(
@@ -117,8 +117,8 @@ public class Organism extends Matter {
 		currentAction = ' ';
 	}
 
-	// For testing purposes only.
-	// Just removing the GridPanel call.
+	// FOR TESTING PURPOSES ONLY.
+	// JUST REMOVING THE GRIDPANEL CALL.
 	public Organism(boolean boo, int numGenes, double aFitness, int anId) {
 		super(100.00, anId, 'o');
 		r = new Random();
@@ -127,16 +127,18 @@ public class Organism extends Matter {
 		id = anId;
 	}
 
-	// This ctor is for testing purposes.
+	// THIS CTOR IS FOR TESTING PURPOSES.
 	public Organism(double ahealth, Chromosome aChromosome) {
 		hlth = ahealth;
 		chromosome = aChromosome;
+		fitness = 0.0;
 	}
 
 	public Organism(Coordinate aLocation, Chromosome aChromosome) {
 		hlth = 7500.0;
 		location = aLocation;
 		chromosome = aChromosome;
+		fitness = 0.0;
 	}
 
 	public boolean eatFood(double val) {
