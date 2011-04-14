@@ -194,7 +194,7 @@ public class GridPanel extends JPanel {
 	 */
 	public boolean eatFood(Organism org, Food aFood) {
 		if (org.matterInRange(aFood.getId(), aFood.getType(), 5)) {
-			System.out.println("Ate Food");
+			System.out.println("Ate Food!!");
 			return org.eatFood(5 * aFood.getFoodType());
 		}
 		return false;
@@ -844,13 +844,13 @@ public class GridPanel extends JPanel {
 
 				for (int j = 1; j < chrome.size(); j++) { // loopGenes.
 					currentGene = chrome.getGene(j);
-					System.out.println("onGene: " + j);
+					/*System.out.println("onGene: " + j);*/
 					for (int k = 1; k < foodList.size(); k++) { // loopFood.
 						double aResult = evaluateGeneFoodInRangeAstar(org,
 								currentGene, foodList.get(k));
 						if (aResult > bestEval.getSnd()) {
 							foodDestination = foodList.get(k);
-							bestEval.setLeft(k);
+							bestEval.setLeft(j);
 							bestEval.setRight(aResult);
 						}
 					} // End loopFood.
@@ -1033,8 +1033,7 @@ public class GridPanel extends JPanel {
 	 */
 	public boolean doActionAstar(Organism org, OrgData anOrgData,
 			Pair<Integer, Double> bestEval, Food aFoodDestination) {
-
-		switch (bestEval.left()) {
+		switch (bestEval.getFst()) {
 			case 0:
 				moveAstarClosedList(org, anOrgData, aFoodDestination,
 						(ArrayList<Coordinate>) anOrgData.getClosedList());
