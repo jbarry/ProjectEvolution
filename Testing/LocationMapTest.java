@@ -1,10 +1,8 @@
 package Testing;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.util.LinkedList;
-import java.util.PriorityQueue;
 import java.util.Random;
 
 import junit.framework.Assert;
@@ -22,6 +20,7 @@ import Interactive.HealthyFood;
 import Interactive.Organism;
 import Interactive.Pair;
 import Interactive.PoisonousFood;
+import Searching.StarQueue;
 
 public class LocationMapTest {
 
@@ -333,6 +332,68 @@ public class LocationMapTest {
 		map.clearLocations();
 	}
 	
+	/*@Test
+	public void hasObstacleSouthWestTestWithHasObstacleSouthWestMethod() {
+		LocationMap map = LocationMap.getInstance();
+		Organism org1 = new Organism(true, 4, 0.0, 0);
+		org1.getLocation().setX(10);
+		org1.getLocation().setY(10);
+		Organism org2 = new Organism(true, 4, 0.0, 1);
+		org2.getLocation().setX(5);
+		org2.getLocation().setY(10);
+		map.setOrganism(org1);
+		map.setOrganism(org2);
+		System.out.println(map.get(7,9).getSnd());
+		Assert.assertTrue(LocationMap.hasObstacleSouthWest(10, 10, 0));
+		map.clearLocations();
+	}
+	
+	@Test
+	public void hasObstacleSouthTestWithHasObstacleSouthMethod() {
+		LocationMap map = LocationMap.getInstance();
+		Organism org1 = new Organism(true, 4, 0.0, 0);
+		org1.getLocation().setX(10);
+		org1.getLocation().setY(10);
+		Organism org2 = new Organism(true, 4, 0.0, 1);
+		org2.getLocation().setX(10);
+		org2.getLocation().setY(15);
+		map.setOrganism(org1);
+		map.setOrganism(org2);
+		System.out.println(map.get(7,9).getSnd());
+		Assert.assertTrue(LocationMap.hasObstacleSouth(10, 10, 0));
+		map.clearLocations();
+	}
+	
+	@Test
+	public void hasObstacleWestTest2() {
+		LocationMap map = LocationMap.getInstance();
+		Organism org1 = new Organism(true, 4, 0.0, 0);
+		org1.getLocation().setX(10);
+		org1.getLocation().setY(10);
+		Organism org2 = new Organism(true, 4, 0.0, 1);
+		org2.getLocation().setX(5);
+		org2.getLocation().setY(10);
+		map.setOrganism(org1);
+		map.setOrganism(org2);
+		Assert.assertTrue(LocationMap.hasObstacleWest(10, 10, 0));
+		map.clearLocations();
+	}
+	
+	@Test
+	public void hasObstacleNorthWestTest2() {
+		LocationMap map = LocationMap.getInstance();
+		Organism org1 = new Organism(true, 4, 0.0, 0);
+		org1.getLocation().setX(10);
+		org1.getLocation().setY(10);
+		Organism org2 = new Organism(true, 4, 0.0, 1);
+		org2.getLocation().setX(5);
+		org2.getLocation().setY(5);
+		map.setOrganism(org1);
+		map.setOrganism(org2);
+		Assert.assertTrue(LocationMap.hasObstacleNorthWest(9, 9, 0));
+		map.clearLocations();
+	}*/
+	
 	@Test
 	public void shouldOnlyHaveSouthMovementInStarQueue() {
 		LocationMap map = LocationMap.getInstance();
@@ -377,7 +438,7 @@ public class LocationMapTest {
 		map.setOrganism(org8);
 		
 		Coordinate end = new Coordinate(34, 9);
-		PriorityQueue<Coordinate> sq = LocationMap.adjacentCoordinates(10, 10, 1,
+		StarQueue<Coordinate> sq = LocationMap.adjacentCoordinates(10, 10, 1,
 				end, org1.getId());
 		System.out.println("queue size: " + sq.size());
 		Coordinate coord = sq.remove();
@@ -424,7 +485,7 @@ public class LocationMapTest {
 		map.setOrganism(org7);
 		
 		Coordinate end = new Coordinate(34, 9);
-		PriorityQueue<Coordinate> sq = LocationMap.adjacentCoordinates(10, 10, 1,
+		StarQueue<Coordinate> sq = LocationMap.adjacentCoordinates(10, 10, 1,
 				end, org1.getId());
 		Coordinate coord = sq.remove();
 		System.out.println("To move to: " + coord.getX() + ", " + coord.getY());
@@ -482,7 +543,7 @@ public class LocationMapTest {
 		map.setOrganism(org9);
 		
 		Coordinate end = new Coordinate(34, 9);
-		PriorityQueue<Coordinate> sq = LocationMap.adjacentCoordinates(10, 10, 1,
+		StarQueue<Coordinate> sq = LocationMap.adjacentCoordinates(10, 10, 1,
 				end, org1.getId());
 		System.out.println("queue size: " + sq.size());
 		Coordinate coord = sq.remove();
@@ -541,7 +602,7 @@ public class LocationMapTest {
 		map.setOrganism(org9);*/
 		
 		Coordinate end = new Coordinate(26, 13);
-		PriorityQueue<Coordinate> sq = LocationMap.adjacentCoordinates(10, 10, 1,
+		StarQueue<Coordinate> sq = LocationMap.adjacentCoordinates(10, 10, 1,
 				end, org1.getId());
 		System.out.println("queue size: " + sq.size());
 		Coordinate coord = sq.remove();
@@ -600,7 +661,7 @@ public class LocationMapTest {
 		map.setOrganism(org9);*/
 		
 		Coordinate end = new Coordinate(26, 13);
-		PriorityQueue<Coordinate> sq = LocationMap.adjacentCoordinates(10, 10, 1,
+		StarQueue<Coordinate> sq = LocationMap.adjacentCoordinates(10, 10, 1,
 				end, org1.getId());
 		System.out.println("queue size: " + sq.size());
 		Coordinate coord = sq.remove();
