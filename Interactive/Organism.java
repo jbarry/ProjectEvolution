@@ -156,8 +156,6 @@ public class Organism extends Matter {
 	 * @param scanRange
 	 * @return
 	 */
-	// TODO: Find the error that causes the random food that is out of bounds to
-	// be added to the set.
 	public List<Integer> getFoodInRange(int scanRange) {
 		Set<Integer> objectIds = new HashSet<Integer>();
 		// create a square from cornerTop to cornerBottom of
@@ -188,6 +186,40 @@ public class Organism extends Matter {
 			}
 		}
 		return new ArrayList<Integer>(objectIds);
+	}
+
+	/**
+	 * Returns a boolean indicating whether or not the specified Matter id with type is in
+	 * the scanRange of the organism.
+	 * 
+	 * @param scanRange
+	 * @return
+	 */
+	public boolean matterInRange(int anId, Character type, int scanRange) {
+		int widthSub = location.getX() - (getWidth() / 2);
+		int widthPlus = location.getX() + (getWidth() / 2);
+		int heightSub = location.getY() - (getHeight() / 2);
+		int heightPlus = location.getY() + (getHeight() / 2);
+		// cornerTop and cornerBottom will be values for the loop
+		// conditional.
+		Coordinate cornerTop = new Coordinate(widthSub - scanRange, heightSub
+				- scanRange);
+		Coordinate cornerBottom = new Coordinate(widthPlus + scanRange,
+				heightPlus + scanRange);
+		// Instance of locationMap.
+		LocationMap locationMap = LocationMap.getInstance();
+		for (int i = cornerTop.getX(); i <= cornerBottom.getX(); i++) {
+			for (int j = cornerTop.getY(); j <= cornerBottom.getY(); j++) {
+				try {
+					// Count all occurrences of objects in location map.
+					Pair<Integer, Character> space = locationMap.get(i, j);
+					if (space.getSnd() == type && space.getFst() == anId)
+						return true;
+				} catch (ArrayIndexOutOfBoundsException e) {
+				}
+			}
+		}
+		return false;
 	}
 
 	public void newLocation() {

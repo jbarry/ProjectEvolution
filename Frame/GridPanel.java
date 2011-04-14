@@ -105,8 +105,8 @@ public class GridPanel extends JPanel {
 									/ lengthGeneration);
 							/*simulateStepAstarWithoutEatWithClosedList(7);*/
 							/*simulateStepAstarWithoutEatWithClosedListOrgData(5);*/
-							/*simulateStepAstarClosedListOrgData(1);*/
-							simulateStepAstarClosedListOrgDataTest(1);
+							simulateStepAstarClosedListOrgDataLoopGenes(1);
+							/*simulateStepAstarClosedListOrgDataTest(1);*/
 							repaint();
 						} else if (trialNum < trialsPerGen)
 							newTrial();
@@ -182,6 +182,22 @@ public class GridPanel extends JPanel {
 			return org.eatFood(5 * foodToEat.getFoodType());
 		} else
 			return false;
+	}
+
+	/**
+	 * Checks to see if a specific food is in range and returns whether or not
+	 * the organism died while eating, if the food is in range.
+	 * 
+	 * @param org
+	 * @param aFood
+	 * @return
+	 */
+	public boolean eatFood(Organism org, Food aFood) {
+		if (org.matterInRange(aFood.getId(), aFood.getType(), 5)) {
+			System.out.println("Ate Food");
+			return org.eatFood(5 * aFood.getFoodType());
+		}
+		return false;
 	}
 
 	/**
@@ -780,7 +796,7 @@ public class GridPanel extends JPanel {
 	 *            The number of actions that an organism will do at each time
 	 *            step.
 	 */
-	private void simulateStepAstarClosedListOrgData(int numActions) {
+	private void simulateStepAstarClosedListOrgDataLoopGenes(int numActions) {
 
 		Collections.shuffle(shuffleIds);
 		// Loop through Organisms.
@@ -825,25 +841,33 @@ public class GridPanel extends JPanel {
 				Pair<Integer, Double> bestEval = new Pair<Integer, Double>(0,
 						evaluateGeneFoodInRangeAstar(org, currentGene,
 								foodDestination));
-				for (int k = 1; k < foodList.size(); k++) { // loopFood.
-					double aResult = evaluateGeneFoodInRangeAstar(org,
-							currentGene, foodList.get(k));
-					if (aResult > bestEval.getSnd()) {
-						foodDestination = foodList.get(k);
-						bestEval.setLeft(k);
-						bestEval.setRight(aResult);
-					}
-				} // End loopFood.
-				  // This mechanism decides whether or not to clear the
-				  // closed list. The closed list should clear if the
-				  // organism has decided to make its way towards another
-				  // food source. If it decides to stay on the path to the
-				  // same food source, then it needs to keep its list of
-				  // previously visited nodes.
+
+				for (int j = 1; j < chrome.size(); j++) { // loopGenes.
+					currentGene = chrome.getGene(j);
+					System.out.println("onGene: " + j);
+					for (int k = 1; k < foodList.size(); k++) { // loopFood.
+						double aResult = evaluateGeneFoodInRangeAstar(org,
+								currentGene, foodList.get(k));
+						if (aResult > bestEval.getSnd()) {
+							foodDestination = foodList.get(k);
+							bestEval.setLeft(k);
+							bestEval.setRight(aResult);
+						}
+					} // End loopFood.
+				} // End loopGenes.
+
+				// This mechanism decides whether or not to clear the
+				// closed list. The closed list should clear if the
+				// organism has decided to make its way towards another
+				// food source. If it decides to stay on the path to the
+				// same food source, then it needs to keep its list of
+				// previously visited nodes.
 				if (orgData.getLastFoodSourceIndex() != bestEval.getFst()) {
 					closedList.clear();
 					orgData.setLastFoodSourceIndex(bestEval.getFst());
 				}
+				// TODO: Later on replace foodDestination with
+				// objectDestination.
 				if (doActionAstar(org, orgData, bestEval, foodDestination)) {
 					System.out.println("removing on action");
 					shuffleIds.remove(new Integer(org.getId()));
@@ -999,6 +1023,14 @@ public class GridPanel extends JPanel {
 		repaint();
 	}
 
+	/**
+	 * @param org
+	 * @param anOrgData
+	 * @param bestEval
+	 * @param aFoodDestination
+	 * @return boolean indicating whether or not the organism died while
+	 *         performing an action.
+	 */
 	public boolean doActionAstar(Organism org, OrgData anOrgData,
 			Pair<Integer, Double> bestEval, Food aFoodDestination) {
 
@@ -1006,8 +1038,10 @@ public class GridPanel extends JPanel {
 			case 0:
 				moveAstarClosedList(org, anOrgData, aFoodDestination,
 						(ArrayList<Coordinate>) anOrgData.getClosedList());
+				break;
 			case 1:
-				return eatFoodInRange(org);
+				return eatFood(org, aFoodDestination);
+				/*return eatFoodInRange(org);*/
 		}
 		return false;
 	}
