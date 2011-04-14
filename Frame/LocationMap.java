@@ -11,6 +11,14 @@ import Interactive.Food;
 import Interactive.Organism;
 import Interactive.Pair;
 
+/**
+ * Location map will consist of: key: current instance number of object value:
+ * 'w' for white space or available. 'o' for organism. 'h' for healthy food. 'p'
+ * for poisonous food.
+ * 
+ * @author projev.
+ * 
+ */
 public class LocationMap {
 
 	private Pair<Integer, Character>[][] locationMap;
@@ -87,6 +95,13 @@ public class LocationMap {
 	}
 
 	// CLOSER TO THE ORIGINAL THAN THE OTHER NEW LOCATION.
+	/**
+	 * @param c
+	 * @param width
+	 * @param height
+	 * @param anId
+	 * @param aType
+	 */
 	public void newLocation(Coordinate c, int width, int height, int anId,
 			Character aType) {
 		setRangeToBlank(width, height, c.getX(), c.getY());
@@ -101,32 +116,9 @@ public class LocationMap {
 		c.setX(newX);
 		c.setY(newY);
 		setWrapAround(c, width, height);
-		// set boundaries
-		/*setWrapAround(newLocation, width, height);*/
+		// Set boundaries.
 		setRange(c, width, height, aType, anId);
 	}
-
-	/*public void newLocation(Matter m) {
-		int width = m.getWidth();
-		int height = m.getHeight();
-		int x = r.nextInt(GridPanel.WIDTH);
-		int y = r.nextInt(GridPanel.HEIGHT);
-		// Find an available position.
-		while(!canSpawn(x, y, width, height)){
-			x = r.nextInt(GridPanel.WIDTH);
-			y = r.nextInt(GridPanel.HEIGHT);
-		}
-		Coordinate location = m.getLocation();
-		location.setX(x);
-		location.setY(y);
-		// Replace old position with 'w'.
-		int mX = location.getX();
-		int mY = location.getY();
-		setRange(width, height, 'w', m.getId(), mX, mY);
-		// Set boundaries.
-		setWrapAround(width, height);
-		setRange(width, height, 'o');
-	}*/
 
 	/**
 	 * @param x
@@ -355,28 +347,26 @@ public class LocationMap {
 	 * @return
 	 */
 	public static Coordinate search(Coordinate start, Coordinate end, int anId) {
-		// openList is a priority queue organized based
-		// on shortest distance to end node.
-		/* Coordinate endCoordinate = (Coordinate) end.spawnCoordinate(0); */
+		// Open list is a priority queue organized based on shortest distance to
+		// end node.
 		end.setPriority(0);
 		start.setPriority(distance(start.getX(), start.getY(), end.getX(),
 				end.getY()));
-		// for each surrounding position.
-		// assign priority, then add to queue.
+		// For each surrounding position assign priority, then add to queue.
 		Coordinate current = start;
 		PriorityQueue<Coordinate> adjacentList = adjacentCoordinates(
 				current.getX(), current.getY(), 3, end, anId);
-		/*StarQueue<Coordinate> adjacentList = adjacentCoordinatesByPixel(
-				current.getX(), current.getY(), end, anId);*/
-		// If there are available positions to move to.
-		// Then remove the top one. Which will be the best place to move to.
+		// If there are available positions to move to, then remove the top one,
+		// which will be the best place to move to.
 		if (!adjacentList.isEmpty())
 			return adjacentList.remove();
 		return start;
 	}
 
 	/**
-	 * Returns the next position produced by the Astar search algorithm.
+	 * Returns the next position produced by the Astar search algorithm. This
+	 * search returns a list that contains the start coordinate if the
+	 * adjacentCoordinates method returns an empty priority queue.
 	 * 
 	 * @param start
 	 * @param end
@@ -384,25 +374,20 @@ public class LocationMap {
 	 */
 	public static PriorityQueue<Coordinate> searchWithList(Coordinate start,
 			Coordinate end, int anId) {
-		// openList is a priority queue organized based
-		// on shortest distance to end node.
-		/* Coordinate endCoordinate = (Coordinate) end.spawnCoordinate(0); */
+		// Open list is a priority queue organized based on shortest distance to
+		// end node.
 		end.setPriority(0);
 		start.setPriority(distance(start.getX(), start.getY(), end.getX(),
 				end.getY()));
-		// for each surrounding position.
-		// assign priority, then add to queue.
+		// For each surrounding position assign priority, then add to queue.
 		Coordinate current = start;
-		PriorityQueue<Coordinate> adjacentList =
-			adjacentCoordinates(current.getX(), current.getY(), 3, end, anId);
-		/*StarQueue<Coordinate> adjacentList = adjacentCoordinatesByPixel(
-				current.getX(), current.getY(), end, anId);*/
-		// If there are available positions to move to.
-		// Then remove the top one. Which will be the best place to move to.
+		PriorityQueue<Coordinate> adjacentList = adjacentCoordinates(
+				current.getX(), current.getY(), 3, end, anId);
+		// If there are available positions to move to, then remove the top one,
+		// which will be the best place to move to.
 		if (!adjacentList.isEmpty())
 			return adjacentList;
-		PriorityQueue<Coordinate> listWithSelfCoordinate =
-			new PriorityQueue<Coordinate>();
+		PriorityQueue<Coordinate> listWithSelfCoordinate = new PriorityQueue<Coordinate>();
 		listWithSelfCoordinate.add(start);
 		return listWithSelfCoordinate;
 	}
@@ -418,8 +403,6 @@ public class LocationMap {
 		/*System.out.println("original position" + x + ", " + y);*/
 		int moveWidth = stepSize;
 		int moveHeight = stepSize;
-		/*int moveWidth = Organism.width;
-		int moveHeight = Organism.height;*/
 		int endX = end.getX();
 		int endY = end.getY();
 		// W
@@ -458,7 +441,6 @@ public class LocationMap {
 		return adj;
 	}
 
-
 	/**
 	 * Calculates the priority of a given coordinate start o the coordinate end.
 	 * Priority is based on the distance of a straight line between the two
@@ -489,7 +471,7 @@ public class LocationMap {
 				try {
 					Pair<Integer, Character> object = LocationMap.getInstance()
 							.get(i, j);
-					// count all occurrences of objects in location map
+					// Count all occurrences of objects in location map.
 					if (object.getSnd() == 'w')
 						continue checkObstacles;
 					else if (object.getSnd() == 'p')
