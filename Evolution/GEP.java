@@ -169,7 +169,7 @@ public class GEP {
 	  * @param org
 	  * @return
 	  */
-	 public double fitnessAverageHealthTimeOfDeathNumSteps(OrgData orgData, Organism o) {
+	 public double fitnessAverageHealthTimeOfDeathNumSteps(OrgData orgData) {
 		  int numSteps = orgData.getNumSteps();
 		  System.out.println("numsteps: " + orgData.getNumSteps());
 		  System.out.println("timeofdeath: " + orgData.getTimeOfDeath());
@@ -181,7 +181,7 @@ public class GEP {
 				    + orgData.getTimeOfDeath();
 		  System.out.println("fit: " + fitness);
 		  System.out.println();
-		  o.setFitness(fitness);
+		  orgData.setFitness(fitness);
 		  return fitness;
 	 }
 
@@ -195,6 +195,7 @@ public class GEP {
 	  * 
 	  * @return
 	  */
+	 
 	 public LinkedList<Organism> newGeneration(LinkedList<Organism> anOrgList) {
 
 		  // List to hold the Elite individuals.
