@@ -404,8 +404,9 @@ public class GridPanel extends JPanel {
 												.getX());
 										foodY = norm.normalize(f.getLocation()
 												.getY());
-										orgNearFood = norm.normalize(f
-												.numSurroundingObjects(5));
+										LocationMap map = LocationMap.getInstance();
+										orgNearFood = norm.normalize(map.numSurroundingObjects(
+												f.getLocation(), f.getWidth(), f.getHeight(), 10));
 										foodRemaining = norm.normalize(f
 												.getHealth());
 
@@ -601,21 +602,11 @@ public class GridPanel extends JPanel {
 		// handle each new organism created.
 		for (Organism org : organisms)
 			org.paint(g);
+		/*for (Integer i : shuffleIds)
+			organisms.get(i).paint(g);*/
 		for (Food f : foodList)
 			if (f.getHealth() > 0)
 				f.paint(g, false);
-		/*for (HealthyFood h : healthFd)
-			if (h != null)
-				if (h.getHealth() > 0)
-					h.paint(g, false);
-				else
-					h.paint(g, true);
-		for (PoisonousFood p : poisFood)
-			if (p != null)
-				if (p.getHealth() > 0)
-					p.paint(g, false);
-				else
-					p.paint(g, true);*/
 	}
 
 	/**
@@ -839,17 +830,18 @@ public class GridPanel extends JPanel {
 				// and the food source that the evaluation corresponds
 				// to.
 				Pair<Integer, Double> bestEval = new Pair<Integer, Double>(0,
-						evaluateGeneFoodInRangeAstar(org, currentGene,
+						evaluateGeneFoodInRangeAstarNoNorm(org, currentGene,
 								foodDestination));
 
 				for (int j = 1; j < chrome.size(); j++) { // loopGenes.
 					currentGene = chrome.getGene(j);
 					/*System.out.println("onGene: " + j);*/
 					for (int k = 1; k < foodList.size(); k++) { // loopFood.
-						double aResult = evaluateGeneFoodInRangeAstar(org,
-								currentGene, foodList.get(k));
+						Food fd = foodList.get(k);
+						double aResult = evaluateGeneFoodInRangeAstarNoNorm(org,
+								currentGene, fd);
 						if (aResult > bestEval.getSnd()) {
-							foodDestination = foodList.get(k);
+							foodDestination = fd;
 							bestEval.setLeft(j);
 							bestEval.setRight(aResult);
 						}
@@ -979,7 +971,7 @@ public class GridPanel extends JPanel {
 	 */
 	private void moveAstarClosedList(Organism org, OrgData od,
 			Food aFoodDestination, ArrayList<Coordinate> aClosedList) {
-		PriorityQueue<Coordinate> sq = LocationMap.searchWithList(
+		PriorityQueue<Coordinate> sq = LocationMap.getInstance().searchWithList(
 				org.getLocation(), aFoodDestination.getLocation(), org.getId());
 		Coordinate nextMove;
 		/*org.printId();
@@ -1068,21 +1060,26 @@ public class GridPanel extends JPanel {
 		return result.evaluate(environment);
 	}
 
-	private double evaluateGeneFoodInRange(Organism org, Gene currentGene,
+	private double evaluateGeneFoodInRangeAstar(Organism org, Gene currentGene,
 			Food aFood) {
+
+		LocationMap map = LocationMap.getInstance();
 		HashMap<String, Double> environment = new HashMap<String, Double>();
 		double orgX = norm.normalize(org.getLocation().getX());
 		double orgY = norm.normalize(org.getLocation().getY());
-		double health = norm.normalize(org.getHealth());
-		double numSurroundingOrgs = norm.normalize(org.getSurroundingObjects(
-				'o', 5).size() - 1);
 		double foodX = norm.normalize(aFood.getLocation().getX());
 		double foodY = norm.normalize(aFood.getLocation().getY());
-		double orgNearFood = norm.normalize(aFood.numSurroundingObjects(5));
+		double distanceToFood = norm.normalize(map.distance(orgX, orgY, foodX,
+				foodY));
+		double health = norm.normalize(org.getHealth());
+		double numSurroundingOrgs = norm.normalize(map.numSurroundingObjects(
+				org.getLocation(), org.getWidth(), org.getHeight(), 10));
+		double orgNearFood = norm.normalize(map.numSurroundingObjects(
+				aFood.getLocation(), aFood.getWidth(), aFood.getHeight(), 10));
 		double foodRemaining = norm.normalize(aFood.getHealth());
 		Expr result = currentGene.getEvaledList();
-		environment.put("a", foodX - orgX);
-		environment.put("b", orgY - foodY);
+		environment.put("a", distanceToFood); // Represents distance to
+		// food.
 		environment.put("c", orgNearFood);
 		environment.put("d", health);
 		environment.put("e", foodRemaining);
@@ -1090,21 +1087,75 @@ public class GridPanel extends JPanel {
 		environment.put("g", numSurroundingOrgs);
 		return result.evaluate(environment);
 	}
+	
+	private double evaluateGeneFoodInRangeAstarTest(Organism org,
+			Gene currentGene, Food aFood) {
 
-	private double evaluateGeneFoodInRangeAstar(Organism org, Gene currentGene,
+		LocationMap map = LocationMap.getInstance();
+		System.out.println("Inside evaluateGene");
+		HashMap<String, Double> environment = new HashMap<String, Double>();
+		double orgX = norm.normalize(org.getLocation().getX());
+		System.out.println("orgX: " + orgX);
+		double orgY = norm.normalize(org.getLocation().getY());
+		System.out.println("orgY: " + orgY);
+		double foodX = norm.normalize(aFood.getLocation().getX());
+		System.out.println("foodX: " + foodX);
+		double foodY = norm.normalize(aFood.getLocation().getY());
+		System.out.println("foodY: " + foodY);
+		double distanceToFood = norm.normalize(map.distance(orgX, orgY, foodX,
+				foodY));
+		System.out.println("distanceToFood: " + distanceToFood);
+		double health = norm.normalize(org.getHealth());
+		System.out.println("health: " + health);
+
+		double numSurroundingOrgs = norm.normalize(map.numSurroundingObjects(
+				org.getLocation(), org.getWidth(), org.getHeight(), 10));
+		System.out.println("aroundOrg wo norm: "
+				+ map.numSurroundingObjects(org.getLocation(), org.getWidth(),
+						org.getHeight(), 10));
+		/*System.out.println("numSurroundOrg: " + org.getId() + " is: "
+				+ numSurroundingOrgs);*/
+		double orgNearFood = norm.normalize(map.numSurroundingObjects(
+				aFood.getLocation(), aFood.getWidth(), aFood.getHeight(), 10));
+		/*System.out.println("orgNearFood: " + aFood.getId() + " is: "
+				+ orgNearFood);*/
+		System.out.println("aroundfood wo norm: "
+				+ map.numSurroundingObjects(aFood.getLocation(),
+						aFood.getWidth(), aFood.getHeight(), 10));
+		double foodRemaining = norm.normalize(aFood.getHealth());
+		System.out.println("foodRemaining: " + foodRemaining);
+		Expr result = currentGene.getEvaledList();
+		environment.put("a", distanceToFood); // Represents distance to
+		// food.
+		environment.put("c", orgNearFood);
+		environment.put("d", health);
+		environment.put("e", foodRemaining);
+		environment.put("f", aFood.getFoodType());
+		environment.put("g", numSurroundingOrgs);
+		double resultDoub = result.evaluate(environment);
+		System.out.println("ResultDoub: " + resultDoub);
+		System.out.println();
+		System.out.println();
+		return result.evaluate(environment);
+	}
+	
+	private double evaluateGeneFoodInRangeAstarNoNorm(Organism org, Gene currentGene,
 			Food aFood) {
+
+		LocationMap map = LocationMap.getInstance();
 		HashMap<String, Double> environment = new HashMap<String, Double>();
 		double orgX = org.getLocation().getX();
 		double orgY = org.getLocation().getY();
 		double foodX = aFood.getLocation().getX();
 		double foodY = aFood.getLocation().getY();
-		double distanceToFood = norm.normalize(LocationMap.distance(orgX, orgY,
-				foodX, foodY));
-		double health = norm.normalize(org.getHealth());
-		double numSurroundingOrgs = norm.normalize(org.getSurroundingObjects(
-				'o', 5).size() - 1);
-		double orgNearFood = norm.normalize(aFood.numSurroundingObjects(5));
-		double foodRemaining = norm.normalize(aFood.getHealth());
+		double distanceToFood = map.distance(orgX, orgY, foodX,
+				foodY);
+		double health = org.getHealth();
+		double numSurroundingOrgs = map.numSurroundingObjects(
+				org.getLocation(), org.getWidth(), org.getHeight(), 10);
+		double orgNearFood = map.numSurroundingObjects(
+				aFood.getLocation(), aFood.getWidth(), aFood.getHeight(), 10);
+		double foodRemaining = aFood.getHealth();
 		Expr result = currentGene.getEvaledList();
 		environment.put("a", distanceToFood); // Represents distance to
 		// food.

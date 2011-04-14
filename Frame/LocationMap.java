@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Random;
+import java.util.Set;
 
 import Interactive.Food;
 import Interactive.Organism;
@@ -346,7 +347,7 @@ public class LocationMap {
 	 * @param end
 	 * @return
 	 */
-	public static Coordinate search(Coordinate start, Coordinate end, int anId) {
+	public Coordinate search(Coordinate start, Coordinate end, int anId) {
 		// Open list is a priority queue organized based on shortest distance to
 		// end node.
 		end.setPriority(0);
@@ -372,7 +373,7 @@ public class LocationMap {
 	 * @param end
 	 * @return
 	 */
-	public static PriorityQueue<Coordinate> searchWithList(Coordinate start,
+	public PriorityQueue<Coordinate> searchWithList(Coordinate start,
 			Coordinate end, int anId) {
 		// Open list is a priority queue organized based on shortest distance to
 		// end node.
@@ -397,7 +398,7 @@ public class LocationMap {
 	 * 
 	 * @return
 	 */
-	public static PriorityQueue<Coordinate> adjacentCoordinates(int x, int y,
+	public PriorityQueue<Coordinate> adjacentCoordinates(int x, int y,
 			int stepSize, Coordinate end, int anId) {
 		PriorityQueue<Coordinate> adj = new PriorityQueue<Coordinate>();
 		/*System.out.println("original position" + x + ", " + y);*/
@@ -450,7 +451,7 @@ public class LocationMap {
 	 * @param end
 	 * @return
 	 */
-	public static double distance(double orgX, double orgY, double foodX,
+	public double distance(double orgX, double orgY, double foodX,
 			double foodY) {
 		return Math.sqrt(Math.pow((foodX - orgX), 2)
 				+ Math.pow((foodY - orgY), 2));
@@ -460,7 +461,7 @@ public class LocationMap {
 	 * @param scanRange
 	 * @return number of surrounding objects, namely Food or Organism Instances
 	 */
-	public static HashMap<String, ArrayList<Integer>> objectsInSpace(int x,
+	public HashMap<String, ArrayList<Integer>> objectsInSpace(int x,
 			int y) {
 		HashSet<Integer> pois = new HashSet<Integer>();
 		HashSet<Integer> heal = new HashSet<Integer>();
@@ -504,7 +505,7 @@ public class LocationMap {
 	 * @param scanRange
 	 * @return boolean whether or not there are objects occupying the space.
 	 */
-	public static boolean hasObstacle(int x, int y, int anId) {
+	public boolean hasObstacle(int x, int y, int anId) {
 		int edgeWidth = Organism.width / 2;
 		int edgeHeight = Organism.height / 2;
 		for (int i = x - edgeWidth; i <= x + edgeWidth; i++) {
@@ -523,5 +524,38 @@ public class LocationMap {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * @param scanRange
+	 * @return number of surrounding objects, namely Food or Organism Instances
+	 */
+	public double numSurroundingObjects(Coordinate location,int width, int height, int scanRange) {
+		Set<Integer> objectIds = new HashSet<Integer>();
+		// Create a square from cornerTop to cornerBottom of
+		// dimension scanRange+getWidth/2 X scanRange+getHeight/2 to be scanned.
+		int widthSub = location.getX() - (width / 2);
+		int widthPlus = location.getX() + (width / 2);
+		int heightSub = location.getY() - (height / 2);
+		int heightPlus = location.getY() + (height / 2);
+		Coordinate cornerTop = new Coordinate(widthSub - scanRange, heightSub
+				- scanRange);
+		Coordinate cornerBottom = new Coordinate(widthPlus + scanRange,
+				heightPlus + scanRange);
+		for (int i = cornerTop.getX(); i <= cornerBottom.getX(); i++) {
+			for (int j = cornerTop.getY(); j <= cornerBottom.getY(); j++) {
+				try {
+					// Count all occurrences of objects in location map
+					Pair<Integer, Character> space = LocationMap.getInstance()
+							.get(i, j);
+					Character spaceType = space.getSnd();
+					Integer spaceId = space.getFst();
+					if (spaceType != 'w')
+						objectIds.add(space.getFst());
+				} catch (ArrayIndexOutOfBoundsException e) {
+				}
+			}
+		}
+		return objectIds.size();
 	}
 }

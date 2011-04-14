@@ -63,40 +63,6 @@ public abstract class Matter implements Comparable<Matter>{
 	
 	/**
 	 * @param scanRange
-	 * @return number of surrounding objects, namely Food or Organism Instances
-	 */
-	public double numSurroundingObjects(int scanRange) {
-		double numObj = 0.0;
-		// create a square from cornerTop to cornerBottom of dimension
-		// scanRange+getWidth/2 X scanRange+getHeight/2
-		Coordinate cornerTop = new Coordinate(location.getX()
-				- (getWidth() / 2 - scanRange), location.getY()
-				- (getHeight() / 2) - scanRange);
-		Coordinate cornerBottom = new Coordinate(location.getX()
-				+ (getWidth() / 2 + scanRange), location.getY()
-				+ (getHeight() / 2) + scanRange);
-		for (int i = cornerTop.getX(); i <= cornerBottom.getX(); i++) {
-			for (int j = cornerTop.getY(); j <= cornerBottom.getY(); j++) {
-				try {
-					// count all occurrences of objects in location map
-					if (LocationMap.getInstance().get(i, j).getSnd() != 'w') {
-						numObj++;
-					}
-				} catch (ArrayIndexOutOfBoundsException e) {
-				}
-			}
-		}
-		// make sure that scanning object was not included in scan.
-		if (numObj >= getWidth() * getHeight())
-			numObj -= getWidth() * getHeight();
-		// return a normalized value. Will count "partially" discovered
-		// organisms
-		// as a whole number, does not include "wrapped" scan.
-		return Math.ceil(numObj / (getWidth() * getHeight()));
-	}
-
-	/**
-	 * @param scanRange
 	 * @param type
 	 * @return a list of id numbers of the surrounding objects of choice.
 	 */
