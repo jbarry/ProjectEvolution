@@ -25,7 +25,6 @@ import Interactive.Pair;
 public class GEP {
 
 	 // Class variables.
-	 private LinkedList<Organism> orgList;
 	 private Random ran;
 
 	 private boolean handicap;
@@ -77,59 +76,59 @@ public class GEP {
 	 /**
 	  * This method assigns a double representing fitness of each organism.
 	  * 
-	  * @param org
+	  * @param orgData
 	  *              - a single organism to be assessed.
 	  * @return a double representing the evaluated fitness of the organism.
 	  */
-	 public double fitnessIan(Organism org) {
-		  double avgHealth = org.getHlthTot() / org.getSamples();
-		  double activity = (double) org.getNumSteps();
-		  double goodEating = (double) org.getHealthEat()
-				    * (org.getHealthEat() + org.getPoisonEat() + org
+	 public double fitnessIan(OrgData orgData) {
+		  double avgHealth = orgData.getHlthTot() / orgData.getSamples();
+		  double activity = (double) orgData.getNumSteps();
+		  double goodEating = (double) orgData.getHealthEat()
+				    * (orgData.getHealthEat() + orgData.getPoisonEat() + orgData
 							 .getTotalScans())
 				    / (GridPanel.numFoodSources);
-		  double assertion = (double) (org.getNumSteps()
-				    + org.getNumAttacked() + org.getNumPushed())
-				    / (org.getHealthEat() + 1);
-		  double badEating = (double) org.getPoisonEat() + 1;
+		  double assertion = (double) (orgData.getNumSteps()
+				    + orgData.getNumAttacked() + orgData.getNumPushed())
+				    / (orgData.getHealthEat() + 1);
+		  double badEating = (double) orgData.getPoisonEat() + 1;
 		  double fitness = (avgHealth * (activity + goodEating + assertion))
 				    / badEating;
-		  org.setFitness(fitness);
+		  orgData.setFitness(fitness);
 		  return fitness;
 	 }
 
 	 /**
 	  * This is texting Ian's fitness function with print statements.
 	  * 
-	  * @param org
+	  * @param orgData
 	  * @return
 	  */
-	 public double fitnessIanTest(Organism org) {
-		  double avgHealth = org.getHlthTot() / org.getSamples();
+	 public double fitnessIanTest(OrgData orgData) {
+		  double avgHealth = orgData.getHlthTot() / orgData.getSamples();
 		  System.out.println("avgHealth: " + avgHealth);
-		  double activity = (double) org.getNumSteps();
+		  double activity = (double) orgData.getNumSteps();
 		  System.out.println("activity: " + activity);
-		  double goodEating = (double) org.getHealthEat()
-				    * (org.getHealthEat() + org.getPoisonEat() + org
+		  double goodEating = (double) orgData.getHealthEat()
+				    * (orgData.getHealthEat() + orgData.getPoisonEat() + orgData
 							 .getTotalScans())
 				    / (GridPanel.numFoodSources);
 		  System.out.println("goodEating: " + goodEating);
-		  double assertion = (double) (org.getNumSteps()
-				    + org.getNumAttacked() + org.getNumPushed())
-				    / (org.getHealthEat() + 1);
+		  double assertion = (double) (orgData.getNumSteps()
+				    + orgData.getNumAttacked() + orgData.getNumPushed())
+				    / (orgData.getHealthEat() + 1);
 		  System.out.println("assertion: " + assertion);
-		  double badEating = (double) org.getPoisonEat() + 1;
+		  double badEating = (double) orgData.getPoisonEat() + 1;
 		  System.out.println("badEating: " + badEating);
 		  double fitness = (avgHealth * (activity + goodEating + assertion))
 				    / badEating;
-		  org.setFitness(fitness);
+		  orgData.setFitness(fitness);
 		  System.out.println();
 		  return fitness;
 	 }
 
-	 public double fitnessDistanceTraveled(Organism org) {
-		  System.out.println(org.getSteps());
-		  return org.getSteps();
+	 public double fitnessDistanceTraveled(OrgData orgData) {
+		  System.out.println(orgData.getSteps());
+		  return orgData.getSteps();
 	 }
 
 	 /**
@@ -151,14 +150,14 @@ public class GEP {
 	  * average health per the number of steps that it had taken over a
 	  * generation.
 	  * 
-	  * @param org
+	  * @param orgData
 	  * @return
 	  */
-	 public double fitnessAvgHealthPerSteps(Organism org) {
-		  int numSteps = org.getNumSteps();
+	 public double fitnessAvgHealthPerSteps(OrgData orgData) {
+		  int numSteps = orgData.getNumSteps();
 		  if (numSteps > 0)
 			   return 0.0;
-		  return (org.getHlthTot() / org.getSamples()) / org.getNumSteps();
+		  return (orgData.getHlthTot() / orgData.getSamples()) / orgData.getNumSteps();
 	 }
 	 
 	 /**
@@ -700,13 +699,6 @@ public class GEP {
 
 	 public void setTwoPtProb(double x) {
 		  twoPtProb = x;
-	 }
-
-	 /**
-	  * @param anOrgList
-	  */
-	 public void setOrgList(LinkedList<Organism> anOrgList) {
-		  orgList = anOrgList;
 	 }
 
 	 public void enableElitism(boolean aDoElitism, int aNumElites) {
