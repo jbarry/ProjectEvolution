@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.TreeSet;
 
 import Frame.Coordinate;
+import Frame.LocationMap;
 
 public class OrgData {
 
@@ -14,7 +15,6 @@ public class OrgData {
 	private int numScans;
 	private int numAttacked;
 	private int numPushed;
-	
 	private double fitness;
 	private double hlthTot;
 	private int samples;
@@ -139,14 +139,6 @@ public class OrgData {
 
 	public void setNumScans(int numScans) {
 		this.numScans = numScans;
-	}
-
-	public String getAction() {
-		return action;
-	}
-
-	public void setAction(String action) {
-		this.action = action;
 	}
 
 	public double getFitness() {
@@ -291,4 +283,15 @@ public class OrgData {
 	public ArrayList<ArrayList<String>> getActionList() {
 		return actionList;
 	}
+	
+	/*public void goBack(int generation) {
+		int x = location.getX();
+		int y = location.getY();
+		LocationMap.getInstance().newLocation(location, width, height, id, 'o');
+		chromosome = chromosomeHistory.get(generation - 1);
+		for (int i = generation; i < chromosomeHistory.size(); i++) {
+			chromosomeHistory.remove(i);
+		}
+		clear();
+	}*/
 }
