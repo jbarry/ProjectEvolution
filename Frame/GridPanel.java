@@ -1,7 +1,5 @@
 package Frame;
 
-import static java.lang.System.out;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -11,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Random;
 
 import javax.swing.BorderFactory;
@@ -29,8 +28,6 @@ import Interactive.OrgData;
 import Interactive.Organism;
 import Interactive.Pair;
 import Interactive.PoisonousFood;
-/* import Searching.AStar; */
-import Searching.StarQueue;
 
 /**
  * This class will handle all of the simulation's display.
@@ -54,7 +51,7 @@ public class GridPanel extends JPanel {
 	private ArrayList<Integer> shuffleIds;
 	private ArrayList<String> shuffleStringIds;
 	private int lengthTimeStep = 100;
-	private int lengthGeneration = 100;
+	private int lengthGeneration = 500;
 	private int timePassed = 0;
 	private int trialsPerGen = 1;
 	public int trialNum = 1;
@@ -107,8 +104,8 @@ public class GridPanel extends JPanel {
 							gui.updatePercentage((double) timePassed
 									/ lengthGeneration);
 							/*simulateStepAstarWithoutEatWithClosedList(7);*/
-							simulateStepAstarWithoutEatWithClosedListOrgData(5);
-							/*simulateStepAstarClosedListOrgData(1);*/
+							/*simulateStepAstarWithoutEatWithClosedListOrgData(5);*/
+							simulateStepAstarClosedListOrgData(1);
 							repaint();
 						} else if (trialNum < trialsPerGen)
 							newTrial();
@@ -135,7 +132,7 @@ public class GridPanel extends JPanel {
 		timePassed = 0;
 		locationMap.clearLocations();
 		for (Organism org : organisms) {
-			org.goBack(generation);
+			/*org.goBack(generation)*/;
 		}
 		GUI.genPanel.removeGenerations(generation);
 		healthFd.clear();
@@ -206,11 +203,20 @@ public class GridPanel extends JPanel {
 	public void newTrial() {
 		t.stop();
 		shuffleIds.clear();
-		for (Organism o : organisms) {
+		/*for (Organism o : organisms) {
 			o.newLocation();
 			o.setHealth(o.getMaxHealth());
 			o.clear();
 			shuffleIds.add(o.getId());
+		}*/
+		for (int i = 0; i < organisms.size(); i++) {
+			Organism org = organisms.get(i);
+			OrgData orgData = orgDataList.get(i);
+			org.setFitness(g.fitnessAverageHealthTimeOfDeathNumSteps(orgData));
+			orgData.clear();
+			org.newLocation();
+			org.setHealth(orgData.getMaxHealth());
+			shuffleIds.add(org.getId());
 		}
 		trialNum++;
 		healthFd.clear();
@@ -232,39 +238,67 @@ public class GridPanel extends JPanel {
 		}
 	}
 
+	// TODO: Organize the logic in this method. By logic I mean logical
+	// progression.
 	public void newGenerationAstar() {
 		timePassed = 0;
-		double sum = 0;
 		trialNum = 1;
 		generationNum++;
+		// Clear the location map.
 		locationMap.clearLocations();
 		shuffleIds.clear();
+		// sum is used for displaying data to generation panel.
+		double sum = 0;
 		// Assign organism fitness and reinitialize organisms.
 		for (int i = 0; i < organisms.size(); i++) {
-			Organism o = organisms.get(i);
-			OrgData od = orgDataList.get(i);
-			od.setFitness(g.fitnessAverageHealthTimeOfDeathNumSteps(od, o));
-			sum += o.getFitness();
-			od.clear();
-			o.clear();
-			o.newLocation();
-			o.addChromosome();
-			o.setHealth(o.getMaxHealth());
-			o.clear();
-			shuffleIds.add(o.getId());
+			// An organism.
+			Organism org = organisms.get(i);
+			// organisms corresponding data object.
+			OrgData orgData = orgDataList.get(i);
+			// Asses fitness of each organism.
+			org.setFitness(g.fitnessAverageHealthTimeOfDeathNumSteps(orgData));
+			sum += org.getFitness();
 		}
-		// Place the organisms on the locationMap.
-		locationMap.placeOrganisms(organisms);
-		lastAvg = sum / OptionsPanel.numOrganisms;
+		// Perform the evolutionary process on the organism's in the organism
+		// list.
+		organisms = g.newGeneration(organisms);
 		// Reinitialize food list.
-		for (int i = 0; i < numFoodSources * 2; i++)
+		food.clear();
+		for (int i = 0; i < numFoodSources * 2; i++) {
 			if (ran.nextBoolean())
 				food.add(new HealthyFood(100.00, i, 2));
 			else
 				food.add(new PoisonousFood(100.00, i, 2));
-		// Place food on locationMap.
-		locationMap.placeFoods(food);
-		organisms = g.newGeneration(organisms);
+			// Place food on locationMap.
+			locationMap.placeFood(food.get(i));
+		}
+		// Re-initialization of the organisms and the OrgData objects are done in
+		// this loop. New positions for organisms and food objects are done as
+		// well.
+		for (int i = 0; i < organisms.size(); i++) {
+			// An organism.
+			Organism org = organisms.get(i);
+			// organisms corresponding data object.
+			OrgData orgData = orgDataList.get(i);
+			Chromosome chrom = org.getChromosome();
+			// Update the new symLists to an evaluated expression.
+			// TODO: Make Gene and Chromosome implement iterable.
+			for (int j = 0; j < chrom.size(); j++)
+				chrom.getGene(j).updateEvaledList();
+			// Re-initialize all of the organism's data.
+			orgData.clear();
+			orgData.addChromosome(org.getChromosome());
+			// Place the organisms on the locationMap.
+			locationMap.placeOrganism(org);
+			/*locationMap.newLocation(org.getLocation(), Organism.width,
+					Organism.height, org.getId(), 'o');*/
+			org.setHealth(orgData.getMaxHealth());
+			shuffleIds.add(org.getId());
+		}
+		
+		/*locationMap.placeOrganisms(organisms);*/
+		// Calculate lastAvg for the Generation Panel.
+		lastAvg = sum / OptionsPanel.numOrganisms;
 		// Set the generation panel data information.
 		GUI.genPanel.addGeneration();
 		if (!GUI.genPanel.resumeHasNotBeenClicked()) {
@@ -300,7 +334,7 @@ public class GridPanel extends JPanel {
 					org.deplete(org.getMaxHealth() / lengthGeneration);
 					org.clearAction();
 					// Take sample of organism health for fitness.
-					org.incHlthTot();
+					/*org.incHlthTot();*/
 					if (org.getHealth() > 0) {
 						ArrayList<Food> sight = new ArrayList<Food>();
 						ArrayList<Integer> sightIDs = new ArrayList<Integer>();
@@ -312,7 +346,7 @@ public class GridPanel extends JPanel {
 						sightIDs = org.getSurroundingObjects('p', 20);
 						for (Integer i : sightIDs)
 							sight.add(poisFood.get(i));
-						org.addScan(sight.size());
+						/*org.addScan(sight.size())*/;
 						double orgX = norm.normalize(org.getLocation().getX());
 						double orgY = norm.normalize(org.getLocation().getY());
 						double health = norm.normalize(org.getHealth());
@@ -429,7 +463,7 @@ public class GridPanel extends JPanel {
 				for (Organism o : organisms) {
 					o.newLocation();
 					o.setHealth(o.getMaxHealth());
-					o.clear();
+					/*o.clear();*/
 					shuffleIds.add(o.getId());
 				}
 				trialNum++;
@@ -446,18 +480,18 @@ public class GridPanel extends JPanel {
 			} else {
 				timePassed = 0;
 				double sum = 0;
-				g.setOrgList(organisms);
+				/*g.setOrgList(organisms)*/;
 				organisms = g.newGeneration(organisms);
 				healthFd.clear();
 				poisFood.clear();
 				locationMap.clearLocations();
 				shuffleIds.clear();
 				for (Organism o : organisms) {
-					sum += g.fitnessIan(o);
+					/*sum += g.fitnessIan(o);*/
 					o.newLocation();
-					o.addChromosome();
+					/*o.addChromosome();*/
 					o.setHealth(o.getMaxHealth());
-					o.clear();
+					/*o.clear();*/
 					shuffleIds.add(o.getId());
 				}
 				lastAvg = sum / OptionsPanel.numOrganisms;
@@ -638,7 +672,7 @@ public class GridPanel extends JPanel {
 			else
 				food.add(new PoisonousFood(100.00, i, 2));
 		locationMap.placeFoods(food);
-		g = new GEP(0.75, 0.01, 0.01, 0.75, 0.75, 1, false, false);
+		g = new GEP(0.75, 0.01, 0.01, 0.75, 0.75, 2, false, true);
 	}
 
 	/**
@@ -669,7 +703,7 @@ public class GridPanel extends JPanel {
 			Integer lastFoodSourceIndex = 0;
 			for (int l = 0; l < numActions; l++) { // numActions loop.
 				// Sample for fitness function.
-				org.incHlthTot();
+				orgData.incHlthTot();
 				// depleteValue is the value to decrease the Organism's
 				// health
 				// by at each time step.
@@ -748,7 +782,7 @@ public class GridPanel extends JPanel {
 			Organism org = organisms.get(shuffleIds.get(i));
 			// The orgData object holds all of the data for this specific
 			// organism.
-			OrgData orgData = orgDataList.get(shuffleIds.get(i));
+			OrgData orgData = orgDataList.get(org.getId());
 			orgData.incrementSumHealth(org.getHealth());
 			// Closed list.
 			ArrayList<Coordinate> closedList = (ArrayList<Coordinate>) orgData
@@ -756,15 +790,15 @@ public class GridPanel extends JPanel {
 			closedList.add(org.getLocation());
 			// lastFoodSourceIndex holds the index of the last food source
 			// that was visited.
-			Integer lastFoodSourceIndex = 0;
+			orgData.setLastFoodSourceIndex(0);
 			for (int l = 0; l < numActions; l++) { // numActions loop.
 				// Sample for fitness function.
-				org.incHlthTot();
+				orgData.incHlthTot();
 				// depleteValue is the value to decrease the Organism's
 				// health
 				// by at each time step.
-				double depleteValue = org.getMaxHealth()
-						/ ((lengthGeneration - 30) * numActions);
+				double depleteValue = orgData.getMaxHealth()
+						/ ((lengthGeneration - 100) * numActions);
 				// Check to see if the Organism is dead, if so remove
 				// that org
 				// from the shuffleIds list.
@@ -772,7 +806,6 @@ public class GridPanel extends JPanel {
 					System.out.println("removing on deplete");
 					orgData.setTimeOfDeath(timePassed);
 					shuffleIds.remove(new Integer(org.getId()));
-					// TODO: Remove orgData objects from list.
 					continue mainLoop;
 				}
 				Chromosome chrome = org.getChromosome();
@@ -808,9 +841,9 @@ public class GridPanel extends JPanel {
 				// food source. If it decides to stay on the path to the
 				// same food source, then it needs to keep its list of
 				// previously visited nodes.
-				if (lastFoodSourceIndex != bestEval.getFst()) {
+				if (orgData.getLastFoodSourceIndex() != bestEval.getFst()) {
 					closedList.clear();
-					lastFoodSourceIndex = bestEval.getFst();
+					orgData.setLastFoodSourceIndex(bestEval.getFst());
 				}
 				if (doActionAstar(org, orgData, bestEval, foodDestination)) {
 					System.out.println("removing on action");
@@ -831,8 +864,7 @@ public class GridPanel extends JPanel {
 	 */
 	private void moveAstarClosedList(Organism org, OrgData od,
 			Food aFoodDestination, ArrayList<Coordinate> aClosedList) {
-
-		StarQueue<Coordinate> sq = LocationMap.searchWithList(
+		PriorityQueue<Coordinate> sq = LocationMap.searchWithList(
 				org.getLocation(), aFoodDestination.getLocation(), org.getId());
 		Coordinate nextMove;
 		/*org.printId();
@@ -1076,11 +1108,13 @@ public class GridPanel extends JPanel {
 	}
 
 	public String getOrganismData(int index) {
-		Organism o = organisms.get(index);
-		return o.getId() + " " + o.getHealth() + " " + o.getFitness() + " "
-				+ o.getLocation().getX() + " " + o.getLocation().getY() + " "
-				+ o.getHealthEat() + " " + o.getPoisonEat() + " "
-				+ o.getEatFail() + " " + o.getNumAttacked() + " "
-				+ o.getNumPushed() + " " + o.getTotalScans();
+		OrgData orgData = orgDataList.get(index);
+		Organism org = organisms.get(index);
+		return orgData.getId() + " " + org.getHealth() + " "
+				+ org.getFitness() + " " + org.getLocation().getX() + " "
+				+ org.getLocation().getY() + " " + orgData.getHealthEat() + " "
+				+ orgData.getPoisonEat() + " " + orgData.getEatFail() + " "
+				+ orgData.getNumAttacked() + " " + orgData.getNumPushed() + " "
+				+ orgData.getTotalScans();
 	}
 }

@@ -10,8 +10,7 @@ import static java.lang.System.out;
 import Evaluation.Eval;
 import Evaluation.Expr;
 
-public class Gene<A extends Crossable<?>> extends Genetic implements
-		  Crossable<Gene<A>> {
+public class Gene<A extends Crossable<?>> extends Genetic {
 
 	 private List<Character> symList;
 	 private Random ran;
@@ -82,11 +81,35 @@ public class Gene<A extends Crossable<?>> extends Genetic implements
 
 	 public Gene(LinkedList<Character> aSymList) {
 		  symList = aSymList;
+		  lenGenes = aSymList.size();
+		  ran = new Random();
+		  symbols = new LinkedList<Character>();
+		  terminals = new LinkedList<Character>();
+		  symbols.add('*');
+		  symbols.add('/');
+		  symbols.add('-');
+		  symbols.add('+');
+		  symbols.add('a');
+		  /*symbols.add('b');*/
+		  symbols.add('c');
+		  symbols.add('d');
+		  symbols.add('e');
+		  symbols.add('f');
+		  symbols.add('g');
+		  terminals.add('a'); // x distance.
+		  /*terminals.add('b');*/// y distance.
+		  terminals.add('c'); // Organisms near food source.
+		  terminals.add('d'); // Organism's health.
+		  terminals.add('e'); // Food remaining in food source.
+		  terminals.add('f'); // If poison = -1 normalized, otherwise 1
+						  // normalized.
+		  terminals.add('g'); // NumOrganisms surrounding this organism.
+		  Collections.shuffle(symbols);
 		  ran = new Random();
 	 }
 
 	 public int size() {
-		  return lenGenes;
+		  return symList.size();
 	 }
 
 	 public List<Character> getSymList() {
@@ -126,7 +149,6 @@ public class Gene<A extends Crossable<?>> extends Genetic implements
 		  symList = aSymList;
 	 }
 
-	 @Override
 	 public Pair<Gene<A>, Gene<A>> crossOver(Gene<A> other) {
 		  // Define the point where the crossover will occur.
 		  int crossPoint = ran.nextInt(size());
@@ -151,9 +173,10 @@ public class Gene<A extends Crossable<?>> extends Genetic implements
 		  return symList.subList(x, y);
 	 }
 
-	 public void printSymList(List<Character> aSymList) {
-		  for (int i = 0; i < aSymList.size(); i++) {
-			   out.print(aSymList.get(i).charValue());
+	 public void printSymList() {
+		 System.out.println("Printing symList");
+		  for (int i = 0; i < symList.size(); i++) {
+			   out.print(symList.get(i).charValue());
 		  }
 		  out.println();
 	 }

@@ -63,30 +63,6 @@ public class GEPTest {
 	public void tearDown() throws Exception {
 	}
 
-	// DONE CASE: ELITE LIST SIZE 1.
-	// DONE CASE:
-	// TODO CASE: NUM ELITES IS 0.
-	// TODO CASE: ALL SAME FITNESS.
-	@Test
-	public void assembleElitesListEvenOrgListTest() {
-		// Even number of Organisms.
-		LinkedList<Organism> orgList = new LinkedList<Organism>();
-		orgList.add(new Organism(true, 7, 10.0, 0));
-		orgList.add(new Organism(true, 7, 4.0, 1));
-		orgList.add(new Organism(true, 7, 11.0, 2));
-		orgList.add(new Organism(true, 7, 3.0, 3));
-		orgList.add(new Organism(true, 7, 10.0, 4));
-		orgList.add(new Organism(true, 7, 13.0, 5));
-		orgList.add(new Organism(true, 7, 12.0, 6));
-		orgList.add(new Organism(true, 7, 10.0, 7));
-		gep.setOrgList(orgList);
-		LinkedList<Chromosome> eliteList = (LinkedList<Chromosome>) gep
-				.assembleElites(orgList);
-		assertSame(eliteList.pop().getId(), orgList.get(5).getId());
-		assertSame(eliteList.pop().getId(), orgList.get(6).getId());
-		assertSame(eliteList.pop().getId(), orgList.get(2).getId());
-	}
-
 	@Test
 	public void partnerSelectTestOddPopulation() {
 		// CASE: ODD NUMBER OF ORGANISMS.
@@ -106,7 +82,6 @@ public class GEPTest {
 		orgList.add(new Organism(true, 7, 10.0, 12));
 		orgList.add(new Organism(true, 7, 10.0, 13));
 		orgList.add(new Organism(true, 7, 10.0, 14));
-		gep.setOrgList(orgList);
 		LinkedList<Pair<Organism, Organism>> partnerList = gep
 				.partnerSelect(orgList);
 		while (!partnerList.isEmpty()) {
@@ -146,7 +121,6 @@ public class GEPTest {
 		orgList.add(new Organism(true, 7, 10.0, 13));
 		orgList.add(new Organism(true, 7, 10.0, 14));
 		orgList.add(new Organism(true, 7, 10.0, 15));
-		gep.setOrgList(orgList);
 		LinkedList<Pair<Organism, Organism>> partnerList = gep
 				.partnerSelect(orgList);
 		while (!partnerList.isEmpty()) {
@@ -174,7 +148,6 @@ public class GEPTest {
 		LinkedList<Organism> orgList = new LinkedList<Organism>();
 		for (int i = 0; i < 13; i++)
 			orgList.add(new Organism(true, 4, r.nextInt(20), i));
-		gep.setOrgList(orgList);
 		LinkedList<Pair<Organism, Organism>> partnerList = gep
 				.partnerSelect(orgList);
 		LinkedList<Organism> tournOrgList = gep.tournament(partnerList);
@@ -182,7 +155,6 @@ public class GEPTest {
 			Organism firstOrg = partnerList.get(i).getFst();
 			Organism secOrg = partnerList.get(i).getSnd();
 			Organism tournListOrg = tournOrgList.get(i);
-			Double tournListOrgFitness = tournListOrg.getFitness();
 			Double firstFitness = firstOrg.getFitness();
 			Double secFitness = secOrg.getFitness();
 			if (firstFitness <= secFitness) {
@@ -199,7 +171,6 @@ public class GEPTest {
 		LinkedList<Organism> orgList = new LinkedList<Organism>();
 		for (int i = 0; i < 14; i++)
 			orgList.add(new Organism(true, 4, r.nextInt(20), i));
-		gep.setOrgList(orgList);
 		LinkedList<Pair<Organism, Organism>> partnerList = gep
 				.partnerSelect(orgList);
 		LinkedList<Organism> tournOrgList = gep.tournament(partnerList);
@@ -231,7 +202,6 @@ public class GEPTest {
 		LinkedList<Organism> orgList = new LinkedList<Organism>();
 		for (int i = 0; i < 14; i++)
 			orgList.add(new Organism(true, 4, r.nextInt(20), i));
-		gep.setOrgList(orgList);
 		LinkedList<Chromosome> chromList = gep.makeChromList(gep.tournament(gep
 				.partnerSelect(orgList)));
 		/* gep.printChromeListIds(chromList); */

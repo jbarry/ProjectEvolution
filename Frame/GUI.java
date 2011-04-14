@@ -916,7 +916,8 @@ public class GUI extends Container{
 						// Split the second index of the tempChrom array into
 						// the organism's individual data pieces
 						organismData = tempChrom[1].split(" ");
-						Organism individOrganism = new Organism(500.0,
+						OrgData individOrgData = new OrgData(500.0,i);
+						Organism individOrganism = new Organism(individOrgData.getMaxHealth(),
 								numGenes, i, 100);
 						// Create temporary Linked List of type Gene to store
 						// each gene in a given organisms' Chromosome
@@ -958,6 +959,7 @@ public class GUI extends Container{
 						// Fitness, X-Location, Y-Location, Healthy Eats, Poison
 						// Eats, Eat Fails, Num Attacked, Num Pushed, and Total
 						// Scans
+						// TODO: Check if the switch to OrgData was okay.
 						for (int m = 0; m < organismData.length; m++) {
 							if (m == 0) {
 								individOrganism.setId(Integer
@@ -980,27 +982,27 @@ public class GUI extends Container{
 										Integer.parseInt(organismData[m]));
 							}
 							if (m == 5) {
-								individOrganism.setHealthyEat(Integer
+								individOrgData.setHealthyEatSuccess(Integer
 										.parseInt(organismData[m]));
 							}
 							if (m == 6) {
-								individOrganism.setPoisonEat(Integer
+								individOrgData.setPoisonEatSuccess(Integer
 										.parseInt(organismData[m]));
 							}
 							if (m == 7) {
-								individOrganism.setEatFail(Integer
+								individOrgData.setEatFail(Integer
 										.parseInt(organismData[m]));
 							}
 							if (m == 8) {
-								individOrganism.setNumAttacked(Integer
+								individOrgData.setNumAttacked(Integer
 										.parseInt(organismData[m]));
 							}
 							if (m == 9) {
-								individOrganism.setNumPushed(Integer
+								individOrgData.setNumPushed(Integer
 										.parseInt(organismData[m]));
 							}
 							if (m == 10) {
-								individOrganism.setTotalScans(Integer
+								individOrgData.setNumScans(Integer
 										.parseInt(organismData[m]));
 							}
 						}
