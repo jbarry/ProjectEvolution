@@ -641,7 +641,7 @@ public class GridPanel extends JPanel {
 			locationMap.placeFood(foodList.get(i));
 		}
 		g = new GEP(0.75, 0.01, 0.01, 0.75, 0.75, 2, false, true);
-		preProcessAstar(4);
+		/*preProcessAstar(4);*/
 	}
 
 	/**
@@ -653,7 +653,6 @@ public class GridPanel extends JPanel {
 	 *            step.
 	 */
 	private void simulateStepAstarClosedListOrgDataLoopGenes(int numActions) {
-
 		Collections.shuffle(shuffleIds);
 		// Loop through Organisms.
 		mainLoop: for (int i = 0; i < shuffleIds.size(); i++) { // mainLoop.
@@ -678,7 +677,7 @@ public class GridPanel extends JPanel {
 				// health
 				// by at each time step.
 				double depleteValue = orgData.getMaxHealth()
-						/ ((lengthGeneration - 100) * numActions);
+						/ ((lengthGeneration - 1) * numActions);
 				// Check to see if the Organism is dead, if so remove that org
 				// from the shuffleIds list.
 				if (deplete(org, depleteValue)) {
@@ -687,31 +686,42 @@ public class GridPanel extends JPanel {
 					continue mainLoop;
 				}
 				Chromosome chrome = org.getChromosome();
+				// Get the first food.
+				int foodDestination = 0;
 				// bestEval is used to hold the value of the evaluation
 				// and the food source that the evaluation corresponds
 				// to.
 				// TODO: 1st gene is only evaled once.
 				Pair<Integer, Double> bestEval = null;
-				// Get the first food.
-				int foodDestination = 0;
-				for (int j = 0; j < chrome.size(); j++) { // loopGenes.
+				for (int geneIndex = 0; geneIndex < chrome.size(); geneIndex++) { // loopGenes.
 					// First Gene in Chromosome.
-					Gene currentGene = chrome.getGene(0);
-					foodDestination = j;
-					bestEval = new Pair<Integer, Double>(0,
-							evaluateGeneFoodInRangeAstarNoNorm(org,
-									currentGene, foodList.get(foodDestination)));
-					currentGene = chrome.getGene(j);
+					Gene currentGene = chrome.getGene(geneIndex);
 					/*System.out.println("onGene: " + j);*/
-					for (int k = 0; k < foodList.size(); k++) { // loopFood.
-						Food fd = foodList.get(k);
-						double aResult = evaluateGeneFoodInRangeAstarNoNorm(
-								org, currentGene, fd);
-						if (aResult > bestEval.getRight()) {
-							foodDestination = k;
-							/*System.out.println("replacedId: " + k);*/
-							bestEval.setLeft(j);
-							bestEval.setRight(aResult);
+					for (int foodIndex = 0; foodIndex < foodList.size(); foodIndex++) { // loopFood.
+						// If the geneIndex and the food index 0, then set the
+						// values of bestEval.
+						// bestEval is initialized in this fashion to prevent the
+						// occurrence of the case where, if bestEval is initialized
+						// outside of the geneLoop to have left and right values of
+						// 0, 0, then when comparing resulting evaluations of food
+						// sources to each other, all of the evaluations, except the
+						// evaluation of the first food source and the first gene,
+						// turn out to be less than 0, but greater than the
+						// evaluation of the first food source and the first gene. 
+						if (geneIndex == 0 && foodIndex == 0)
+							bestEval = new Pair<Integer, Double>(0,
+									evaluateGeneFoodInRangeAstarNoNorm(org,
+											currentGene, foodList.get(0)));
+						else {
+							Food fd = foodList.get(foodIndex);
+							double aResult = evaluateGeneFoodInRangeAstarNoNorm(
+									org, currentGene, fd);
+							if (aResult > bestEval.getRight()) {
+								foodDestination = foodIndex;
+								/*System.out.println("replacedId: " + k);*/
+								bestEval.setLeft(geneIndex);
+								bestEval.setRight(aResult);
+							}
 						}
 					} // End loopFood.
 				} // End loopGenes.
@@ -728,8 +738,8 @@ public class GridPanel extends JPanel {
 				}
 				// TODO: Later on replace foodDestination with
 				// objectDestination.
-				if (doActionAstar(org, orgData, bestEval, orgData.getLastFoodSourceIndex())) {
-					System.out.println("removing on action");
+				if (doActionAstar(org, orgData, bestEval,
+						orgData.getLastFoodSourceIndex())) {
 					shuffleIds.remove(new Integer(org.getId()));
 					orgData.setTimeOfDeath(timePassed);
 					continue mainLoop;
@@ -737,7 +747,7 @@ public class GridPanel extends JPanel {
 			} // End NumAction Loop.
 		} // End mainLoop.
 	}
-	
+
 	/**
 	 * Uses: Astar, there is no eating, and the closed list is in the OrgData
 	 * object.
@@ -746,7 +756,8 @@ public class GridPanel extends JPanel {
 	 *            The number of actions that an organism will do at each time
 	 *            step.
 	 */
-	private void simulateStepAstarClosedListOrgDataLoopGenesPreProcess(int numActions) {
+	private void simulateStepAstarClosedListOrgDataLoopGenesPreProcess(
+			int numActions) {
 
 		Collections.shuffle(shuffleIds);
 		// Loop through Organisms.
@@ -787,24 +798,36 @@ public class GridPanel extends JPanel {
 				// and the food source that the evaluation corresponds
 				// to.
 				// TODO: 1st gene is only evaled once.
-				Pair<Integer, Double> bestEval = new Pair<Integer, Double>(0,
-						evaluateGeneFoodInRangeAstarNoNorm(org,
-								chrome.getGene(0), foodList.get(0)));
-				for (int j = 0; j < chrome.size(); j++) { // loopGenes.
+				Pair<Integer, Double> bestEval = null;
+				for (int geneIndex = 0; geneIndex < chrome.size(); geneIndex++) { // loopGenes.
 					// First Gene in Chromosome.
-					Gene currentGene = chrome.getGene(0);
-					currentGene = chrome.getGene(j);
+					Gene currentGene = chrome.getGene(geneIndex);
 					/*System.out.println("onGene: " + j);*/
-					for (int k = 0; k < foodList.size(); k++) { // loopFood.
-						foodDestination = j;
-						Food fd = foodList.get(k);
-						double aResult = evaluateGeneFoodInRangeAstarNoNorm(
-								org, currentGene, fd);
-						if (aResult > bestEval.getRight()) {
-							foodDestination = k;
-							/*System.out.println("replacedId: " + k);*/
-							bestEval.setLeft(j);
-							bestEval.setRight(aResult);
+					for (int foodIndex = 0; foodIndex < foodList.size(); foodIndex++) { // loopFood.
+						// If the geneIndex and the food index 0, then set the
+						// values of bestEval.
+						// bestEval is initialized in this fashion to prevent the
+						// occurrence of the case where, if bestEval is initialized
+						// outside of the geneLoop to have left and right values of
+						// 0, 0, then when comparing resulting evaluations of food
+						// sources to each other, all of the evaluations, except the
+						// evaluation of the first food source and the first gene,
+						// turn out to be less than 0, but greater than the
+						// evaluation of the first food source and the first gene. 
+						if (geneIndex == 0 && foodIndex == 0)
+							bestEval = new Pair<Integer, Double>(0,
+									evaluateGeneFoodInRangeAstarNoNorm(org,
+											currentGene, foodList.get(0)));
+						else {
+							Food fd = foodList.get(foodIndex);
+							double aResult = evaluateGeneFoodInRangeAstarNoNorm(
+									org, currentGene, fd);
+							if (aResult > bestEval.getRight()) {
+								foodDestination = foodIndex;
+								/*System.out.println("replacedId: " + k);*/
+								bestEval.setLeft(geneIndex);
+								bestEval.setRight(aResult);
+							}
 						}
 					} // End loopFood.
 				} // End loopGenes.
@@ -821,7 +844,8 @@ public class GridPanel extends JPanel {
 				}
 				// TODO: Later on replace foodDestination with
 				// objectDestination.
-				if (doActionAstar(org, orgData, bestEval, orgData.getLastFoodSourceIndex())) {
+				if (doActionAstar(org, orgData, bestEval,
+						orgData.getLastFoodSourceIndex())) {
 					shuffleIds.remove(new Integer(org.getId()));
 					orgData.setTimeOfDeath(timePassed);
 					continue mainLoop;
@@ -866,8 +890,8 @@ public class GridPanel extends JPanel {
 				.searchWithList(org.getLocation(), fd.getLocation(),
 						org.getId());
 		Coordinate nextMove;
-		/*System.out.println();
-		System.out.println("going to: " + fd.getId());*/
+		/*System.out.println();*/
+		/*System.out.println("going to: " + fd.getId());*/
 		/*org.printId();
 		org.printLocation();
 		System.out.println("Next move: " + nextMove.getX() + ", "
@@ -905,8 +929,7 @@ public class GridPanel extends JPanel {
 			od.countStep();
 			aClosedList.add(nextMove);
 		}
-		System.out.println("Added to closedList: " + aClosedList.get(0));
-		/*repaint();*/
+		repaint();
 	}
 
 	private double evaluateGene(Organism org, Gene currentGene) {

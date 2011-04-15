@@ -377,6 +377,8 @@ public class GEP {
 		return deepCopyEliteList(orderedOrgList);
 	}
 	
+	// TODO: Implement the Cloneable and Iterable interfaces in Chromosome and
+	// Gene.
 	public List<Chromosome> deepCopyEliteList(List<Organism> orderedOrgList) {
 		/*System.out.println("indeepcopy");*/
 		// The list of deep copied elites to be returned.
