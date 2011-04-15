@@ -51,7 +51,7 @@ public class GridPanel extends JPanel {
 	private ArrayList<Integer> shuffleIds;
 	private ArrayList<String> shuffleStringIds;
 	private int lengthTimeStep = 100;
-	private int lengthGeneration = 500;
+	private int lengthGeneration = 100;
 	private int timePassed = 0;
 	private int trialsPerGen = 1;
 	public int trialNum = 1;
@@ -96,11 +96,6 @@ public class GridPanel extends JPanel {
 					public void actionPerformed(ActionEvent e) {
 						if (timePassed < lengthGeneration) {
 							timePassed++;
-							/* simulateStep(); */
-							/*simulateStep2(2);*/
-							/*simulateStep2Test(4);*/
-							/*simulateStepAstar(1);*/
-							/*simulateStepAstarWithoutEat(4);*/
 							gui.updatePercentage((double) timePassed
 									/ lengthGeneration);
 							/*simulateStepAstarWithoutEatWithClosedList(7);*/
@@ -267,81 +262,6 @@ public class GridPanel extends JPanel {
 		}
 	}
 
-	// TODO: Organize the logic in this method. By logic I mean logical
-	// progression.
-	public void newGenerationAstar() {
-		timePassed = 0;
-		trialNum = 1;
-		generationNum++;
-		// Clear the location map.
-		locationMap.clearLocations();
-		shuffleIds.clear();
-		// sum is used for displaying data to generation panel.
-		double sum = 0;
-		// Assign organism fitness and reinitialize organisms.
-		for (int i = 0; i < organisms.size(); i++) {
-			// An organism.
-			Organism org = organisms.get(i);
-			// organisms corresponding data object.
-			OrgData orgData = orgDataList.get(i);
-			// Asses fitness of each organism.
-			org.setFitness(g.fitnessAverageHealthTimeOfDeathNumSteps(orgData));
-			sum += org.getFitness();
-		}
-		// Perform the evolutionary process on the organism's in the organism
-		// list.
-		organisms = g.newGeneration(organisms);
-		// Reinitialize food list.
-		foodList.clear();
-		for (int i = 0; i < numFoodSources * 2; i++) {
-			if (ran.nextBoolean())
-				foodList.add(new HealthyFood(100.00, i, 2));
-			else
-				foodList.add(new PoisonousFood(100.00, i, 2));
-			// Place food on locationMap.
-			locationMap.placeFood(foodList.get(i));
-		}
-		// Re-initialization of the organisms and the OrgData objects are done
-		// in
-		// this loop. New positions for organisms and food objects are done as
-		// well.
-		for (int i = 0; i < organisms.size(); i++) {
-			// An organism.
-			Organism org = organisms.get(i);
-			// organisms corresponding data object.
-			OrgData orgData = orgDataList.get(i);
-			Chromosome chrom = org.getChromosome();
-			// Update the new symLists to an evaluated expression.
-			// TODO: Make Gene and Chromosome implement iterable.
-			for (int j = 0; j < chrom.size(); j++)
-				chrom.getGene(j).updateEvaledList();
-			// Re-initialize all of the organism's data.
-			orgData.clear();
-			orgData.addChromosome(org.getChromosome());
-			// Place the organisms on the locationMap.
-			locationMap.placeOrganism(org);
-			/*locationMap.newLocation(org.getLocation(), Organism.width,
-					Organism.height, org.getId(), 'o');*/
-			org.setHealth(orgData.getMaxHealth());
-			shuffleIds.add(org.getId());
-		}
-
-		/*locationMap.placeOrganisms(organisms);*/
-		// Calculate lastAvg for the Generation Panel.
-		lastAvg = sum / OptionsPanel.numOrganisms;
-		// Set the generation panel data information.
-		GUI.genPanel.addGeneration();
-		if (!GUI.genPanel.resumeHasNotBeenClicked()) {
-			GUI.genPanel.enableResumeSimulation();
-			gui.toggleAllPauses(false);
-		} else {
-			t.start();
-			GUI.genPanel.newGeneration();
-			repaint();
-			System.out.println("restarting");
-		}
-	}
-
 	/**
 	 * Preprocess generations Essentially run the simulation without updating
 	 * the graphics.
@@ -405,9 +325,13 @@ public class GridPanel extends JPanel {
 												.getX());
 										foodY = norm.normalize(f.getLocation()
 												.getY());
-										LocationMap map = LocationMap.getInstance();
-										orgNearFood = norm.normalize(map.numSurroundingObjects(
-												f.getLocation(), f.getWidth(), f.getHeight(), 10));
+										LocationMap map = LocationMap
+												.getInstance();
+										orgNearFood = norm.normalize(map
+												.numSurroundingObjects(
+														f.getLocation(),
+														f.getWidth(),
+														f.getHeight(), 10));
 										foodRemaining = norm.normalize(f
 												.getHealth());
 
@@ -541,6 +465,22 @@ public class GridPanel extends JPanel {
 		}
 	}
 
+	public void preProcessAstar(int generations) {
+		for (numPreProcessedGenerations = 0; numPreProcessedGenerations < generations; numPreProcessedGenerations++) {
+			System.out.println("Processing Generation " + generationNum);
+			if (timePassed < lengthGeneration) {
+				timePassed++;
+				gui.updatePercentage((double) timePassed / lengthGeneration);
+				simulateStepAstarClosedListOrgDataLoopGenes(1);
+			} else if (trialNum < trialsPerGen)
+				newTrial();
+			else {
+				/*newGeneration();*/
+				newGenerationAstar();
+			}
+		}
+	}
+
 	// ------------------------------------------------------------------------------------
 	// --Getters/Setters--
 	// ------------------------------------------------------------------------------------
@@ -587,68 +527,79 @@ public class GridPanel extends JPanel {
 		return true;
 	}
 
-	// ------------------------------------------------------------------------------------
-	// --Override Functions--
-	// ------------------------------------------------------------------------------------
-	/**
-	 * A function that will be called to update the current state of the panel
-	 * 
-	 * @param g
-	 *            the Graphics object used
-	 */
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		gui.getMap().paint(g);
-		// handle each new organism created.
-		for (Organism org : organisms)
-			org.paint(g);
-		/*for (Integer i : shuffleIds)
-			organisms.get(i).paint(g);*/
-		for (Food f : foodList)
-			if (f.getHealth() > 0)
-				f.paint(g, false);
-	}
-
-	/**
-	 * Sets the initial game state of the GridPanel.
-	 */
-	public void initializeAstar() {
-		// Reset all generation info from previous simulations.
-		generationNum = 1;
-		trialNum = 1;
-		GUI.genPanel.resetGenInformation();
-		ran = new Random();
+	// TODO: Organize the logic in this method. By logic I mean logical
+	// progression.
+	public void newGenerationAstar() {
 		timePassed = 0;
-		shuffleIds = new ArrayList<Integer>();
-		// Location map will consist of: key: current instance number of
-		// object
-		// value: 'w' for white space or available. 'o' for organism. 'h'
-		// for
-		// healthy food. 'p' for poisonous food.
-		locationMap = LocationMap.getInstance();
+		trialNum = 1;
+		generationNum++;
+		// Clear the location map.
 		locationMap.clearLocations();
-		norm = new Normalizer(new Pair<Double, Double>(-600.0, 600.0),
-				new Pair<Double, Double>(-50.0, 50.0));
-		organisms.clear();
 		shuffleIds.clear();
-		numFoodSources = OptionsPanel.numOrganisms / 5;
-		for (int i = 0; i < OptionsPanel.numOrganisms; i++) {
-			/*Organism o = new Organism(100.00, 2, i);*/
-			Organism o = new Organism(100.00, 1, i);
-			organisms.add(o);
-			shuffleIds.add(i);
-			/*o.addStartingLocation();*/
-			/*o.addChromosome();*/
+		// sum is used for displaying data to generation panel.
+		double sum = 0;
+		// Assign organism fitness and reinitialize organisms.
+		for (int i = 0; i < organisms.size(); i++) {
+			// An organism.
+			Organism org = organisms.get(i);
+			// organisms corresponding data object.
+			OrgData orgData = orgDataList.get(i);
+			// Asses fitness of each organism.
+			org.setFitness(g.fitnessAverageHealthTimeOfDeathNumSteps(orgData));
+			sum += org.getFitness();
 		}
-		locationMap.placeOrganisms(organisms);
-		for (int i = 0; i < numFoodSources * 2; i++)
+		// Perform the evolutionary process on the organism's in the organism
+		// list.
+		organisms = g.newGeneration(organisms);
+		// Reinitialize food list.
+		foodList.clear();
+		for (int i = 0; i < numFoodSources * 2; i++) {
 			if (ran.nextBoolean())
 				foodList.add(new HealthyFood(100.00, i, 2));
 			else
 				foodList.add(new PoisonousFood(100.00, i, 2));
-		locationMap.placeFoods(foodList);
-		g = new GEP(0.75, 0.01, 0.01, 0.75, 0.75, 1, false, false);
+			// Place food on locationMap.
+			locationMap.placeFood(foodList.get(i));
+		}
+		// Re-initialization of the organisms and the OrgData objects are done
+		// in
+		// this loop. New positions for organisms and food objects are done as
+		// well.
+		for (int i = 0; i < organisms.size(); i++) {
+			// An organism.
+			Organism org = organisms.get(i);
+			// organisms corresponding data object.
+			OrgData orgData = orgDataList.get(i);
+			Chromosome chrom = org.getChromosome();
+			// Update the new symLists to an evaluated expression.
+			// TODO: Make Gene and Chromosome implement iterable.
+			for (int j = 0; j < chrom.size(); j++)
+				chrom.getGene(j).updateEvaledList();
+			// Re-initialize all of the organism's data.
+			orgData.clear();
+			orgData.addChromosome(org.getChromosome());
+			// Place the organisms on the locationMap.
+			locationMap.placeOrganism(org);
+			/*locationMap.newLocation(org.getLocation(), Organism.width,
+					Organism.height, org.getId(), 'o');*/
+			org.setHealth(orgData.getMaxHealth());
+			shuffleIds.add(org.getId());
+		}
+
+		/*locationMap.placeOrganisms(organisms);*/
+		// Calculate lastAvg for the Generation Panel.
+		lastAvg = sum / OptionsPanel.numOrganisms;
+		// Set the generation panel data information.
+		GUI.genPanel.addGeneration();
+		if (!GUI.genPanel.resumeHasNotBeenClicked()) {
+			GUI.genPanel.enableResumeSimulation();
+			gui.toggleAllPauses(false);
+		} else {
+			t.start();
+			GUI.genPanel.newGeneration();
+			/*repaint();*/
+			System.out.println("restarting");
+		}
 	}
 
 	/**
@@ -689,100 +640,8 @@ public class GridPanel extends JPanel {
 				foodList.add(new PoisonousFood(100.00, i, 2));
 			locationMap.placeFood(foodList.get(i));
 		}
-		
-		System.out.println("printingIds in foodList");
-		for (Food f : foodList) {
-			System.out.println(f.getId());
-		}
 		g = new GEP(0.75, 0.01, 0.01, 0.75, 0.75, 2, false, true);
-	}
-
-	/**
-	 * Uses: Astar, there is no eating, and the closed list is in the OrgData
-	 * object.
-	 * 
-	 * @param numActions
-	 *            The number of actions that an organism will do at each time
-	 *            step.
-	 */
-	private void simulateStepAstarWithoutEatWithClosedListOrgData(int numActions) {
-
-		Collections.shuffle(shuffleIds);
-		// Loop through Organisms.
-		mainLoop: for (int i = 0; i < shuffleIds.size(); i++) { // mainLoop.
-			// Get an Organism corresponding the the ids in the shuffleIds
-			// list.
-			Organism org = organisms.get(shuffleIds.get(i));
-			// The orgData object holds all of the data for this specific
-			// organism.
-			OrgData orgData = orgDataList.get(shuffleIds.get(i));
-			// Closed list.
-			ArrayList<Coordinate> closedList = (ArrayList<Coordinate>) orgData
-					.getClosedList();
-			closedList.add(org.getLocation());
-			// lastFoodSourceIndex holds the index of the last food source
-			// that was visited.
-			Integer lastFoodSourceIndex = 0;
-			for (int l = 0; l < numActions; l++) { // numActions loop.
-				// Sample for fitness function.
-				orgData.incHlthTot();
-				// depleteValue is the value to decrease the Organism's
-				// health
-				// by at each time step.
-				double depleteValue = org.getMaxHealth()
-						/ ((lengthGeneration - 1) * numActions);
-				// Check to see if the Organism is dead, if so remove
-				// that org
-				// from the shuffleIds list.
-				if (deplete(org, depleteValue)) {
-					System.out.println("removing on deplete");
-					shuffleIds.remove(new Integer(org.getId()));
-					continue mainLoop;
-				}
-				Chromosome chrome = org.getChromosome();
-				// First Gene in Chromosome.
-				Gene currentGene = chrome.getGene(0);
-				// Get the first food.
-				int foodDestination = 0;
-				// bestEval is used to hold the value of the evaluation
-				// and the food source that the evaluation corresponds
-				// to.
-				Pair<Integer, Double> bestEval = new Pair<Integer, Double>(0,
-						evaluateGeneFoodInRangeAstar(org, currentGene,
-								foodDestination));
-				for (int k = 1; k < foodList.size(); k++) { // loopFood.
-					double aResult = evaluateGeneFoodInRangeAstar(org,
-							currentGene, k);
-					/*System.out.println("on food" + k);
-					System.out.println("Result for eval: " + aResult);*/
-					if (aResult > bestEval.getRight()) {
-						foodDestination = k;
-						/*System.out.println("Replaced!! result");*/
-						bestEval.setLeft(k);
-						bestEval.setRight(aResult);
-					}
-				} // End loopFood.
-				/*System.out.println("foodToMoveto id: "
-					    + foodDestination.getId());
-				System.out.println();
-				moveAstar(org, bestEval, foodDestination);*/
-				// This mechanism decides whether or not to clear the
-				// closed
-				// list. The closed list should clear if the organism
-				// has
-				// decided to make its way towards another food source.
-				// If it
-				// decides to stay on the path to the same food source,
-				// then it
-				// needs to keep its list of previously visited
-				// nodes.
-				if (lastFoodSourceIndex != bestEval.getLeft()) {
-					closedList.clear();
-					lastFoodSourceIndex = bestEval.getLeft();
-				}
-				moveAstarClosedList(org, orgData, foodDestination, closedList);
-			} // End NumAction Loop.
-		} // End mainLoop.
+		/*preProcessAstar(4);*/
 	}
 
 	/**
@@ -828,27 +687,26 @@ public class GridPanel extends JPanel {
 					continue mainLoop;
 				}
 				Chromosome chrome = org.getChromosome();
-				// First Gene in Chromosome.
-				Gene currentGene = chrome.getGene(0);
-				// Get the first food.
-				int foodDestination = 0;
 				// bestEval is used to hold the value of the evaluation
 				// and the food source that the evaluation corresponds
 				// to.
 				// TODO: 1st gene is only evaled once.
-				Pair<Integer, Double> bestEval = new Pair<Integer, Double>(0,
-						evaluateGeneFoodInRangeAstarNoNorm(org, currentGene,
-								foodList.get(foodDestination)));
-				System.out.println("l: " + l);
-				for (int j = 1; j < chrome.size(); j++) { // loopGenes.
+				Pair<Integer, Double> bestEval = null;
+				// Get the first food.
+				int foodDestination = 0;
+				for (int j = 0; j < chrome.size(); j++) { // loopGenes.
+					// First Gene in Chromosome.
+					Gene currentGene = chrome.getGene(0);
+					foodDestination = j;
+					bestEval = new Pair<Integer, Double>(0,
+							evaluateGeneFoodInRangeAstarNoNorm(org,
+									currentGene, foodList.get(foodDestination)));
 					currentGene = chrome.getGene(j);
-					System.out.println("j: " + j);
 					/*System.out.println("onGene: " + j);*/
-					for (int k = 1; k < foodList.size(); k++) { // loopFood.
+					for (int k = 0; k < foodList.size(); k++) { // loopFood.
 						Food fd = foodList.get(k);
-						System.out.println("k: " + k);
-						double aResult = evaluateGeneFoodInRangeAstarNoNorm(org,
-								currentGene, fd);
+						double aResult = evaluateGeneFoodInRangeAstarNoNorm(
+								org, currentGene, fd);
 						if (aResult > bestEval.getRight()) {
 							foodDestination = k;
 							/*System.out.println("replacedId: " + k);*/
@@ -864,13 +722,13 @@ public class GridPanel extends JPanel {
 				// food source. If it decides to stay on the path to the
 				// same food source, then it needs to keep its list of
 				// previously visited nodes.
-				if (orgData.getLastFoodSourceIndex() != bestEval.getLeft()) {
+				if (orgData.getLastFoodSourceIndex() != foodDestination) {
 					closedList.clear();
-					orgData.setLastFoodSourceIndex(bestEval.getLeft());
+					orgData.setLastFoodSourceIndex(foodDestination);
 				}
 				// TODO: Later on replace foodDestination with
 				// objectDestination.
-				if (doActionAstar(org, orgData, bestEval, foodDestination)) {
+				if (doActionAstar(org, orgData, bestEval, orgData.getLastFoodSourceIndex())) {
 					System.out.println("removing on action");
 					shuffleIds.remove(new Integer(org.getId()));
 					orgData.setTimeOfDeath(timePassed);
@@ -881,95 +739,25 @@ public class GridPanel extends JPanel {
 	}
 
 	/**
-	 * Uses: Astar, there is no eating, and the closed list is in the OrgData
-	 * object.
-	 * 
-	 * @param numActions
-	 *            The number of actions that an organism will do at each time
-	 *            step.
+	 * @param org
+	 * @param anOrgData
+	 * @param bestEval
+	 * @param aFoodDestination
+	 * @return boolean indicating whether or not the organism died while
+	 *         performing an action.
 	 */
-	private void simulateStepAstarClosedListOrgDataTest(int numActions) {
-		System.out.println("simStep");
-		Collections.shuffle(shuffleIds);
-		// Loop through Organisms.
-		mainLoop: for (int i = 0; i < shuffleIds.size(); i++) { // mainLoop.
-			// Get an Organism corresponding the the ids in the shuffleIds
-			// list.
-			Organism org = organisms.get(shuffleIds.get(i));
-			/*System.out.println("simStep for org id num: " + org.getId());*/
-			// The orgData object holds all of the data for this specific
-			// organism.
-			OrgData orgData = orgDataList.get(org.getId());
-			/*System.out.println("orgData id num: " + orgData.getId());*/
-			orgData.incrementSumHealth(org.getHealth());
-			// Closed list.
-			ArrayList<Coordinate> closedList = (ArrayList<Coordinate>) orgData
-					.getClosedList();
-			closedList.add(org.getLocation());
-			// lastFoodSourceIndex holds the index of the last food source
-			// that was visited.
-			orgData.setLastFoodSourceIndex(0);
-			for (int l = 0; l < numActions; l++) { // numActions loop.
-				// Sample for fitness function.
-				orgData.incHlthTot();
-				// depleteValue is the value to decrease the Organism's health
-				// by at each time step.
-				double depleteValue = orgData.getMaxHealth()
-						/ ((lengthGeneration - 100) * numActions);
-				// Check to see if the Organism is dead, if so remove that org
-				// from the shuffleIds list.
-				if (deplete(org, depleteValue)) {
-					/*System.out.println("removing on deplete");*/
-					orgData.setTimeOfDeath(timePassed);
-					shuffleIds.remove(new Integer(org.getId()));
-					continue mainLoop;
-				}
-				Chromosome chrome = org.getChromosome();
-				// First Gene in Chromosome.
-				Gene currentGene = chrome.getGene(0);
-				// Get the first food.
-				int foodDestination = 0;
-				// bestEval is used to hold the value of the evaluation
-				// and the food source that the evaluation corresponds
-				// to.
-				Pair<Integer, Double> bestEval = new Pair<Integer, Double>(0,
-						evaluateGeneFoodInRangeAstar(org, currentGene,
-								foodDestination));
-				for (int k = 1; k < foodList.size(); k++) { // loopFood.
-					double aResult = evaluateGeneFoodInRangeAstar(org,
-							currentGene, k);
-					/*System.out.println("aResult: " + aResult);
-					System.out.println("prevResult: " + bestEval.getSnd());
-					System.out.println();*/
-					if (aResult > bestEval.getRight()) {
-						/*System.out.println("aResult better than prev.");*/
-						foodDestination = k;
-						/*System.out.println("Going to food source: " + k);*/
-						bestEval.setLeft(k);
-						bestEval.setRight(aResult);
-					}
-				} // End loopFood.
-
-				// This mechanism decides whether or not to clear the
-				// closed list. The closed list should clear if the
-				// organism has decided to make its way towards another
-				// food source. If it decides to stay on the path to the
-				// same food source, then it needs to keep its list of
-				// previously visited nodes.
-				if (orgData.getLastFoodSourceIndex() != bestEval.getLeft()) {
-					closedList.clear();
-					orgData.setLastFoodSourceIndex(bestEval.getLeft());
-				}
-				if (doActionAstar(org, orgData, bestEval, foodDestination)) {
-					/*System.out.println("removing on action");*/
-					shuffleIds.remove(new Integer(org.getId()));
-					orgData.setTimeOfDeath(timePassed);
-					continue mainLoop;
-				}
-			} // End NumAction Loop.
-			/*System.out.println("Performed num limit of actions");*/
-		} // End mainLoop.
-		/*System.out.println();*/
+	public boolean doActionAstar(Organism org, OrgData anOrgData,
+			Pair<Integer, Double> bestEval, int aFoodDestination) {
+		switch (bestEval.getLeft()) {
+			case 0:
+				moveAstarClosedList(org, anOrgData, aFoodDestination,
+						(ArrayList<Coordinate>) anOrgData.getClosedList());
+				break;
+			case 1:
+				return eatFood(org, aFoodDestination);
+				/*return eatFoodInRange(org);*/
+		}
+		return false;
 	}
 
 	/**
@@ -982,8 +770,9 @@ public class GridPanel extends JPanel {
 	private void moveAstarClosedList(Organism org, OrgData od,
 			int aFoodDestination, ArrayList<Coordinate> aClosedList) {
 		Food fd = foodList.get(aFoodDestination);
-		PriorityQueue<Coordinate> sq = LocationMap.getInstance().searchWithList(
-				org.getLocation(), fd.getLocation(), org.getId());
+		PriorityQueue<Coordinate> sq = LocationMap.getInstance()
+				.searchWithList(org.getLocation(), fd.getLocation(),
+						org.getId());
 		Coordinate nextMove;
 		System.out.println();
 		System.out.println("going to: " + fd.getId());
@@ -1024,30 +813,8 @@ public class GridPanel extends JPanel {
 			od.countStep();
 			aClosedList.add(nextMove);
 		}
-		/*System.out.println("Added to closedList: " + aClosedList.get(0));*/
-		repaint();
-	}
-
-	/**
-	 * @param org
-	 * @param anOrgData
-	 * @param bestEval
-	 * @param aFoodDestination
-	 * @return boolean indicating whether or not the organism died while
-	 *         performing an action.
-	 */
-	public boolean doActionAstar(Organism org, OrgData anOrgData,
-			Pair<Integer, Double> bestEval, int aFoodDestination) {
-		switch (bestEval.getLeft()) {
-			case 0:
-				moveAstarClosedList(org, anOrgData, aFoodDestination,
-						(ArrayList<Coordinate>) anOrgData.getClosedList());
-				break;
-			case 1:
-				return eatFood(org, aFoodDestination);
-				/*return eatFoodInRange(org);*/
-		}
-		return false;
+		System.out.println("Added to closedList: " + aClosedList.get(0));
+		/*repaint();*/
 	}
 
 	private double evaluateGene(Organism org, Gene currentGene) {
@@ -1100,7 +867,7 @@ public class GridPanel extends JPanel {
 		environment.put("g", numSurroundingOrgs);
 		return result.evaluate(environment);
 	}
-	
+
 	private double evaluateGeneFoodInRangeAstarTest(Organism org,
 			Gene currentGene, Food aFood) {
 
@@ -1151,9 +918,9 @@ public class GridPanel extends JPanel {
 		System.out.println();
 		return result.evaluate(environment);
 	}
-	
-	private double evaluateGeneFoodInRangeAstarNoNorm(Organism org, Gene currentGene,
-			Food aFood) {
+
+	private double evaluateGeneFoodInRangeAstarNoNorm(Organism org,
+			Gene currentGene, Food aFood) {
 
 		LocationMap map = LocationMap.getInstance();
 		HashMap<String, Double> environment = new HashMap<String, Double>();
@@ -1161,13 +928,12 @@ public class GridPanel extends JPanel {
 		double orgY = org.getLocation().getY();
 		double foodX = aFood.getLocation().getX();
 		double foodY = aFood.getLocation().getY();
-		double distanceToFood = map.distance(orgX, orgY, foodX,
-				foodY);
+		double distanceToFood = map.distance(orgX, orgY, foodX, foodY);
 		double health = org.getHealth();
 		double numSurroundingOrgs = map.numSurroundingObjects(
 				org.getLocation(), org.getWidth(), org.getHeight(), 10);
-		double orgNearFood = map.numSurroundingObjects(
-				aFood.getLocation(), aFood.getWidth(), aFood.getHeight(), 10);
+		double orgNearFood = map.numSurroundingObjects(aFood.getLocation(),
+				aFood.getWidth(), aFood.getHeight(), 10);
 		double foodRemaining = aFood.getHealth();
 		Expr result = currentGene.getEvaledList();
 		environment.put("a", distanceToFood); // Represents distance to
@@ -1199,48 +965,6 @@ public class GridPanel extends JPanel {
 		if (!foodInRangeIds.isEmpty())
 			for (Integer integer : foodInRangeIds)
 				foodInRange.add(foodList.get(integer));
-		return foodInRange;
-	}
-
-	/**
-	 * This method gets all returns a list of all the Food objects that are in
-	 * the org's sight range.
-	 * 
-	 * @param org
-	 * @return
-	 */
-	/*FOR TESTING.*/
-	// Uses abstract Food class instead of HealthyFood and Poisonous Food.
-	private List<Food> collectFoodInRange2Test(Organism org) {
-		int sightRange = 30;
-		// List of Ids of the food in range.
-		ArrayList<Integer> foodInRangeIds = (ArrayList<Integer>) org
-				.getFoodInRange(sightRange);
-		// List to be filled with actual food objects.
-		LinkedList<Food> foodInRange = new LinkedList<Food>();
-		// Fill the healthyFoodInRange list with food objects obtained from
-		// ids.
-		if (!foodInRangeIds.isEmpty())
-			for (Integer integer : foodInRangeIds)
-				foodInRange.add(foodList.get(integer));
-		for (Food f : foodInRange) {
-			Coordinate c = f.getLocation();
-			int fX = c.getX();
-			int fY = c.getY();
-			Coordinate cOrg = org.getLocation();
-			int oX = cOrg.getX();
-			int oY = cOrg.getY();
-			int xRange = Math.abs(oX - fX);
-			int yRange = Math.abs(oY - fY);
-			if (xRange > sightRange + 4) {
-				System.out.println("out of range x");
-				System.out.println("xRange: " + xRange);
-			}
-			if (yRange > sightRange + 4) {
-				System.out.println("out of range y");
-				System.out.println("yRange: " + yRange);
-			}
-		}
 		return foodInRange;
 	}
 
@@ -1304,5 +1028,28 @@ public class GridPanel extends JPanel {
 				+ orgData.getPoisonEat() + " " + orgData.getEatFail() + " "
 				+ orgData.getNumAttacked() + " " + orgData.getNumPushed() + " "
 				+ orgData.getTotalScans();
+	}
+
+	// ------------------------------------------------------------------------------------
+	// --Override Functions--
+	// ------------------------------------------------------------------------------------
+	/**
+	 * A function that will be called to update the current state of the panel
+	 * 
+	 * @param g
+	 *            the Graphics object used
+	 */
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		gui.getMap().paint(g);
+		// handle each new organism created.
+		for (Organism org : organisms)
+			org.paint(g);
+		/*for (Integer i : shuffleIds)
+			organisms.get(i).paint(g);*/
+		for (Food f : foodList)
+			if (f.getHealth() > 0)
+				f.paint(g, false);
 	}
 }
