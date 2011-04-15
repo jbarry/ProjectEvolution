@@ -132,7 +132,7 @@ public class LocationMap {
 		for (int i = x - (width / 2); i <= x + (width / 2); i++) {
 			for (int j = y - (height / 2); j <= y + (height / 2); j++) {
 				try {
-					if (locationMap[i][j].getSnd() != 'w') {
+					if (locationMap[i][j].getRight() != 'w') {
 						return false;
 					}
 				} catch (ArrayIndexOutOfBoundsException e) {
@@ -473,14 +473,14 @@ public class LocationMap {
 					Pair<Integer, Character> object = LocationMap.getInstance()
 							.get(i, j);
 					// Count all occurrences of objects in location map.
-					if (object.getSnd() == 'w')
+					if (object.getRight() == 'w')
 						continue checkObstacles;
-					else if (object.getSnd() == 'p')
-						pois.add(object.getFst());
-					else if (object.getSnd() == 'h')
-						heal.add(object.getFst());
-					else if (object.getSnd() == 'o')
-						orgs.add(object.getFst());
+					else if (object.getRight() == 'p')
+						pois.add(object.getLeft());
+					else if (object.getRight() == 'h')
+						heal.add(object.getLeft());
+					else if (object.getRight() == 'o')
+						orgs.add(object.getLeft());
 				} catch (ArrayIndexOutOfBoundsException e) {
 				}
 			}
@@ -513,8 +513,8 @@ public class LocationMap {
 				try {
 					Pair<Integer, Character> aPair = LocationMap.getInstance()
 							.get(i, j);
-					Character charType = aPair.getSnd();
-					Integer spaceId = aPair.getFst();
+					Character charType = aPair.getRight();
+					Integer spaceId = aPair.getLeft();
 					if (charType == 'o' && spaceId != anId)
 						return true;
 					if (charType == 'h' || charType == 'p')
@@ -548,10 +548,10 @@ public class LocationMap {
 					// Count all occurrences of objects in location map
 					Pair<Integer, Character> space = LocationMap.getInstance()
 							.get(i, j);
-					Character spaceType = space.getSnd();
-					Integer spaceId = space.getFst();
+					Character spaceType = space.getRight();
+					Integer spaceId = space.getLeft();
 					if (spaceType != 'w')
-						objectIds.add(space.getFst());
+						objectIds.add(space.getLeft());
 				} catch (ArrayIndexOutOfBoundsException e) {
 				}
 			}

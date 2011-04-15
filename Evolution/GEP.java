@@ -520,8 +520,8 @@ public class GEP {
 		LinkedList<Organism> newPop = new LinkedList<Organism>();
 		// Iter through partners list.
 		for (int i = 0; i < aPartners.size(); i++) {
-			Organism org1 = aPartners.get(i).getFst();
-			Organism org2 = aPartners.get(i).getSnd();
+			Organism org1 = aPartners.get(i).getLeft();
+			Organism org2 = aPartners.get(i).getRight();
 			// TODO: change the fitness call when OrgData is used.
 			if (org1.getFitness() <= org2.getFitness())
 				newPop.add(org2);
@@ -552,8 +552,8 @@ public class GEP {
 		LinkedList<Organism> newPop = new LinkedList<Organism>();
 		// Iter through partners list.
 		for (int i = 0; i < partners.size(); i++) {
-			Organism org1 = partners.get(i).getFst();
-			Organism org2 = partners.get(i).getSnd();
+			Organism org1 = partners.get(i).getLeft();
+			Organism org2 = partners.get(i).getRight();
 
 			// TODO: change the fitness call when OrgData is used.
 			if (org1.getFitness() <= org2.getFitness())
@@ -576,8 +576,8 @@ public class GEP {
 		int countWon = 0;
 		// Iter through partners list.
 		for (int i = 0; i < partners.size(); i++) {
-			Organism org1 = partners.get(i).getFst();
-			Organism org2 = partners.get(i).getSnd();
+			Organism org1 = partners.get(i).getLeft();
+			Organism org2 = partners.get(i).getRight();
 			double fit1 = org1.getFitness();
 			double fit2 = org2.getFitness();
 			double rand = ran.nextDouble();
@@ -677,7 +677,7 @@ public class GEP {
 			LinkedList<Pair<Chromosome, Chromosome>> aPairList) {
 		for (int i = 0; i < aPairList.size(); i++)
 			if (ran.nextDouble() < onePtProb)
-				aPairList.get(i).getFst().crossOver(aPairList.get(i).getSnd());
+				aPairList.get(i).getLeft().crossOver(aPairList.get(i).getRight());
 	}
 
 	public double getTournProb() {
@@ -777,8 +777,8 @@ public class GEP {
 		out.println("ParterList with Ids");
 		out.println();
 		for (Pair<Organism, Organism> partner : partners) {
-			Organism o1 = partner.getFst();
-			Organism o2 = partner.getSnd();
+			Organism o1 = partner.getLeft();
+			Organism o2 = partner.getRight();
 			out.println(o1.getId() + " <=> " + o2.getId());
 		}
 		out.println();
@@ -874,8 +874,8 @@ public class GEP {
 		out.println("chrom pair list size: " + mates.size());
 		out.println("chrom pair list with Ids:");
 		for (Pair<Chromosome, Chromosome> partners : mates) {
-			Chromosome c1 = partners.getFst();
-			Chromosome c2 = partners.getSnd();
+			Chromosome c1 = partners.getLeft();
+			Chromosome c2 = partners.getRight();
 			out.println(c1.getId() + " <=> " + c2.getId());
 		}
 		out.println();

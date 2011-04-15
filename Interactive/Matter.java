@@ -84,10 +84,10 @@ public abstract class Matter implements Comparable<Matter>{
 					// Count all occurrences of objects in location map
 					Pair<Integer, Character> space = LocationMap.getInstance()
 							.get(i, j);
-					Character spaceType = space.getSnd();
-					Integer spaceId = space.getFst();
+					Character spaceType = space.getRight();
+					Integer spaceId = space.getLeft();
 					if (spaceType == type && spaceId != id)
-						objectIds.add(space.getFst());
+						objectIds.add(space.getLeft());
 				} catch (ArrayIndexOutOfBoundsException e) {
 				}
 			}

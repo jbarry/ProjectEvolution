@@ -199,8 +199,8 @@ public class LocationMapTest {
 			System.out.println("orgid: " + id);
 			System.out.println("orgType: " + 'o');
 			Pair<Integer, Character> space = map.get(x, y);
-			int spaceId = space.getFst();
-			Character spaceType = space.getSnd();
+			int spaceId = space.getLeft();
+			Character spaceType = space.getRight();
 			System.out.println("spaceid: " + spaceId);
 			System.out.println("spaceType: " + spaceType);
 			// Assert that the space is filled with the organism's id.
@@ -208,8 +208,8 @@ public class LocationMapTest {
 			// Assert that the space is filled with the appropriate type.
 			Assert.assertEquals("o", spaceType.toString());
 		}
-		System.out.println("In the random pair: " + map.get(20, 237).getFst()
-				+ ", " + map.get(20, 237).getSnd());
+		System.out.println("In the random pair: " + map.get(20, 237).getLeft()
+				+ ", " + map.get(20, 237).getRight());
 		map.clearLocations();
 	}
 	

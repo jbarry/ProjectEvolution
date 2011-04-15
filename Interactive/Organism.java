@@ -179,8 +179,8 @@ public class Organism extends Matter {
 					// Count all occurrences of objects in location
 					// map
 					Pair<Integer, Character> space = locationMap.get(i, j);
-					if (space.getSnd() == 'h' || space.getSnd() == 'p')
-						objectIds.add(space.getFst());
+					if (space.getRight() == 'h' || space.getRight() == 'p')
+						objectIds.add(space.getLeft());
 				} catch (ArrayIndexOutOfBoundsException e) {
 				}
 			}
@@ -213,7 +213,7 @@ public class Organism extends Matter {
 				try {
 					// Count all occurrences of objects in location map.
 					Pair<Integer, Character> space = locationMap.get(i, j);
-					if (space.getSnd() == type && space.getFst() == anId)
+					if (space.getRight() == type && space.getLeft() == anId)
 						return true;
 				} catch (ArrayIndexOutOfBoundsException e) {
 				}

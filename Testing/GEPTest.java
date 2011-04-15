@@ -88,10 +88,10 @@ public class GEPTest {
 			Pair<Organism, Organism> partners1 = partnerList.poll();
 			for (int j = 0; j < partnerList.size(); j++) {
 				Pair<Organism, Organism> partners2 = partnerList.get(j);
-				Integer id1P1 = partners1.getFst().getId();
-				Integer id2P1 = partners1.getSnd().getId();
-				Integer id1P2 = partners2.getFst().getId();
-				Integer id2P2 = partners2.getSnd().getId();
+				Integer id1P1 = partners1.getLeft().getId();
+				Integer id2P1 = partners1.getRight().getId();
+				Integer id1P2 = partners2.getLeft().getId();
+				Integer id2P2 = partners2.getRight().getId();
 				assertFalse(id1P1 == id2P1 && id1P1 == id2P2);
 				if (id1P1 == id1P2)
 					assertFalse(id2P1 == id2P2);
@@ -127,10 +127,10 @@ public class GEPTest {
 			Pair<Organism, Organism> partners1 = partnerList.poll();
 			for (int j = 0; j < partnerList.size(); j++) {
 				Pair<Organism, Organism> partners2 = partnerList.get(j);
-				Integer id1P1 = partners1.getFst().getId();
-				Integer id2P1 = partners1.getSnd().getId();
-				Integer id1P2 = partners2.getFst().getId();
-				Integer id2P2 = partners2.getSnd().getId();
+				Integer id1P1 = partners1.getLeft().getId();
+				Integer id2P1 = partners1.getRight().getId();
+				Integer id1P2 = partners2.getLeft().getId();
+				Integer id2P2 = partners2.getRight().getId();
 				assertFalse(id1P1 == id2P1 && id1P1 == id2P2);
 				if (id1P1 == id1P2)
 					assertFalse(id2P1 == id2P2);
@@ -152,8 +152,8 @@ public class GEPTest {
 				.partnerSelect(orgList);
 		LinkedList<Organism> tournOrgList = gep.tournament(partnerList);
 		for (int i = 0; i < partnerList.size(); i++) {
-			Organism firstOrg = partnerList.get(i).getFst();
-			Organism secOrg = partnerList.get(i).getSnd();
+			Organism firstOrg = partnerList.get(i).getLeft();
+			Organism secOrg = partnerList.get(i).getRight();
 			Organism tournListOrg = tournOrgList.get(i);
 			Double firstFitness = firstOrg.getFitness();
 			Double secFitness = secOrg.getFitness();
@@ -175,8 +175,8 @@ public class GEPTest {
 				.partnerSelect(orgList);
 		LinkedList<Organism> tournOrgList = gep.tournament(partnerList);
 		for (int i = 0; i < partnerList.size(); i++) {
-			Organism firstOrg = partnerList.get(i).getFst();
-			Organism secOrg = partnerList.get(i).getSnd();
+			Organism firstOrg = partnerList.get(i).getLeft();
+			Organism secOrg = partnerList.get(i).getRight();
 			Organism tournListOrg = tournOrgList.get(i);
 			Double tournListOrgFitness = tournListOrg.getFitness();
 			Double firstFitness = firstOrg.getFitness();
@@ -221,10 +221,10 @@ public class GEPTest {
 			Pair<Chromosome, Chromosome> partners1 = matePairList.poll();
 			for (int j = 0; j < matePairList.size(); j++) {
 				Pair<Chromosome, Chromosome> partners2 = matePairList.get(j);
-				Chromosome chrom11 = partners1.getFst();
-				Chromosome chrom12 = partners1.getSnd();
-				Chromosome chrom21 = partners2.getFst();
-				Chromosome chrom22 = partners2.getSnd();
+				Chromosome chrom11 = partners1.getLeft();
+				Chromosome chrom12 = partners1.getRight();
+				Chromosome chrom21 = partners2.getLeft();
+				Chromosome chrom22 = partners2.getRight();
 				Integer id1P1 = chrom11.getId();
 				Integer id2P1 = chrom12.getId();
 				Integer id1P2 = chrom21.getId();

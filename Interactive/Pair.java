@@ -24,11 +24,11 @@ public class Pair<A, B> {
 		snd = b;
 	}
 	
-	public A getFst() {
+	public A getLeft() {
 		return fst;
 	}
 	
-	public B getSnd() {
+	public B getRight() {
 		return snd;
 	}
 	

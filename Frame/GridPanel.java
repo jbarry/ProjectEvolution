@@ -755,7 +755,7 @@ public class GridPanel extends JPanel {
 							currentGene, k);
 					/*System.out.println("on food" + k);
 					System.out.println("Result for eval: " + aResult);*/
-					if (aResult > bestEval.getSnd()) {
+					if (aResult > bestEval.getRight()) {
 						foodDestination = k;
 						/*System.out.println("Replaced!! result");*/
 						bestEval.setLeft(k);
@@ -776,9 +776,9 @@ public class GridPanel extends JPanel {
 				// then it
 				// needs to keep its list of previously visited
 				// nodes.
-				if (lastFoodSourceIndex != bestEval.getFst()) {
+				if (lastFoodSourceIndex != bestEval.getLeft()) {
 					closedList.clear();
-					lastFoodSourceIndex = bestEval.getFst();
+					lastFoodSourceIndex = bestEval.getLeft();
 				}
 				moveAstarClosedList(org, orgData, foodDestination, closedList);
 			} // End NumAction Loop.
@@ -849,7 +849,7 @@ public class GridPanel extends JPanel {
 						System.out.println("k: " + k);
 						double aResult = evaluateGeneFoodInRangeAstarNoNorm(org,
 								currentGene, fd);
-						if (aResult > bestEval.getSnd()) {
+						if (aResult > bestEval.getRight()) {
 							foodDestination = k;
 							/*System.out.println("replacedId: " + k);*/
 							bestEval.setLeft(j);
@@ -864,9 +864,9 @@ public class GridPanel extends JPanel {
 				// food source. If it decides to stay on the path to the
 				// same food source, then it needs to keep its list of
 				// previously visited nodes.
-				if (orgData.getLastFoodSourceIndex() != bestEval.getFst()) {
+				if (orgData.getLastFoodSourceIndex() != bestEval.getLeft()) {
 					closedList.clear();
-					orgData.setLastFoodSourceIndex(bestEval.getFst());
+					orgData.setLastFoodSourceIndex(bestEval.getLeft());
 				}
 				// TODO: Later on replace foodDestination with
 				// objectDestination.
@@ -941,7 +941,7 @@ public class GridPanel extends JPanel {
 					/*System.out.println("aResult: " + aResult);
 					System.out.println("prevResult: " + bestEval.getSnd());
 					System.out.println();*/
-					if (aResult > bestEval.getSnd()) {
+					if (aResult > bestEval.getRight()) {
 						/*System.out.println("aResult better than prev.");*/
 						foodDestination = k;
 						/*System.out.println("Going to food source: " + k);*/
@@ -956,9 +956,9 @@ public class GridPanel extends JPanel {
 				// food source. If it decides to stay on the path to the
 				// same food source, then it needs to keep its list of
 				// previously visited nodes.
-				if (orgData.getLastFoodSourceIndex() != bestEval.getFst()) {
+				if (orgData.getLastFoodSourceIndex() != bestEval.getLeft()) {
 					closedList.clear();
-					orgData.setLastFoodSourceIndex(bestEval.getFst());
+					orgData.setLastFoodSourceIndex(bestEval.getLeft());
 				}
 				if (doActionAstar(org, orgData, bestEval, foodDestination)) {
 					/*System.out.println("removing on action");*/
@@ -1038,7 +1038,7 @@ public class GridPanel extends JPanel {
 	 */
 	public boolean doActionAstar(Organism org, OrgData anOrgData,
 			Pair<Integer, Double> bestEval, int aFoodDestination) {
-		switch (bestEval.getFst()) {
+		switch (bestEval.getLeft()) {
 			case 0:
 				moveAstarClosedList(org, anOrgData, aFoodDestination,
 						(ArrayList<Coordinate>) anOrgData.getClosedList());
