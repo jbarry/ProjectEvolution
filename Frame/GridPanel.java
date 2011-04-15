@@ -471,7 +471,7 @@ public class GridPanel extends JPanel {
 			if (timePassed < lengthGeneration) {
 				timePassed++;
 				gui.updatePercentage((double) timePassed / lengthGeneration);
-				simulateStepAstarClosedListOrgDataLoopGenes(1);
+				simulateStepAstarClosedListOrgDataLoopGenesPreProcess(1);
 			} else if (trialNum < trialsPerGen)
 				newTrial();
 			else {
@@ -641,7 +641,7 @@ public class GridPanel extends JPanel {
 			locationMap.placeFood(foodList.get(i));
 		}
 		g = new GEP(0.75, 0.01, 0.01, 0.75, 0.75, 2, false, true);
-		/*preProcessAstar(4);*/
+		preProcessAstar(4);
 	}
 
 	/**
@@ -737,6 +737,98 @@ public class GridPanel extends JPanel {
 			} // End NumAction Loop.
 		} // End mainLoop.
 	}
+	
+	/**
+	 * Uses: Astar, there is no eating, and the closed list is in the OrgData
+	 * object.
+	 * 
+	 * @param numActions
+	 *            The number of actions that an organism will do at each time
+	 *            step.
+	 */
+	private void simulateStepAstarClosedListOrgDataLoopGenesPreProcess(int numActions) {
+
+		Collections.shuffle(shuffleIds);
+		// Loop through Organisms.
+		mainLoop: for (int i = 0; i < shuffleIds.size(); i++) { // mainLoop.
+			// Get an Organism corresponding the the ids in the shuffleIds
+			// list.
+			Organism org = organisms.get(shuffleIds.get(i));
+			// The orgData object holds all of the data for this specific
+			// organism.
+			OrgData orgData = orgDataList.get(org.getId());
+			orgData.incrementSumHealth(org.getHealth());
+			// Closed list.
+			ArrayList<Coordinate> closedList = (ArrayList<Coordinate>) orgData
+					.getClosedList();
+			closedList.add(org.getLocation());
+			// lastFoodSourceIndex holds the index of the last food source
+			// that was visited.
+			orgData.setLastFoodSourceIndex(0);
+			for (int l = 0; l < numActions; l++) { // numActions loop.
+				// Sample for fitness function.
+				orgData.incHlthTot();
+				// depleteValue is the value to decrease the Organism's
+				// health
+				// by at each time step.
+				double depleteValue = orgData.getMaxHealth()
+						/ ((lengthGeneration - 1) * numActions);
+				// Check to see if the Organism is dead, if so remove that org
+				// from the shuffleIds list.
+				if (deplete(org, depleteValue)) {
+					orgData.setTimeOfDeath(timePassed);
+					shuffleIds.remove(new Integer(org.getId()));
+					continue mainLoop;
+				}
+				Chromosome chrome = org.getChromosome();
+				// Get the first food.
+				int foodDestination = 0;
+				// bestEval is used to hold the value of the evaluation
+				// and the food source that the evaluation corresponds
+				// to.
+				// TODO: 1st gene is only evaled once.
+				Pair<Integer, Double> bestEval = new Pair<Integer, Double>(0,
+						evaluateGeneFoodInRangeAstarNoNorm(org,
+								chrome.getGene(0), foodList.get(0)));
+				for (int j = 0; j < chrome.size(); j++) { // loopGenes.
+					// First Gene in Chromosome.
+					Gene currentGene = chrome.getGene(0);
+					currentGene = chrome.getGene(j);
+					/*System.out.println("onGene: " + j);*/
+					for (int k = 0; k < foodList.size(); k++) { // loopFood.
+						foodDestination = j;
+						Food fd = foodList.get(k);
+						double aResult = evaluateGeneFoodInRangeAstarNoNorm(
+								org, currentGene, fd);
+						if (aResult > bestEval.getRight()) {
+							foodDestination = k;
+							/*System.out.println("replacedId: " + k);*/
+							bestEval.setLeft(j);
+							bestEval.setRight(aResult);
+						}
+					} // End loopFood.
+				} // End loopGenes.
+
+				// This mechanism decides whether or not to clear the
+				// closed list. The closed list should clear if the
+				// organism has decided to make its way towards another
+				// food source. If it decides to stay on the path to the
+				// same food source, then it needs to keep its list of
+				// previously visited nodes.
+				if (orgData.getLastFoodSourceIndex() != foodDestination) {
+					closedList.clear();
+					orgData.setLastFoodSourceIndex(foodDestination);
+				}
+				// TODO: Later on replace foodDestination with
+				// objectDestination.
+				if (doActionAstar(org, orgData, bestEval, orgData.getLastFoodSourceIndex())) {
+					shuffleIds.remove(new Integer(org.getId()));
+					orgData.setTimeOfDeath(timePassed);
+					continue mainLoop;
+				}
+			} // End NumAction Loop.
+		} // End mainLoop.
+	}
 
 	/**
 	 * @param org
@@ -774,8 +866,8 @@ public class GridPanel extends JPanel {
 				.searchWithList(org.getLocation(), fd.getLocation(),
 						org.getId());
 		Coordinate nextMove;
-		System.out.println();
-		System.out.println("going to: " + fd.getId());
+		/*System.out.println();
+		System.out.println("going to: " + fd.getId());*/
 		/*org.printId();
 		org.printLocation();
 		System.out.println("Next move: " + nextMove.getX() + ", "
