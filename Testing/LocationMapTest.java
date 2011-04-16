@@ -224,7 +224,7 @@ public class LocationMapTest {
 		org2.getLocation().setY(5);
 		map.setOrganism(org1);
 		map.setOrganism(org2);
-		Assert.assertTrue(LocationMap.hasObstacle(10, 9, 0));
+		Assert.assertTrue(map.hasObstacle(10, 9, 0));
 		map.clearLocations();
 	}
 	
@@ -239,7 +239,7 @@ public class LocationMapTest {
 		org2.getLocation().setY(5);
 		map.setOrganism(org1);
 		map.setOrganism(org2);
-		Assert.assertTrue(LocationMap.hasObstacle(11, 9, 0));
+		Assert.assertTrue(map.hasObstacle(11, 9, 0));
 		map.clearLocations();
 	}
 	
@@ -254,7 +254,7 @@ public class LocationMapTest {
 		org2.getLocation().setY(15);
 		map.setOrganism(org1);
 		map.setOrganism(org2);
-		Assert.assertTrue(LocationMap.hasObstacle(11, 11, 0));
+		Assert.assertTrue(map.hasObstacle(11, 11, 0));
 		map.clearLocations();
 	}
 
@@ -269,7 +269,7 @@ public class LocationMapTest {
 		org2.getLocation().setY(15);
 		map.setOrganism(org1);
 		map.setOrganism(org2);
-		Assert.assertTrue(LocationMap.hasObstacle(10, 11, 0));
+		Assert.assertTrue(map.hasObstacle(10, 11, 0));
 		map.clearLocations();
 	}
 	
@@ -299,7 +299,7 @@ public class LocationMapTest {
 		org2.getLocation().setY(10);
 		map.setOrganism(org1);
 		map.setOrganism(org2);
-		Assert.assertTrue(LocationMap.hasObstacle(9, 10, 0));
+		Assert.assertTrue(map.hasObstacle(9, 10, 0));
 		map.clearLocations();
 	}
 	
@@ -314,7 +314,7 @@ public class LocationMapTest {
 		org2.getLocation().setY(5);
 		map.setOrganism(org1);
 		map.setOrganism(org2);
-		Assert.assertTrue(LocationMap.hasObstacle(9, 9, 0));
+		Assert.assertTrue(map.hasObstacle(9, 9, 0));
 		map.clearLocations();
 	}
 	
@@ -329,7 +329,7 @@ public class LocationMapTest {
 		org2.getLocation().setY(4);
 		map.setOrganism(org1);
 		map.setOrganism(org2);
-		Assert.assertTrue(!LocationMap.hasObstacle(9, 9, 0));
+		Assert.assertTrue(!map.hasObstacle(9, 9, 0));
 		map.clearLocations();
 	}
 	
@@ -377,7 +377,7 @@ public class LocationMapTest {
 		map.setOrganism(org8);
 		
 		Coordinate end = new Coordinate(34, 9);
-		PriorityQueue<Coordinate> sq = LocationMap.adjacentCoordinates(10, 10, 1,
+		PriorityQueue<Coordinate> sq = map.adjacentCoordinates(10, 10, 1,
 				end, org1.getId());
 		System.out.println("queue size: " + sq.size());
 		Coordinate coord = sq.remove();
@@ -424,7 +424,7 @@ public class LocationMapTest {
 		map.setOrganism(org7);
 		
 		Coordinate end = new Coordinate(34, 9);
-		PriorityQueue<Coordinate> sq = LocationMap.adjacentCoordinates(10, 10, 1,
+		PriorityQueue<Coordinate> sq = map.adjacentCoordinates(10, 10, 1,
 				end, org1.getId());
 		Coordinate coord = sq.remove();
 		System.out.println("To move to: " + coord.getX() + ", " + coord.getY());
@@ -482,7 +482,7 @@ public class LocationMapTest {
 		map.setOrganism(org9);
 		
 		Coordinate end = new Coordinate(34, 9);
-		PriorityQueue<Coordinate> sq = LocationMap.adjacentCoordinates(10, 10, 1,
+		PriorityQueue<Coordinate> sq = map.adjacentCoordinates(10, 10, 1,
 				end, org1.getId());
 		System.out.println("queue size: " + sq.size());
 		Coordinate coord = sq.remove();
@@ -541,7 +541,7 @@ public class LocationMapTest {
 		map.setOrganism(org9);*/
 		
 		Coordinate end = new Coordinate(26, 13);
-		PriorityQueue<Coordinate> sq = LocationMap.adjacentCoordinates(10, 10, 1,
+		PriorityQueue<Coordinate> sq = map.adjacentCoordinates(10, 10, 1,
 				end, org1.getId());
 		System.out.println("queue size: " + sq.size());
 		Coordinate coord = sq.remove();
@@ -600,7 +600,7 @@ public class LocationMapTest {
 		map.setOrganism(org9);*/
 		
 		Coordinate end = new Coordinate(26, 13);
-		PriorityQueue<Coordinate> sq = LocationMap.adjacentCoordinates(10, 10, 1,
+		PriorityQueue<Coordinate> sq = map.adjacentCoordinates(10, 10, 1,
 				end, org1.getId());
 		System.out.println("queue size: " + sq.size());
 		Coordinate coord = sq.remove();

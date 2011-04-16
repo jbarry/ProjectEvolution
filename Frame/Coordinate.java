@@ -88,19 +88,42 @@ public class Coordinate implements Comparable<Coordinate>{
 	    }
 	    return false;
 	}
-	//------------------------------------------------------------------------------------
-	//--overloaded functions--
-	//------------------------------------------------------------------------------------
-	@Override 
-	public boolean equals(Object o){
-	    if (o instanceof Coordinate) {
-	        Coordinate c = (Coordinate) o;
-	        if (this.getX() == c.getX()
-	        		& this.getY() == c.getY()){
-	        	return true;
-	        }
-	    }
-	    return false;
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(priority);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + x;
+		result = prime * result + y;
+		return result;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Coordinate other = (Coordinate) obj;
+		if (Double.doubleToLongBits(priority) != Double
+				.doubleToLongBits(other.priority))
+			return false;
+		if (x != other.x)
+			return false;
+		if (y != other.y)
+			return false;
+		return true;
 	}
 	/**
 	 * @return a String representation of the Object.

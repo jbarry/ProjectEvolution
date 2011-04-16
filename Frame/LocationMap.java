@@ -388,7 +388,8 @@ public class LocationMap {
 		// which will be the best place to move to.
 		if (!adjacentList.isEmpty())
 			return adjacentList;
-		PriorityQueue<Coordinate> listWithSelfCoordinate = new PriorityQueue<Coordinate>();
+		PriorityQueue<Coordinate> listWithSelfCoordinate =
+			new PriorityQueue<Coordinate>();
 		listWithSelfCoordinate.add(start);
 		return listWithSelfCoordinate;
 	}
@@ -451,10 +452,8 @@ public class LocationMap {
 	 * @param end
 	 * @return
 	 */
-	public double distance(double orgX, double orgY, double foodX,
-			double foodY) {
-		return Math.sqrt(Math.pow((foodX - orgX), 2)
-				+ Math.pow((foodY - orgY), 2));
+	public static double distance(double x1, double y1, double x2, double y2) {
+		return Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
 	}
 
 	/**

@@ -655,10 +655,10 @@ public class GridPanel extends JPanel {
 	private void simulateStepAstarClosedListOrgDataLoopGenes(int numActions) {
 		Collections.shuffle(shuffleIds);
 		// Loop through Organisms.
-		mainLoop: for (int i = 0; i < shuffleIds.size(); i++) { // mainLoop.
+		mainLoop: for (int orgIndex = 0; orgIndex < shuffleIds.size(); orgIndex++) { // mainLoop.
 			// Get an Organism corresponding the the ids in the shuffleIds
 			// list.
-			Organism org = organisms.get(shuffleIds.get(i));
+			Organism org = organisms.get(shuffleIds.get(orgIndex));
 			// The orgData object holds all of the data for this specific
 			// organism.
 			OrgData orgData = orgDataList.get(org.getId());
@@ -670,7 +670,8 @@ public class GridPanel extends JPanel {
 			// lastFoodSourceIndex holds the index of the last food source
 			// that was visited.
 			orgData.setLastFoodSourceIndex(0);
-			for (int l = 0; l < numActions; l++) { // numActions loop.
+			for (int numActionIndex = 0; numActionIndex < numActions; numActionIndex++) { // numActions
+																						  // loop.
 				// Sample for fitness function.
 				orgData.incHlthTot();
 				// depleteValue is the value to decrease the Organism's
@@ -699,23 +700,25 @@ public class GridPanel extends JPanel {
 					/*System.out.println("onGene: " + j);*/
 					for (int foodIndex = 0; foodIndex < foodList.size(); foodIndex++) { // loopFood.
 						// If the geneIndex and the food index 0, then set the
-						// values of bestEval.
-						// bestEval is initialized in this fashion to prevent the
-						// occurrence of the case where, if bestEval is initialized
-						// outside of the geneLoop to have left and right values of
-						// 0, 0, then when comparing resulting evaluations of food
-						// sources to each other, all of the evaluations, except the
-						// evaluation of the first food source and the first gene,
-						// turn out to be less than 0, but greater than the
-						// evaluation of the first food source and the first gene. 
+						// values of bestEval. bestEval is initialized in this
+						// fashion to prevent the occurrence of the case where,
+						// if bestEval is initialized outside of the geneLoop to
+						// have left and right values of 0, 0, then when
+						// comparing resulting evaluations of food sources to
+						// each other, all of the evaluations, except the
+						// evaluation of the first food source and the first
+						// gene, turn out to be less than 0, but greater than
+						// the evaluation of the first food source and the first
+						// gene.
 						if (geneIndex == 0 && foodIndex == 0)
 							bestEval = new Pair<Integer, Double>(0,
-									evaluateGeneFoodInRangeAstarNoNorm(org,
-											currentGene, foodList.get(0)));
+									evaluateGeneFoodInRangeAstar(org,
+											currentGene.getEvaledList(),
+											foodList.get(0)));
 						else {
-							Food fd = foodList.get(foodIndex);
-							double aResult = evaluateGeneFoodInRangeAstarNoNorm(
-									org, currentGene, fd);
+							double aResult = evaluateGeneFoodInRangeAstar(org,
+									currentGene.getEvaledList(),
+									foodList.get(foodIndex));
 							if (aResult > bestEval.getRight()) {
 								foodDestination = foodIndex;
 								/*System.out.println("replacedId: " + k);*/
@@ -732,14 +735,14 @@ public class GridPanel extends JPanel {
 				// food source. If it decides to stay on the path to the
 				// same food source, then it needs to keep its list of
 				// previously visited nodes.
-				if (orgData.getLastFoodSourceIndex() != foodDestination) {
+				if (orgData.getLastFoodSourceDestination() != foodDestination) {
 					closedList.clear();
 					orgData.setLastFoodSourceIndex(foodDestination);
 				}
 				// TODO: Later on replace foodDestination with
 				// objectDestination.
 				if (doActionAstar(org, orgData, bestEval,
-						orgData.getLastFoodSourceIndex())) {
+						orgData.getLastFoodSourceDestination())) {
 					shuffleIds.remove(new Integer(org.getId()));
 					orgData.setTimeOfDeath(timePassed);
 					continue mainLoop;
@@ -838,14 +841,14 @@ public class GridPanel extends JPanel {
 				// food source. If it decides to stay on the path to the
 				// same food source, then it needs to keep its list of
 				// previously visited nodes.
-				if (orgData.getLastFoodSourceIndex() != foodDestination) {
+				if (orgData.getLastFoodSourceDestination() != foodDestination) {
 					closedList.clear();
 					orgData.setLastFoodSourceIndex(foodDestination);
 				}
 				// TODO: Later on replace foodDestination with
 				// objectDestination.
 				if (doActionAstar(org, orgData, bestEval,
-						orgData.getLastFoodSourceIndex())) {
+						orgData.getLastFoodSourceDestination())) {
 					shuffleIds.remove(new Integer(org.getId()));
 					orgData.setTimeOfDeath(timePassed);
 					continue mainLoop;
@@ -866,70 +869,44 @@ public class GridPanel extends JPanel {
 			Pair<Integer, Double> bestEval, int aFoodDestination) {
 		switch (bestEval.getLeft()) {
 			case 0:
-				moveAstarClosedList(org, anOrgData, aFoodDestination,
-						(ArrayList<Coordinate>) anOrgData.getClosedList());
+				if (moveAstarUsingContains(org, aFoodDestination,
+						(ArrayList<Coordinate>) anOrgData.getClosedList()))
+					anOrgData.countStep();
 				break;
 			case 1:
 				return eatFood(org, aFoodDestination);
-				/*return eatFoodInRange(org);*/
 		}
 		return false;
 	}
 
 	/**
-	 * Moves the organism using Astar.
-	 * 
 	 * @param org
-	 * @param bestEval
+	 * @param orgData
 	 * @param aFoodDestination
+	 * @return boolean indicating whether or not the organism moved.
 	 */
-	private void moveAstarClosedList(Organism org, OrgData od,
-			int aFoodDestination, ArrayList<Coordinate> aClosedList) {
+	private boolean moveAstarUsingContains(Organism org, int aFoodDestination,
+			List<Coordinate> closedList) {
+		
 		Food fd = foodList.get(aFoodDestination);
 		PriorityQueue<Coordinate> sq = LocationMap.getInstance()
 				.searchWithList(org.getLocation(), fd.getLocation(),
 						org.getId());
-		Coordinate nextMove;
-		/*System.out.println();*/
-		/*System.out.println("going to: " + fd.getId());*/
-		/*org.printId();
-		org.printLocation();
-		System.out.println("Next move: " + nextMove.getX() + ", "
-			    + nextMove.getY());
-		System.out.println("closedList size(): " + aClosedList.size());*/
-		boolean canMove;
-		getNextMove: do {
-			canMove = true;
-			nextMove = sq.remove();
-			int nextX = nextMove.getX();
-			int nextY = nextMove.getY();
-			/*System.out.print("nextMove: ");
-			nextMove.printLocation();*/
-			if (sq.isEmpty()) {
-				canMove = false;
-				aClosedList.clear();
-				break;
+		do {
+			Coordinate move = sq.poll();
+			// If queue is emtpy.
+			if (move == null)
+				return false;
+			else {
+				// Check to see if the move is on the closed list.
+				if (!closedList.contains(move)) {
+					closedList.add(move);
+					org.moveTo(move);
+					return true;
+				} // Otherwise, get the next move.
 			}
-			for (int i = 0; i < aClosedList.size(); i++) {
-				Coordinate closed = aClosedList.get(i);
-				int closedX = closed.getX();
-				int closedY = closed.getY();
-				/*System.out.println("On closed list: " + closedX + ", "
-						 + closedY);*/
-				if (nextX == closedX && nextY == closedY) {
-					canMove = false;
-					continue getNextMove;
-				}
-			}
-			if (canMove)
-				break;
 		} while (!sq.isEmpty());
-		if (canMove) {
-			org.moveTo(nextMove);
-			od.countStep();
-			aClosedList.add(nextMove);
-		}
-		repaint();
+		return false;
 	}
 
 	private double evaluateGene(Organism org, Gene currentGene) {
@@ -955,9 +932,8 @@ public class GridPanel extends JPanel {
 		return result.evaluate(environment);
 	}
 
-	private double evaluateGeneFoodInRangeAstar(Organism org, Gene currentGene,
-			int fdId) {
-		Food aFood = foodList.get(fdId);
+	private double evaluateGeneFoodInRangeAstar(Organism org, Expr result,
+			Food aFood) {
 		LocationMap map = LocationMap.getInstance();
 		HashMap<String, Double> environment = new HashMap<String, Double>();
 		double orgX = norm.normalize(org.getLocation().getX());
@@ -972,7 +948,6 @@ public class GridPanel extends JPanel {
 		double orgNearFood = norm.normalize(map.numSurroundingObjects(
 				aFood.getLocation(), aFood.getWidth(), aFood.getHeight(), 10));
 		double foodRemaining = norm.normalize(aFood.getHealth());
-		Expr result = currentGene.getEvaledList();
 		environment.put("a", distanceToFood); // Represents distance to
 		// food.
 		environment.put("c", orgNearFood);

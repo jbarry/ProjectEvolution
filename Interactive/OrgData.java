@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.TreeSet;
 
 import Frame.Coordinate;
-import Frame.LocationMap;
 
 public class OrgData {
 
@@ -29,7 +28,7 @@ public class OrgData {
 	private ArrayList<ArrayList<String>> actionList;
 	private ArrayList<Coordinate> startingLocation;
 	private ArrayList<Chromosome> chromosomeHistory;
-	private int lastFoodSourceIndex;
+	private int lastFoodSourceDestination;
 
 	public OrgData(double aMaxHealth, int anId) {
 		maxHealth = aMaxHealth;
@@ -46,7 +45,7 @@ public class OrgData {
 		steps = 1;
 		timeOfDeath = 1;
 		closedList = new ArrayList<Coordinate>();
-		lastFoodSourceIndex = 0;
+		lastFoodSourceDestination = 0;
 		averageHealth = 1;
 		previousPosition = new Coordinate(0, 0);
 		healthyFood = new TreeSet<Integer>();
@@ -113,7 +112,7 @@ public class OrgData {
 		steps = 1;
 		timeOfDeath = 1;
 		closedList = new ArrayList<Coordinate>();
-		lastFoodSourceIndex = 0;
+		lastFoodSourceDestination = 0;
 		averageHealth = 1;
 		previousPosition = new Coordinate(0, 0);
 		healthyFood = new TreeSet<Integer>();
@@ -291,13 +290,13 @@ public class OrgData {
 		return actionList;
 	}
 
-	public int getLastFoodSourceIndex() {
+	public int getLastFoodSourceDestination() {
 		// TODO Auto-generated method stub
-		return lastFoodSourceIndex;
+		return lastFoodSourceDestination;
 	}
 	
 	public void setLastFoodSourceIndex(int aLastFoodSourceIndex) {
-		lastFoodSourceIndex = aLastFoodSourceIndex;
+		lastFoodSourceDestination = aLastFoodSourceIndex;
 	}
 	
 	/*public void goBack(int generation) {
