@@ -174,7 +174,8 @@ public class GEP {
 				/ orgData.getTimeOfDeath());
 		System.out.println("avghealth: " + orgData.getAverageHealth());
 		double fitness = (numSteps / orgData.getAverageHealth())
-				+ orgData.getTimeOfDeath();
+				+ (orgData.getTimeOfDeath() * orgData.getTimeOfDeath())
+				+ (orgData.getAverageHealth() * orgData.getAverageHealth());
 		System.out.println("fit: " + fitness);
 		System.out.println();
 		return fitness;
@@ -374,6 +375,7 @@ public class GEP {
 			System.out.println("Id: " + organism.getId() + " fitness: "
 					+ organism.getFitness());
 		}*/
+		/*return makeChromList(orderedOrgList.clone());*/
 		return deepCopyEliteList(orderedOrgList);
 	}
 	

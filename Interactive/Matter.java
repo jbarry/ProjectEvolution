@@ -10,7 +10,7 @@ import java.util.Set;
 import Frame.Coordinate;
 import Frame.LocationMap;
 
-public abstract class Matter implements Comparable<Matter>{
+public abstract class Matter implements Comparable<Matter>, Cloneable{
 
 	protected Coordinate location;
 	protected double hlth;

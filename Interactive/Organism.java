@@ -15,7 +15,7 @@ import javax.swing.ImageIcon;
 import Frame.Coordinate;
 import Frame.LocationMap;
 
-public class Organism extends Matter {
+public class Organism extends Matter implements Cloneable{
 
 	// ------------------------------------------------------------------------------------
 	// --globals--
@@ -496,6 +496,16 @@ public class Organism extends Matter {
 	@Override
 	public int getId() {
 		return id;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		Organism org = (Organism) super.clone();
+		org.chromosome = (Chromosome) org.chromosome.clone();
+		return super.clone();
 	}
 
 	/*public void paint(Graphics g) {

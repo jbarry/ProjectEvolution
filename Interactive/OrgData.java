@@ -111,15 +111,15 @@ public class OrgData {
 		samples = 1;
 		steps = 1;
 		timeOfDeath = 1;
-		closedList = new ArrayList<Coordinate>();
+		closedList.clear();
 		lastFoodSourceDestination = 0;
 		averageHealth = 1;
 		previousPosition = new Coordinate(0, 0);
-		healthyFood = new TreeSet<Integer>();
-		poisonFood = new TreeSet<Integer>();
-		actionList = new ArrayList<ArrayList<String>>();
-		startingLocation = new ArrayList<Coordinate>();
-		chromosomeHistory = new ArrayList<Chromosome>();
+		healthyFood.clear();
+		poisonFood.clear();
+		actionList.clear();
+		startingLocation.clear();
+		chromosomeHistory.clear();
 	}
 
 	public void incHlthTot() {

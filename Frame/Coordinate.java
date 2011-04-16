@@ -116,9 +116,6 @@ public class Coordinate implements Comparable<Coordinate>{
 		if (getClass() != obj.getClass())
 			return false;
 		Coordinate other = (Coordinate) obj;
-		if (Double.doubleToLongBits(priority) != Double
-				.doubleToLongBits(other.priority))
-			return false;
 		if (x != other.x)
 			return false;
 		if (y != other.y)

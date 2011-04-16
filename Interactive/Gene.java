@@ -9,7 +9,7 @@ import java.util.Random;
 import Evaluation.Eval;
 import Evaluation.Expr;
 
-public class Gene<A extends Crossable<?>> extends Genetic {
+public class Gene<A extends Crossable<?>> extends Genetic implements Cloneable{
 
 	private List<Character> symList;
 	private Random ran;
@@ -206,5 +206,14 @@ public class Gene<A extends Crossable<?>> extends Genetic {
 		int size2 = ran.nextInt(symbols.size());
 		char mut = symbols.get(size2);
 		setSym(ran.nextInt(size()), mut);
+	}
+	
+	public Object clone() throws CloneNotSupportedException {
+		Gene gene = (Gene) super.clone();
+		/*gene.symList
+		gene.symbols
+		gene.terminals
+		gene.ran*/
+		return super.clone();
 	}
 }

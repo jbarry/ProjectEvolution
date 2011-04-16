@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class Chromosome extends Genetic {
+public class Chromosome extends Genetic implements Cloneable{
 
 	private List<Gene> chromosome;
 	private Random ran;
@@ -134,5 +134,14 @@ public class Chromosome extends Genetic {
 	// For testing GEP.
 	public int getId() {
 		return id;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		
+		return super.clone();
 	}
 }

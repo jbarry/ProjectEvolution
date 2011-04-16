@@ -95,14 +95,14 @@ public class GridPanel extends JPanel {
 				t = new javax.swing.Timer(lengthTimeStep, new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if (timePassed < lengthGeneration) {
-							timePassed++;
 							gui.updatePercentage((double) timePassed
 									/ lengthGeneration);
 							/*simulateStepAstarWithoutEatWithClosedList(7);*/
 							/*simulateStepAstarWithoutEatWithClosedListOrgData(5);*/
-							simulateStepAstarClosedListOrgDataLoopGenes(1);
+							simulateStepAstarClosedListOrgDataLoopGenes(1, 40);
 							/*simulateStepAstarClosedListOrgDataTest(1);*/
 							repaint();
+							timePassed++;
 						} else if (trialNum < trialsPerGen)
 							newTrial();
 						else {
@@ -262,222 +262,16 @@ public class GridPanel extends JPanel {
 		}
 	}
 
-	/**
-	 * Preprocess generations Essentially run the simulation without updating
-	 * the graphics.
-	 */
-
-	public void preProcess(int generations) {
-		for (numPreProcessedGenerations = 0; numPreProcessedGenerations < generations; numPreProcessedGenerations++) {
-
+	public void preProcessAstar(int generations) {
+		numPreProcessedGenerations = 0;
+		while (numPreProcessedGenerations < generations) {
 			System.out.println("Processing Generation " + generationNum);
 			while (timePassed < lengthGeneration) {
-				/* begin game logic here: */
-				for (int i = shuffleIds.size() - 1; i >= 0; i--)
-					if (organisms.get(i).getHealth() <= 0)
-						shuffleIds.remove(i);
-
-				Collections.shuffle(shuffleIds);
-				int orgIndex = 0;
-				for (Integer orgNum : shuffleIds) {
-					Organism org = organisms.get(orgNum);
-					org.deplete(org.getMaxHealth() / lengthGeneration);
-					org.clearAction();
-					// Take sample of organism health for fitness.
-					/*org.incHlthTot();*/
-					if (org.getHealth() > 0) {
-						ArrayList<Food> sight = new ArrayList<Food>();
-						ArrayList<Integer> sightIDs = new ArrayList<Integer>();
-						sightIDs = org.getSurroundingObjects('h', 20);
-						for (Integer i : sightIDs) {
-							sight.add(healthFd.get(i));
-						}
-						sightIDs.clear();
-						sightIDs = org.getSurroundingObjects('p', 20);
-						for (Integer i : sightIDs)
-							sight.add(poisFood.get(i));
-						/*org.addScan(sight.size())*/;
-						double orgX = norm.normalize(org.getLocation().getX());
-						double orgY = norm.normalize(org.getLocation().getY());
-						double health = norm.normalize(org.getHealth());
-						double numSurroundingOrgs = norm.normalize(org
-								.getSurroundingObjects('o', 5).size() - 1);
-						Chromosome chrom = org.getChromosome();
-						Pair<Integer, Double> bestEval1 = new Pair<Integer, Double>(
-								0, 0.0);
-						Pair<Integer, Double> bestEval2 = new Pair<Integer, Double>(
-								1, 0.0);
-						for (int i = 0; i < chrom.size(); i++) {
-							Gene workingGene = chrom.getGene(i);
-							// if there is something in org's
-							// field of vision.
-							if (sight.size() > 0) {
-								for (int j = 0; j < sight.size(); j++) {
-									HashMap<String, Double> environment = new HashMap<String, Double>();
-									Food f = sight.get(j);
-									double foodX;
-									double foodY;
-									double orgNearFood;
-									double foodRemaining;
-									double isPoison = norm.normalize(1.0);
-									if (f != null) {
-										foodX = norm.normalize(f.getLocation()
-												.getX());
-										foodY = norm.normalize(f.getLocation()
-												.getY());
-										LocationMap map = LocationMap
-												.getInstance();
-										orgNearFood = norm.normalize(map
-												.numSurroundingObjects(
-														f.getLocation(),
-														f.getWidth(),
-														f.getHeight(), 10));
-										foodRemaining = norm.normalize(f
-												.getHealth());
-
-										if (f instanceof PoisonousFood)
-											isPoison = -isPoison;
-									} else {
-										foodX = norm
-												.normalize(ran.nextDouble() * 100);
-										foodY = norm
-												.normalize(ran.nextDouble() * 100);
-										orgNearFood = norm.normalize(0.0);
-										foodRemaining = norm.normalize(0.0);
-									}
-									Expr result = workingGene.getEvaledList();
-									environment.put("a", foodX - orgX);
-									environment.put("b", orgY - foodY);
-									environment.put("c", orgNearFood);
-									environment.put("d", health);
-									environment.put("e", foodRemaining);
-									environment.put("f", isPoison);
-									environment.put("g", numSurroundingOrgs);
-									double geneEval = result
-											.evaluate(environment);
-									if (geneEval > bestEval1.right()
-											&& bestEval1.right() < bestEval2
-													.right()) {
-										bestEval1.setLeft(i);
-										bestEval1.setRight(geneEval);
-									} else if (geneEval > bestEval2.right()
-											&& i != bestEval1.left()) {
-										bestEval2.setLeft(i);
-										bestEval2.setRight(geneEval);
-									}
-								}
-								sight.clear();
-							}
-							// TODO: if there isn't anything in
-							// org's field of
-							// vision.
-							// These numbers need to be worked
-							// out.
-							else {
-								Expr result = workingGene.getEvaledList();
-								HashMap<String, Double> environment = new HashMap<String, Double>();
-								environment.put("a",
-										norm.normalize(ran.nextDouble() * 100)); // not
-								// sure
-								// what
-								// to
-								// pass
-								environment.put("b",
-										norm.normalize(ran.nextDouble() * 100)); // not
-								// sure
-								// what
-								// to
-								// pass
-								environment.put("c", norm.normalize(0.0));
-								environment.put("d", health);
-								environment.put("e", norm.normalize(0.0));
-								environment.put("f", norm.normalize(1.0));
-								environment.put("g", numSurroundingOrgs);
-								double geneEval = result.evaluate(environment);
-								if (geneEval > bestEval1.right()
-										&& bestEval1.right() < bestEval2
-												.right()) {
-									bestEval1.setLeft(i);
-									bestEval1.setRight(geneEval);
-								} else if (geneEval > bestEval2.right()
-										&& i != bestEval1.left()) {
-									bestEval2.setLeft(i);
-									bestEval2.setRight(geneEval);
-								}
-							}
-						}
-						/*doAction(org, bestEval1);
-						doAction(org, bestEval2);*/
-					}
-					orgIndex++;
-				}
+				simulateStepAstarClosedListOrgDataLoopGenes(1, 40);
 				timePassed++;
 			}
-			if (trialNum < trialsPerGen) {
-				shuffleIds.clear();
-				for (Organism o : organisms) {
-					o.newLocation();
-					o.setHealth(o.getMaxHealth());
-					/*o.clear();*/
-					shuffleIds.add(o.getId());
-				}
-				trialNum++;
-				healthFd.clear();
-				poisFood.clear();
-				for (int i = 0; i < OptionsPanel.numOrganisms / 2; i++) {
-					HealthyFood h = new HealthyFood(100.0, i, 2);
-					PoisonousFood f = new PoisonousFood(100.0, i, 2);
-					healthFd.add(h);
-					poisFood.add(f);
-				}
-				timePassed = 0;
-				GUI.genPanel.newTrial();
-			} else {
-				timePassed = 0;
-				double sum = 0;
-				/*g.setOrgList(organisms)*/;
-				organisms = g.newGeneration(organisms);
-				healthFd.clear();
-				poisFood.clear();
-				locationMap.clearLocations();
-				shuffleIds.clear();
-				for (Organism o : organisms) {
-					/*sum += g.fitnessIan(o);*/
-					o.newLocation();
-					/*o.addChromosome();*/
-					o.setHealth(o.getMaxHealth());
-					/*o.clear();*/
-					shuffleIds.add(o.getId());
-				}
-				lastAvg = sum / OptionsPanel.numOrganisms;
-				System.out.println(lastAvg);
-				for (int i = 0; i < OptionsPanel.numOrganisms / 2; i++) {
-					HealthyFood h = new HealthyFood(100.0, i, 2);
-					PoisonousFood f = new PoisonousFood(100.0, i, 2);
-					healthFd.add(h);
-					poisFood.add(f);
-				}
-				trialNum = 1;
-				generationNum++;
-				GUI.genPanel.addGeneration();
-				GUI.genPanel.newGeneration();
-			}
-		}
-	}
-
-	public void preProcessAstar(int generations) {
-		for (numPreProcessedGenerations = 0; numPreProcessedGenerations < generations; numPreProcessedGenerations++) {
-			System.out.println("Processing Generation " + generationNum);
-			if (timePassed < lengthGeneration) {
-				timePassed++;
-				gui.updatePercentage((double) timePassed / lengthGeneration);
-				simulateStepAstarClosedListOrgDataLoopGenesPreProcess(1);
-			} else if (trialNum < trialsPerGen)
-				newTrial();
-			else {
-				/*newGeneration();*/
-				newGenerationAstar();
-			}
+			newGenerationAstar();
+			numPreProcessedGenerations++;
 		}
 	}
 
@@ -641,7 +435,7 @@ public class GridPanel extends JPanel {
 			locationMap.placeFood(foodList.get(i));
 		}
 		g = new GEP(0.75, 0.01, 0.01, 0.75, 0.75, 2, false, true);
-		/*preProcessAstar(4);*/
+		preProcessAstar(6);
 	}
 
 	/**
@@ -652,7 +446,7 @@ public class GridPanel extends JPanel {
 	 *            The number of actions that an organism will do at each time
 	 *            step.
 	 */
-	private void simulateStepAstarClosedListOrgDataLoopGenes(int numActions) {
+	private void simulateStepAstarClosedListOrgDataLoopGenes(int numActions, double healthDepletion) {
 		Collections.shuffle(shuffleIds);
 		// Loop through Organisms.
 		mainLoop: for (int orgIndex = 0; orgIndex < shuffleIds.size(); orgIndex++) { // mainLoop.
@@ -678,11 +472,12 @@ public class GridPanel extends JPanel {
 				// health
 				// by at each time step.
 				double depleteValue = orgData.getMaxHealth()
-						/ ((lengthGeneration - 1) * numActions);
+						/ ((lengthGeneration - healthDepletion) * numActions);
 				// Check to see if the Organism is dead, if so remove that org
 				// from the shuffleIds list.
 				if (deplete(org, depleteValue)) {
 					orgData.setTimeOfDeath(timePassed);
+					System.out.println("remove on deplete.");
 					shuffleIds.remove(new Integer(org.getId()));
 					continue mainLoop;
 				}
@@ -752,112 +547,6 @@ public class GridPanel extends JPanel {
 	}
 
 	/**
-	 * Uses: Astar, there is no eating, and the closed list is in the OrgData
-	 * object.
-	 * 
-	 * @param numActions
-	 *            The number of actions that an organism will do at each time
-	 *            step.
-	 */
-	private void simulateStepAstarClosedListOrgDataLoopGenesPreProcess(
-			int numActions) {
-
-		Collections.shuffle(shuffleIds);
-		// Loop through Organisms.
-		mainLoop: for (int i = 0; i < shuffleIds.size(); i++) { // mainLoop.
-			// Get an Organism corresponding the the ids in the shuffleIds
-			// list.
-			Organism org = organisms.get(shuffleIds.get(i));
-			// The orgData object holds all of the data for this specific
-			// organism.
-			OrgData orgData = orgDataList.get(org.getId());
-			orgData.incrementSumHealth(org.getHealth());
-			// Closed list.
-			ArrayList<Coordinate> closedList = (ArrayList<Coordinate>) orgData
-					.getClosedList();
-			closedList.add(org.getLocation());
-			// lastFoodSourceIndex holds the index of the last food source
-			// that was visited.
-			orgData.setLastFoodSourceIndex(0);
-			for (int l = 0; l < numActions; l++) { // numActions loop.
-				// Sample for fitness function.
-				orgData.incHlthTot();
-				// depleteValue is the value to decrease the Organism's
-				// health
-				// by at each time step.
-				double depleteValue = orgData.getMaxHealth()
-						/ ((lengthGeneration - 1) * numActions);
-				// Check to see if the Organism is dead, if so remove that org
-				// from the shuffleIds list.
-				if (deplete(org, depleteValue)) {
-					orgData.setTimeOfDeath(timePassed);
-					shuffleIds.remove(new Integer(org.getId()));
-					continue mainLoop;
-				}
-				Chromosome chrome = org.getChromosome();
-				// Get the first food.
-				int foodDestination = 0;
-				// bestEval is used to hold the value of the evaluation
-				// and the food source that the evaluation corresponds
-				// to.
-				// TODO: 1st gene is only evaled once.
-				Pair<Integer, Double> bestEval = null;
-				for (int geneIndex = 0; geneIndex < chrome.size(); geneIndex++) { // loopGenes.
-					// First Gene in Chromosome.
-					Gene currentGene = chrome.getGene(geneIndex);
-					/*System.out.println("onGene: " + j);*/
-					for (int foodIndex = 0; foodIndex < foodList.size(); foodIndex++) { // loopFood.
-						// If the geneIndex and the food index 0, then set the
-						// values of bestEval.
-						// bestEval is initialized in this fashion to prevent the
-						// occurrence of the case where, if bestEval is initialized
-						// outside of the geneLoop to have left and right values of
-						// 0, 0, then when comparing resulting evaluations of food
-						// sources to each other, all of the evaluations, except the
-						// evaluation of the first food source and the first gene,
-						// turn out to be less than 0, but greater than the
-						// evaluation of the first food source and the first gene. 
-						if (geneIndex == 0 && foodIndex == 0)
-							bestEval = new Pair<Integer, Double>(0,
-									evaluateGeneFoodInRangeAstarNoNorm(org,
-											currentGene, foodList.get(0)));
-						else {
-							Food fd = foodList.get(foodIndex);
-							double aResult = evaluateGeneFoodInRangeAstarNoNorm(
-									org, currentGene, fd);
-							if (aResult > bestEval.getRight()) {
-								foodDestination = foodIndex;
-								/*System.out.println("replacedId: " + k);*/
-								bestEval.setLeft(geneIndex);
-								bestEval.setRight(aResult);
-							}
-						}
-					} // End loopFood.
-				} // End loopGenes.
-
-				// This mechanism decides whether or not to clear the
-				// closed list. The closed list should clear if the
-				// organism has decided to make its way towards another
-				// food source. If it decides to stay on the path to the
-				// same food source, then it needs to keep its list of
-				// previously visited nodes.
-				if (orgData.getLastFoodSourceDestination() != foodDestination) {
-					closedList.clear();
-					orgData.setLastFoodSourceIndex(foodDestination);
-				}
-				// TODO: Later on replace foodDestination with
-				// objectDestination.
-				if (doActionAstar(org, orgData, bestEval,
-						orgData.getLastFoodSourceDestination())) {
-					shuffleIds.remove(new Integer(org.getId()));
-					orgData.setTimeOfDeath(timePassed);
-					continue mainLoop;
-				}
-			} // End NumAction Loop.
-		} // End mainLoop.
-	}
-
-	/**
 	 * @param org
 	 * @param anOrgData
 	 * @param bestEval
@@ -892,6 +581,8 @@ public class GridPanel extends JPanel {
 		PriorityQueue<Coordinate> sq = LocationMap.getInstance()
 				.searchWithList(org.getLocation(), fd.getLocation(),
 						org.getId());
+		if (sq.peek().equals(org.getLocation()))
+			return false;
 		do {
 			Coordinate move = sq.poll();
 			// If queue is emtpy.
@@ -903,12 +594,12 @@ public class GridPanel extends JPanel {
 					closedList.add(move);
 					org.moveTo(move);
 					return true;
-				} // Otherwise, get the next move.
+				} // Otherwise, get the next move.Hey 
 			}
 		} while (!sq.isEmpty());
 		return false;
 	}
-
+	
 	private double evaluateGene(Organism org, Gene currentGene) {
 
 		HashMap<String, Double> environment = new HashMap<String, Double>();

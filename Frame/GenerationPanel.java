@@ -322,7 +322,7 @@ public class GenerationPanel extends JPanel{
 					simPreprocess(e,simulation);
 				} else {
 					// the number of generations.
-					simulation.preProcess(x);
+					simulation.preProcessAstar(x);
 					JOptionPane.showMessageDialog(simulation,
 							"Pre-Processing complete, resume the simulation to continue.", "Success!",
 							JOptionPane.INFORMATION_MESSAGE);
