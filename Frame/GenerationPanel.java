@@ -306,9 +306,7 @@ public class GenerationPanel extends JPanel{
 		int result = 1;
 		try {
 			result = ((Integer) op.getValue()).intValue();
-		} catch (NullPointerException q) {
-
-		}
+		} catch (NullPointerException q) {}
 
 		if (result == JOptionPane.OK_OPTION) {
 			userCancel = false;

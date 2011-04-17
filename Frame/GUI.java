@@ -14,12 +14,10 @@
 
 package Frame;
 
-import java.applet.Applet;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.FileDialog;
 import java.awt.GridLayout;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -31,25 +29,17 @@ import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
 import java.io.Writer;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.media.Manager;
-import javax.media.Player;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -58,19 +48,19 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
-import javax.swing.plaf.ColorUIResource;
-import javax.swing.plaf.basic.BasicScrollBarUI;
-import javax.swing.plaf.metal.DefaultMetalTheme;
-import javax.swing.plaf.metal.MetalLookAndFeel;
-import javax.swing.plaf.metal.MetalTheme;
-import Interactive.*;
+
+import Interactive.Audio;
+import Interactive.Chromosome;
+import Interactive.Gene;
+import Interactive.Map;
+import Interactive.OrgData;
+import Interactive.Organism;
 
 /**
  * This class will host and initialize all JPanels and JMenuItems. It will NOT
@@ -286,7 +276,7 @@ public class GUI extends Container {
 
 		jframe.setJMenuBar(menuBar);
 
-		/** New Simulation Option */
+		// new simulation option
 		newSimulation = new JMenuItem("New Simulation", KeyEvent.VK_N);
 		KeyStroke ctrlNKeyStroke = KeyStroke.getKeyStroke("control N");
 		newSimulation.setAccelerator(ctrlNKeyStroke);
@@ -301,6 +291,9 @@ public class GUI extends Container {
 					saveConfig.setEnabled(true);
 					loadGenes.setEnabled(true);
 					loadConfig.setEnabled(true);
+					optionsPanel.enableToggleGraphics();
+					/* simulation.initialize(); */
+					/* simulation.initializeAstar(); */
 					simulation.initialize();
 					simulation.start();
 				}
@@ -308,6 +301,7 @@ public class GUI extends Container {
 		});
 		fileMenu.add(newSimulation);
 
+		fileMenu.addSeparator();
 		/** Select Custom Map */
 		selectMapMenu = new JMenu("Select Map");
 		selectMapMenu.setMnemonic(KeyEvent.VK_M);
@@ -321,7 +315,7 @@ public class GUI extends Container {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				enableMapItems();
-				map.setCurrMap(defaultMap.getText());		
+				map.setCurrMap(defaultMap.getText());
 				audio.stopAudio();
 				defaultMap.setEnabled(false);
 			}
@@ -337,7 +331,7 @@ public class GUI extends Container {
 				enableMapItems();
 				map.setCurrMap(grassMap.getText());
 				audio.stopAudio();
-				audio = new Audio("grass.wav");			
+				audio = new Audio("grass.wav");
 				audio.playAudio();
 				grassMap.setEnabled(false);
 
@@ -354,7 +348,7 @@ public class GUI extends Container {
 				enableMapItems();
 				map.setCurrMap(sandMap.getText());
 				audio.stopAudio();
-				audio = new Audio("sand.wav");			
+				audio = new Audio("sand.wav");
 				audio.playAudio();
 				sandMap.setEnabled(false);
 
@@ -371,7 +365,7 @@ public class GUI extends Container {
 				enableMapItems();
 				map.setCurrMap(waterMap.getText());
 				audio.stopAudio();
-				audio = new Audio("water.wav");			
+				audio = new Audio("water.wav");
 				audio.playAudio();
 				waterMap.setEnabled(false);
 
@@ -388,7 +382,7 @@ public class GUI extends Container {
 				enableMapItems();
 				map.setCurrMap(moonMap.getText());
 				audio.stopAudio();
-				audio = new Audio("moon.wav");			
+				audio = new Audio("moon.wav");
 				audio.playAudio();
 				moonMap.setEnabled(false);
 			}
@@ -404,9 +398,9 @@ public class GUI extends Container {
 				enableMapItems();
 				map.setCurrMap(middleEarthMap.getText());
 				audio.stopAudio();
-				audio = new Audio("middleEarth.wav");			
+				audio = new Audio("middleEarth.wav");
 				audio.playAudio();
-				middleEarthMap.setEnabled(false);		
+				middleEarthMap.setEnabled(false);
 			}
 		});
 		selectMapMenu.add(middleEarthMap);
@@ -420,13 +414,13 @@ public class GUI extends Container {
 				enableMapItems();
 				map.setCurrMap(sawMap.getText());
 				audio.stopAudio();
-				audio = new Audio("saw.wav");			
+				audio = new Audio("saw.wav");
 				audio.playAudio();
 				sawMap.setEnabled(false);
 			}
 		});
 		selectMapMenu.add(sawMap);
-		
+
 		// Dexter Map
 		dexterMap = new JMenuItem("Dexter");
 		dexterMap.setText("Dexter");
@@ -437,16 +431,16 @@ public class GUI extends Container {
 				enableMapItems();
 				map.setCurrMap(dexterMap.getText());
 				audio.stopAudio();
-				audio = new Audio("dexter.wav");			
+				audio = new Audio("dexter.wav");
 				audio.playAudio();
 				dexterMap.setEnabled(false);
 			}
 		});
 		selectMapMenu.add(dexterMap);
-		
+
 		fileMenu.addSeparator();
 
-		/** Save Genes Option */
+		// save genes to text file
 		saveGenes = new JMenuItem("Save Genes", KeyEvent.VK_S);
 		KeyStroke ctrlSKeyStroke = KeyStroke.getKeyStroke("control S");
 		saveGenes.setAccelerator(ctrlSKeyStroke);
@@ -461,7 +455,7 @@ public class GUI extends Container {
 		fileMenu.add(saveGenes);
 		saveGenes.setEnabled(false);
 
-		/** Save Configuration Option */
+		// save configuration from text file
 		saveConfig = new JMenuItem("Save Configuration");
 		saveConfig.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -477,7 +471,7 @@ public class GUI extends Container {
 		// separator between groups of JMenuItems
 		fileMenu.addSeparator();
 
-		/** Load Genes Option */
+		// load genes from text file
 		loadGenes = new JMenuItem("Load Genes", KeyEvent.VK_L);
 		KeyStroke ctrlLKeyStroke = KeyStroke.getKeyStroke("control L");
 		loadGenes.setAccelerator(ctrlLKeyStroke);
@@ -492,7 +486,7 @@ public class GUI extends Container {
 		fileMenu.add(loadGenes);
 		loadGenes.setEnabled(true);
 
-		/** Load Configuration Option */
+		// load configuration from text file
 		loadConfig = new JMenuItem("Load Configuration");
 		loadConfig.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -509,7 +503,7 @@ public class GUI extends Container {
 		// separator between groups of JMenuItems
 		fileMenu.addSeparator();
 
-		/** Pause/Resume Option */
+		// pause/resume option
 		pause = new JMenuItem("Pause/Resume", KeyEvent.VK_P);
 		pause.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -519,7 +513,7 @@ public class GUI extends Container {
 		controlMenu.add(pause);
 		pause.setEnabled(false);
 
-		/** Exit Option */
+		// exit option
 		exitApplication = new JMenuItem("Exit", KeyEvent.VK_X);
 		exitApplication.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -529,7 +523,7 @@ public class GUI extends Container {
 		});
 		fileMenu.add(exitApplication);
 
-		/** About Option */
+		// about option
 		about = new JMenuItem("About...", KeyEvent.VK_A);
 		about.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -547,7 +541,7 @@ public class GUI extends Container {
 		});
 		helpMenu.add(about);
 
-		/** Set Additional Frame Attributes */
+		/** set additional frame attributes */
 		jframe.setLocationRelativeTo(null);
 		jframe.setResizable(false);
 		jframe.addWindowListener(new WindowAdapter() {
@@ -556,7 +550,7 @@ public class GUI extends Container {
 			}
 		});
 
-		/** Apply LnF (Look and Feel) */
+		// apply LnF (Look and Feel)
 		SwingUtilities.updateComponentTreeUI(jframe);
 	}
 
@@ -713,16 +707,18 @@ public class GUI extends Container {
 
 		LinkedList<Organism> tempOrgs;
 		tempOrgs = simulation.getOrganisms();
-		int geneLength = tempOrgs.get(0).getChromosome().getGene(0).size();
-		int numGenes = tempOrgs.get(0).getChromosome().size();
+		Chromosome chrom = tempOrgs.get(0).getChromosome();
+		int geneLength = chrom.getGene(0).size();
+		int numGenes = chrom.size();
 
 		String fileContents = "VALID_GEP_GENE_FILE" + " " + geneLength + " "
 				+ numGenes + " ";
 
 		for (int i = 0; i < tempOrgs.size(); i++) {
-			for (int k = 0; k < tempOrgs.get(i).getChromosome().size(); k++) {
-				ArrayList<String> tempArray = tempOrgs.get(i).getChromosome()
-						.getGene(k).makeStringArray();
+			for (int k = 0; k < chrom.size(); k++) {
+				Gene gene = chrom.getGene(k);
+				ArrayList<String> tempArray = gene.makeStringArray(gene
+						.getSymList());
 				for (int j = 0; j < tempArray.size(); j++) {
 					fileContents += tempArray.get(j);
 				}
@@ -770,8 +766,9 @@ public class GUI extends Container {
 
 		for (int i = 0; i < tempOrgs.size(); i++) {
 			for (int k = 0; k < tempOrgs.get(i).getChromosome().size(); k++) {
-				ArrayList<String> tempArray = tempOrgs.get(i).getChromosome()
-						.getGene(k).makeStringArray();
+				Gene gene = tempOrgs.get(i).getChromosome().getGene(k);
+				ArrayList<String> tempArray = gene.makeStringArray(gene
+						.getSymList());
 				for (int j = 0; j < tempArray.size(); j++) {
 					fileContents += tempArray.get(j);
 				}
@@ -888,13 +885,14 @@ public class GUI extends Container {
 					 * Uncomment the following code to print the chromosomes of
 					 * each organism
 					 */
-					// for(int h = 0 ; h < population.size(); h++){
-					// System.out.println("Organism " + h);
-					// for (int o = 0 ; o <
-					// population.get(h).getChromosome().size() ; o++){
-					// System.out.println(population.get(h).getChromosome().getGene(o).getList());
-					// }
-					// }
+					/*
+					 * for(int h = 0 ; h < population.size(); h++){
+					 * System.out.println("Organism " + h); for (int o = 0 ; o <
+					 * population.get(h).getChromosome().size() ; o++){
+					 * System.out
+					 * .println(population.get(h).getChromosome().getGene
+					 * (o).getList()); } }
+					 */
 					simulation.initializeFromGeneFile(population);
 				} else {
 					JOptionPane.showMessageDialog(jframe,
@@ -907,9 +905,8 @@ public class GUI extends Container {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		if (simulation.isPaused() && !emptySimulation) {
+		if (simulation.isPaused() && !emptySimulation)
 			optionsPanel.eventPause(simulation);
-		}
 	}
 
 	public void loadConfig() {
@@ -966,8 +963,9 @@ public class GUI extends Container {
 						// Split the second index of the tempChrom array into
 						// the organism's individual data pieces
 						organismData = tempChrom[1].split(" ");
-						Organism individOrganism = new Organism(500.0,
-								numGenes, i, 100);
+						OrgData individOrgData = new OrgData(500.0, i);
+						Organism individOrganism = new Organism(
+								individOrgData.getMaxHealth(), numGenes, i, 100);
 						// Create temporary Linked List of type Gene to store
 						// each gene in a given organisms' Chromosome
 						LinkedList<Gene> tempGeneList = new LinkedList<Gene>();
@@ -1008,6 +1006,7 @@ public class GUI extends Container {
 						// Fitness, X-Location, Y-Location, Healthy Eats, Poison
 						// Eats, Eat Fails, Num Attacked, Num Pushed, and Total
 						// Scans
+						// TODO: Check if the switch to OrgData was okay.
 						for (int m = 0; m < organismData.length; m++) {
 							if (m == 0) {
 								individOrganism.setId(Integer
@@ -1030,27 +1029,27 @@ public class GUI extends Container {
 										Integer.parseInt(organismData[m]));
 							}
 							if (m == 5) {
-								individOrganism.setHealthyEat(Integer
+								individOrgData.setHealthyEatSuccess(Integer
 										.parseInt(organismData[m]));
 							}
 							if (m == 6) {
-								individOrganism.setPoisonEat(Integer
+								individOrgData.setPoisonEatSuccess(Integer
 										.parseInt(organismData[m]));
 							}
 							if (m == 7) {
-								individOrganism.setEatFail(Integer
+								individOrgData.setEatFail(Integer
 										.parseInt(organismData[m]));
 							}
 							if (m == 8) {
-								individOrganism.setNumAttacked(Integer
+								individOrgData.setNumAttacked(Integer
 										.parseInt(organismData[m]));
 							}
 							if (m == 9) {
-								individOrganism.setNumPushed(Integer
+								individOrgData.setNumPushed(Integer
 										.parseInt(organismData[m]));
 							}
 							if (m == 10) {
-								individOrganism.setTotalScans(Integer
+								individOrgData.setNumScans(Integer
 										.parseInt(organismData[m]));
 							}
 						}
@@ -1060,37 +1059,37 @@ public class GUI extends Container {
 					 * chromosomes and data of all of the organisms that have
 					 * been loaded from the configuration file
 					 */
-					// for (int h = 0; h < population.size(); h++) {
-					// System.out.println("Organism " + (h + 1));
-					// for (int o = 0; o < population.get(h).getChromosome()
-					// .size(); o++) {
-					// System.out.println(population.get(h).getChromosome()
-					// .getGene(o).getList());
-					//
-					// }
-					// System.out.println("Id : " + population.get(h).getId());
-					// System.out.println("Health: "
-					// + population.get(h).getHealth());
-					// System.out.println("Fitness: "
-					// + population.get(h).getFitness());
-					// System.out.println("X location: "
-					// + population.get(h).getLocation().getX());
-					// System.out.println("Y Location: "
-					// + population.get(h).getLocation().getY());
-					// System.out.println("Healthy Eats: "
-					// + population.get(h).getHealthEat());
-					// System.out.println("Poison Eats: "
-					// + population.get(h).getPoisonEat());
-					// System.out.println("Eat Fails: "
-					// + population.get(h).getEatFail());
-					// System.out.println("Num Attacked: "
-					// + population.get(h).getNumAttacked());
-					// System.out.println("Num Pushed: "
-					// + population.get(h).getNumPushed());
-					// System.out.println("Total Scans: "
-					// + population.get(h).getTotalScans());
-					// System.out.println();
-					// }
+
+					/*
+					 * for (int h = 0; h < population.size(); h++) {
+					 * System.out.println("Organism " + (h + 1)); for (int o =
+					 * 0; o < population.get(h).getChromosome() .size(); o++) {
+					 * System.out.println(population.get(h)
+					 * .getChromosome().getGene(o).getList());
+					 * 
+					 * } System.out.println("Id : " +
+					 * population.get(h).getId()); System.out.println("Health: "
+					 * + population.get(h).getHealth());
+					 * System.out.println("Fitness: " +
+					 * population.get(h).getFitness());
+					 * System.out.println("X location: " +
+					 * population.get(h).getLocation().getX());
+					 * System.out.println("Y Location: " +
+					 * population.get(h).getLocation().getY());
+					 * System.out.println("Healthy Eats: " +
+					 * population.get(h).getHealthEat());
+					 * System.out.println("Poison Eats: " +
+					 * population.get(h).getPoisonEat());
+					 * System.out.println("Eat Fails: " +
+					 * population.get(h).getEatFail());
+					 * System.out.println("Num Attacked: " +
+					 * population.get(h).getNumAttacked());
+					 * System.out.println("Num Pushed: " +
+					 * population.get(h).getNumPushed());
+					 * System.out.println("Total Scans: " +
+					 * population.get(h).getTotalScans()); System.out.println();
+					 * }
+					 */
 					// simulation.initializeFromConfigFile(population);
 				} else {
 					JOptionPane.showMessageDialog(jframe,
@@ -1117,5 +1116,4 @@ public class GUI extends Container {
 	public static void main(String[] args) {
 		new GUI();
 	}
-
 }

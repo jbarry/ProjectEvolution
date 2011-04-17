@@ -1,9 +1,9 @@
 package Interactive;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class Pair<A, B> {
-
+	
 	private A fst;
 	private B snd;
 
@@ -24,12 +24,25 @@ public class Pair<A, B> {
 		snd = b;
 	}
 	
-	public A getFst() {
+	public A getLeft() {
 		return fst;
 	}
 	
-	public B getSnd() {
+	public B getRight() {
 		return snd;
+	}
+	
+	public ArrayList<Pair<Integer, Integer>> change1(
+			ArrayList<Pair<Integer, Integer>> toChange) {
+		for (Pair<Integer, Integer> p: toChange)
+			p.setLeft(19);
+		return toChange;
+	}
+	
+	public static void change(ArrayList<Integer> toChange) {
+		toChange.add(4);
+		toChange.add(12);
+		toChange.add(13);
 	}
 }
 

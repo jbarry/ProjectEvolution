@@ -16,8 +16,7 @@ public class Map {
 	private Image moonMap;
 	private Image middleEarth;
 	private Image sawMap;
-	private Image dexterMap;
-	
+	private Image dexterMap;	
 	
 	public Map(){
 		currMap = "Default";
