@@ -14,13 +14,10 @@
 
 package Frame;
 
-import java.applet.Applet;
-import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.FileDialog;
 import java.awt.GridLayout;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -32,23 +29,17 @@ import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
 import java.io.Writer;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -57,19 +48,18 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
-import javax.swing.plaf.ColorUIResource;
-import javax.swing.plaf.basic.BasicScrollBarUI;
-import javax.swing.plaf.metal.DefaultMetalTheme;
-import javax.swing.plaf.metal.MetalLookAndFeel;
-import javax.swing.plaf.metal.MetalTheme;
-import Interactive.*;
+
+import Interactive.Chromosome;
+import Interactive.Gene;
+import Interactive.Map;
+import Interactive.OrgData;
+import Interactive.Organism;
 
 /**
  * This class will host and initialize all JPanels and JMenuItems. It will NOT
@@ -295,7 +285,7 @@ public class GUI extends Container{
 					loadConfig.setEnabled(true);
 					/*simulation.initialize();*/
 					/*simulation.initializeAstar();*/
-					simulation.initializeAstarWithOrgData();
+					simulation.initialize();
 					simulation.start();
 				}
 			}
@@ -660,18 +650,18 @@ public class GUI extends Container{
 
 		LinkedList<Organism> tempOrgs;
 		tempOrgs = simulation.getOrganisms();
-		int geneLength = tempOrgs.get(0).getChromosome().getGene(0)
-				.size();
-		int numGenes = tempOrgs.get(0).getChromosome().size();
+		Chromosome chrom = tempOrgs.get(0).getChromosome();
+		int geneLength = chrom.getGene(0).size();
+		int numGenes = chrom.size();
 
 		String fileContents = "VALID_GEP_GENE_FILE" + " " + geneLength + " "
 				+ numGenes + " ";
 
 		for (int i = 0; i < tempOrgs.size(); i++) {
-			for (int k = 0; k < tempOrgs.get(i).getChromosome().size(); k++) {
-				 Gene gene = tempOrgs.get(i).getChromosome()
-					.getGene(k);
-				ArrayList<String> tempArray = gene.makeStringArray(gene.getSymList());
+			for (int k = 0; k < chrom.size(); k++) {
+				Gene gene = chrom.getGene(k);
+				ArrayList<String> tempArray = gene.makeStringArray(gene
+						.getSymList());
 				for (int j = 0; j < tempArray.size(); j++) {
 					fileContents += tempArray.get(j);
 				}
@@ -839,12 +829,12 @@ public class GUI extends Container{
 					 * Uncomment the following code to print the chromosomes
 					 * of each organism
 					 */
-//					 for(int h = 0 ; h < population.size(); h++){
-//						 System.out.println("Organism " + h);
-//						 for (int o = 0 ; o < population.get(h).getChromosome().size() ; o++){
-//							 System.out.println(population.get(h).getChromosome().getGene(o).getList());
-//						 }
-//					 }
+					 /*for(int h = 0 ; h < population.size(); h++){
+						 System.out.println("Organism " + h);
+						 for (int o = 0 ; o < population.get(h).getChromosome().size() ; o++){
+							 System.out.println(population.get(h).getChromosome().getGene(o).getList());
+						 }
+					 }*/
 					simulation.initializeFromGeneFile(population);
 				} else {
 					JOptionPane.showMessageDialog(jframe,
@@ -857,9 +847,8 @@ public class GUI extends Container{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		if (simulation.isPaused() && !emptySimulation) {
+		if (simulation.isPaused() && !emptySimulation)
 			optionsPanel.eventPause(simulation);
-		}
 	}
 
 	public void loadConfig() {
@@ -916,9 +905,9 @@ public class GUI extends Container{
 						// Split the second index of the tempChrom array into
 						// the organism's individual data pieces
 						organismData = tempChrom[1].split(" ");
-						OrgData individOrgData = new OrgData(500.0,i);
-						Organism individOrganism = new Organism(individOrgData.getMaxHealth(),
-								numGenes, i, 100);
+						OrgData individOrgData = new OrgData(500.0, i);
+						Organism individOrganism = new Organism(
+								individOrgData.getMaxHealth(), numGenes, i, 100);
 						// Create temporary Linked List of type Gene to store
 						// each gene in a given organisms' Chromosome
 						LinkedList<Gene> tempGeneList = new LinkedList<Gene>();
@@ -1070,5 +1059,4 @@ public class GUI extends Container{
 	public static void main(String[] args) {
 		new GUI();
 	}
-
 }

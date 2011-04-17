@@ -306,9 +306,7 @@ public class GenerationPanel extends JPanel{
 		int result = 1;
 		try {
 			result = ((Integer) op.getValue()).intValue();
-		} catch (NullPointerException q) {
-
-		}
+		} catch (NullPointerException q) {}
 
 		if (result == JOptionPane.OK_OPTION) {
 			userCancel = false;
@@ -322,7 +320,7 @@ public class GenerationPanel extends JPanel{
 					simPreprocess(e,simulation);
 				} else {
 					// the number of generations.
-					simulation.preProcessAstar(x);
+					simulation.preProcess(x);
 					JOptionPane.showMessageDialog(simulation,
 							"Pre-Processing complete, resume the simulation to continue.", "Success!",
 							JOptionPane.INFORMATION_MESSAGE);

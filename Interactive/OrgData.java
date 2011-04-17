@@ -22,7 +22,6 @@ public class OrgData {
 	private int timeOfDeath;
 	private double averageHealth;
 	private List<Coordinate> closedList;
-	private Coordinate previousPosition;
 	private TreeSet<Integer> healthyFood;
 	private TreeSet<Integer> poisonFood;
 	private ArrayList<ArrayList<String>> actionList;
@@ -47,12 +46,13 @@ public class OrgData {
 		closedList = new ArrayList<Coordinate>();
 		lastFoodSourceDestination = 0;
 		averageHealth = 1;
-		previousPosition = new Coordinate(0, 0);
-		healthyFood = new TreeSet<Integer>();
-		poisonFood = new TreeSet<Integer>();
 		actionList = new ArrayList<ArrayList<String>>();
+		actionList.add(new ArrayList<String>());
 		startingLocation = new ArrayList<Coordinate>();
 		chromosomeHistory = new ArrayList<Chromosome>();
+		healthyFood = new TreeSet<Integer>();
+		poisonFood = new TreeSet<Integer>();
+		
 	}
 
 	public void countStep() {
@@ -99,7 +99,7 @@ public class OrgData {
 		numScans += scans;
 	}
 
-	public void clear() {
+	public void reinitializeVariables() {
 		eatFail = 1;
 		healthyEatSuccess = 1;
 		poisonEatSuccess = 1;
@@ -114,12 +114,27 @@ public class OrgData {
 		closedList.clear();
 		lastFoodSourceDestination = 0;
 		averageHealth = 1;
-		previousPosition = new Coordinate(0, 0);
-		healthyFood.clear();
-		poisonFood.clear();
+	}
+	
+	public void clearActionList() {
 		actionList.clear();
+	}
+	
+	public void clearStartingLocation() {
 		startingLocation.clear();
-		chromosomeHistory.clear();
+	}
+	
+	public void clearClosedList() {
+		closedList.clear();
+	}
+	
+	public void clearEatFail() {
+		eatFail = 1;
+	}
+
+	public void clearFoodList() {
+		poisonFood.clear();
+		healthyFood.clear();
 	}
 
 	public void incHlthTot() {
@@ -207,19 +222,6 @@ public class OrgData {
 		return closedList;
 	}
 
-	public void clearClosedList() {
-		closedList.clear();
-	}
-
-	public Coordinate getPreviousPosition() {
-		return previousPosition;
-	}
-
-	public void setPreviousPosition(int x, int y) {
-		previousPosition.setX(x);
-		previousPosition.setY(y);
-	}
-
 	public int getTimeOfDeath() {
 		return timeOfDeath;
 	}
@@ -298,15 +300,32 @@ public class OrgData {
 	public void setLastFoodSourceIndex(int aLastFoodSourceIndex) {
 		lastFoodSourceDestination = aLastFoodSourceIndex;
 	}
+
+	public void subEatFail() {
+		eatFail--;
+	}
 	
-	/*public void goBack(int generation) {
-		int x = location.getX();
-		int y = location.getY();
-		LocationMap.getInstance().newLocation(location, width, height, id, 'o');
-		chromosome = chromosomeHistory.get(generation - 1);
+	public void addAction(String action, int index) {
+		actionList.get(actionList.size() - 1).add(action + " " + index);
+	}
+	
+	public Chromosome goBack(int generation) {
+		Chromosome toReturnChrom = chromosomeHistory.get(generation - 1);
 		for (int i = generation; i < chromosomeHistory.size(); i++) {
 			chromosomeHistory.remove(i);
 		}
-		clear();
-	}*/
+		reinitializeVariables();
+		return toReturnChrom;
+	}
+
+	/*public void goBack(int generation) {
+	int x = location.getX();
+	int y = location.getY();
+	LocationMap.getInstance().newLocation(location, width, height, id, 'o');
+	chromosome = chromosomeHistory.get(generation - 1);
+	for (int i = generation; i < chromosomeHistory.size(); i++) {
+		chromosomeHistory.remove(i);
+	}
+	clear();
+}*/
 }

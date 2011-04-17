@@ -173,7 +173,7 @@ public class GEP {
 		orgData.setAverageHealth(orgData.getHlthTot()
 				/ orgData.getTimeOfDeath());
 		System.out.println("avghealth: " + orgData.getAverageHealth());
-		double fitness = (numSteps / orgData.getAverageHealth())
+		double fitness = (orgData.getAverageHealth() / numSteps)
 				+ (orgData.getTimeOfDeath() * orgData.getTimeOfDeath())
 				+ (orgData.getAverageHealth() * orgData.getAverageHealth());
 		System.out.println("fit: " + fitness);
@@ -885,7 +885,7 @@ public class GEP {
 		out.println();
 	}
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		LinkedList<Organism> orgList = new LinkedList<Organism>();
 		Random r = new Random();
 
@@ -895,7 +895,7 @@ public class GEP {
 		GEP gep = new GEP(1.00, 1.00, 1.00, 1.00, 1.00, 2, false, true);
 		gep.newGenerationTest(orgList);
 
-		/*// CASE: ODD NUMBER OF ORGANISMS.
+		// CASE: ODD NUMBER OF ORGANISMS.
 		LinkedList<Organism> orgList2 = new LinkedList<Organism>();
 		for (int i = 0; i < 5; i++)
 			orgList2.add(new Organism(true, 4, r.nextInt(20), i));
@@ -909,6 +909,6 @@ public class GEP {
 			orgList3.add(new Organism(true, 4, r.nextInt(20), i));
 		GEP gep3 = new GEP(1.00, 1.00, 1.00, 1.00, 1.00, 2, false, false); // Elitism
 																		   // ctor.
-		gep3.newGenerationTest(orgList3);*/
-	}
+		gep3.newGenerationTest(orgList3);
+	}*/
 }

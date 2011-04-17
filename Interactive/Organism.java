@@ -481,6 +481,21 @@ public class Organism extends Matter implements Cloneable{
 	public char getType() {
 		return 'o';
 	}
+	
+	@Override
+	public int getId() {
+		return id;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		Organism org = (Organism) super.clone();
+		org.chromosome = (Chromosome) org.chromosome.clone();
+		return super.clone();
+	}
 
 	public void paint(Graphics g) {
 		g.setColor(Color.BLACK);
@@ -491,21 +506,6 @@ public class Organism extends Matter implements Cloneable{
 		+ ", " + location.getY());*/
 		g.fillRect((int) this.location.getX() - (width / 2),
 				(int) this.location.getY() - (height / 2), width, height);
-	}
-
-	@Override
-	public int getId() {
-		return id;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#clone()
-	 */
-	@Override
-	protected Object clone() throws CloneNotSupportedException {
-		Organism org = (Organism) super.clone();
-		org.chromosome = (Chromosome) org.chromosome.clone();
-		return super.clone();
 	}
 
 	/*public void paint(Graphics g) {
