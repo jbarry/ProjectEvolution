@@ -245,6 +245,7 @@ public class GridPanel extends JPanel {
 	}
 
 	public void preProcess(int generations) {
+		System.out.println("process");
 		numPreProcessedGenerations = 0;
 		while (numPreProcessedGenerations < generations) {
 			System.out.println("Processing Generation " + generationNum);
@@ -416,6 +417,56 @@ public class GridPanel extends JPanel {
 		}
 		g = new GEP(0.75, 0.01, 0.01, 0.75, 0.75, 2, false, true);
 //		preProcess(2);
+	}
+
+	public void initializeFromGeneFile(LinkedList<Organism> orgList) {
+		generationNum = 1;
+		trialNum = 1;
+		
+		ran = new Random();
+		timePassed = 0;
+		shuffleIds = new ArrayList<Integer>();
+		orgDataList = new ArrayList<OrgData>();
+		organisms.clear();
+		foodList.clear();
+		norm = new Normalizer(new Pair<Double, Double>(-600.0, 600.0),
+				new Pair<Double, Double>(-50.0, 50.0));
+		locationMap = LocationMap.getInstance();
+		locationMap.clearLocations();
+		// Initialize the organisms in the organisms list and have the
+		// locationMap singleton object place that organism on the map.
+		// Initialize the OrgData objects with an id corresponding to an
+		// organism.
+		organisms = orgList;
+		numFoodSources = organisms.size() / 5;
+		GUI.genPanel.resetGenInformation();
+		for(Organism org: organisms) {
+			System.out.println("Org: " + org.getId());
+			Chromosome chrom = org.getChromosome();
+			for (int i = 0; i < chrom.size(); i++) {
+				System.out.println("eval: " + i);
+				System.out.println(chrom.getGene(i).getEvaledList().toString());
+			}
+			System.out.println();
+		}
+		/*System.exit(0);*/
+		for (int i = 0; i < organisms.size(); i++) {
+			Organism org = organisms.get(i);
+			orgDataList.add(new OrgData(org.getMaxHealth(), org.getId()));
+			locationMap.placeOrganism(org);
+			shuffleIds.add(i);
+		}
+		// Initialize the food sources and allow locationMap to find a starting
+		// position for them.
+		for (int i = 0; i < numFoodSources * 3; i++) {
+			if (ran.nextBoolean())
+				foodList.add(new HealthyFood(100.00, i, 2));
+			else
+				foodList.add(new PoisonousFood(100.00, i, 2));
+			locationMap.placeFood(foodList.get(i));
+		}
+		g = new GEP(0.75, 0.01, 0.01, 0.75, 0.75, 2, false, true);
+		preProcess(2);
 	}
 
 	/**
@@ -766,37 +817,6 @@ public class GridPanel extends JPanel {
 		Coordinate foodLocation = food.getLocation();
 		locationMap.setRangeToBlank(foodLocation.getX(), foodLocation.getY(),
 				food.getWidth(), food.getHeight());
-	}
-
-	public void initializeFromGeneFile(LinkedList<Organism> population) {
-		// reset all generation info from previous simulations.
-		generationNum = 1;
-		trialNum = 1;
-		GUI.genPanel.resetGenInformation();
-		ran = new Random();
-		timePassed = 0;
-		shuffleIds = new ArrayList<Integer>();
-
-		/*
-		 * location map will consist of: key: current instance number of object
-		 * value: 'w' for white space or available. 'o' for organism. 'h' for
-		 * healthy food. 'p' for poisonous food.
-		 */
-		locationMap.getInstance().clearLocations();
-
-		norm = new Normalizer(new Pair<Double, Double>(-600.0, 600.0),
-				new Pair<Double, Double>(-50.0, 50.0));
-
-		// clear any remaining organisms, food, or poison in simulation.
-		organisms.clear();
-		healthFd.clear();
-		poisFood.clear();
-
-		for (int i = 0; i < population.size(); i++) {
-			organisms.add(population.get(i));
-			shuffleIds.add(i);
-			organisms.get(i).newLocation();
-		}
 	}
 
 	public String getOrganismData(int index) {

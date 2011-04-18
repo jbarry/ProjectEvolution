@@ -22,7 +22,6 @@ public class Chromosome extends Genetic implements Cloneable{
 	// For testing purposes of the GEP class.
 	public Chromosome(LinkedList<Gene> aChrom) {
 		chromosome = aChrom;
-		System.out.println("set chrom!!");
 		ran = new Random();
 	}
 
@@ -43,6 +42,7 @@ public class Chromosome extends Genetic implements Cloneable{
 		for (int i = 0; i < numGenes; i++)
 			chromosome.add(new Gene(true, 7));
 	}
+	
 	public void rotate(int gene) {
 		@SuppressWarnings("rawtypes")
 		Gene theGene = chromosome.get(gene);

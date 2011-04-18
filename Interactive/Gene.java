@@ -107,6 +107,7 @@ public class Gene<A extends Crossable<?>> extends Genetic implements Cloneable{
 		terminals.add('g'); // NumOrganisms surrounding this organism.
 		Collections.shuffle(symbols);
 		ran = new Random();
+		evaledList = Eval.evaluation(makeStringArray(symList));
 	}
 
 	public int size() {

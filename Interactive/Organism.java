@@ -85,7 +85,7 @@ public class Organism extends Matter implements Cloneable{
 	public Organism(double aHealth, int chromSize, int anId) {
 		super(aHealth, anId, 'o');
 		chromosome = new Chromosome(chromSize);
-		/*scanRange = aScanRange;*/
+		fitness = 0.0;
 		// Image initialization.
 		ninja_walk1 = new ImageIcon(getClass().getResource(
 				"sprites/ninja_walk1.gif")).getImage();

@@ -80,9 +80,9 @@ public class GUI extends Container{
 	private JMenu helpMenu;
 
 	private JMenuItem newSimulation;
-	private JMenuItem saveGenes;
+	private JMenuItem fieldSaveGenes;
 	private JMenuItem saveConfig;
-	private JMenuItem loadGenes;
+	private JMenuItem fieldLoadGenes;
 	private JMenuItem loadConfig;
 	private JMenuItem pause;
 	private JMenuItem exitApplication;
@@ -279,9 +279,9 @@ public class GUI extends Container{
 					emptySimulation = false;
 					pause.setEnabled(true);
 					genPanel.enableStopButton();
-					saveGenes.setEnabled(true);
+					fieldSaveGenes.setEnabled(true);
 					saveConfig.setEnabled(true);
-					loadGenes.setEnabled(true);
+					fieldLoadGenes.setEnabled(true);
 					loadConfig.setEnabled(true);
 					/*simulation.initialize();*/
 					/*simulation.initializeAstar();*/
@@ -385,10 +385,10 @@ public class GUI extends Container{
 		fileMenu.addSeparator();
 		
 		// save genes to text file
-		saveGenes = new JMenuItem("Save Genes", KeyEvent.VK_S);
+		fieldSaveGenes = new JMenuItem("Save Genes", KeyEvent.VK_S);
 		KeyStroke ctrlSKeyStroke = KeyStroke.getKeyStroke("control S");
-	    saveGenes.setAccelerator(ctrlSKeyStroke);
-		saveGenes.addActionListener(new ActionListener() {
+	    fieldSaveGenes.setAccelerator(ctrlSKeyStroke);
+		fieldSaveGenes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (!simulation.isPaused()) {
 					optionsPanel.eventPause(simulation);
@@ -396,8 +396,8 @@ public class GUI extends Container{
 				saveGenes();
 			}
 		});
-		fileMenu.add(saveGenes);
-		saveGenes.setEnabled(false);
+		fileMenu.add(fieldSaveGenes);
+		fieldSaveGenes.setEnabled(false);
 
 		// save configuration from text file
 		saveConfig = new JMenuItem("Save Configuration");
@@ -416,10 +416,10 @@ public class GUI extends Container{
 		fileMenu.addSeparator();
 
 		// load genes from text file
-		loadGenes = new JMenuItem("Load Genes", KeyEvent.VK_L);
+		fieldLoadGenes = new JMenuItem("Load Genes", KeyEvent.VK_L);
 		KeyStroke ctrlLKeyStroke = KeyStroke.getKeyStroke("control L");
-	    loadGenes.setAccelerator(ctrlLKeyStroke);
-		loadGenes.addActionListener(new ActionListener() {
+	    fieldLoadGenes.setAccelerator(ctrlLKeyStroke);
+		fieldLoadGenes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (!simulation.isPaused() && !emptySimulation) {
 					optionsPanel.eventPause(simulation);
@@ -427,8 +427,8 @@ public class GUI extends Container{
 				loadGenes();
 			}
 		});
-		fileMenu.add(loadGenes);
-		loadGenes.setEnabled(true);
+		fileMenu.add(fieldLoadGenes);
+		fieldLoadGenes.setEnabled(true);
 
 		// load configuration from text file
 		loadConfig = new JMenuItem("Load Configuration");
@@ -583,7 +583,7 @@ public class GUI extends Container{
 	}
 	
 	public void enableJMenuItemSaveGenes(){
-		saveGenes.setEnabled(true);
+		fieldSaveGenes.setEnabled(true);
 	}
 	
 	public void enableJMenuItemSaveConfig() {
@@ -650,23 +650,24 @@ public class GUI extends Container{
 
 		LinkedList<Organism> tempOrgs;
 		tempOrgs = simulation.getOrganisms();
-		Chromosome chrom = tempOrgs.get(0).getChromosome();
-		int geneLength = chrom.getGene(0).size();
-		int numGenes = chrom.size();
+		Chromosome aChrom = tempOrgs.get(0).getChromosome();
+		int geneSize = aChrom.getGene(0).size();
+		int chromSize = aChrom.size();
 
-		String fileContents = "VALID_GEP_GENE_FILE" + " " + geneLength + " "
-				+ numGenes + " ";
+		String fileContents = "VALID_GEP_GENE_FILE" + " " + geneSize + " "
+				+ chromSize + " ";
 
 		for (int i = 0; i < tempOrgs.size(); i++) {
-			for (int k = 0; k < chrom.size(); k++) {
-				Gene gene = chrom.getGene(k);
+			Organism org = tempOrgs.get(i);
+			Chromosome chrom1 = org.getChromosome();
+			for (int k = 0; k < chrom1.size(); k++) {
+				Gene gene = chrom1.getGene(k);
 				ArrayList<String> tempArray = gene.makeStringArray(gene
 						.getSymList());
-				for (int j = 0; j < tempArray.size(); j++) {
+				for (int j = 0; j < tempArray.size(); j++)
 					fileContents += tempArray.get(j);
-				}
 			}
-			fileContents += " ";
+			fileContents+=" ";
 		}
 
 		Writer writer = null;
@@ -751,9 +752,9 @@ public class GUI extends Container{
 		BufferedReader reader = null;
 		String tempChars;
 		String[] fileContents;
-		LinkedList<Organism> population = new LinkedList<Organism>();
-		int geneLength = 0;
-		int numGenes = 0;
+		LinkedList<Organism> orgList = new LinkedList<Organism>();
+		int geneSize = 0;
+		int chromSize = 0;
 
 		try {
 			// Create load dialog box
@@ -766,38 +767,36 @@ public class GUI extends Container{
 				File file = new File(ld.getDirectory(), ld.getFile());
 				reader = new BufferedReader(new FileReader(file));
 				tempChars = reader.readLine();
-				// Split file that was read in using spaces as a delimiter
+				// Split file that was read in using spaces as a delimiter.
 				fileContents = tempChars.split(" ");
-				// Confirm that the file loaded was a valid gep gene file
+				// Confirm that the file loaded was a valid gep gene file.
 				if (fileContents[0].equals("VALID_GEP_GENE_FILE")) {
 					emptySimulation = false;
 					// traverse list of Chromosomes in file, parse Gene
 					// info/assign to organisms, create population
 					for (int i = 1; i < fileContents.length; i++) {
 						if (i <= 2) {
-							if (i == 1) {
-								// Set gene length equal to the first element
-								// after validation
-								geneLength = Integer.parseInt(fileContents[i]);
-							}
-							if (i == 2) {
-								// Set the number of genes equal to the second
-								// element after validation
-								numGenes = Integer.parseInt(fileContents[i]);
-							}
+							// Set gene length equal to the first element
+							// after validation.
+							if (i == 1)
+								geneSize = Integer.parseInt(fileContents[i]);
+							// Set the number of genes equal to the second
+							// element after validation.
+							if (i == 2)
+								chromSize = Integer.parseInt(fileContents[i]);
 						} else {
-							Organism individOrganism = new Organism(500.0,
-									numGenes, i, 100);
-							LinkedList<Gene> tempGeneList = new LinkedList<Gene>();
+							Organism org = new Organism(100.0, chromSize, i - 3);
+							LinkedList<Gene> tempGeneList =
+								new LinkedList<Gene>();
 							// traverse individual Chromosome to split genes at
 							// geneLength
-							for (int j = 0; j < numGenes; j++) {
+							for (int j = 0; j < chromSize; j++) {
 								// Traverse organism's chromosome and split into
 								// individual genes at intervals of gene length
-								String tempGene = fileContents[i].substring(
-										(j * geneLength),
-										((j * geneLength) + (geneLength)))
-										.trim();
+								int from = (j * geneSize);
+								int to = (j * geneSize) + (geneSize);
+								String tempGene =
+									fileContents[i].substring(from, to).trim();
 								// Create a temporary array of characters that
 								// the
 								// temporary gene will be converted and stored
@@ -806,36 +805,44 @@ public class GUI extends Container{
 								// Create a temporary Linked List of type
 								// Character
 								// to store the individual character arrays
-								LinkedList<Character> tempGeneArray = new LinkedList<Character>();
+								LinkedList<Character> symListCopy =
+									new LinkedList<Character>();
 								// For loop to add each character array to the
 								// Linked List of type Character
-								for (int h = 0; h < tempGene.length(); h++) {
-									tempGeneArray.add(tempCharGenes[h]);
-								}
-								Gene g = new Gene(tempGeneArray);
-								tempGeneList.add(g);
+								for (int h = 0; h < tempGene.length(); h++)
+									symListCopy.add(tempCharGenes[h]);
+								tempGeneList.add(new Gene(symListCopy));
 							}
+							/*System.out.println("tgl size: " + tempGeneList.size());
+							for (int j = 0; j < tempGeneList.size(); j++) {
+								System.out.println("symList: " + j);
+								tempGeneList.get(j).printSymList();
+								System.out.println();
+							}
+							System.out.println();*/
 							// Constructor to create a new Gene with the Linked
 							// List of type Character
-							individOrganism.setChromosome(new Chromosome(
-									tempGeneList));
+							org.setChromosome(new Chromosome(tempGeneList));
 							// Finally add the new organism to the Linked List
 							// of
 							// type sOrganism: population.
-							population.add(individOrganism);
+							orgList.add(org);
 						}
 					}
 					/*
 					 * Uncomment the following code to print the chromosomes
 					 * of each organism
 					 */
-					 /*for(int h = 0 ; h < population.size(); h++){
-						 System.out.println("Organism " + h);
-						 for (int o = 0 ; o < population.get(h).getChromosome().size() ; o++){
-							 System.out.println(population.get(h).getChromosome().getGene(o).getList());
-						 }
-					 }*/
-					simulation.initializeFromGeneFile(population);
+					/*for (int h = 0; h < orgList.size(); h++) {
+						System.out.println("Organism " + h);
+						Chromosome chrom = orgList.get(h).getChromosome();
+						for (int o = 0; o < chrom.size(); o++) {
+							chrom.getGene(o).printSymList();
+							System.out.println();
+						}
+					}*/
+					/*System.exit(0);*/
+					simulation.initializeFromGeneFile(orgList);
 				} else {
 					JOptionPane.showMessageDialog(jframe,
 							"Please select a valid saved genes file.", "Error",
@@ -907,7 +914,7 @@ public class GUI extends Container{
 						organismData = tempChrom[1].split(" ");
 						OrgData individOrgData = new OrgData(500.0, i);
 						Organism individOrganism = new Organism(
-								individOrgData.getMaxHealth(), numGenes, i, 100);
+								individOrgData.getMaxHealth(), numGenes, i);
 						// Create temporary Linked List of type Gene to store
 						// each gene in a given organisms' Chromosome
 						LinkedList<Gene> tempGeneList = new LinkedList<Gene>();
