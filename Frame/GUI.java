@@ -122,14 +122,10 @@ public class GUI extends Container{
     		JFrame.setDefaultLookAndFeelDecorated(true);
     		JDialog.setDefaultLookAndFeelDecorated(true);
         } 
-        catch (UnsupportedLookAndFeelException e) {
-        }
-        catch (ClassNotFoundException e) {
-        }
-        catch (InstantiationException e) {
-        }
-        catch (IllegalAccessException e) {
-        }
+        catch (UnsupportedLookAndFeelException e) {}
+        catch (ClassNotFoundException e) {}
+        catch (InstantiationException e) {}
+        catch (IllegalAccessException e) {}
 		
         //Gradients
         List<Object> gradients = new ArrayList<Object>(5);
@@ -559,7 +555,7 @@ public class GUI extends Container{
 				} else {
 					// the number of organisms given via user-input.
 					OptionsPanel.numOrganisms = x;
-					optionsPanel.toggleEnabled(true);
+					optionsPanel.togglePauseEnabled(true);
 					pause.setEnabled(false);
 				}
 			} catch (NumberFormatException a) {
@@ -842,6 +838,10 @@ public class GUI extends Container{
 						}
 					}*/
 					/*System.exit(0);*/
+					optionsPanel.togglePauseEnabled(true);
+					enableStopGenButton();
+					enableJMenuItemSaveGenes();
+					enableJMenuItemPause();
 					simulation.initializeFromGeneFile(orgList);
 				} else {
 					JOptionPane.showMessageDialog(jframe,

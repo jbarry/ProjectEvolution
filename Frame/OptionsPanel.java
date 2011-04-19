@@ -325,14 +325,14 @@ public class OptionsPanel extends JPanel implements Runnable {
 									   MonitorPanel.simStatus
 												.setText("Running");
 									   pause.setText("Pause");
-									   toggleEnabled(true);
+									   togglePauseEnabled(true);
 									   gui.enableStopGenButton();
 									   gui.enableJMenuItemSaveGenes();
 									   gui.enableJMenuItemPause();
 									   /*simulation.initialize();*/
 									   /*simulation.initializeAstar();*/
 									   simulation.initialize();
-									   simulation.start();
+									   /*simulation.start();*/
 								  }
 							 } else {
 								  numOrgsLbl.setText("Number not 2 <= x <= 500");
@@ -813,7 +813,7 @@ public class OptionsPanel extends JPanel implements Runnable {
 	 // ------------------------------------------------------------------------------------
 	 // --method called in GUI to handle pause button visibility--
 	 // ------------------------------------------------------------------------------------
-	 public void toggleEnabled(boolean toggle) {
+	 public void togglePauseEnabled(boolean toggle) {
 		  if (toggle == true) {
 			   pause.setEnabled(true);
 			   timeStepSelectionSldr.setEnabled(true);
@@ -843,6 +843,10 @@ public class OptionsPanel extends JPanel implements Runnable {
 			   pause.setText("Resume");
 			   MonitorPanel.simStatus.setText("Paused");
 		  }
+	 }
+	 
+	 public JButton getPauseButton() {
+		 return pause;
 	 }
 
 	 // ------------------------------------------------------------------------------------

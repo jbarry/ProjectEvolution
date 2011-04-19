@@ -311,10 +311,8 @@ public class OrgData {
 	
 	public Chromosome goBack(int generation) {
 		Chromosome toReturnChrom = chromosomeHistory.get(generation - 1);
-		for (int i = generation; i < chromosomeHistory.size(); i++) {
+		for (int i = generation; i < chromosomeHistory.size(); i++)
 			chromosomeHistory.remove(i);
-		}
-		reinitializeVariables();
 		return toReturnChrom;
 	}
 

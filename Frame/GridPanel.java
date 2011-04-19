@@ -51,7 +51,7 @@ public class GridPanel extends JPanel {
 	private ArrayList<Integer> shuffleIds;
 	private ArrayList<String> shuffleStringIds;
 	private int lengthTimeStep = 100;
-	private int lengthGeneration = 100;
+	private int lengthGeneration = 10;
 	private int timePassed = 0;
 	private int trialsPerGen = 1;
 	public int trialNum = 1;
@@ -122,23 +122,23 @@ public class GridPanel extends JPanel {
 		generationNum = generation;
 		timePassed = 0;
 		locationMap.clearLocations();
-			for (int i = 0; i < organisms.size(); i++) {
-				Organism org = organisms.get(i);
-				OrgData orgData = orgDataList.get(i);
-				org.setChromosome(orgData.goBack(generation));
-				locationMap.newLocation(org.getLocation(), org.getWidth(),
+		for (int i = 0; i < organisms.size(); i++) {
+			Organism org = organisms.get(i);
+			OrgData orgData = orgDataList.get(i);
+			org.setChromosome(orgData.goBack(generation));
+			orgData.reinitializeVariables();
+			locationMap.newLocation(org.getLocation(), org.getWidth(),
 					org.getHeight(), org.getId(), 'o');
-			}
+		}
 		GUI.genPanel.removeGenerations(generation);
-		healthFd.clear();
-		poisFood.clear();
 		foodList.clear();
 
-		for (int i = 0; i < numFoodSources; i++) {
-			HealthyFood h = new HealthyFood(100.0, i, 2);
-			PoisonousFood f = new PoisonousFood(100.0, i, 2);
-			healthFd.add(h);
-			poisFood.add(f);
+		for (int i = 0; i < numFoodSources * 3; i++) {
+			if (ran.nextBoolean())
+				foodList.add(new HealthyFood(100.00, i, 2));
+			else
+				foodList.add(new PoisonousFood(100.00, i, 2));
+			locationMap.placeFood(foodList.get(i));
 		}
 	}
 
@@ -417,6 +417,7 @@ public class GridPanel extends JPanel {
 		}
 		g = new GEP(0.75, 0.01, 0.01, 0.75, 0.75, 2, false, true);
 //		preProcess(2);
+		t.start();
 	}
 
 	public void initializeFromGeneFile(LinkedList<Organism> orgList) {
@@ -440,16 +441,6 @@ public class GridPanel extends JPanel {
 		organisms = orgList;
 		numFoodSources = organisms.size() / 5;
 		GUI.genPanel.resetGenInformation();
-		for(Organism org: organisms) {
-			System.out.println("Org: " + org.getId());
-			Chromosome chrom = org.getChromosome();
-			for (int i = 0; i < chrom.size(); i++) {
-				System.out.println("eval: " + i);
-				System.out.println(chrom.getGene(i).getEvaledList().toString());
-			}
-			System.out.println();
-		}
-		/*System.exit(0);*/
 		for (int i = 0; i < organisms.size(); i++) {
 			Organism org = organisms.get(i);
 			orgDataList.add(new OrgData(org.getMaxHealth(), org.getId()));
@@ -466,7 +457,8 @@ public class GridPanel extends JPanel {
 			locationMap.placeFood(foodList.get(i));
 		}
 		g = new GEP(0.75, 0.01, 0.01, 0.75, 0.75, 2, false, true);
-		preProcess(2);
+		/*preProcess(2);*/
+		t.start();
 	}
 
 	/**
