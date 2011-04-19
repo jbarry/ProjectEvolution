@@ -154,6 +154,10 @@ public class OrgData {
 	public void setHealthyEatSuccess(int healthyEatSuccess) {
 		this.healthyEatSuccess = healthyEatSuccess;
 	}
+	
+	public void addHealthSuccess() {
+		healthyEatSuccess++;
+	}
 
 	public int getPoisonEatSuccess() {
 		return poisonEatSuccess;
@@ -161,6 +165,10 @@ public class OrgData {
 
 	public void setPoisonEatSuccess(int poisonEatSuccess) {
 		this.poisonEatSuccess = poisonEatSuccess;
+	}
+	
+	public void addPoisSuccess() {
+		poisonEatSuccess++;
 	}
 
 	public int getNumScans() {
@@ -285,6 +293,10 @@ public class OrgData {
 	public TreeSet<Integer> getHealthyFood() {
 		return healthyFood;
 	}
+	
+	public void addHealthyFood(Integer i) {
+		healthyFood.add(i);
+	}
 
 	public void setPoisonFood(TreeSet<Integer> poisonFood) {
 		this.poisonFood = poisonFood;
@@ -292,6 +304,10 @@ public class OrgData {
 
 	public TreeSet<Integer> getPoisonFood() {
 		return poisonFood;
+	}
+	
+	public void addPoisFood(Integer i ) {
+		poisonFood.add(i);
 	}
 
 	public void setActionList(ArrayList<ArrayList<String>> actionList) {

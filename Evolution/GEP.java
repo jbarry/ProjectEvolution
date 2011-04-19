@@ -74,28 +74,6 @@ public class GEP {
 	}
 
 	/**
-	 * This method assigns a double representing fitness of each organism.
-	 * 
-	 * @param orgData
-	 *            - a single organism to be assessed.
-	 * @return a double representing the evaluated fitness of the organism.
-	 */
-	public double fitnessIan(OrgData orgData) {
-		double avgHealth = orgData.getHlthTot() / orgData.getSamples();
-		double activity = (double) orgData.getNumSteps();
-		double goodEating = (double) orgData.getHealthEat()
-				* (orgData.getHealthEat() + orgData.getPoisonEat() + orgData
-						.getTotalScans()) / (GridPanel.numFoodSources);
-		double assertion = (double) (orgData.getNumSteps()
-				+ orgData.getNumAttacked() + orgData.getNumPushed())
-				/ (orgData.getHealthEat() + 1);
-		double badEating = (double) orgData.getPoisonEat() + 1;
-		double fitness = (avgHealth * (activity + goodEating + assertion))
-				/ badEating;
-		return fitness;
-	}
-
-	/**
 	 * This is texting Ian's fitness function with print statements.
 	 * 
 	 * @param orgData
@@ -122,41 +100,6 @@ public class GEP {
 		return fitness;
 	}
 
-	public double fitnessDistanceTraveled(OrgData orgData) {
-		System.out.println(orgData.getSteps());
-		return orgData.getSteps();
-	}
-
-	/**
-	 * @param org
-	 * @return
-	 */
-	public double fitnessDwight(Organism org) {
-		/*
-		 * double avgHealth = org.getHlthTot() / org.getSamples(); double
-		 * fitness = avgHealth / org.getSamples() + org.getHealthyFoodSize() *
-		 * 20 + org.getNumAttacked() + org.getNumPushed() -
-		 * org.getPoisonFoodSize() * 10; return fitness;
-		 */
-		return 0.0;
-	}
-
-	/**
-	 * This fitness function evaluates the fitness of an Organism based on its
-	 * average health per the number of steps that it had taken over a
-	 * generation.
-	 * 
-	 * @param orgData
-	 * @return
-	 */
-	public double fitnessAvgHealthPerSteps(OrgData orgData) {
-		int numSteps = orgData.getNumSteps();
-		if (numSteps > 0)
-			return 0.0;
-		return (orgData.getHlthTot() / orgData.getSamples())
-				/ orgData.getNumSteps();
-	}
-
 	/**
 	 * This fitness function evaluates the fitness of an Organism based on its
 	 * average health per the number of steps that it had taken over a
@@ -165,19 +108,28 @@ public class GEP {
 	 * @param org
 	 * @return
 	 */
-	public double fitnessAverageHealthTimeOfDeathNumSteps(OrgData orgData) {
-		int numSteps = orgData.getNumSteps();
-		System.out.println("numsteps: " + orgData.getNumSteps());
-		System.out.println("timeofdeath: " + orgData.getTimeOfDeath());
-		System.out.println("healthtotal: " + orgData.getHlthTot());
+	public double fitness(OrgData orgData) {
+		double numSteps = orgData.getNumSteps();
 		orgData.setAverageHealth(orgData.getHlthTot()
 				/ orgData.getTimeOfDeath());
-		System.out.println("avghealth: " + orgData.getAverageHealth());
-		double fitness = (orgData.getAverageHealth() / numSteps)
-				+ (orgData.getTimeOfDeath() * orgData.getTimeOfDeath())
-				+ (orgData.getAverageHealth() * orgData.getAverageHealth());
-		System.out.println("fit: " + fitness);
-		System.out.println();
+		double averageHealth = orgData.getAverageHealth();
+		double timeOfDeath = orgData.getTimeOfDeath();
+		double hEat = orgData.getHealthEat();
+		double pEat = orgData.getPoisonEat();
+		double hEatSuccesses = orgData.getHealthyEatSuccess();
+		double pEatSuccesses = orgData.getPoisonEatSuccess();
+		System.out.println("numsteps: " + numSteps);
+		System.out.println("timeofdeath: " + timeOfDeath);
+		System.out.println("avghealth: " + averageHealth);
+		System.out.println("hEat: " + hEat);
+		System.out.println("pEat: " + pEat);
+		System.out.println("pSuccess: " + pEatSuccesses);
+		System.out.println("hSuccess: " + hEatSuccesses);
+		double fitness = (orgData.getAverageHealth() / numSteps) + timeOfDeath
+				+ averageHealth * Math.pow(hEat, 4)
+				* ((-1) * Math.pow(pEat, 4)) - (Math.pow(pEatSuccesses, 2)
+				+ Math.pow(hEatSuccesses, 2));
+		System.out.println("fit: " + fitness + "\n");
 		return fitness;
 	}
 

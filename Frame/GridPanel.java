@@ -51,7 +51,7 @@ public class GridPanel extends JPanel {
 	private ArrayList<Integer> shuffleIds;
 	private ArrayList<String> shuffleStringIds;
 	private int lengthTimeStep = 100;
-	private int lengthGeneration = 10;
+	private int lengthGeneration = 600;
 	private int timePassed = 0;
 	private int trialsPerGen = 1;
 	public int trialNum = 1;
@@ -97,7 +97,7 @@ public class GridPanel extends JPanel {
 						if (timePassed < lengthGeneration) {
 							gui.updatePercentage((double) timePassed
 									/ lengthGeneration);
-							simulateStepAstarClosedListOrgDataLoopGenes(1, 40);
+							simulateStepAstarClosedListOrgDataLoopGenes(1, 100);
 							repaint();
 							timePassed++;
 						} else if (trialNum < trialsPerGen)
@@ -167,10 +167,18 @@ public class GridPanel extends JPanel {
 	 * @param aFood
 	 * @return
 	 */
-	public boolean eatFood(Organism org, int fdId) {
+	public boolean eatFood(Organism org, OrgData orgData, int fdId) {
 		Food aFood = foodList.get(fdId);
 		if (org.matterInRange(aFood.getId(), aFood.getType(), 5)) {
-			System.out.println("Ate Food!!"); // TODO: Deplete food source.
+			if (aFood.getType() == 'h') {
+				System.out.println("Ate healthy Food!!");
+				orgData.addHealthyFood(aFood.getId());
+				orgData.addHealthSuccess();
+			} else {
+				System.out.println("Ate Pois Food!!");
+				orgData.addPoisFood(aFood.getId());
+				orgData.addPoisSuccess();
+			}
 			return org.eatFood(5 * aFood.getFoodType());
 		}
 		return false;
@@ -216,7 +224,7 @@ public class GridPanel extends JPanel {
 		for (int i = 0; i < organisms.size(); i++) {
 			Organism org = organisms.get(i);
 			OrgData orgData = orgDataList.get(i);
-			org.setFitness(g.fitnessAverageHealthTimeOfDeathNumSteps(orgData));
+			org.setFitness(g.fitness(orgData));
 			orgData.clearEatFail();
 			orgData.clearFoodList();
 			orgData.reinitializeVariables();
@@ -250,7 +258,7 @@ public class GridPanel extends JPanel {
 		while (numPreProcessedGenerations < generations) {
 			System.out.println("Processing Generation " + generationNum);
 			while (timePassed < lengthGeneration) {
-				simulateStepAstarClosedListOrgDataLoopGenes(1, 40);
+				simulateStepAstarClosedListOrgDataLoopGenes(1, 100);
 				timePassed++;
 			}
 			newGenerationAstar();
@@ -321,7 +329,7 @@ public class GridPanel extends JPanel {
 			// Organisms corresponding data object.
 			OrgData orgData = orgDataList.get(i);
 			// Asses fitness of each organism.
-			org.setFitness(g.fitnessAverageHealthTimeOfDeathNumSteps(orgData));
+			org.setFitness(g.fitness(orgData));
 			sum += org.getFitness();
 		}
 		// Perform the evolutionary process on the organism's in the organism
@@ -588,7 +596,7 @@ public class GridPanel extends JPanel {
 					anOrgData.countStep();
 				break;
 			case 1:
-				return eatFood(org, aFoodDestination);
+				return eatFood(org, anOrgData, aFoodDestination);
 		}
 		return false;
 	}
