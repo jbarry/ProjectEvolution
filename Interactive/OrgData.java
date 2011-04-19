@@ -1,6 +1,7 @@
 package Interactive;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -255,7 +256,16 @@ public class OrgData {
 	}
 
 	public void addChromosome(Chromosome chrom) {
-		chromosomeHistory.add(chrom);
+		LinkedList<Gene> listOfGenes = new LinkedList<Gene>();
+		for (int i = 0; i < chrom.size(); i++) {
+			LinkedList<Character> symList = (LinkedList<Character>) chrom
+					.getGene(i).getSymList();
+			LinkedList<Character> symListCopy = new LinkedList<Character>();
+			for (int j = 0; j < symList.size(); j++)
+				symListCopy.add(symList.get(j));
+			listOfGenes.add(new Gene(symListCopy));
+		}
+		chromosomeHistory.add(new Chromosome(listOfGenes));
 	}
 
 	public void addGeneration(Chromosome chrom, Coordinate c) {

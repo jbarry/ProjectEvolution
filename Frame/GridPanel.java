@@ -401,7 +401,9 @@ public class GridPanel extends JPanel {
 		// organism.
 		for (int i = 0; i < OptionsPanel.numOrganisms; i++) {
 			Organism org = new Organism(100.00, 2, i);
-			orgDataList.add(new OrgData(org.getMaxHealth(), i));
+			OrgData orgData = new OrgData(org.getMaxHealth(), i);
+			orgData.addChromosome(org.getChromosome());
+			orgDataList.add(orgData);
 			organisms.add(org);
 			locationMap.placeOrganism(org);
 			shuffleIds.add(i);
