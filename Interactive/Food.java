@@ -73,7 +73,7 @@ public abstract class Food extends Matter {
 		return 0;
 	}
 
-	public abstract Double getFoodType();
+	public abstract Double getTypeInt();
 	public abstract int getId();
 	/*public abstract void paint(Graphics g, boolean isDepleted);*/
 

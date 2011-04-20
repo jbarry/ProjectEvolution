@@ -55,7 +55,7 @@ public class HealthyFood extends Food {
 		return 'h';
 	}
 	
-	public Double getFoodType() {
+	public Double getTypeInt() {
 		return 1.0;
 	}
 

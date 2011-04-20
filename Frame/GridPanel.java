@@ -51,7 +51,7 @@ public class GridPanel extends JPanel {
 	private ArrayList<Integer> shuffleIds;
 	private ArrayList<String> shuffleStringIds;
 	private int lengthTimeStep = 100;
-	private int lengthGeneration = 600;
+	private int lengthGeneration = 500;
 	private int timePassed = 0;
 	private int trialsPerGen = 1;
 	public int trialNum = 1;
@@ -97,7 +97,7 @@ public class GridPanel extends JPanel {
 						if (timePassed < lengthGeneration) {
 							gui.updatePercentage((double) timePassed
 									/ lengthGeneration);
-							simulateStepAstarClosedListOrgDataLoopGenes(1, 100);
+							simStep(1, 2);
 							repaint();
 							timePassed++;
 						} else if (trialNum < trialsPerGen)
@@ -133,7 +133,7 @@ public class GridPanel extends JPanel {
 		GUI.genPanel.removeGenerations(generation);
 		foodList.clear();
 
-		for (int i = 0; i < numFoodSources * 3; i++) {
+		for (int i = 0; i < numFoodSources * 2; i++) {
 			if (ran.nextBoolean())
 				foodList.add(new HealthyFood(100.00, i, 2));
 			else
@@ -170,16 +170,10 @@ public class GridPanel extends JPanel {
 	public boolean eatFood(Organism org, OrgData orgData, int fdId) {
 		Food aFood = foodList.get(fdId);
 		if (org.matterInRange(aFood.getId(), aFood.getType(), 5)) {
-			if (aFood.getType() == 'h') {
-				System.out.println("Ate healthy Food!!");
-				orgData.addHealthyFood(aFood.getId());
-				orgData.addHealthSuccess();
-			} else {
-				System.out.println("Ate Pois Food!!");
-				orgData.addPoisFood(aFood.getId());
-				orgData.addPoisSuccess();
-			}
-			return org.eatFood(5 * aFood.getFoodType());
+			orgData.addEatFoodData(aFood.getType(), aFood.getId());
+			if (deplete(foodList.get(fdId), 5))
+				foodDead(foodList.get(fdId), "food died on eat.");
+			return org.eatFood(5 * aFood.getTypeInt());
 		}
 		return false;
 	}
@@ -258,7 +252,7 @@ public class GridPanel extends JPanel {
 		while (numPreProcessedGenerations < generations) {
 			System.out.println("Processing Generation " + generationNum);
 			while (timePassed < lengthGeneration) {
-				simulateStepAstarClosedListOrgDataLoopGenes(1, 100);
+				simStep(1, 2);
 				timePassed++;
 			}
 			newGenerationAstar();
@@ -360,16 +354,18 @@ public class GridPanel extends JPanel {
 				chrom.getGene(j).updateEvaledList();
 			// Re-initialize all of the organism's data.
 			orgData.reinitializeVariables();
+			org.reinitialize();
 			orgData.addChromosome(org.getChromosome());
 			// Place the organisms on the locationMap.
 			locationMap.placeOrganism(org);
-			/*locationMap.newLocation(org.getLocation(), Organism.width,
-					Organism.height, org.getId(), 'o');*/
 			org.setHealth(orgData.getMaxHealth());
 			shuffleIds.add(org.getId());
 		}
-
-		/*locationMap.placeOrganisms(organisms);*/
+		// Set the most elite Individuals.
+		ArrayList<Integer> eliteIdList = (ArrayList<Integer>) g
+				.getEliteIdList();
+		for (int i = 0; i < eliteIdList.size(); i++)
+			organisms.get(eliteIdList.get(i)).setElite(true);
 		// Calculate lastAvg for the Generation Panel.
 		lastAvg = sum / OptionsPanel.numOrganisms;
 		// Set the generation panel data information.
@@ -380,7 +376,6 @@ public class GridPanel extends JPanel {
 		} else {
 			t.start();
 			GUI.genPanel.newGeneration();
-			/*repaint();*/
 			System.out.println("restarting");
 		}
 	}
@@ -418,14 +413,14 @@ public class GridPanel extends JPanel {
 		}
 		// Initialize the food sources and allow locationMap to find a starting
 		// position for them.
-		for (int i = 0; i < numFoodSources * 3; i++) {
+		for (int i = 0; i < numFoodSources * 2; i++) {
 			if (ran.nextBoolean())
 				foodList.add(new HealthyFood(100.00, i, 2));
 			else
 				foodList.add(new PoisonousFood(100.00, i, 2));
 			locationMap.placeFood(foodList.get(i));
 		}
-		g = new GEP(0.75, 0.01, 0.01, 0.75, 0.75, 2, false, true);
+		g = new GEP(0.75, 0.01, 0.01, 0.82, 0.82, 2, false, true);
 //		preProcess(2);
 		t.start();
 	}
@@ -459,14 +454,14 @@ public class GridPanel extends JPanel {
 		}
 		// Initialize the food sources and allow locationMap to find a starting
 		// position for them.
-		for (int i = 0; i < numFoodSources * 3; i++) {
+		for (int i = 0; i < numFoodSources * 2; i++) {
 			if (ran.nextBoolean())
 				foodList.add(new HealthyFood(100.00, i, 2));
 			else
 				foodList.add(new PoisonousFood(100.00, i, 2));
 			locationMap.placeFood(foodList.get(i));
 		}
-		g = new GEP(0.75, 0.01, 0.01, 0.75, 0.75, 2, false, true);
+		g = new GEP(0.75, 0.01, 0.01, 0.82, 0.82, 2, false, true);
 		/*preProcess(2);*/
 		t.start();
 	}
@@ -476,13 +471,24 @@ public class GridPanel extends JPanel {
 	 * object.
 	 * 
 	 * @param numActions
-	 *            The number of actions that an organism will do at each time
-	 *            step.
+	 * @param healthDepletion
 	 */
-	private void simulateStepAstarClosedListOrgDataLoopGenes(int numActions, double healthDepletion) {
+	private void simStep(int numActions, double healthDepletion) {
 		Collections.shuffle(shuffleIds);
+		for (int i = 0; i < foodList.size(); i++) {
+			Food f = foodList.get(i);
+			// Deplete food.
+			if (deplete(f, (ran.nextInt(20) / 10)))
+				foodDead(f, "food died! Replacing.");
+		}
 		// Loop through Organisms.
 		mainLoop: for (int orgIndex = 0; orgIndex < shuffleIds.size(); orgIndex++) { // mainLoop.
+			// If all the orgs are dead, then start a new generation.
+			if (shuffleIds.isEmpty()) {
+				timePassed = lengthGeneration;
+				System.out.println("All dead.");
+				break;
+			}
 			// Get an Organism corresponding the the ids in the shuffleIds
 			// list.
 			Organism org = organisms.get(shuffleIds.get(orgIndex));
@@ -501,17 +507,14 @@ public class GridPanel extends JPanel {
 																						  // loop.
 				// Sample for fitness function.
 				orgData.incHlthTot();
-				// depleteValue is the value to decrease the Organism's
-				// health
+				// depleteValue is the value to decrease the Organism's health
 				// by at each time step.
 				double depleteValue = orgData.getMaxHealth()
-						/ ((lengthGeneration - healthDepletion) * numActions);
+						/ (lengthGeneration / healthDepletion);
 				// Check to see if the Organism is dead, if so remove that org
 				// from the shuffleIds list.
 				if (deplete(org, depleteValue)) {
-					orgData.setTimeOfDeath(timePassed);
-					System.out.println("remove on deplete.");
-					shuffleIds.remove(new Integer(org.getId()));
+					orgDead(org, orgData, "remove on deplete.");
 					continue mainLoop;
 				}
 				Chromosome chrome = org.getChromosome();
@@ -677,7 +680,7 @@ public class GridPanel extends JPanel {
 		environment.put("c", orgNearFood);
 		environment.put("d", health);
 		environment.put("e", foodRemaining);
-		environment.put("f", aFood.getFoodType());
+		environment.put("f", aFood.getTypeInt());
 		environment.put("g", numSurroundingOrgs);
 		return result.evaluate(environment);
 	}
@@ -724,7 +727,7 @@ public class GridPanel extends JPanel {
 		environment.put("c", orgNearFood);
 		environment.put("d", health);
 		environment.put("e", foodRemaining);
-		environment.put("f", aFood.getFoodType());
+		environment.put("f", aFood.getTypeInt());
 		environment.put("g", numSurroundingOrgs);
 		double resultDoub = result.evaluate(environment);
 		System.out.println("ResultDoub: " + resultDoub);
@@ -755,7 +758,7 @@ public class GridPanel extends JPanel {
 		environment.put("c", orgNearFood);
 		environment.put("d", health);
 		environment.put("e", foodRemaining);
-		environment.put("f", aFood.getFoodType());
+		environment.put("f", aFood.getTypeInt());
 		environment.put("g", numSurroundingOrgs);
 		return result.evaluate(environment);
 	}
@@ -792,10 +795,6 @@ public class GridPanel extends JPanel {
 	public boolean deplete(Matter m, double val) {
 		if (m.getHealth() - val < 0) {
 			m.setHealth(0);
-			Coordinate c = m.getLocation();
-			int x = c.getX();
-			int y = c.getY();
-			locationMap.setRangeToBlank(x, y, m.getWidth(), m.getHeight());
 			return true;
 		} else
 			m.setHealth(m.getHealth() - val);
@@ -815,10 +814,11 @@ public class GridPanel extends JPanel {
 	public void foodDead(Food food, String message) {
 		// TODO: Decorate with dead food class.
 		System.out.println(message);
-		foodList.remove(food);
+		food.setHealth(food.getMaxHealth());
 		Coordinate foodLocation = food.getLocation();
 		locationMap.setRangeToBlank(foodLocation.getX(), foodLocation.getY(),
 				food.getWidth(), food.getHeight());
+		locationMap.placeFood(food);
 	}
 
 	public String getOrganismData(int index) {
@@ -826,12 +826,12 @@ public class GridPanel extends JPanel {
 		Organism org = organisms.get(index);
 		return orgData.getId() + " " + org.getHealth() + " " + org.getFitness()
 				+ " " + org.getLocation().getX() + " "
-				+ org.getLocation().getY() + " " + orgData.getHealthEat() + " "
-				+ orgData.getPoisonEat() + " " + orgData.getEatFail() + " "
+				+ org.getLocation().getY() + " " + orgData.getHealthEatSize() + " "
+				+ orgData.getPoisonEatSize() + " " + orgData.getEatFail() + " "
 				+ orgData.getNumAttacked() + " " + orgData.getNumPushed() + " "
 				+ orgData.getTotalScans();
 	}
-
+	
 	// ------------------------------------------------------------------------------------
 	// --Override Functions--
 	// ------------------------------------------------------------------------------------

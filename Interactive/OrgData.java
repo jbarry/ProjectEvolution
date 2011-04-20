@@ -1,6 +1,7 @@
 package Interactive;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
@@ -23,8 +24,8 @@ public class OrgData {
 	private int timeOfDeath;
 	private double averageHealth;
 	private List<Coordinate> closedList;
-	private TreeSet<Integer> healthyFood;
-	private TreeSet<Integer> poisonFood;
+	private HashSet<Integer> healthyFood;
+	private HashSet<Integer> poisonFood;
 	private ArrayList<ArrayList<String>> actionList;
 	private ArrayList<Coordinate> startingLocation;
 	private ArrayList<Chromosome> chromosomeHistory;
@@ -51,8 +52,8 @@ public class OrgData {
 		actionList.add(new ArrayList<String>());
 		startingLocation = new ArrayList<Coordinate>();
 		chromosomeHistory = new ArrayList<Chromosome>();
-		healthyFood = new TreeSet<Integer>();
-		poisonFood = new TreeSet<Integer>();
+		healthyFood = new HashSet<Integer>();
+		poisonFood = new HashSet<Integer>();
 		
 	}
 
@@ -84,12 +85,12 @@ public class OrgData {
 		eatFail++;
 	}
 
-	public int getHealthEat() {
-		return healthyEatSuccess;
+	public int getHealthEatSize() {
+		return healthyFood.size();
 	}
 
-	public int getPoisonEat() {
-		return poisonEatSuccess;
+	public int getPoisonEatSize() {
+		return poisonFood.size();
 	}
 
 	public int getTotalScans() {
@@ -286,11 +287,11 @@ public class OrgData {
 		startingLocation.add(c);
 	}
 
-	public void setHealthyFood(TreeSet<Integer> healthyFood) {
+	public void setHealthyFood(HashSet<Integer> healthyFood) {
 		this.healthyFood = healthyFood;
 	}
 
-	public TreeSet<Integer> getHealthyFood() {
+	public HashSet<Integer> getHealthyFood() {
 		return healthyFood;
 	}
 	
@@ -298,11 +299,11 @@ public class OrgData {
 		healthyFood.add(i);
 	}
 
-	public void setPoisonFood(TreeSet<Integer> poisonFood) {
+	public void setPoisonFood(HashSet<Integer> poisonFood) {
 		this.poisonFood = poisonFood;
 	}
 
-	public TreeSet<Integer> getPoisonFood() {
+	public HashSet<Integer> getPoisonFood() {
 		return poisonFood;
 	}
 	
@@ -340,6 +341,18 @@ public class OrgData {
 		for (int i = generation; i < chromosomeHistory.size(); i++)
 			chromosomeHistory.remove(i);
 		return toReturnChrom;
+	}
+
+	public void addEatFoodData(Character type, int id) {
+		if (type == 'h') {
+			System.out.println("Ate healthy Food!!");
+			addHealthyFood(id);
+			addHealthSuccess();
+		} else {
+			System.out.println("Ate Pois Food!!");
+			addPoisFood(id);
+			addPoisSuccess();
+		}
 	}
 
 	/*public void goBack(int generation) {

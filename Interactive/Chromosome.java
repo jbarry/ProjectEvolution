@@ -16,7 +16,7 @@ public class Chromosome extends Genetic implements Cloneable{
 		ran = new Random();
 		chromosome = new LinkedList<Gene>();
 		for (int i = 0; i < numGenes; i++)
-			chromosome.add(new Gene(true, 60));
+			chromosome.add(new Gene(true, 100));
 	}
 	
 	// For testing purposes of the GEP class.

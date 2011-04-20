@@ -26,6 +26,7 @@ public class Organism extends Matter implements Cloneable{
 	public static int height = 5;
 	private String action;
 	private double fitness;
+	private boolean isElite;
 	// For images/actions
 	private Image ninja_walk1;
 	private Image ninja_walk1_inv;
@@ -43,49 +44,11 @@ public class Organism extends Matter implements Cloneable{
 	private boolean facingRight;
 	private char currentAction;
 
-	// ------------------------------------------------------------------------------------
-	// --constructors--
-	// ------------------------------------------------------------------------------------
-	public Organism(double aHealth, int chromSize, int anId, int aScanRange) {
-		super(aHealth, anId, 'o');
-		chromosome = new Chromosome(chromSize);
-		fitness = 0.0;
-		/*scanRange = aScanRange;*/
-		// Image initialization.
-		ninja_walk1 = new ImageIcon(getClass().getResource(
-				"sprites/ninja_walk1.gif")).getImage();
-		ninja_walk1_inv = new ImageIcon(getClass().getResource(
-				"sprites/ninja_walk1_inv.gif")).getImage();
-		ninja_walk2 = new ImageIcon(getClass().getResource(
-				"sprites/ninja_walk2.gif")).getImage();
-		ninja_walk2_inv = new ImageIcon(getClass().getResource(
-				"sprites/ninja_walk2_inv.gif")).getImage();
-		ninja_eat = new ImageIcon(getClass().getResource(
-				"sprites/ninja_eat.gif")).getImage();
-		ninja_eat_inv = new ImageIcon(getClass().getResource(
-				"sprites/ninja_eat_inv.gif")).getImage();
-		ninja_attack = new ImageIcon(getClass().getResource(
-				"sprites/ninja_attack.gif")).getImage();
-		ninja_attack_inv = new ImageIcon(getClass().getResource(
-				"sprites/ninja_attack_inv.gif")).getImage();
-		ninja_push = new ImageIcon(getClass().getResource(
-				"sprites/ninja_push.gif")).getImage();
-		ninja_push_inv = new ImageIcon(getClass().getResource(
-				"sprites/ninja_push_inv.gif")).getImage();
-		ninja_dead = new ImageIcon(getClass().getResource(
-				"sprites/ninja_dead.gif")).getImage();
-		ninja_dead_inv = new ImageIcon(getClass().getResource(
-				"sprites/ninja_dead_inv.gif")).getImage();
-		// create behavior tracking boolean variables
-		swapImage = true;
-		facingRight = true;
-		currentAction = ' ';
-	}
-
 	public Organism(double aHealth, int chromSize, int anId) {
 		super(aHealth, anId, 'o');
 		chromosome = new Chromosome(chromSize);
 		fitness = 0.0;
+		isElite = false;
 		// Image initialization.
 		ninja_walk1 = new ImageIcon(getClass().getResource(
 				"sprites/ninja_walk1.gif")).getImage();
@@ -405,6 +368,10 @@ public class Organism extends Matter implements Cloneable{
 	public void clearAction() {
 		action = "";
 	}
+	
+	public void reinitialize() {
+		isElite = false;
+	}
 
 	public Chromosome getChromosome() {
 		return chromosome;
@@ -498,7 +465,10 @@ public class Organism extends Matter implements Cloneable{
 	}
 
 	public void paint(Graphics g) {
-		g.setColor(Color.BLACK);
+		if(isElite)
+			g.setColor(Color.GREEN);
+		else
+			g.setColor(Color.BLACK);
 		/*if (location == null)
 		System.out.println("loc at paint time is null");
 		else
@@ -506,6 +476,14 @@ public class Organism extends Matter implements Cloneable{
 		+ ", " + location.getY());*/
 		g.fillRect((int) this.location.getX() - (width / 2),
 				(int) this.location.getY() - (height / 2), width, height);
+	}
+
+	public void setElite(boolean isElite) {
+		this.isElite = isElite;
+	}
+
+	public boolean isElite() {
+		return isElite;
 	}
 
 	/*public void paint(Graphics g) {

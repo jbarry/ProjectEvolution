@@ -31,12 +31,12 @@ public class GEP {
 	private boolean handicap;
 	private int numElites;
 	private boolean doElitism;
-
 	public static double tournProb;
 	public static double mutProb;
 	public static double rotProb;
 	public static double onePtProb;
 	public static double twoPtProb;
+	private List<Integer> eliteIdList;
 
 	/**
 	 * 
@@ -69,8 +69,8 @@ public class GEP {
 		handicap = aHandicap;
 		doElitism = aDoElitism;
 		numElites = aNumElitists;
-
 		ran = new Random();
+		eliteIdList = new ArrayList<Integer>();
 	}
 
 	/**
@@ -84,15 +84,15 @@ public class GEP {
 		System.out.println("avgHealth: " + avgHealth);
 		double activity = (double) orgData.getNumSteps();
 		System.out.println("activity: " + activity);
-		double goodEating = (double) orgData.getHealthEat()
-				* (orgData.getHealthEat() + orgData.getPoisonEat() + orgData
+		double goodEating = (double) orgData.getHealthEatSize()
+				* (orgData.getHealthEatSize() + orgData.getPoisonEatSize() + orgData
 						.getTotalScans()) / (GridPanel.numFoodSources);
 		System.out.println("goodEating: " + goodEating);
 		double assertion = (double) (orgData.getNumSteps()
 				+ orgData.getNumAttacked() + orgData.getNumPushed())
-				/ (orgData.getHealthEat() + 1);
+				/ (orgData.getHealthEatSize() + 1);
 		System.out.println("assertion: " + assertion);
-		double badEating = (double) orgData.getPoisonEat() + 1;
+		double badEating = (double) orgData.getPoisonEatSize() + 1;
 		System.out.println("badEating: " + badEating);
 		double fitness = (avgHealth * (activity + goodEating + assertion))
 				/ badEating;
@@ -114,21 +114,27 @@ public class GEP {
 				/ orgData.getTimeOfDeath());
 		double averageHealth = orgData.getAverageHealth();
 		double timeOfDeath = orgData.getTimeOfDeath();
-		double hEat = orgData.getHealthEat();
-		double pEat = orgData.getPoisonEat();
+		double hEat = orgData.getHealthEatSize();
+		if (hEat == 0)
+			hEat = 1;
+		double pEat = orgData.getPoisonEatSize();
+		if (pEat == 0)
+			pEat = 1;
 		double hEatSuccesses = orgData.getHealthyEatSuccess();
 		double pEatSuccesses = orgData.getPoisonEatSuccess();
-		System.out.println("numsteps: " + numSteps);
 		System.out.println("timeofdeath: " + timeOfDeath);
 		System.out.println("avghealth: " + averageHealth);
-		System.out.println("hEat: " + hEat);
-		System.out.println("pEat: " + pEat);
-		System.out.println("pSuccess: " + pEatSuccesses);
-		System.out.println("hSuccess: " + hEatSuccesses);
-		double fitness = (orgData.getAverageHealth() / numSteps) + timeOfDeath
-				+ averageHealth * Math.pow(hEat, 4)
-				* ((-1) * Math.pow(pEat, 4)) - (Math.pow(pEatSuccesses, 2)
-				+ Math.pow(hEatSuccesses, 2));
+		if (hEat > 1)
+			System.out.println("hEat: " + hEat);
+		if (pEat > 1)
+			System.out.println("pEat: " + pEat);
+		if (pEatSuccesses > 1)
+			System.out.println("pSuccess: " + pEatSuccesses);
+		if (hEatSuccesses > 1)
+			System.out.println("hSuccess: " + hEatSuccesses);
+		double fitness = timeOfDeath + averageHealth + Math.pow(hEat, 4)
+				- Math.pow(pEat, 4) + Math.pow(hEatSuccesses, 2)
+				+ (pEatSuccesses * 2);
 		System.out.println("fit: " + fitness + "\n");
 		return fitness;
 	}
@@ -145,9 +151,9 @@ public class GEP {
 	 */
 
 	public LinkedList<Organism> newGeneration(LinkedList<Organism> anOrgList) {
-
 		// List to hold the Elite individuals.
 		LinkedList<Chromosome> eliteList = new LinkedList<Chromosome>();
+		eliteIdList.clear();
 		// Get the most elite indiv or individuals.
 		if (doElitism) {
 			// Called on a clone of the orgList because
@@ -167,8 +173,7 @@ public class GEP {
 		// for 2-point cross over.
 		pairList = mateSelect(makeChrmListFrmPair(pairList));
 		// 2-point cross over.
-		onePointCrossOver(pairList);
-		onePointCrossOver(pairList);
+		twoPointCrossOver(pairList);
 		LinkedList<Chromosome> finalChromes = makeChrmListFrmPair(pairList);
 		// Proceed with elitism if true.
 		if (doElitism)
@@ -322,6 +327,7 @@ public class GEP {
 		LinkedList<Organism> orderedOrgList = (LinkedList<Organism>) anOrgList
 				.clone();
 		Collections.sort(orderedOrgList);
+		// Fill the eliteIdList field to return to the grid panel when asked.
 		/*System.out.println("In assembleelites method");*/
 		/*for (Organism organism : orderedOrgList) {
 			System.out.println("Id: " + organism.getId() + " fitness: "
@@ -410,8 +416,13 @@ public class GEP {
 		while (indeces.size() < numElites)
 			indeces.add(ran.nextInt(aFinalChromes.size()));
 		LinkedList<Integer> indexList = new LinkedList<Integer>(indeces);
-		while (!indexList.isEmpty())
-			aFinalChromes.set(indexList.pop(), anEliteList.pop());
+		while (!indexList.isEmpty()) {
+			Integer eliteIndex = indexList.pop();
+			// Get the index/id of the organism that will get the elite's
+			// chromosomes.
+			eliteIdList.add(eliteIndex);
+			aFinalChromes.set(eliteIndex, anEliteList.pop());
+		}
 		return aFinalChromes;
 	}
 
@@ -635,6 +646,14 @@ public class GEP {
 			if (ran.nextDouble() < onePtProb)
 				aPairList.get(i).getLeft().crossOver(aPairList.get(i).getRight());
 	}
+	
+	public void twoPointCrossOver(LinkedList<Pair<Chromosome, Chromosome>> aPairList) {
+		for (int i = 0; i < aPairList.size(); i++)
+			if (ran.nextDouble() < twoPtProb) {
+				aPairList.get(i).getLeft().crossOver(aPairList.get(i).getRight());
+				aPairList.get(i).getLeft().crossOver(aPairList.get(i).getRight());
+			}
+	}
 
 	public double getTournProb() {
 		return tournProb;
@@ -691,6 +710,10 @@ public class GEP {
 
 	public int getNumElites() {
 		return numElites;
+	}
+	
+	public List<Integer> getEliteIdList() {
+		return eliteIdList;
 	}
 
 	// Used for debugging. Prints the line number.

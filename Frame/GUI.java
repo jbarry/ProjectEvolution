@@ -170,7 +170,7 @@ public class GUI extends Container{
 		/** Create and set jframe attributes */
 		jframe = new JFrame();
 		jframe.setLayout(null);
-		jframe.setAlwaysOnTop(true);
+		jframe.setAlwaysOnTop(false);
 		jframe.setSize(GUI.WIDTH, GUI.HEIGHT);
 		jframe.setVisible(true);
 		jframe.setFocusable(true);
@@ -565,7 +565,7 @@ public class GUI extends Container{
 				getGridPanelData(e);
 			}
 		}
-		jframe.setAlwaysOnTop(true);
+		jframe.setAlwaysOnTop(false);
 		dialog.dispose();
 		return userCancel;
 	}
@@ -672,7 +672,7 @@ public class GUI extends Container{
 			FileDialog sd = new FileDialog(new JFrame(), "Save Genes",
 					FileDialog.SAVE);
 			sd.setVisible(true);
-			sd.setAlwaysOnTop(true);
+			sd.setAlwaysOnTop(false);
 			sd.setFocusable(true);
 			File file = new File(sd.getDirectory(), sd.getFile() + ".txt");
 			writer = new BufferedWriter(new FileWriter(file));
@@ -723,7 +723,7 @@ public class GUI extends Container{
 			FileDialog sd = new FileDialog(new JFrame(), "Save Configuration",
 					FileDialog.SAVE);
 			sd.setVisible(true);
-			sd.setAlwaysOnTop(true);
+			sd.setAlwaysOnTop(false);
 			sd.setFocusable(true);
 			File file = new File(sd.getDirectory(), sd.getFile() + ".txt");
 			writer = new BufferedWriter(new FileWriter(file));
@@ -757,7 +757,7 @@ public class GUI extends Container{
 			FileDialog ld = new FileDialog(new JFrame(), "Load Genes",
 					FileDialog.LOAD);
 			ld.setVisible(true);
-			ld.setAlwaysOnTop(true);
+			ld.setAlwaysOnTop(false);
 			ld.setFocusable(true);
 			if (ld.getFile() != null) {
 				File file = new File(ld.getDirectory(), ld.getFile());
@@ -874,7 +874,7 @@ public class GUI extends Container{
 			FileDialog ld = new FileDialog(new JFrame(), "Load Configuration",
 					FileDialog.LOAD);
 			ld.setVisible(true);
-			ld.setAlwaysOnTop(true);
+			ld.setAlwaysOnTop(false);
 			ld.setFocusable(true);
 			if (ld.getFile() != null) {
 				File file = new File(ld.getDirectory(), ld.getFile());

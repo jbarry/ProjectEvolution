@@ -47,7 +47,7 @@ public class PoisonousFood extends Food{
 		return 'p';
 	}
 	
-	public Double getFoodType() {
+	public Double getTypeInt() {
 		return -1.0;
 	}
 
