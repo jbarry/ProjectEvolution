@@ -80,8 +80,8 @@ public class GridPanel extends JPanel {
 				// initial JPanel settings
 				setLayout(null);
 				setLocation(GUI.WIDTH - GridPanel.WIDTH, 0);
-				setSize(GridPanel.WIDTH, GridPanel.HEIGHT);
 				setBorder(BorderFactory.createLineBorder(Color.black));
+				setSize(GridPanel.WIDTH, GridPanel.HEIGHT);
 
 				organisms = new LinkedList<Organism>();
 				healthFd = new LinkedList<HealthyFood>();
