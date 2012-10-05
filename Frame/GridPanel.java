@@ -59,7 +59,7 @@ public class GridPanel extends JPanel {
 	public double lastAvg = 0; 
 	private GEP g;
 	public static int numFoodSources = 0;
-	private Timer t;
+	private Timer timer;
 	private Normalizer norm;
 	private int numPreProcessedGenerations = 0;
 	private Random ran;
@@ -92,7 +92,7 @@ public class GridPanel extends JPanel {
 						GridPanel.this));
 				// handle other mouse events
 				addMouseListener(new MouseListenerClass());
-				t = new javax.swing.Timer(lengthTimeStep, new ActionListener() {
+				timer = new javax.swing.Timer(lengthTimeStep, new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if (timePassed < lengthGeneration) {
 							gui.updatePercentage((double) timePassed
@@ -118,7 +118,7 @@ public class GridPanel extends JPanel {
 	}
 
 	public void revert(int generation) {
-		t.stop();
+		timer.stop();
 		generationNum = generation;
 		timePassed = 0;
 		locationMap.clearLocations();
@@ -205,7 +205,7 @@ public class GridPanel extends JPanel {
 	}
 
 	public void newTrial() {
-		t.stop();
+		timer.stop();
 		shuffleIds.clear();
 		/*for (Organism o : organisms) {
 			o.newLocation();
@@ -239,7 +239,7 @@ public class GridPanel extends JPanel {
 			GUI.genPanel.enableResumeSimulation();
 			gui.toggleAllPauses(false);
 		} else {
-			t.start();
+			timer.start();
 			GUI.genPanel.newTrial();
 		}
 	}
@@ -277,7 +277,7 @@ public class GridPanel extends JPanel {
 	}
 
 	public Timer getTimer() {
-		return t;
+		return timer;
 	}
 
 	public int getCurrTimeStep() {
@@ -286,19 +286,19 @@ public class GridPanel extends JPanel {
 
 	public void setTimeStep(int step) {
 		lengthTimeStep = step;
-		t.setDelay(step);
+		timer.setDelay(step);
 	}
 
-	public void start() {
-		t.start();
+	public void startTimer() {
+		timer.start();
 	}
 
 	public void stop() {
-		t.stop();
+		timer.stop();
 	}
 
 	public boolean isPaused() {
-		if (t.isRunning())
+		if (timer.isRunning())
 			return false;
 		return true;
 	}
@@ -369,7 +369,7 @@ public class GridPanel extends JPanel {
 			GUI.genPanel.enableResumeSimulation();
 			gui.toggleAllPauses(false);
 		} else {
-			t.start();
+			timer.start();
 			GUI.genPanel.newGeneration();
 			/*repaint();*/
 			System.out.println("restarting");

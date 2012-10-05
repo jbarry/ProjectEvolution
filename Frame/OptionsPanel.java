@@ -308,7 +308,7 @@ public class OptionsPanel extends JPanel implements Runnable {
 								/* simulation.initialize(); */
 								/* simulation.initializeAstar(); */
 								simulation.initialize();
-								simulation.start();
+								simulation.startTimer();
 							}
 						} else {
 							numOrgsLbl.setText("Number not 2 <= x <= 500");
@@ -839,7 +839,7 @@ public class OptionsPanel extends JPanel implements Runnable {
 	// ------------------------------------------------------------------------------------
 	public void eventPause(GridPanel simulation) {
 		if (simulation.isPaused()) {
-			simulation.start();
+			simulation.startTimer();
 			pause.setText("Pause");
 			MonitorPanel.simStatus.setText("Running");
 		} else {

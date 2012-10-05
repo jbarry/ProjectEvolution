@@ -295,7 +295,7 @@ public class GUI extends Container {
 					/* simulation.initialize(); */
 					/* simulation.initializeAstar(); */
 					simulation.initialize();
-					simulation.start();
+					simulation.startTimer();
 				}
 			}
 		});
@@ -494,7 +494,7 @@ public class GUI extends Container {
 					optionsPanel.eventPause(simulation);
 				}
 				loadConfig();
-				simulation.start();
+				simulation.startTimer();
 			}
 		});
 		fileMenu.add(loadConfig);
