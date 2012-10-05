@@ -64,7 +64,8 @@ public class GridPanel extends JPanel {
 	private int numPreProcessedGenerations = 0;
 	private Random ran;
 	private GUI gui;
-
+	private Thread gameThread;
+	
 	// ------------------------------------------------------------------------------------
 	// --constructors--
 	// ------------------------------------------------------------------------------------
@@ -74,45 +75,47 @@ public class GridPanel extends JPanel {
 	 */
 	public GridPanel(final GUI aGui) {
 		gui = aGui;
-		Runnable r = new Runnable() {
-			@Override
-			public void run() {
-				// initial JPanel settings
-				setLayout(null);
-				setLocation(GUI.WIDTH - GridPanel.WIDTH, 0);
-				setBorder(BorderFactory.createLineBorder(Color.black));
-				setSize(GridPanel.WIDTH, GridPanel.HEIGHT);
-
-				organisms = new LinkedList<Organism>();
-				healthFd = new LinkedList<HealthyFood>();
-				poisFood = new LinkedList<PoisonousFood>();
-				foodList = new LinkedList<Food>();
-				// track user mouse movement.
-				addMouseMotionListener(new MouseMotionListenerClass(
-						GridPanel.this));
-				// handle other mouse events
-				addMouseListener(new MouseListenerClass());
-				timer = new javax.swing.Timer(lengthTimeStep, new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						if (timePassed < lengthGeneration) {
-							gui.updatePercentage((double) timePassed
-									/ lengthGeneration);
-							simulateStepAstarClosedListOrgDataLoopGenes(1, 40);
-							repaint();
-							timePassed++;
-						} else if (trialNum < trialsPerGen)
-							newTrial();
-						else {
-							newGenerationAstar();
-						}
-						repaint();
-					}
-				});
+		// track user mouse movement.
+		addMouseMotionListener(new MouseMotionListenerClass(
+				GridPanel.this));
+		// handle other mouse events
+		addMouseListener(new MouseListenerClass());
+		// initial JPanel settings
+		setLayout(null);
+		setLocation(GUI.WIDTH - GridPanel.WIDTH, 0);
+		setBorder(BorderFactory.createLineBorder(Color.black));
+		setSize(GridPanel.WIDTH, GridPanel.HEIGHT);
+		
+		// Initialize timer. Trying to keep painting separate from
+		// actual game.
+		timer = new javax.swing.Timer(lengthTimeStep, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+//				repaint();
 			}
-		};
-		r.run();
+		});
+		
+		/*gameThread = new Thread(new GameRunnable());*/
 	}
 
+	class GameRunnable implements Runnable {
+		@Override
+		public void run() {
+			if (timePassed < lengthGeneration) {
+				System.out.println(timePassed + " " + lengthGeneration);
+				gui.updatePercentage((double) timePassed
+						/ lengthGeneration);
+				simulateStepAstarClosedListOrgDataLoopGenes(1, 40);
+				timePassed++;
+			} else if (trialNum < trialsPerGen) newTrial();
+			else newGenerationAstar();
+			System.out.println("end of thread");
+		}
+	}
+	
+	public void setupGame() {
+		
+	}
+	
 	public int getGenerationNum() {
 		return generationNum;
 	}
@@ -290,6 +293,8 @@ public class GridPanel extends JPanel {
 	}
 
 	public void startTimer() {
+		/*gameThread.start();*/
+		System.out.println("thread started");
 		timer.start();
 	}
 
@@ -381,6 +386,12 @@ public class GridPanel extends JPanel {
 	 * objects.
 	 */
 	public void initialize() {
+		
+		organisms = new LinkedList<Organism>();
+		healthFd = new LinkedList<HealthyFood>();
+		poisFood = new LinkedList<PoisonousFood>();
+		foodList = new LinkedList<Food>();
+		
 		generationNum = 1;
 		trialNum = 1;
 		GUI.genPanel.resetGenInformation();
