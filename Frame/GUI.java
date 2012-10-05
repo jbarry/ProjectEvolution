@@ -115,68 +115,7 @@ public class GUI extends Container {
 	// --constructors--
 	// ------------------------------------------------------------------------------------
 	public GUI() {
-		/** Handle UI override for Frame */
-		UIManager ui = new UIManager();
-
-		try {
-			// Set System L&F.
-			ui.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-
-			// allow for fancy frame and dialog boxes.
-			JFrame.setDefaultLookAndFeelDecorated(true);
-			JDialog.setDefaultLookAndFeelDecorated(true);
-		} catch (UnsupportedLookAndFeelException e) {
-		} catch (ClassNotFoundException e) {
-		} catch (InstantiationException e) {
-		} catch (IllegalAccessException e) {
-		}
-
-		// Gradients
-		List<Object> gradients = new ArrayList<Object>(5);
-		gradients.add(0.00f);
-		gradients.add(0.00f);
-		gradients.add(new Color(0xC1C1C1));
-		gradients.add(new Color(0xFFFFFF));
-		gradients.add(new Color(0x5C5D5C));
-
-		// UI HashMap Overrides
-		ui.put("Button.background", new Color(255, 255, 255));
-		ui.put("Button.foreground", new Color(0, 0, 0));
-		ui.put("Button.gradient", gradients);
-		ui.put("Button.select", new Color(175, 175, 175));
-
-		ui.put("Label.foreground", new Color(0, 0, 0));
-
-		ui.put("Menu.selectionBackground", new Color(175, 175, 175));
-		ui.put("MenuBar.background", new Color(220, 220, 220));
-		ui.put("MenuBar.foreground", new Color(0, 0, 0));
-		ui.put("MenuItem.selectionBackground", new Color(175, 175, 175));
-
-		ui.put("OptionPane.background", new Color(175, 175, 175));
-		ui.put("OptionPane.errorDialog.titlePane.background", new Color(255,
-				153, 153)); // redish
-		ui.put("OptionPane.questionDialog.titlePane.background", new Color(153,
-				204, 153)); // greenish
-		ui.put("OptionPane.warningDialog.titlePane.background", new Color(255,
-				204, 103)); // yellowish
-
-		ui.put("Panel.background", new Color(175, 175, 175));
-
-		ui.put("RadioButton.background", new Color(175, 175, 175));
-		ui.put("RadioButton.foreground", new Color(0, 0, 0));
-
-		ui.put("RootPane.frameBorder",
-				BorderFactory.createLineBorder(Color.BLACK, 2));
-		ui.put("RootPane.plainDialogBorder",
-				BorderFactory.createLineBorder(Color.BLACK, 2));
-		ui.put("RootPane.questionDialogBorder",
-				BorderFactory.createLineBorder(Color.BLACK, 2));
-		ui.put("RootPane.warningDialogBorder",
-				BorderFactory.createLineBorder(Color.BLACK, 2));
-
-		ui.put("Slider.background", new Color(175, 175, 175));
-
-		ui.put("TextArea.foreground", new Color(0, 0, 0));
+		
 
 		/** Create and set jframe attributes */
 		jframe = new JFrame();
@@ -211,6 +150,7 @@ public class GUI extends Container {
 			public void keyTyped(KeyEvent arg0) {
 			}
 		};
+		
 		pane.addKeyListener(frameKeyListener);
 
 		MouseListener frameMouseListener = new MouseListener() {
@@ -551,7 +491,7 @@ public class GUI extends Container {
 		});
 
 		// apply LnF (Look and Feel)
-		SwingUtilities.updateComponentTreeUI(jframe);
+		/*SwingUtilities.updateComponentTreeUI(jframe);*/
 	}
 
 	// ------------------------------------------------------------------------------------

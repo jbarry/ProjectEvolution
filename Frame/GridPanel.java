@@ -65,6 +65,7 @@ public class GridPanel extends JPanel {
 	private Random ran;
 	private GUI gui;
 	private Thread gameThread;
+	public boolean gameStarted;
 	
 	// ------------------------------------------------------------------------------------
 	// --constructors--
@@ -75,6 +76,8 @@ public class GridPanel extends JPanel {
 	 */
 	public GridPanel(final GUI aGui) {
 		gui = aGui;
+		gameStarted = false;
+		
 		// track user mouse movement.
 		addMouseMotionListener(new MouseMotionListenerClass(
 				GridPanel.this));
@@ -294,6 +297,7 @@ public class GridPanel extends JPanel {
 
 	public void startTimer() {
 		/*gameThread.start();*/
+		gameStarted = true;
 		System.out.println("thread started");
 		timer.start();
 	}
@@ -835,15 +839,17 @@ public class GridPanel extends JPanel {
 	 */
 	@Override
 	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		gui.getMap().paint(g);
-		// handle each new organism created.
-		for (Organism org : organisms)
-			org.paint(g);
-		/*for (Integer i : shuffleIds)
-			organisms.get(i).paint(g);*/
-		for (Food f : foodList)
-			if (f.getHealth() > 0)
-				f.paint(g, false);
+		if (gameStarted) {
+			super.paintComponent(g);
+			gui.getMap().paint(g);
+			// handle each new organism created.
+			for (Organism org : organisms)
+				org.paint(g);
+			/*for (Integer i : shuffleIds)
+				organisms.get(i).paint(g);*/
+			for (Food f : foodList)
+				if (f.getHealth() > 0)
+					f.paint(g, false);
+		}
 	}
 }
