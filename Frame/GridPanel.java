@@ -64,8 +64,9 @@ public class GridPanel extends JPanel {
 	private int numPreProcessedGenerations = 0;
 	private Random ran;
 	private GUI gui;
-	private Thread gameThread;
-	public boolean gameStarted;
+	private GameThread gameThread;
+	public boolean isPainting;
+	private boolean gamePaused;
 	
 	// ------------------------------------------------------------------------------------
 	// --constructors--
@@ -76,7 +77,8 @@ public class GridPanel extends JPanel {
 	 */
 	public GridPanel(final GUI aGui) {
 		gui = aGui;
-		gameStarted = false;
+		isPainting = false;
+		gamePaused = false;
 		
 		// track user mouse movement.
 		addMouseMotionListener(new MouseMotionListenerClass(
@@ -93,26 +95,54 @@ public class GridPanel extends JPanel {
 		// actual game.
 		timer = new javax.swing.Timer(lengthTimeStep, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				repaint();
+				repaint();
 			}
 		});
 		
-		/*gameThread = new Thread(new GameRunnable());*/
+		gameThread = new GameThread();
+		
 	}
 
-	class GameRunnable implements Runnable {
+	private class GameThread extends Thread {
+		
+		private boolean isWaiting = false;
+		
 		@Override
 		public void run() {
-			if (timePassed < lengthGeneration) {
-				System.out.println(timePassed + " " + lengthGeneration);
-				gui.updatePercentage((double) timePassed
-						/ lengthGeneration);
-				simulateStepAstarClosedListOrgDataLoopGenes(1, 40);
-				timePassed++;
-			} else if (trialNum < trialsPerGen) newTrial();
-			else newGenerationAstar();
-			System.out.println("end of thread");
+				while (timePassed < lengthGeneration) {
+					synchronized (this) {
+						if (!gameThread.isWaiting) {
+							gui.updatePercentage((double) timePassed
+									/ lengthGeneration);
+							simulateStepAstarClosedListOrgDataLoopGenes(1, 40);
+							timePassed++;
+						} else
+							try {
+								wait();
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+					}
+				}
+				if (trialNum < trialsPerGen)
+					newTrial();
+				else {
+					System.out.println("");
+					newGenerationAstar();
+				}
+			
 		}
+		
+		public void pauseThread() {
+			isWaiting = true;
+		}
+	}
+
+	public void startTimer() {
+		gameThread.start();
+		isPainting = true;
+		/*System.out.println("thread started: " + gameStarted);*/
+		timer.start();
 	}
 	
 	public void setupGame() {
@@ -295,15 +325,12 @@ public class GridPanel extends JPanel {
 		timer.setDelay(step);
 	}
 
-	public void startTimer() {
-		/*gameThread.start();*/
-		gameStarted = true;
-		System.out.println("thread started");
-		timer.start();
-	}
-
-	public void stop() {
+	public void stopGame() {
 		timer.stop();
+		if (gameThread.isAlive()) {
+			System.out.println("is alive");
+			gameThread.pauseThread();
+		}
 	}
 
 	public boolean isPaused() {
@@ -447,6 +474,7 @@ public class GridPanel extends JPanel {
 		mainLoop: for (int orgIndex = 0; orgIndex < shuffleIds.size(); orgIndex++) { // mainLoop.
 			// Get an Organism corresponding the the ids in the shuffleIds
 			// list.
+//			System.out.println("loop orgs");
 			Organism org = organisms.get(shuffleIds.get(orgIndex));
 			// The orgData object holds all of the data for this specific
 			// organism.
@@ -839,7 +867,7 @@ public class GridPanel extends JPanel {
 	 */
 	@Override
 	public void paintComponent(Graphics g) {
-		if (gameStarted) {
+		if (isPainting) {
 			super.paintComponent(g);
 			gui.getMap().paint(g);
 			// handle each new organism created.

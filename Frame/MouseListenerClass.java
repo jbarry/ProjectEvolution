@@ -23,7 +23,7 @@ public class MouseListenerClass implements MouseListener{
 	}
 	@Override
 	public void mouseExited(MouseEvent arg0) {
-		MonitorPanel.currMouseLoc.setText("");
+		/*MonitorPanel.currMouseLoc.setText("");*/
 	}
 	@Override
 	public void mousePressed(MouseEvent arg0) {
