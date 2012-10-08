@@ -18,7 +18,7 @@ public abstract class Matter implements Comparable<Matter>, Cloneable{
 	protected int id;
 	protected Random r;
 	protected char type;
-	public static boolean graphicsEnabled = true;
+	public static boolean graphicsEnabled = false;
 	
 	public Matter() {
 		r = new Random();
