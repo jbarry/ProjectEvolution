@@ -50,7 +50,7 @@ public class GridPanel extends JPanel {
 	private ArrayList<OrgData> orgDataList;
 	private ArrayList<Integer> shuffleIds;
 	private ArrayList<String> shuffleStringIds;
-	private int lengthTimeStep = 100;
+	private int lengthTimeStep = 500;
 	private int lengthGeneration = 100;
 	private int timePassed = 0;
 	private int trialsPerGen = 1;
@@ -93,7 +93,7 @@ public class GridPanel extends JPanel {
 		
 		// Initialize timer. Trying to keep painting separate from
 		// actual game.
-		timer = new javax.swing.Timer(lengthTimeStep, new ActionListener() {
+		timer = new javax.swing.Timer(10, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				repaint();
 			}
@@ -105,24 +105,15 @@ public class GridPanel extends JPanel {
 
 	private class GameThread extends Thread {
 		
-		private boolean isWaiting = false;
-		
 		@Override
 		public void run() {
 				while (timePassed < lengthGeneration) {
-					synchronized (this) {
-						if (!gameThread.isWaiting) {
-							gui.updatePercentage((double) timePassed
-									/ lengthGeneration);
-							simulateStepAstarClosedListOrgDataLoopGenes(1, 40);
-							timePassed++;
-						} else
-							try {
-								wait();
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-					}
+					System.out.println("loopagain");
+					gui.updatePercentage((double) timePassed
+							/ lengthGeneration);
+					simulateStepAstarClosedListOrgDataLoopGenes(1, 40);
+					System.out.println("still going");
+					timePassed++;
 				}
 				if (trialNum < trialsPerGen)
 					newTrial();
@@ -130,14 +121,29 @@ public class GridPanel extends JPanel {
 					System.out.println("");
 					newGenerationAstar();
 				}
-			
-		}
-		
-		public void pauseThread() {
-			isWaiting = true;
 		}
 	}
+	
+	public void stopGame() {
+//		timer.stop();
+		synchronized(gameThread) {
+//			try {
+				gameThread.interrupt();
+//			} catch (InterruptedException e) {
+//				System.out.println("Interrupted!");
+//			}
+		}
+//		if (gameThread.isAlive()) {
+//			System.out.println("is alive");
+//			gameThread.pauseThread();
+//		}
+	}
 
+	public void resumeGame() {
+		timer.start();
+		gameThread.notify();
+	}
+	
 	public void startTimer() {
 		gameThread.start();
 		isPainting = true;
@@ -323,14 +329,6 @@ public class GridPanel extends JPanel {
 	public void setTimeStep(int step) {
 		lengthTimeStep = step;
 		timer.setDelay(step);
-	}
-
-	public void stopGame() {
-		timer.stop();
-		if (gameThread.isAlive()) {
-			System.out.println("is alive");
-			gameThread.pauseThread();
-		}
 	}
 
 	public boolean isPaused() {

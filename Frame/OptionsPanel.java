@@ -839,7 +839,8 @@ public class OptionsPanel extends JPanel implements Runnable {
 	// ------------------------------------------------------------------------------------
 	public void eventPause(GridPanel simulation) {
 		if (simulation.isPaused()) {
-			simulation.startTimer();
+//			simulation.startTimer();
+			simulation.resumeGame();
 			pause.setText("Pause");
 			MonitorPanel.simStatus.setText("Running");
 		} else {
