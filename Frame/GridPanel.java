@@ -179,7 +179,7 @@ public class GridPanel extends JPanel {
 				OrgData orgData = orgDataList.get(i);
 				org.setChromosome(orgData.goBack(generation));
 				locationMap.newLocation(org.getLocation(), org.getWidth(),
-					org.getHeight(), org.getId(), 'o');
+					org.getHeight(), org.getMatterID(), 'o');
 			}
 		GUI.genPanel.removeGenerations(generation);
 		healthFd.clear();
@@ -201,7 +201,7 @@ public class GridPanel extends JPanel {
 	public void attack2(Organism org, ArrayList<Organism> aOrgsUsed) {
 		ArrayList<Integer> surroundingOrganisms = org.getSurroundingObjects(
 				'o', 1);
-		surroundingOrganisms.remove((Integer) org.getId());
+		surroundingOrganisms.remove((Integer) org.getMatterID());
 		if (surroundingOrganisms.size() > 0) {
 			int index = surroundingOrganisms.get(ran
 					.nextInt(surroundingOrganisms.size()));
@@ -221,7 +221,7 @@ public class GridPanel extends JPanel {
 	 */
 	public boolean eatFood(Organism org, int fdId) {
 		Food aFood = foodList.get(fdId);
-		if (org.matterInRange(aFood.getId(), aFood.getType(), 5)) {
+		if (org.matterInRange(aFood.getMatterID(), aFood.getType(), 5)) {
 			System.out.println("Ate Food!!"); // TODO: Deplete food source.
 			return org.eatFood(5 * aFood.getFoodType());
 		}
@@ -234,7 +234,7 @@ public class GridPanel extends JPanel {
 	public void attack(Organism org) {
 		ArrayList<Integer> surroundingOrganisms = org.getSurroundingObjects(
 				'o', 1);
-		surroundingOrganisms.remove((Integer) org.getId());
+		surroundingOrganisms.remove((Integer) org.getMatterID());
 		if (surroundingOrganisms.size() > 0) {
 			int index = surroundingOrganisms.get(ran
 					.nextInt(surroundingOrganisms.size()));
@@ -246,7 +246,7 @@ public class GridPanel extends JPanel {
 	public void push(Organism org) {
 		ArrayList<Integer> surroundingOrganismsPush = org
 				.getSurroundingObjects('o', 1);
-		surroundingOrganismsPush.remove((Integer) org.getId());
+		surroundingOrganismsPush.remove((Integer) org.getMatterID());
 		if (surroundingOrganismsPush.size() > 0) {
 			int index = surroundingOrganismsPush.get(ran
 					.nextInt(surroundingOrganismsPush.size()));
@@ -274,7 +274,7 @@ public class GridPanel extends JPanel {
 			orgData.reinitializeVariables();
 			org.newLocation();
 			org.setHealth(orgData.getMaxHealth());
-			shuffleIds.add(org.getId());
+			shuffleIds.add(org.getMatterID());
 		}
 		trialNum++;
 		healthFd.clear();
@@ -401,7 +401,7 @@ public class GridPanel extends JPanel {
 			/*locationMap.newLocation(org.getLocation(), Organism.width,
 					Organism.height, org.getId(), 'o');*/
 			org.setHealth(orgData.getMaxHealth());
-			shuffleIds.add(org.getId());
+			shuffleIds.add(org.getMatterID());
 		}
 
 		/*locationMap.placeOrganisms(organisms);*/
@@ -486,7 +486,7 @@ public class GridPanel extends JPanel {
 			Organism org = organisms.get(shuffleIds.get(orgIndex));
 			// The orgData object holds all of the data for this specific
 			// organism.
-			OrgData orgData = orgDataList.get(org.getId());
+			OrgData orgData = orgDataList.get(org.getMatterID());
 			orgData.incrementSumHealth(org.getHealth());
 			// Closed list.
 			ArrayList<Coordinate> closedList = (ArrayList<Coordinate>) orgData
@@ -509,7 +509,7 @@ public class GridPanel extends JPanel {
 				if (deplete(org, depleteValue)) {
 					orgData.setTimeOfDeath(timePassed);
 					System.out.println("remove on deplete.");
-					shuffleIds.remove(new Integer(org.getId()));
+					shuffleIds.remove(new Integer(org.getMatterID()));
 					continue mainLoop;
 				}
 				Chromosome chrome = org.getChromosome();
@@ -569,7 +569,7 @@ public class GridPanel extends JPanel {
 				// objectDestination.
 				if (doActionAstar(org, orgData, bestEval,
 						orgData.getLastFoodSourceDestination())) {
-					shuffleIds.remove(new Integer(org.getId()));
+					shuffleIds.remove(new Integer(org.getMatterID()));
 					orgData.setTimeOfDeath(timePassed);
 					continue mainLoop;
 				}
@@ -611,7 +611,7 @@ public class GridPanel extends JPanel {
 		Food fd = foodList.get(aFoodDestination);
 		PriorityQueue<Coordinate> sq = LocationMap.getInstance()
 				.searchWithList(org.getLocation(), fd.getLocation(),
-						org.getId());
+						org.getMatterID());
 		if (sq.peek().equals(org.getLocation()))
 			return false;
 		do {
@@ -804,7 +804,7 @@ public class GridPanel extends JPanel {
 		// TODO: Decorate with dead org class.
 		orgData.setTimeOfDeath(timePassed);
 		System.out.println(message);
-		shuffleIds.remove(new Integer(org.getId()));
+		shuffleIds.remove(new Integer(org.getMatterID()));
 		Coordinate orgLocation = org.getLocation();
 		locationMap.setRangeToBlank(orgLocation.getX(), orgLocation.getY(),
 				org.getWidth(), org.getHeight());

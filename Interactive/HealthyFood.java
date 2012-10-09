@@ -35,7 +35,7 @@ public class HealthyFood extends Food {
 		String str = "";
 		str += " I am food. Eat me." + "\n Location: " + getLocation()
 				+ "\n Remaining Food: " + getHealth() + "\n ID: "
-				+ this.getId();
+				+ this.getMatterID();
 		return str;
 	}
 
@@ -64,7 +64,13 @@ public class HealthyFood extends Food {
 	}
 
 	@Override
-	public int getId() {
+	public int getMatterID() {
 		return id;
+	}
+	
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -34,7 +34,7 @@ public class PoisonousFood extends Food {
 		String str = "";
 		str += " I am poisonous food. Don't eat me." + "\n Location: "
 				+ getLocation() + "\n Remaining Poison: " + getHealth()
-				+ "\n ID: " + this.getId();
+				+ "\n ID: " + this.getMatterID();
 		return str;
 	}
 
@@ -63,7 +63,13 @@ public class PoisonousFood extends Food {
 	}
 
 	@Override
-	public int getId() {
+	public int getMatterID() {
 		return id;
+	}
+	
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
 	}
 }

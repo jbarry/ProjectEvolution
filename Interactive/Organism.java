@@ -71,6 +71,7 @@ public class Organism extends Matter implements Cloneable {
 		chromosome = aChromosome;
 		fitness = 0.0;
 	}
+	
 
 	public boolean eatFood(double val) {
 		hlth += val;
@@ -255,7 +256,7 @@ public class Organism extends Matter implements Cloneable {
 		 */
 
 		organisms.get(orgIndex).decreaseHealth(5);
-		organisms.get(this.getId()).setAction("Attacking org " + orgIndex);
+		organisms.get(this.getMatterID()).setAction("Attacking org " + orgIndex);
 		/*
 		 * System.out.print(". Health: " + organisms.get(orgIndex).getHealth());
 		 * System.out.println(". Attacked by org " + this.id);
@@ -311,7 +312,7 @@ public class Organism extends Matter implements Cloneable {
 	 */
 	public String toString() {
 		String str = "";
-		str += " I am an Organism " + this.getId() + ". Fear me."
+		str += " I am an Organism " + this.getMatterID() + ". Fear me."
 				+ "\n Location: " + location + "\n Health: " + hlth
 				+ "\n Status: " + getAction();
 		return str;
@@ -386,7 +387,7 @@ public class Organism extends Matter implements Cloneable {
 		org.decreaseHealth(5);
 
 		/* numAttacked++; */
-		anOrgList.get(this.getId()).setAction("Attacking org " + orgIndex);
+		anOrgList.get(this.getMatterID()).setAction("Attacking org " + orgIndex);
 		/*
 		 * System.out.print(". Health: " + organisms.get(orgIndex).getHealth());
 		 * System.out.println(". Attacked by org " + this.id);
@@ -413,7 +414,7 @@ public class Organism extends Matter implements Cloneable {
 	}
 
 	@Override
-	public int getId() {
+	public int getMatterID() {
 		return id;
 	}
 
@@ -439,5 +440,11 @@ public class Organism extends Matter implements Cloneable {
 		 */
 		g.fillRect((int) this.location.getX() - (width / 2),
 				(int) this.location.getY() - (height / 2), width, height);
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -195,7 +195,7 @@ public class LocationMapTest {
 		for (Organism org : orgList) {
 			int x = org.getLocation().getX();
 			int y = org.getLocation().getY();
-			int id = org.getId();
+			int id = org.getMatterID();
 			System.out.println("orgid: " + id);
 			System.out.println("orgType: " + 'o');
 			Pair<Integer, Character> space = map.get(x, y);
@@ -378,7 +378,7 @@ public class LocationMapTest {
 		
 		Coordinate end = new Coordinate(34, 9);
 		PriorityQueue<Coordinate> sq = map.adjacentCoordinates(10, 10, 1,
-				end, org1.getId());
+				end, org1.getMatterID());
 		System.out.println("queue size: " + sq.size());
 		Coordinate coord = sq.remove();
 		System.out.println("To move to: " + coord.getX() + ", " + coord.getY());
@@ -425,7 +425,7 @@ public class LocationMapTest {
 		
 		Coordinate end = new Coordinate(34, 9);
 		PriorityQueue<Coordinate> sq = map.adjacentCoordinates(10, 10, 1,
-				end, org1.getId());
+				end, org1.getMatterID());
 		Coordinate coord = sq.remove();
 		System.out.println("To move to: " + coord.getX() + ", " + coord.getY());
 		assertEquals(10, coord.getX());
@@ -483,7 +483,7 @@ public class LocationMapTest {
 		
 		Coordinate end = new Coordinate(34, 9);
 		PriorityQueue<Coordinate> sq = map.adjacentCoordinates(10, 10, 1,
-				end, org1.getId());
+				end, org1.getMatterID());
 		System.out.println("queue size: " + sq.size());
 		Coordinate coord = sq.remove();
 		System.out.println("To move to: " + coord.getX() + ", " + coord.getY());
@@ -542,7 +542,7 @@ public class LocationMapTest {
 		
 		Coordinate end = new Coordinate(26, 13);
 		PriorityQueue<Coordinate> sq = map.adjacentCoordinates(10, 10, 1,
-				end, org1.getId());
+				end, org1.getMatterID());
 		System.out.println("queue size: " + sq.size());
 		Coordinate coord = sq.remove();
 		System.out.println("To move to: " + coord.getX() + ", " + coord.getY());
@@ -601,7 +601,7 @@ public class LocationMapTest {
 		
 		Coordinate end = new Coordinate(26, 13);
 		PriorityQueue<Coordinate> sq = map.adjacentCoordinates(10, 10, 1,
-				end, org1.getId());
+				end, org1.getMatterID());
 		System.out.println("queue size: " + sq.size());
 		Coordinate coord = sq.remove();
 		System.out.println("To move to: " + coord.getX() + ", " + coord.getY());

@@ -88,10 +88,10 @@ public class GEPTest {
 			Pair<Organism, Organism> partners1 = partnerList.poll();
 			for (int j = 0; j < partnerList.size(); j++) {
 				Pair<Organism, Organism> partners2 = partnerList.get(j);
-				Integer id1P1 = partners1.getLeft().getId();
-				Integer id2P1 = partners1.getRight().getId();
-				Integer id1P2 = partners2.getLeft().getId();
-				Integer id2P2 = partners2.getRight().getId();
+				Integer id1P1 = partners1.getLeft().getMatterID();
+				Integer id2P1 = partners1.getRight().getMatterID();
+				Integer id1P2 = partners2.getLeft().getMatterID();
+				Integer id2P2 = partners2.getRight().getMatterID();
 				assertFalse(id1P1 == id2P1 && id1P1 == id2P2);
 				if (id1P1 == id1P2)
 					assertFalse(id2P1 == id2P2);
@@ -127,10 +127,10 @@ public class GEPTest {
 			Pair<Organism, Organism> partners1 = partnerList.poll();
 			for (int j = 0; j < partnerList.size(); j++) {
 				Pair<Organism, Organism> partners2 = partnerList.get(j);
-				Integer id1P1 = partners1.getLeft().getId();
-				Integer id2P1 = partners1.getRight().getId();
-				Integer id1P2 = partners2.getLeft().getId();
-				Integer id2P2 = partners2.getRight().getId();
+				Integer id1P1 = partners1.getLeft().getMatterID();
+				Integer id2P1 = partners1.getRight().getMatterID();
+				Integer id1P2 = partners2.getLeft().getMatterID();
+				Integer id2P2 = partners2.getRight().getMatterID();
 				assertFalse(id1P1 == id2P1 && id1P1 == id2P2);
 				if (id1P1 == id1P2)
 					assertFalse(id2P1 == id2P2);

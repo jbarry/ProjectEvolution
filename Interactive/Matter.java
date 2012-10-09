@@ -10,7 +10,7 @@ import java.util.Set;
 import Frame.Coordinate;
 import Frame.LocationMap;
 
-public abstract class Matter implements Comparable<Matter>, Cloneable{
+public abstract class Matter implements Comparable<Matter>, Cloneable, Runnable {
 
 	protected Coordinate location;
 	protected double hlth;
@@ -106,8 +106,11 @@ public abstract class Matter implements Comparable<Matter>, Cloneable{
 	
 	public abstract int getWidth();
 	
-	public abstract int getId();
+	public abstract int getMatterID();
 
+	@Override
+	public abstract void run();
+	
 	public void setMxHlth(double aMxHlth) {
 		mxHlth = aMxHlth;
 	}

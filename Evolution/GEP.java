@@ -783,7 +783,7 @@ public class GEP {
 		for (Pair<Organism, Organism> partner : partners) {
 			Organism o1 = partner.getLeft();
 			Organism o2 = partner.getRight();
-			out.println(o1.getId() + " <=> " + o2.getId());
+			out.println(o1.getMatterID() + " <=> " + o2.getMatterID());
 		}
 		out.println();
 		out.println("partnerList size: " + partners.size());
@@ -822,7 +822,7 @@ public class GEP {
 		System.out.println();
 		for (int i = 0; i < anOrgList.size(); i++) {
 			Organism org = anOrgList.get(i);
-			out.println("orgId: " + org.getId());
+			out.println("orgId: " + org.getMatterID());
 		}
 		out.println();
 	}
@@ -853,7 +853,7 @@ public class GEP {
 		out.println();
 		for (int i = 0; i < anOrgList.size(); i++) {
 			Organism org = anOrgList.get(i);
-			out.println("orgId: " + org.getId() + " Fitness: "
+			out.println("orgId: " + org.getMatterID() + " Fitness: "
 					+ org.getFitness());
 		}
 		out.println();

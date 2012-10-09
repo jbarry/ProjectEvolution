@@ -276,7 +276,7 @@ public class LocationMap {
 		for (int i = 0; i < orgList.size(); i++) {
 			Organism org = orgList.get(i);
 			place(org.getLocation(), org.getWidth(), org.getHeight(),
-					org.getId(), org.getType());
+					org.getMatterID(), org.getType());
 		}
 	}
 
@@ -287,7 +287,7 @@ public class LocationMap {
 	 * @param orgList
 	 */
 	public void placeOrganism(Organism org) {
-		place(org.getLocation(), org.getWidth(), org.getHeight(), org.getId(),
+		place(org.getLocation(), org.getWidth(), org.getHeight(), org.getMatterID(),
 				org.getType());
 	}
 
@@ -300,7 +300,7 @@ public class LocationMap {
 	public void setOrganism(Organism org) {
 		setWrapAround(org.getLocation(), org.getWidth(), org.getHeight());
 		setRange(org.getLocation(), org.getWidth(), org.getHeight(), 'o',
-				org.getId());
+				org.getMatterID());
 	}
 
 	/**
@@ -311,7 +311,7 @@ public class LocationMap {
 		for (int i = 0; i < orgList.size(); i++) {
 			Organism org = orgList.get(i);
 			placeTest(org.getLocation(), org.getWidth(), org.getHeight(),
-					org.getId(), org.getType());
+					org.getMatterID(), org.getType());
 		}
 	}
 
@@ -324,7 +324,7 @@ public class LocationMap {
 	public void placeFoods(LinkedList<Food> foodList) {
 		for (int i = 0; i < foodList.size(); i++) {
 			Food f = foodList.get(i);
-			place(f.getLocation(), f.getWidth(), f.getHeight(), f.getId(),
+			place(f.getLocation(), f.getWidth(), f.getHeight(), f.getMatterID(),
 					f.getType());
 		}
 	}
@@ -336,7 +336,7 @@ public class LocationMap {
 	 * @param foodList
 	 */
 	public void placeFood(Food f) {
-		place(f.getLocation(), f.getWidth(), f.getHeight(), f.getId(),
+		place(f.getLocation(), f.getWidth(), f.getHeight(), f.getMatterID(),
 				f.getType());
 	}
 
