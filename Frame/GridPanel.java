@@ -67,7 +67,7 @@ public class GridPanel extends JPanel {
 	private GameThread gameThread;
 	public boolean isPainting;
 	private boolean gamePaused;
-	private Thread timerThread;
+	private Thread timerCalculator;
 	
 	// ------------------------------------------------------------------------------------
 	// --constructors--
@@ -98,22 +98,28 @@ public class GridPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				gui.updatePercentage((double) timePassed
 						/ lengthGeneration);
+//				System.out.println("Percentage: " + "tmepassed: " + timePassed + " lengthgen: " + lengthGeneration);
 				repaint();
 			}
 		});
 		
 		gameThread = new GameThread();
-		timerThread = new Thread();
+		timerCalculator = new Thread(new TimerCalculatorRunnable());
 	}
 
-	private class TimerThread implements Runnable {
+	private class TimerCalculatorRunnable implements Runnable {
 		
 		@Override
 		public void run() {
 			while (timePassed < lengthGeneration) {
-				System.out.println("loopagain");
-			
-				System.out.println("still going");
+				System.out.println("before sleep");
+				try {
+					Thread.currentThread().sleep(300);
+					System.out.println("sleeping");
+				} catch (InterruptedException e) {
+					
+				}
+				System.out.println("woke up");
 				timePassed++;
 			}
 			if (trialNum < trialsPerGen)
@@ -149,6 +155,7 @@ public class GridPanel extends JPanel {
 	
 	public void startTimer() {
 		gameThread.start();
+		timerCalculator.start();
 		isPainting = true;
 		/*System.out.println("thread started: " + gameStarted);*/
 		timer.start();
