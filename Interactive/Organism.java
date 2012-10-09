@@ -23,6 +23,15 @@ public class Organism extends Matter implements Cloneable {
 	public static int height = 5;
 	private String action;
 	private double fitness;
+	
+	public Organism(double aHealth, int chromSize, int anId) {
+		super(aHealth, anId, 'o');
+		chromosome = new Chromosome(chromSize);
+		/* scanRange = aScanRange; */
+		// Image initialization.
+
+		// create behavior tracking boolean variables
+	}
 
 	// For images/actions
 
@@ -33,15 +42,6 @@ public class Organism extends Matter implements Cloneable {
 		super(aHealth, anId, 'o');
 		chromosome = new Chromosome(chromSize);
 		fitness = 0.0;
-		/* scanRange = aScanRange; */
-		// Image initialization.
-
-		// create behavior tracking boolean variables
-	}
-
-	public Organism(double aHealth, int chromSize, int anId) {
-		super(aHealth, anId, 'o');
-		chromosome = new Chromosome(chromSize);
 		/* scanRange = aScanRange; */
 		// Image initialization.
 

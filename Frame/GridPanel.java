@@ -136,7 +136,13 @@ public class GridPanel extends JPanel {
 		@Override
 		public void run() {
 			while (!gamePaused) {
-				simulateStepAstarClosedListOrgDataLoopGenes(1, 40);
+				
+				// Old version. Without threading.
+				// simulateStepAstarClosedListOrgDataLoopGenes(1, 40);
+				
+				// TODO: Work on threading. (beggining stages)
+				for (Organism org : organisms)
+					org.start();
 			}
 		}
 	}
@@ -153,7 +159,7 @@ public class GridPanel extends JPanel {
 		gameThread.notify();
 	}
 	
-	public void startTimer() {
+	public void startGame() {
 		gameThread.start();
 		timerCalculator.start();
 		isPainting = true;
@@ -444,6 +450,7 @@ public class GridPanel extends JPanel {
 				new Pair<Double, Double>(-50.0, 50.0));
 		locationMap = LocationMap.getInstance();
 		numFoodSources = OptionsPanel.numOrganisms / 5;
+		
 		// Initialize the organisms in the organisms list and have the
 		// locationMap singleton object place that organism on the map.
 		// Initialize the OrgData objects with an id corresponding to an
@@ -455,6 +462,7 @@ public class GridPanel extends JPanel {
 			locationMap.placeOrganism(org);
 			shuffleIds.add(i);
 		}
+		
 		// Initialize the food sources and allow locationMap to find a starting
 		// position for them.
 		for (int i = 0; i < numFoodSources * 3; i++) {
@@ -464,6 +472,7 @@ public class GridPanel extends JPanel {
 				foodList.add(new PoisonousFood(100.00, i, 2));
 			locationMap.placeFood(foodList.get(i));
 		}
+		
 		g = new GEP(0.75, 0.01, 0.01, 0.75, 0.75, 2, false, true);
 //		preProcess(2);
 	}

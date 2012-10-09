@@ -308,7 +308,7 @@ public class OptionsPanel extends JPanel implements Runnable {
 								/* simulation.initialize(); */
 								/* simulation.initializeAstar(); */
 								simulation.initialize();
-								simulation.startTimer();
+								simulation.startGame();
 							}
 						} else {
 							numOrgsLbl.setText("Number not 2 <= x <= 500");
