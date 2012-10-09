@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -107,6 +108,7 @@ public class GridPanel extends JPanel {
 		timerCalculator = new Thread(new TimerCalculatorRunnable());
 	}
 
+	// TODO: Work on syncing gameThread, timerCalculator, and the javax.Timer.
 	private class TimerCalculatorRunnable implements Runnable {
 		
 		@Override
@@ -141,8 +143,9 @@ public class GridPanel extends JPanel {
 				// simulateStepAstarClosedListOrgDataLoopGenes(1, 40);
 				
 				// TODO: Work on threading. (beggining stages)
-				for (Organism org : organisms)
+				for (Organism org : organisms) {
 					org.start();
+				} 
 			}
 		}
 	}
