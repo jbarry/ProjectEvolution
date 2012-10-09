@@ -67,6 +67,7 @@ public class GridPanel extends JPanel {
 	private GameThread gameThread;
 	public boolean isPainting;
 	private boolean gamePaused;
+	private Thread timerThread;
 	
 	// ------------------------------------------------------------------------------------
 	// --constructors--
@@ -95,48 +96,50 @@ public class GridPanel extends JPanel {
 		// actual game.
 		timer = new javax.swing.Timer(10, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				gui.updatePercentage((double) timePassed
+						/ lengthGeneration);
 				repaint();
 			}
 		});
 		
 		gameThread = new GameThread();
-		
+		timerThread = new Thread();
 	}
 
+	private class TimerThread implements Runnable {
+		
+		@Override
+		public void run() {
+			while (timePassed < lengthGeneration) {
+				System.out.println("loopagain");
+			
+				System.out.println("still going");
+				timePassed++;
+			}
+			if (trialNum < trialsPerGen)
+				newTrial();
+			else {
+				System.out.println("");
+				newGenerationAstar();
+			}
+		}
+	}
+	
 	private class GameThread extends Thread {
 		
 		@Override
 		public void run() {
-				while (timePassed < lengthGeneration) {
-					System.out.println("loopagain");
-					gui.updatePercentage((double) timePassed
-							/ lengthGeneration);
-					simulateStepAstarClosedListOrgDataLoopGenes(1, 40);
-					System.out.println("still going");
-					timePassed++;
-				}
-				if (trialNum < trialsPerGen)
-					newTrial();
-				else {
-					System.out.println("");
-					newGenerationAstar();
-				}
+			while (!gamePaused) {
+				simulateStepAstarClosedListOrgDataLoopGenes(1, 40);
+			}
 		}
 	}
 	
-	public void stopGame() {
-//		timer.stop();
+	public void pauseGame() {
+		timer.stop();
 		synchronized(gameThread) {
-//			try {
-				gameThread.interrupt();
-//			} catch (InterruptedException e) {
-//				System.out.println("Interrupted!");
-//			}
+			gamePaused = true;
 		}
-//		if (gameThread.isAlive()) {
-//			System.out.println("is alive");
-//			gameThread.pauseThread();
-//		}
 	}
 
 	public void resumeGame() {

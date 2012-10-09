@@ -844,7 +844,7 @@ public class OptionsPanel extends JPanel implements Runnable {
 			pause.setText("Pause");
 			MonitorPanel.simStatus.setText("Running");
 		} else {
-			simulation.stopGame();
+			simulation.pauseGame();
 			pause.setText("Resume");
 			MonitorPanel.simStatus.setText("Paused");
 		}
