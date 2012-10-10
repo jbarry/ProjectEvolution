@@ -25,25 +25,12 @@ public class Organism extends Matter implements Cloneable {
 	private String action;
 	private double fitness;
 	private OrgData orgData;
+	private int numActions;
 	
-	public Organism(double aHealth, int chromSize, int anId) {
+	public Organism(double aHealth, int chromSize, int anId, int numActions) {
 		super(aHealth, anId, 'o');
 		chromosome = new Chromosome(chromSize);
-		/* scanRange = aScanRange; */
-		// Image initialization.
-
-		// create behavior tracking boolean variables
-	}
-
-	// For images/actions
-
-	// ------------------------------------------------------------------------------------
-	// --constructors--
-	// ------------------------------------------------------------------------------------
-	public Organism(double aHealth, int chromSize, int anId, int aScanRange) {
-		super(aHealth, anId, 'o');
-		chromosome = new Chromosome(chromSize);
-		fitness = 0.0;
+		this.numActions = numActions;
 		/* scanRange = aScanRange; */
 		// Image initialization.
 

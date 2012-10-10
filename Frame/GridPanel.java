@@ -492,8 +492,10 @@ public class GridPanel extends JPanel {
 		Collections.shuffle(shuffleIds);
 		// Loop through Organisms.
 		mainLoop: for (int orgIndex = 0; orgIndex < shuffleIds.size(); orgIndex++) { // mainLoop.
+			
 			// Get an Organism corresponding the the ids in the shuffleIds
 			// list.
+			
 //			System.out.println("loop orgs");
 			Organism org = organisms.get(shuffleIds.get(orgIndex));
 			// The orgData object holds all of the data for this specific
