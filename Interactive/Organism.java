@@ -54,7 +54,7 @@ public class Organism extends Matter implements Cloneable {
 		}
 		
 		public OrganismBuilder setSuper(double aHealth, int chromeSize, int anId) {
-			super(aHealth, anId, 'o');
+			
 			return this;
 		}
 		
@@ -90,41 +90,6 @@ public class Organism extends Matter implements Cloneable {
 	private OrgData orgData;
 	private int numActions;
 	
-	public Organism(double aHealth, int chromSize, int anId, int numActions) {
-		super(aHealth, anId, 'o');
-		chromosome = new Chromosome(chromSize);
-		this.numActions = numActions;
-		/* scanRange = aScanRange; */
-		// Image initialization.
-
-		// create behavior tracking boolean variables
-	}
-
-	// FOR TESTING PURPOSES ONLY.
-	// JUST REMOVING THE GRIDPANEL CALL.
-	public Organism(boolean boo, int numGenes, double aFitness, int anId) {
-		super(100.00, anId, 'o');
-		r = new Random();
-		chromosome = new Chromosome(numGenes, anId, true);
-		fitness = aFitness;
-		id = anId;
-	}
-
-	// THIS CTOR IS FOR TESTING PURPOSES.
-	public Organism(double ahealth, Chromosome aChromosome) {
-		hlth = ahealth;
-		chromosome = aChromosome;
-		fitness = 0.0;
-	}
-
-	public Organism(Coordinate aLocation, Chromosome aChromosome) {
-		hlth = 7500.0;
-		location = aLocation;
-		chromosome = aChromosome;
-		fitness = 0.0;
-	}
-	
-
 	public boolean eatFood(double val) {
 		hlth += val;
 		if (hlth <= 0) {
