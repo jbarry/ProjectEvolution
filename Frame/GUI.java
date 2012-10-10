@@ -61,6 +61,7 @@ import Interactive.Gene;
 import Interactive.Map;
 import Interactive.OrgData;
 import Interactive.Organism;
+import Interactive.Organism.OrganismBuilder;
 
 /**
  * This class will host and initialize all JPanels and JMenuItems. It will NOT
@@ -782,8 +783,10 @@ public class GUI extends Container {
 								numGenes = Integer.parseInt(fileContents[i]);
 							}
 						} else {
-							Organism individOrganism = new Organism(500.0,
-									numGenes, i, 100);
+//							Organism individOrganism = new Organism(500.0,
+//									numGenes, i, 100);
+							Organism individOrganism = Organism.organismBuilder()file;
+							
 							LinkedList<Gene> tempGeneList = new LinkedList<Gene>();
 							// traverse individual Chromosome to split genes at
 							// geneLength

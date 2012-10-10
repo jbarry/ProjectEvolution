@@ -70,6 +70,7 @@ public class GridPanel extends JPanel {
 	private boolean gamePaused;
 	private Thread timerCalculator;
 	
+	
 	// ------------------------------------------------------------------------------------
 	// --constructors--
 	// ------------------------------------------------------------------------------------
@@ -459,7 +460,7 @@ public class GridPanel extends JPanel {
 		// Initialize the OrgData objects with an id corresponding to an
 		// organism.
 		for (int i = 0; i < OptionsPanel.numOrganisms; i++) {
-			Organism org = new Organism(100.00, 2, i);
+			Organism org = new Organism(hlth=100.00, 2, i);
 			orgDataList.add(new OrgData(org.getMaxHealth(), i));
 			organisms.add(org);
 			locationMap.placeOrganism(org);

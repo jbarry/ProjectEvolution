@@ -53,6 +53,11 @@ public class Organism extends Matter implements Cloneable {
 			return this;
 		}
 		
+		public OrganismBuilder setSuper(double aHealth, int chromeSize, int anId) {
+			super(aHealth, anId, 'o');
+			return this;
+		}
+		
 		private int width = 5;
 		private int height = 5;
 		private String action;
