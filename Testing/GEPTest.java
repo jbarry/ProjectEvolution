@@ -67,22 +67,82 @@ public class GEPTest {
 	public void partnerSelectTestOddPopulation() {
 		// CASE: ODD NUMBER OF ORGANISMS.
 		LinkedList<Organism> orgList = new LinkedList<Organism>();
-		orgList.add(Organism.organismBuilder().with)
-		orgList.add(new Organism(true, 7, 10.0, 0));
-		orgList.add(new Organism(true, 7, 4.0, 1));
-		orgList.add(new Organism(true, 7, 11.0, 2));
-		orgList.add(new Organism(true, 7, 3.0, 3));
-		orgList.add(new Organism(true, 7, 10.0, 4));
-		orgList.add(new Organism(true, 7, 13.0, 5));
-		orgList.add(new Organism(true, 7, 12.0, 6));
-		orgList.add(new Organism(true, 7, 10.0, 7));
-		orgList.add(new Organism(true, 7, 10.0, 8));
-		orgList.add(new Organism(true, 7, 10.0, 9));
-		orgList.add(new Organism(true, 7, 10.0, 10));
-		orgList.add(new Organism(true, 7, 10.0, 11));
-		orgList.add(new Organism(true, 7, 10.0, 12));
-		orgList.add(new Organism(true, 7, 10.0, 13));
-		orgList.add(new Organism(true, 7, 10.0, 14));
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(10.0)
+				.withId(0)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(04.0)
+				.withId(1)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(11.0)
+				.withId(2)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(03.0)
+				.withId(3)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(10.0)
+				.withId(4)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(13.0)
+				.withId(5)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(12.0)
+				.withId(6)
+				.build());
+		
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(10.0)
+				.withId(7)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(10.0)
+				.withId(8)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(10.0)
+				.withId(9)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(10.0)
+				.withId(10)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(10.0)
+				.withId(11)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(10.0)
+				.withId(12)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(10.0)
+				.withId(0)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(10.0)
+				.withId(13)
+				.build());
 		LinkedList<Pair<Organism, Organism>> partnerList = gep
 				.partnerSelect(orgList);
 		while (!partnerList.isEmpty()) {
@@ -106,22 +166,82 @@ public class GEPTest {
 	public void partnerSelectTestEvenPopulation() {
 		// CASE: ODD NUMBER OF ORGANISMS.
 		LinkedList<Organism> orgList = new LinkedList<Organism>();
-		orgList.add(new Organism(true, 7, 10.0, 0));
-		orgList.add(new Organism(true, 7, 4.0, 1));
-		orgList.add(new Organism(true, 7, 11.0, 2));
-		orgList.add(new Organism(true, 7, 3.0, 3));
-		orgList.add(new Organism(true, 7, 10.0, 4));
-		orgList.add(new Organism(true, 7, 13.0, 5));
-		orgList.add(new Organism(true, 7, 12.0, 6));
-		orgList.add(new Organism(true, 7, 10.0, 7));
-		orgList.add(new Organism(true, 7, 10.0, 8));
-		orgList.add(new Organism(true, 7, 10.0, 9));
-		orgList.add(new Organism(true, 7, 10.0, 10));
-		orgList.add(new Organism(true, 7, 10.0, 11));
-		orgList.add(new Organism(true, 7, 10.0, 12));
-		orgList.add(new Organism(true, 7, 10.0, 13));
-		orgList.add(new Organism(true, 7, 10.0, 14));
-		orgList.add(new Organism(true, 7, 10.0, 15));
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(10.0)
+				.withId(0)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(04.0)
+				.withId(1)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(11.0)
+				.withId(2)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(03.0)
+				.withId(3)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(10.0)
+				.withId(4)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(13.0)
+				.withId(5)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(12.0)
+				.withId(6)
+				.build());
+		
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(10.0)
+				.withId(7)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(10.0)
+				.withId(8)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(10.0)
+				.withId(9)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(10.0)
+				.withId(10)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(10.0)
+				.withId(11)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(10.0)
+				.withId(12)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(10.0)
+				.withId(0)
+				.build());
+		orgList.add(Organism.organismBuilder()
+				.withNumberOfGenes(7)
+				.withFitness(10.0)
+				.withId(13)
+				.build());
 		LinkedList<Pair<Organism, Organism>> partnerList = gep
 				.partnerSelect(orgList);
 		while (!partnerList.isEmpty()) {
@@ -148,7 +268,11 @@ public class GEPTest {
 		// CASE: ODD NUMBER OF ORGANISMS.
 		LinkedList<Organism> orgList = new LinkedList<Organism>();
 		for (int i = 0; i < 13; i++)
-			orgList.add(new Organism(true, 4, r.nextInt(20), i));
+			orgList.add(Organism.organismBuilder()
+					.withNumberOfGenes(4)
+					.withFitness(r.nextInt(20))
+					.withId(i)
+					.build());
 		LinkedList<Pair<Organism, Organism>> partnerList = gep
 				.partnerSelect(orgList);
 		LinkedList<Organism> tournOrgList = gep.tournament(partnerList);
@@ -171,7 +295,11 @@ public class GEPTest {
 		// CASE: ODD NUMBER OF ORGANISMS.
 		LinkedList<Organism> orgList = new LinkedList<Organism>();
 		for (int i = 0; i < 14; i++)
-			orgList.add(new Organism(true, 4, r.nextInt(20), i));
+			orgList.add(Organism.organismBuilder()
+					.withNumberOfGenes(4)
+					.withFitness(r.nextInt(20))
+					.withId(i)
+					.build());
 		LinkedList<Pair<Organism, Organism>> partnerList = gep
 				.partnerSelect(orgList);
 		LinkedList<Organism> tournOrgList = gep.tournament(partnerList);
@@ -202,7 +330,11 @@ public class GEPTest {
 	public void mateSelectEvenPopulationTest() {
 		LinkedList<Organism> orgList = new LinkedList<Organism>();
 		for (int i = 0; i < 14; i++)
-			orgList.add(new Organism(true, 4, r.nextInt(20), i));
+			orgList.add(Organism.organismBuilder()
+					.withNumberOfGenes(4)
+					.withFitness(r.nextInt(20))
+					.withId(i)
+					.build());
 		LinkedList<Chromosome> chromList = gep.makeChromList(gep.tournament(gep
 				.partnerSelect(orgList)));
 		/* gep.printChromeListIds(chromList); */

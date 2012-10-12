@@ -787,7 +787,7 @@ public class GUI extends Container {
 //									numGenes, i, 100);
 							Organism individOrganism = Organism.organismBuilder()
 									.withHealth(500)
-									.withChromosomeSize(numGenes)
+									.withNumberOfGenes(numGenes)
 									.withId(i)
 									.withNumActions(100)
 									.build();
@@ -916,7 +916,7 @@ public class GUI extends Container {
 //								individOrgData.getMaxHealth(), numGenes, i, 100);
 						Organism individOrganism = Organism.organismBuilder()
 								.withHealth(individOrgData.getMaxHealth())
-								.withChromosomeSize(numGenes)
+								.withNumberOfGenes(numGenes)
 								.withId(i)
 								.withNumActions(100)
 								.build();

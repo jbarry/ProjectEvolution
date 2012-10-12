@@ -463,7 +463,7 @@ public class GridPanel extends JPanel {
 //			Organism org = new Organism(hlth=100.00, 2, i);
 			Organism org = new Organism.OrganismBuilder()
 				.withHealth(100)
-				.withChromosomeSize(2)
+				.withNumberOfGenes(2)
 				.withId(i)
 				.build();
 			orgDataList.add(new OrgData(org.getMaxHealth(), i));

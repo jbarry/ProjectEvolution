@@ -59,7 +59,7 @@ public class Organism extends MatterBase implements Cloneable {
 			return this;
 		}
 		
-		public OrganismBuilder withChromosomeSize(int chromosomeSize) {
+		public OrganismBuilder withNumberOfGenes(int chromosomeSize) {
 			this.numberOfGenes = chromosomeSize;
 			return this;
 		}

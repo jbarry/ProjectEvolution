@@ -55,7 +55,11 @@ public class LocationMapTest {
 		LocationMap map = LocationMap.getInstance();
 		LinkedList<Organism> orgList = new LinkedList<Organism>();
 		for (int i = 0; i < 300; i++)
-			orgList.add(new Organism(true, 4, r.nextInt(20), i));
+			orgList.add(Organism.organismBuilder()
+					.withNumberOfGenes(4)
+					.withFitness(r.nextInt(20))
+					.withId(i)
+					.build());
 		map.placeOrganisms(orgList);
 		for(Organism org : orgList)
 			Assert.assertTrue(org.getLocation().getX() != 0 && org.getLocation().getY() != 0);
@@ -67,7 +71,11 @@ public class LocationMapTest {
 		LocationMap map = LocationMap.getInstance();
 		LinkedList<Organism> orgList = new LinkedList<Organism>();
 		for (int i = 0; i < 300; i++)
-			orgList.add(new Organism(true, 4, r.nextInt(20), i));
+			orgList.add(Organism.organismBuilder()
+					.withNumberOfGenes(4)
+					.withFitness(r.nextInt(20))
+					.withId(i)
+					.build());
 		map.placeOrganisms(orgList);
 		while (!orgList.isEmpty()) {
 			Organism currentOrg = orgList.remove();
@@ -92,7 +100,11 @@ public class LocationMapTest {
 		LocationMap map = LocationMap.getInstance();
 		LinkedList<Organism> orgList = new LinkedList<Organism>();
 		for (int i = 0; i < 400; i++)
-			orgList.add(new Organism(true, 4, r.nextInt(20), i));
+			orgList.add(Organism.organismBuilder()
+					.withNumberOfGenes(4)
+					.withFitness(r.nextInt(20))
+					.withId(i)
+					.build());
 		map.placeOrganisms(orgList);
 		int count = 0;
 		for(Organism org : orgList)
@@ -110,7 +122,11 @@ public class LocationMapTest {
 		LocationMap map = LocationMap.getInstance();
 		LinkedList<Organism> orgList = new LinkedList<Organism>();
 		for (int i = 0; i < 300; i++)
-			orgList.add(new Organism(true, 4, r.nextInt(20), i));
+			orgList.add(Organism.organismBuilder()
+					.withNumberOfGenes(4)
+					.withFitness(r.nextInt(20))
+					.withId(i)
+					.build());
 		map.placeOrganisms(orgList);
 		fail("not yet implemented");
 	}
@@ -190,7 +206,11 @@ public class LocationMapTest {
 		LocationMap map = LocationMap.getInstance();
 		LinkedList<Organism> orgList = new LinkedList<Organism>();
 		for (int i = 0; i < 300; i++)
-			orgList.add(new Organism(true, 4, r.nextInt(20), i));
+			orgList.add(Organism.organismBuilder()
+					.withNumberOfGenes(4)
+					.withFitness(r.nextInt(20))
+					.withId(i)
+					.build());
 		map.placeOrganisms(orgList);
 		for (Organism org : orgList) {
 			int x = org.getLocation().getX();
@@ -216,10 +236,19 @@ public class LocationMapTest {
 	@Test
 	public void hasObstacleNorthTest() {
 		LocationMap map = LocationMap.getInstance();
-		Organism org1 = new Organism(true, 4, 0.0, 0);
+		Organism org1 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(0)
+				.build();
+//		Organism org1 = new Organism(true, 4, 0.0, 0);
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
-		Organism org2 = new Organism(true, 4, 0.0, 1);
+		Organism org2 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(1)
+				.build();
 		org2.getLocation().setX(10);
 		org2.getLocation().setY(5);
 		map.setOrganism(org1);
@@ -231,10 +260,18 @@ public class LocationMapTest {
 	@Test
 	public void hasObstacleNorthEastTest() {
 		LocationMap map = LocationMap.getInstance();
-		Organism org1 = new Organism(true, 4, 0.0, 0);
+		Organism org1 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(0)
+				.build();
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
-		Organism org2 = new Organism(true, 4, 0.0, 1);
+		Organism org2 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(1)
+				.build();
 		org2.getLocation().setX(15);
 		org2.getLocation().setY(5);
 		map.setOrganism(org1);
@@ -246,10 +283,18 @@ public class LocationMapTest {
 	@Test
 	public void hasObstacleSouthEastTest() {
 		LocationMap map = LocationMap.getInstance();
-		Organism org1 = new Organism(true, 4, 0.0, 0);
+		Organism org1 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(0)
+				.build();
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
-		Organism org2 = new Organism(true, 4, 0.0, 1);
+		Organism org2 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(1)
+				.build();
 		org2.getLocation().setX(15);
 		org2.getLocation().setY(15);
 		map.setOrganism(org1);
@@ -261,10 +306,18 @@ public class LocationMapTest {
 	@Test
 	public void hasObstacleSouthTest() {
 		LocationMap map = LocationMap.getInstance();
-		Organism org1 = new Organism(true, 4, 0.0, 0);
+		Organism org1 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(0)
+				.build();
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
-		Organism org2 = new Organism(true, 4, 0.0, 1);
+		Organism org2 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(1)
+				.build();
 		org2.getLocation().setX(10);
 		org2.getLocation().setY(15);
 		map.setOrganism(org1);
@@ -291,10 +344,18 @@ public class LocationMapTest {
 	@Test
 	public void hasObstacleWestTest() {
 		LocationMap map = LocationMap.getInstance();
-		Organism org1 = new Organism(true, 4, 0.0, 0);
+		Organism org1 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(0)
+				.build();
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
-		Organism org2 = new Organism(true, 4, 0.0, 1);
+		Organism org2 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(1)
+				.build();
 		org2.getLocation().setX(5);
 		org2.getLocation().setY(10);
 		map.setOrganism(org1);
@@ -306,10 +367,18 @@ public class LocationMapTest {
 	@Test
 	public void hasObstacleNorthWestTest() {
 		LocationMap map = LocationMap.getInstance();
-		Organism org1 = new Organism(true, 4, 0.0, 0);
+		Organism org1 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(0)
+				.build();
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
-		Organism org2 = new Organism(true, 4, 0.0, 1);
+		Organism org2 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(1)
+				.build();
 		org2.getLocation().setX(5);
 		org2.getLocation().setY(5);
 		map.setOrganism(org1);
@@ -321,10 +390,18 @@ public class LocationMapTest {
 	@Test
 	public void doesNothaveObstacleNorthWestTest() {
 		LocationMap map = LocationMap.getInstance();
-		Organism org1 = new Organism(true, 4, 0.0, 0);
+		Organism org1 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(0)
+				.build();
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
-		Organism org2 = new Organism(true, 4, 0.0, 1);
+		Organism org2 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(1)
+				.build();
 		org2.getLocation().setX(4);
 		org2.getLocation().setY(4);
 		map.setOrganism(org1);
@@ -336,42 +413,74 @@ public class LocationMapTest {
 	@Test
 	public void shouldOnlyHaveSouthMovementInStarQueue() {
 		LocationMap map = LocationMap.getInstance();
-		Organism org1 = new Organism(true, 4, 0.0, 0);
+		Organism org1 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(0)
+				.build();
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
 		map.setOrganism(org1);
 		
-		Organism org2 = new Organism(true, 4, 0.0, 1);
+		Organism org2 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(1)
+				.build();
 		org2.getLocation().setX(5);
 		org2.getLocation().setY(5);
 		map.setOrganism(org2);
 		
-		Organism org3 = new Organism(true, 4, 0.0, 1);
+		Organism org3 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(2)
+				.build();
 		org3.getLocation().setX(10);
 		org3.getLocation().setY(5);
 		map.setOrganism(org3);
 		
-		Organism org4 = new Organism(true, 4, 0.0, 1);
+		Organism org4 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(3)
+				.build();
 		org4.getLocation().setX(15);
 		org4.getLocation().setY(5);
 		map.setOrganism(org4);
 		
-		Organism org5 = new Organism(true, 4, 0.0, 1);
+		Organism org5 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(4)
+				.build();
 		org5.getLocation().setX(15);
 		org5.getLocation().setY(10);
 		map.setOrganism(org5);
 		
-		Organism org6 = new Organism(true, 4, 0.0, 1);
+		Organism org6 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(5)
+				.build();
 		org6.getLocation().setX(15);
 		org6.getLocation().setY(15);
 		map.setOrganism(org6);
 		
-		Organism org7 = new Organism(true, 4, 0.0, 1);
+		Organism org7 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(6)
+				.build();
 		org7.getLocation().setX(5);
 		org7.getLocation().setY(15);
 		map.setOrganism(org7);
 		
-		Organism org8 = new Organism(true, 4, 0.0, 1);
+		Organism org8 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(7)
+				.build();
 		org8.getLocation().setX(5);
 		org8.getLocation().setY(10);
 		map.setOrganism(org8);
@@ -388,37 +497,65 @@ public class LocationMapTest {
 	@Test
 	public void shouldOnlyHaveSouthandWestMovementInStarQueueAndSouthShouldBeFirst() {
 		LocationMap map = LocationMap.getInstance();
-		Organism org1 = new Organism(true, 4, 0.0, 0);
+		Organism org1 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(0)
+				.build();
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
 		map.setOrganism(org1);
 		
-		Organism org2 = new Organism(true, 4, 0.0, 1);
+		Organism org2 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(1)
+				.build();
 		org2.getLocation().setX(5);
 		org2.getLocation().setY(5);
 		map.setOrganism(org2);
 		
-		Organism org3 = new Organism(true, 4, 0.0, 1);
+		Organism org3 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(2)
+				.build();
 		org3.getLocation().setX(10);
 		org3.getLocation().setY(5);
 		map.setOrganism(org3);
 		
-		Organism org4 = new Organism(true, 4, 0.0, 1);
+		Organism org4 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(3)
+				.build();
 		org4.getLocation().setX(15);
 		org4.getLocation().setY(5);
 		map.setOrganism(org4);
 		
-		Organism org5 = new Organism(true, 4, 0.0, 1);
+		Organism org5 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(4)
+				.build();
 		org5.getLocation().setX(15);
 		org5.getLocation().setY(10);
 		map.setOrganism(org5);
 		
-		Organism org6 = new Organism(true, 4, 0.0, 1);
+		Organism org6 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(5)
+				.build();
 		org6.getLocation().setX(15);
 		org6.getLocation().setY(15);
 		map.setOrganism(org6);
 		
-		Organism org7 = new Organism(true, 4, 0.0, 1);
+		Organism org7 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(6)
+				.build();
 		org7.getLocation().setX(5);
 		org7.getLocation().setY(15);
 		map.setOrganism(org7);
@@ -436,50 +573,68 @@ public class LocationMapTest {
 	@Test
 	public void shouldOnlyHaveNorthMovementInStarQueue() {
 		LocationMap map = LocationMap.getInstance();
-		Organism org1 = new Organism(true, 4, 0.0, 0);
+		Organism org1 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(0)
+				.build();
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
 		map.setOrganism(org1);
 		
-		Organism org2 = new Organism(true, 4, 0.0, 1);
+		Organism org2 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(1)
+				.build();
 		org2.getLocation().setX(5);
 		org2.getLocation().setY(5);
 		map.setOrganism(org2);
 		
-		/*Organism org3 = new Organism(true, 4, 0.0, 1);
+		Organism org3 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(2)
+				.build();
 		org3.getLocation().setX(10);
 		org3.getLocation().setY(5);
-		map.setOrganism(org3);*/
+		map.setOrganism(org3);
 		
-		Organism org4 = new Organism(true, 4, 0.0, 1);
+		Organism org4 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(3)
+				.build();
 		org4.getLocation().setX(15);
 		org4.getLocation().setY(5);
 		map.setOrganism(org4);
 		
-		Organism org5 = new Organism(true, 4, 0.0, 1);
+		Organism org5 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(4)
+				.build();
 		org5.getLocation().setX(15);
 		org5.getLocation().setY(10);
 		map.setOrganism(org5);
 		
-		Organism org6 = new Organism(true, 4, 0.0, 1);
+		Organism org6 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(5)
+				.build();
 		org6.getLocation().setX(15);
 		org6.getLocation().setY(15);
 		map.setOrganism(org6);
 		
-		Organism org7 = new Organism(true, 4, 0.0, 1);
-		org7.getLocation().setX(10);
+		Organism org7 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(6)
+				.build();
+		org7.getLocation().setX(5);
 		org7.getLocation().setY(15);
 		map.setOrganism(org7);
-		
-		Organism org8 = new Organism(true, 4, 0.0, 1);
-		org8.getLocation().setX(5);
-		org8.getLocation().setY(15);
-		map.setOrganism(org8);
-		
-		Organism org9 = new Organism(true, 4, 0.0, 1);
-		org9.getLocation().setX(5);
-		org9.getLocation().setY(10);
-		map.setOrganism(org9);
 		
 		Coordinate end = new Coordinate(34, 9);
 		PriorityQueue<Coordinate> sq = map.adjacentCoordinates(10, 10, 1,
@@ -495,42 +650,74 @@ public class LocationMapTest {
 	@Test
 	public void shouldOnlyHaveWestMovementInStarQueue() {
 		LocationMap map = LocationMap.getInstance();
-		Organism org1 = new Organism(true, 4, 0.0, 0);
+		Organism org1 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(0)
+				.build();
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
 		map.setOrganism(org1);
 		
-		Organism org2 = new Organism(true, 4, 0.0, 1);
+		Organism org2 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(1)
+				.build();
 		org2.getLocation().setX(5);
 		org2.getLocation().setY(5);
 		map.setOrganism(org2);
 		
-		Organism org3 = new Organism(true, 4, 0.0, 1);
+		Organism org3 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(2)
+				.build();
 		org3.getLocation().setX(10);
 		org3.getLocation().setY(5);
 		map.setOrganism(org3);
 		
-		Organism org4 = new Organism(true, 4, 0.0, 1);
+		Organism org4 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(3)
+				.build();
 		org4.getLocation().setX(15);
 		org4.getLocation().setY(5);
 		map.setOrganism(org4);
 		
-		Organism org5 = new Organism(true, 4, 0.0, 1);
+		Organism org5 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(4)
+				.build();
 		org5.getLocation().setX(15);
 		org5.getLocation().setY(10);
 		map.setOrganism(org5);
 		
-		Organism org6 = new Organism(true, 4, 0.0, 1);
+		Organism org6 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(5)
+				.build();
 		org6.getLocation().setX(15);
 		org6.getLocation().setY(15);
 		map.setOrganism(org6);
 		
-		Organism org7 = new Organism(true, 4, 0.0, 1);
-		org7.getLocation().setX(10);
+		Organism org7 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(6)
+				.build();
+		org7.getLocation().setX(5);
 		org7.getLocation().setY(15);
 		map.setOrganism(org7);
 		
-		Organism org8 = new Organism(true, 4, 0.0, 1);
+		Organism org8 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(7)
+				.build();
 		org8.getLocation().setX(5);
 		org8.getLocation().setY(15);
 		map.setOrganism(org8);
@@ -554,45 +741,74 @@ public class LocationMapTest {
 	@Test
 	public void shouldOnlyHaveWestMovementInStarQueueAfterFirstMoveThenMoveAgainMoveTwice() {
 		LocationMap map = LocationMap.getInstance();
-		Organism org1 = new Organism(true, 4, 0.0, 0);
+		Organism org1 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(0)
+				.build();
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
 		map.setOrganism(org1);
 		
-		Organism org2 = new Organism(true, 4, 0.0, 1);
+		Organism org2 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(1)
+				.build();
 		org2.getLocation().setX(5);
 		org2.getLocation().setY(5);
 		map.setOrganism(org2);
 		
-		Organism org3 = new Organism(true, 4, 0.0, 1);
+		Organism org3 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(2)
+				.build();
 		org3.getLocation().setX(10);
 		org3.getLocation().setY(5);
 		map.setOrganism(org3);
 		
-		Organism org4 = new Organism(true, 4, 0.0, 1);
+		Organism org4 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(3)
+				.build();
 		org4.getLocation().setX(15);
 		org4.getLocation().setY(5);
 		map.setOrganism(org4);
 		
-		Organism org5 = new Organism(true, 4, 0.0, 1);
+		Organism org5 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(4)
+				.build();
 		org5.getLocation().setX(15);
 		org5.getLocation().setY(10);
 		map.setOrganism(org5);
 		
-		Organism org6 = new Organism(true, 4, 0.0, 1);
+		Organism org6 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(5)
+				.build();
 		org6.getLocation().setX(15);
 		org6.getLocation().setY(15);
 		map.setOrganism(org6);
 		
-		Organism org7 = new Organism(true, 4, 0.0, 1);
-		org7.getLocation().setX(10);
+		Organism org7 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(6)
+				.build();
+		org7.getLocation().setX(5);
 		org7.getLocation().setY(15);
 		map.setOrganism(org7);
 		
-		Organism org8 = new Organism(true, 4, 0.0, 1);
-		org8.getLocation().setX(5);
-		org8.getLocation().setY(15);
-		map.setOrganism(org8);
+		Organism org8 = Organism.organismBuilder()
+				.withNumberOfGenes(4)
+				.withFitness(0.0)
+				.withId(7)
+				.build();
 		
 		/*Organism org9 = new Organism(true, 4, 0.0, 1);
 		org9.getLocation().setX(5);
