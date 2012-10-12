@@ -107,6 +107,7 @@ public class Organism extends MatterBase implements Cloneable {
 		numActions = organismBuilder.numActions;
 		id = organismBuilder.id;
 		health = organismBuilder.health;
+		fitness = organismBuilder.fitness;
 		chromosome = new Chromosome(organismBuilder.numberOfGenes);
 		type = 'o';
 	}
