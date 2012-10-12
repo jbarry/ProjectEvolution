@@ -33,12 +33,12 @@ public abstract class Food extends Matter {
 
 	public Food(int x, int y) {
 		location = new Coordinate(x, y);
-		hlth = 100.0;
+		health = 100.0;
 	}
 
 	public Food(Coordinate aCoord) {
 		location = aCoord;
-		hlth = 100.0;
+		health = 100.0;
 	}
 
 	/**
@@ -89,7 +89,7 @@ public abstract class Food extends Matter {
 	public void printInfo() {
 		System.out.println("Food: ");
 		System.out.println("Id: " + id);
-		System.out.println("Health: " + hlth);
+		System.out.println("Health: " + health);
 		System.out.println("Position: (" + location.getX() + ", "
 				+ location.getY() + ")");
 		System.out.println();

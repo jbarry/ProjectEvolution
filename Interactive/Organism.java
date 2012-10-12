@@ -13,50 +13,75 @@ import java.util.Set;
 import Frame.Coordinate;
 import Frame.LocationMap;
 
-public class Organism extends Matter implements Cloneable {
+public class Organism extends MatterBase implements Cloneable {
 	
 	// ---------------------
 	// Builder for Organism
 	// ---------------------
-	public static class OrganismBuilder {
+	public static class OrganismBuilder extends MatterBuilder<OrganismBuilder> {
+		
 		public Organism build() {
 			return new Organism(this);
 		}
 		
-		public OrganismBuilder setWidth(int width) {
+		public OrganismBuilder withWidth(int width) {
 			this.width = width;
 			return this;
 		}
 		
-		public OrganismBuilder setHeight(int height) {
+		public OrganismBuilder withHeight(int height) {
 			this.height  = height;
 			return this;
 		}
 		
-		public OrganismBuilder setAction(String action) {
+		public OrganismBuilder withAction(String action) {
 			this.action = action;
 			return this;
 		}
 		
-		public OrganismBuilder setFitness(double fitness) {
+		public OrganismBuilder withFitness(double fitness) {
 			this.fitness = fitness;
 			return this;
 		}
 		
-		public OrganismBuilder setOrgData(OrgData orgData) {
+		public OrganismBuilder withOrgData(OrgData orgData) {
 			this.orgData = orgData;
 			return this;
 		}
 		
-		public OrganismBuilder setNumActions(int numActions) {
+		public OrganismBuilder withNumActions(int numActions) {
 			this.numActions = numActions;
 			return this;
 		}
 		
-		public OrganismBuilder setSuper(double aHealth, int chromeSize, int anId) {
-			
+		public OrganismBuilder withHealth(int health) {
+			getParent().setHealth(health);
 			return this;
 		}
+		
+		public OrganismBuilder withChromosomeSize(int chromosomeSize) {
+			this.numberOfGenes = chromosomeSize;
+			return this;
+		}
+		
+		public OrganismBuilder withId(int id) {
+			getParent().id = id;
+			return this;
+		}
+		
+		@Override
+		protected OrganismBuilder getThis() {
+			// TODO Auto-generated method stub
+			return this;
+		}
+
+		@Override
+		protected MatterBase getParent() {
+			// TODO Auto-generated method stub
+			return org;
+		}
+		
+		private Organism org;
 		
 		private int width = 5;
 		private int height = 5;
@@ -64,6 +89,9 @@ public class Organism extends Matter implements Cloneable {
 		private double fitness;
 		private OrgData orgData;
 		private int numActions;
+		private int numberOfGenes;
+		private int id;
+		private int health;
 	}
 	
 	public static OrganismBuilder organismBuilder() {
@@ -77,6 +105,10 @@ public class Organism extends Matter implements Cloneable {
 		fitness = organismBuilder.fitness;
 		orgData = organismBuilder.orgData;
 		numActions = organismBuilder.numActions;
+		id = organismBuilder.id;
+		health = organismBuilder.health;
+		chromosome = new Chromosome(organismBuilder.numberOfGenes);
+		type = 'o';
 	}
 	
 	// ------------------------------------------------------------------------------------
@@ -91,12 +123,12 @@ public class Organism extends Matter implements Cloneable {
 	private int numActions;
 	
 	public boolean eatFood(double val) {
-		hlth += val;
-		if (hlth <= 0) {
-			hlth = 0;
+		health += val;
+		if (health <= 0) {
+			health = 0;
 			return true;
-		} else if (hlth > mxHlth)
-			hlth = mxHlth;
+		} else if (health > mxHlth)
+			health = mxHlth;
 		return false;
 	}
 
@@ -330,7 +362,7 @@ public class Organism extends Matter implements Cloneable {
 	public String toString() {
 		String str = "";
 		str += " I am an Organism " + this.getMatterID() + ". Fear me."
-				+ "\n Location: " + location + "\n Health: " + hlth
+				+ "\n Location: " + location + "\n Health: " + health
 				+ "\n Status: " + getAction();
 		return str;
 	}
@@ -414,7 +446,7 @@ public class Organism extends Matter implements Cloneable {
 	public void printInfo() {
 		System.out.println("Organism: ");
 		System.out.println("Id: " + id);
-		System.out.println("Health: " + hlth);
+		System.out.println("Health: " + health);
 		System.out.println("Position: (" + location.getX() + ", "
 				+ location.getY() + ")");
 		System.out.println();

@@ -785,7 +785,11 @@ public class GUI extends Container {
 						} else {
 //							Organism individOrganism = new Organism(500.0,
 //									numGenes, i, 100);
-							Organism individOrganism = Organism.organismBuilder()file;
+							Organism individOrganism = Organism.organismBuilder()
+									.withHealth(500)
+									.withChromosomeSize(numGenes)
+									.withId(i)
+									.with;
 							
 							LinkedList<Gene> tempGeneList = new LinkedList<Gene>();
 							// traverse individual Chromosome to split genes at

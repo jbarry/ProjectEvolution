@@ -13,7 +13,7 @@ import Frame.LocationMap;
 public abstract class Matter extends Thread implements Comparable<Matter>, Cloneable {
 
 	protected Coordinate location;
-	protected double hlth;
+	protected double health;
 	protected double mxHlth;
 	protected int id;
 	protected Random r;
@@ -25,7 +25,7 @@ public abstract class Matter extends Thread implements Comparable<Matter>, Clone
 	}
 
 	public Matter(double aMxHlth, char type) {
-		hlth = mxHlth = aMxHlth;
+		health = mxHlth = aMxHlth;
 		r = new Random();
 		this.type = type;
 		location = new Coordinate();
@@ -33,7 +33,7 @@ public abstract class Matter extends Thread implements Comparable<Matter>, Clone
 	}
 
 	public Matter(double aMxHlth, int anId, char type) {
-		hlth = mxHlth = aMxHlth;
+		health = mxHlth = aMxHlth;
 		id = anId;
 		r = new Random();
 		this.type = type;
@@ -42,23 +42,23 @@ public abstract class Matter extends Thread implements Comparable<Matter>, Clone
 	}
 	
 	public boolean deplete(double val) {
-		if (hlth - val < 0) {
-			hlth = 0;
+		if (health - val < 0) {
+			health = 0;
 			int x = location.getX();
 			int y = location.getY();
 			LocationMap.getInstance().setRangeToBlank(x, y, getWidth(), getHeight());
 			return true;
 		}
-		else hlth-=val;
+		else health-=val;
 		return false;
 	}
 	
 	public void decreaseHealth(double val) {
-		if (hlth - val < 0) {
-			hlth = 0;
+		if (health - val < 0) {
+			health = 0;
 			/*setRange(getWidth(), getHeight(), 'w');*/
 		}
-		else hlth-=val;
+		else health-=val;
 	}
 	
 	/**
@@ -116,17 +116,17 @@ public abstract class Matter extends Thread implements Comparable<Matter>, Clone
 	}
 
 	public void setHealth(double aHealth) {
-		hlth = aHealth;
+		health = aHealth;
 	}
 
 	public void incHlth(double val) {
-		if(hlth + val > mxHlth)
-			hlth = mxHlth;
-		else hlth+=val;
+		if(health + val > mxHlth)
+			health = mxHlth;
+		else health+=val;
 	}
 
 	public double getHealth() {
-		return hlth;
+		return health;
 	}
 
 	public double getMaxHealth() {
