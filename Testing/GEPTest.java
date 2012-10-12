@@ -67,6 +67,7 @@ public class GEPTest {
 	public void partnerSelectTestOddPopulation() {
 		// CASE: ODD NUMBER OF ORGANISMS.
 		LinkedList<Organism> orgList = new LinkedList<Organism>();
+		orgList.add(Organism.organismBuilder().with)
 		orgList.add(new Organism(true, 7, 10.0, 0));
 		orgList.add(new Organism(true, 7, 4.0, 1));
 		orgList.add(new Organism(true, 7, 11.0, 2));

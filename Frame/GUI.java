@@ -789,7 +789,8 @@ public class GUI extends Container {
 									.withHealth(500)
 									.withChromosomeSize(numGenes)
 									.withId(i)
-									.with;
+									.withNumActions(100)
+									.build();
 							
 							LinkedList<Gene> tempGeneList = new LinkedList<Gene>();
 							// traverse individual Chromosome to split genes at
@@ -911,8 +912,14 @@ public class GUI extends Container {
 						// the organism's individual data pieces
 						organismData = tempChrom[1].split(" ");
 						OrgData individOrgData = new OrgData(500.0, i);
-						Organism individOrganism = new Organism(
-								individOrgData.getMaxHealth(), numGenes, i, 100);
+//						Organism individOrganism = new Organism(
+//								individOrgData.getMaxHealth(), numGenes, i, 100);
+						Organism individOrganism = Organism.organismBuilder()
+								.withHealth(individOrgData.getMaxHealth())
+								.withChromosomeSize(numGenes)
+								.withId(i)
+								.withNumActions(100)
+								.build();
 						// Create temporary Linked List of type Gene to store
 						// each gene in a given organisms' Chromosome
 						LinkedList<Gene> tempGeneList = new LinkedList<Gene>();

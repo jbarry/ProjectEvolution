@@ -54,7 +54,7 @@ public class Organism extends MatterBase implements Cloneable {
 			return this;
 		}
 		
-		public OrganismBuilder withHealth(int health) {
+		public OrganismBuilder withHealth(double health) {
 			getParent().setHealth(health);
 			return this;
 		}
