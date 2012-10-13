@@ -66,6 +66,7 @@ public class Organism extends MatterBase implements Cloneable {
 		
 		public OrganismBuilder withId(int id) {
 			getParent().id = id;
+			System.out.println("what");
 			return this;
 		}
 		
