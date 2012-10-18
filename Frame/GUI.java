@@ -61,7 +61,6 @@ import Interactive.Gene;
 import Interactive.Map;
 import Interactive.OrgData;
 import Interactive.Organism;
-import Interactive.Organism.OrganismBuilder;
 
 /**
  * This class will host and initialize all JPanels and JMenuItems. It will NOT

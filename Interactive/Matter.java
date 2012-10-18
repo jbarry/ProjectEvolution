@@ -24,23 +24,6 @@ public abstract class Matter extends Thread implements Comparable<Matter>, Clone
 		r = new Random();
 	}
 
-	public Matter(double aMxHlth, char type) {
-		health = mxHlth = aMxHlth;
-		r = new Random();
-		this.type = type;
-		location = new Coordinate();
-		/*place(type);*/
-	}
-
-	public Matter(double aMxHlth, int anId, char type) {
-		health = mxHlth = aMxHlth;
-		id = anId;
-		r = new Random();
-		this.type = type;
-		location = new Coordinate();
-		/*place(type);*/
-	}
-	
 	public boolean deplete(double val) {
 		if (health - val < 0) {
 			health = 0;

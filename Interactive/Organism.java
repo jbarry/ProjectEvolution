@@ -13,101 +13,23 @@ import java.util.Set;
 import Frame.Coordinate;
 import Frame.LocationMap;
 
-public class Organism extends MatterBase implements Cloneable {
+public class Organism extends Matter implements Cloneable {
 	
 	// ---------------------
 	// Builder for Organism
 	// ---------------------
-	public static class OrganismBuilder extends MatterBuilder<OrganismBuilder> {
-		
-		public Organism build() {
-			return new Organism(this);
-		}
-		
-		public OrganismBuilder withWidth(int width) {
-			this.width = width;
-			return this;
-		}
-		
-		public OrganismBuilder withHeight(int height) {
-			this.height  = height;
-			return this;
-		}
-		
-		public OrganismBuilder withAction(String action) {
-			this.action = action;
-			return this;
-		}
-		
-		public OrganismBuilder withFitness(double fitness) {
-			this.fitness = fitness;
-			return this;
-		}
-		
-		public OrganismBuilder withOrgData(OrgData orgData) {
-			this.orgData = orgData;
-			return this;
-		}
-		
-		public OrganismBuilder withNumActions(int numActions) {
-			this.numActions = numActions;
-			return this;
-		}
-		
-		public OrganismBuilder withHealth(double health) {
-			getParent().setHealth(health);
-			return this;
-		}
-		
-		public OrganismBuilder withNumberOfGenes(int chromosomeSize) {
-			this.numberOfGenes = chromosomeSize;
-			return this;
-		}
-		
-		public OrganismBuilder withId(int id) {
-			getParent().id = id;
-			System.out.println("what");
-			return this;
-		}
-		
-		@Override
-		protected OrganismBuilder getThis() {
-			// TODO Auto-generated method stub
-			return this;
-		}
-
-		@Override
-		protected MatterBase getParent() {
-			// TODO Auto-generated method stub
-			return org;
-		}
-		
-		private Organism org;
-		
-		private int width = 5;
-		private int height = 5;
-		private String action;
-		private double fitness;
-		private OrgData orgData;
-		private int numActions;
-		private int numberOfGenes;
-		private int id;
-		private int health;
-	}
 	
 	public static OrganismBuilder organismBuilder() {
 		return new OrganismBuilder();
 	}
 	
-	private Organism(OrganismBuilder organismBuilder) {
+	public Organism(OrganismBuilder organismBuilder) {
 		width = organismBuilder.width;
 		height = organismBuilder.height;
 		action = organismBuilder.action;
 		fitness = organismBuilder.fitness;
 		orgData = organismBuilder.orgData;
 		numActions = organismBuilder.numActions;
-		id = organismBuilder.id;
-		health = organismBuilder.health;
 		fitness = organismBuilder.fitness;
 		chromosome = new Chromosome(organismBuilder.numberOfGenes);
 		type = 'o';
