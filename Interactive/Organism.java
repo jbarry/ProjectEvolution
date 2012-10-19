@@ -409,10 +409,12 @@ public class Organism extends Matter implements Cloneable {
 	public void run() {
 		
 			orgData.incrementSumHealth(getHealth());
+			
 			// Closed list.
 			ArrayList<Coordinate> closedList = (ArrayList<Coordinate>) orgData
 					.getClosedList();
 			closedList.add(getLocation());
+
 			// lastFoodSourceIndex holds the index of the last food source
 			// that was visited.
 			orgData.setLastFoodSourceIndex(0);
@@ -420,11 +422,13 @@ public class Organism extends Matter implements Cloneable {
 																						  // loop.
 				// Sample for fitness function.
 				orgData.incHlthTot();
+
 				// depleteValue is the value to decrease the Organism's
 				// health
 				// by at each time step.
 				double depleteValue = orgData.getMaxHealth()
-						/ ((lengthGeneration - healthDepletion) * numActions);
+						/ ((GridPanel.lengthGeneration - healthDepletion) * numActions);
+				
 				// Check to see if the Organism is dead, if so remove that org
 				// from the shuffleIds list.
 				if (deplete(org, depleteValue)) {
@@ -433,9 +437,12 @@ public class Organism extends Matter implements Cloneable {
 					shuffleIds.remove(new Integer(org.getMatterID()));
 					continue mainLoop;
 				}
+				
 				Chromosome chrome = org.getChromosome();
+				
 				// Get the first food.
 				int foodDestination = 0;
+				
 				// bestEval is used to hold the value of the evaluation
 				// and the food source that the evaluation corresponds
 				// to.
