@@ -277,12 +277,14 @@ public class GUI extends Container {
 
 			}
 		});
+		
 		selectMapMenu.add(grassMap);
 
 		// Sand Map
 		sandMap = new JMenuItem("Sand");
 		sandMap.setText("Sand");
 		sandMap.addActionListener(new ActionListener() {
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				enableMapItems();

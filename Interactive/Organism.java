@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import Frame.Coordinate;
+import Frame.GridPanel;
 import Frame.LocationMap;
 
 public class Organism extends Matter implements Cloneable {
@@ -427,7 +428,7 @@ public class Organism extends Matter implements Cloneable {
 				// health
 				// by at each time step.
 				double depleteValue = orgData.getMaxHealth()
-						/ ((GridPanel.lengthGeneration - healthDepletion) * numActions);
+						/ ((GridPanel.lengthGeneration - GridPanel.healthDepletion) * numActions);
 				
 				// Check to see if the Organism is dead, if so remove that org
 				// from the shuffleIds list.
@@ -448,11 +449,15 @@ public class Organism extends Matter implements Cloneable {
 				// to.
 				// TODO: 1st gene is only evaled once.
 				Pair<Integer, Double> bestEval = null;
+				
 				for (int geneIndex = 0; geneIndex < chrome.size(); geneIndex++) { // loopGenes.
+					
 					// First Gene in Chromosome.
 					Gene currentGene = chrome.getGene(geneIndex);
 					/*System.out.println("onGene: " + j);*/
+					
 					for (int foodIndex = 0; foodIndex < foodList.size(); foodIndex++) { // loopFood.
+						
 						// If the geneIndex and the food index 0, then set the
 						// values of bestEval. bestEval is initialized in this
 						// fashion to prevent the occurrence of the case where,
