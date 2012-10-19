@@ -408,94 +408,101 @@ public class Organism extends Matter implements Cloneable {
 	@Override
 	public void run() {
 		
-//			orgData.incrementSumHealth(getHealth());
-//			// Closed list.
-//			ArrayList<Coordinate> closedList = (ArrayList<Coordinate>) orgData
-//					.getClosedList();
-//			closedList.add(getLocation());
-//			// lastFoodSourceIndex holds the index of the last food source
-//			// that was visited.
-//			orgData.setLastFoodSourceIndex(0);
-//			for (int numActionIndex = 0; numActionIndex < numActions; numActionIndex++) { // numActions
-//																						  // loop.
-//				// Sample for fitness function.
-//				orgData.incHlthTot();
-//				// depleteValue is the value to decrease the Organism's
-//				// health
-//				// by at each time step.
-//				double depleteValue = orgData.getMaxHealth()
-//						/ ((lengthGeneration - healthDepletion) * numActions);
-//				// Check to see if the Organism is dead, if so remove that org
-//				// from the shuffleIds list.
-//				if (deplete(org, depleteValue)) {
-//					orgData.setTimeOfDeath(timePassed);
-//					System.out.println("remove on deplete.");
-//					shuffleIds.remove(new Integer(org.getMatterID()));
-//					continue mainLoop;
-//				}
-//				Chromosome chrome = org.getChromosome();
-//				// Get the first food.
-//				int foodDestination = 0;
-//				// bestEval is used to hold the value of the evaluation
-//				// and the food source that the evaluation corresponds
-//				// to.
-//				// TODO: 1st gene is only evaled once.
-//				Pair<Integer, Double> bestEval = null;
-//				for (int geneIndex = 0; geneIndex < chrome.size(); geneIndex++) { // loopGenes.
-//					// First Gene in Chromosome.
-//					Gene currentGene = chrome.getGene(geneIndex);
-//					/*System.out.println("onGene: " + j);*/
-//					for (int foodIndex = 0; foodIndex < foodList.size(); foodIndex++) { // loopFood.
-//						// If the geneIndex and the food index 0, then set the
-//						// values of bestEval. bestEval is initialized in this
-//						// fashion to prevent the occurrence of the case where,
-//						// if bestEval is initialized outside of the geneLoop to
-//						// have left and right values of 0, 0, then when
-//						// comparing resulting evaluations of food sources to
-//						// each other, all of the evaluations, except the
-//						// evaluation of the first food source and the first
-//						// gene, turn out to be less than 0, but greater than
-//						// the evaluation of the first food source and the first
-//						// gene.
-//						if (geneIndex == 0 && foodIndex == 0)
-//							bestEval = new Pair<Integer, Double>(0,
-//									evaluateGeneFoodInRangeAstar(org,
-//											currentGene.getEvaledList(),
-//											foodList.get(0)));
-//						else {
-//							double aResult = evaluateGeneFoodInRangeAstar(org,
-//									currentGene.getEvaledList(),
-//									foodList.get(foodIndex));
-//							if (aResult > bestEval.getRight()) {
-//								foodDestination = foodIndex;
-//								/*System.out.println("replacedId: " + k);*/
-//								bestEval.setLeft(geneIndex);
-//								bestEval.setRight(aResult);
-//							}
-//						}
-//					} // End loopFood.
-//				} // End loopGenes.
-//
-//				// This mechanism decides whether or not to clear the
-//				// closed list. The closed list should clear if the
-//				// organism has decided to make its way towards another
-//				// food source. If it decides to stay on the path to the
-//				// same food source, then it needs to keep its list of
-//				// previously visited nodes.
-//				if (orgData.getLastFoodSourceDestination() != foodDestination) {
-//					closedList.clear();
-//					orgData.setLastFoodSourceIndex(foodDestination);
-//				}
-//				// TODO: Later on replace foodDestination with
-//				// objectDestination.
-//				if (doActionAstar(org, orgData, bestEval,
-//						orgData.getLastFoodSourceDestination())) {
-//					shuffleIds.remove(new Integer(org.getMatterID()));
-//					orgData.setTimeOfDeath(timePassed);
-//					continue mainLoop;
-//				}
-//			} // End NumAction Loop.
-//		} // End mainLoop.
+			orgData.incrementSumHealth(getHealth());
+			
+			// Closed list.
+			ArrayList<Coordinate> closedList = (ArrayList<Coordinate>) orgData
+					.getClosedList();
+			closedList.add(getLocation());
+			
+			// lastFoodSourceIndex holds the index of the last food source
+			// that was visited.
+			orgData.setLastFoodSourceIndex(0);
+			for (int numActionIndex = 0; numActionIndex < numActions; numActionIndex++) { // numActions
+																						  // loop.
+				// Sample for fitness function.
+				orgData.incHlthTot();
+				
+				// depleteValue is the value to decrease the Organism's
+				// health
+				// by at each time step.
+				double depleteValue = orgData.getMaxHealth()
+						/ ((GridPanel.lengthGeneration - healthDepletion) * numActions);
+				
+				// Check to see if the Organism is dead, if so remove that org
+				// from the shuffleIds list.
+				if (deplete(org, depleteValue)) {
+					orgData.setTimeOfDeath(timePassed);
+					System.out.println("remove on deplete.");
+					shuffleIds.remove(new Integer(org.getMatterID()));
+					continue mainLoop;
+				}
+				
+				Chromosome chrome = org.getChromosome();
+				
+				// Get the first food.
+				int foodDestination = 0;
+				
+				// bestEval is used to hold the value of the evaluation
+				// and the food source that the evaluation corresponds
+				// to.
+				// TODO: 1st gene is only evaled once.
+				Pair<Integer, Double> bestEval = null;
+				for (int geneIndex = 0; geneIndex < chrome.size(); geneIndex++) { // loopGenes.
+					// First Gene in Chromosome.
+					Gene currentGene = chrome.getGene(geneIndex);
+					/*System.out.println("onGene: " + j);*/
+					for (int foodIndex = 0; foodIndex < foodList.size(); foodIndex++) { // loopFood.
+						// If the geneIndex and the food index 0, then set the
+						// values of bestEval. bestEval is initialized in this
+						// fashion to prevent the occurrence of the case where,
+						// if bestEval is initialized outside of the geneLoop to
+						// have left and right values of 0, 0, then when
+						// comparing resulting evaluations of food sources to
+						// each other, all of the evaluations, except the
+						// evaluation of the first food source and the first
+						// gene, turn out to be less than 0, but greater than
+						// the evaluation of the first food source and the first
+						// gene.
+						if (geneIndex == 0 && foodIndex == 0)
+							bestEval = new Pair<Integer, Double>(0,
+									evaluateGeneFoodInRangeAstar(org,
+											currentGene.getEvaledList(),
+											foodList.get(0)));
+						else {
+							double aResult = evaluateGeneFoodInRangeAstar(org,
+									currentGene.getEvaledList(),
+									foodList.get(foodIndex));
+							if (aResult > bestEval.getRight()) {
+								foodDestination = foodIndex;
+								/*System.out.println("replacedId: " + k);*/
+								bestEval.setLeft(geneIndex);
+								bestEval.setRight(aResult);
+							}
+						}
+					} // End loopFood.
+				} // End loopGenes.
+
+				// This mechanism decides whether or not to clear the
+				// closed list. The closed list should clear if the
+				// organism has decided to make its way towards another
+				// food source. If it decides to stay on the path to the
+				// same food source, then it needs to keep its list of
+				// previously visited nodes.
+				if (orgData.getLastFoodSourceDestination() != foodDestination) {
+					closedList.clear();
+					orgData.setLastFoodSourceIndex(foodDestination);
+				}
+				// TODO: Later on replace foodDestination with
+				// objectDestination.
+				if (doActionAstar(org, orgData, bestEval,
+						orgData.getLastFoodSourceDestination())) {
+					shuffleIds.remove(new Integer(org.getMatterID()));
+					orgData.setTimeOfDeath(timePassed);
+					continue mainLoop;
+				}
+			} // End NumAction Loop.
+		} // End mainLoop.
 	}
 	
 	private Chromosome chromosome;

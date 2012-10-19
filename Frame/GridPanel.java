@@ -54,7 +54,11 @@ public class GridPanel extends JPanel {
 	private ArrayList<Integer> shuffleIds;
 	private ArrayList<String> shuffleStringIds;
 	private int lengthTimeStep = 500;
-	private int lengthGeneration = 100;
+	
+	// TODO: input into GUI
+	public static int lengthGeneration = 100;
+	public static double healthDepletion = 40;
+	
 	private int timePassed = 0;
 	private int trialsPerGen = 1;
 	public int trialNum = 1;
@@ -71,7 +75,6 @@ public class GridPanel extends JPanel {
 	public boolean isPainting;
 	private boolean gamePaused;
 	private Thread timerCalculator;
-	
 	
 	// ------------------------------------------------------------------------------------
 	// --constructors--
