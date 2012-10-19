@@ -3,11 +3,9 @@ package Interactive;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 import Frame.Coordinate;
@@ -24,27 +22,19 @@ public class Organism extends Matter implements Cloneable {
 	}
 	
 	public Organism(OrganismBuilder organismBuilder) {
-		width = organismBuilder.width;
-		height = organismBuilder.height;
+		width = 5;
+		height = 5;
 		action = organismBuilder.action;
 		fitness = organismBuilder.fitness;
 		orgData = organismBuilder.orgData;
 		numActions = organismBuilder.numActions;
+		health = organismBuilder.health;
 		fitness = organismBuilder.fitness;
 		chromosome = new Chromosome(organismBuilder.numberOfGenes);
 		type = 'o';
+		matterId = organismBuilder.matterId;
+		location = new Coordinate();
 	}
-	
-	// ------------------------------------------------------------------------------------
-	// --globals--
-	// ------------------------------------------------------------------------------------
-	private Chromosome chromosome;
-	public static int width = 5;
-	public static int height = 5;
-	private String action;
-	private double fitness;
-	private OrgData orgData;
-	private int numActions;
 	
 	public boolean eatFood(double val) {
 		health += val;
@@ -127,7 +117,7 @@ public class Organism extends Matter implements Cloneable {
 	}
 
 	public void newLocation() {
-		LocationMap.getInstance().newLocation(location, width, height, id, 'o');
+		LocationMap.getInstance().newLocation(location, width, height, matterId, 'o');
 	}
 
 	public void moveTo(Coordinate c) {
@@ -138,7 +128,7 @@ public class Organism extends Matter implements Cloneable {
 		location.setY(c.getY());
 		map.setWrapAround(location, width, height);
 		// Make current location unavailable.
-		map.setRange(location, width, height, 'o', id);
+		map.setRange(location, width, height, 'o', matterId);
 	}
 
 	/*
@@ -369,7 +359,7 @@ public class Organism extends Matter implements Cloneable {
 
 	public void printInfo() {
 		System.out.println("Organism: ");
-		System.out.println("Id: " + id);
+		System.out.println("Id: " + matterId);
 		System.out.println("Health: " + health);
 		System.out.println("Position: (" + location.getX() + ", "
 				+ location.getY() + ")");
@@ -377,7 +367,7 @@ public class Organism extends Matter implements Cloneable {
 	}
 
 	public void printId() {
-		System.out.println("Id: " + id);
+		System.out.println("Id: " + matterId);
 		System.out.println();
 	}
 
@@ -388,7 +378,7 @@ public class Organism extends Matter implements Cloneable {
 
 	@Override
 	public int getMatterID() {
-		return id;
+		return matterId;
 	}
 
 	/*
@@ -507,4 +497,16 @@ public class Organism extends Matter implements Cloneable {
 //			} // End NumAction Loop.
 //		} // End mainLoop.
 	}
+	
+	// ------------------------------------------------------------------------------------
+	// --globals--
+	// ------------------------------------------------------------------------------------
+	private Chromosome chromosome;
+	public static int width = 5;
+	public static int height = 5;
+	private String action;
+	private double fitness;
+	private OrgData orgData;
+	private int numActions;
+	
 }

@@ -6,28 +6,38 @@ import Frame.Coordinate;
 
 public abstract class MatterBuilder <T extends MatterBuilder<T>> {
 	
-	T withLocation(Coordinate c) {
+	public T withLocation(Coordinate c) {
 		location = c;
 		return getThis();
 	}
 		
-	T withId(int id) {
-		this.id = id;
+	public T withMatterId(int matterId) {
+		this.matterId = matterId;
 		return getThis();
 	}
 	
-	T withHealth(double health) {
+	public T withHealth(double health) {
 		this.health = health;
 		return getThis();
 	}
 	
-	T withMxHlth(double mxHlth) {
+	public T withMxHlth(double mxHlth) {
 		this.mxHlth = mxHlth;
 		return getThis();
 	}
 	
-	T withType(char type) {
+	public T withType(char type) {
 		this.type = type;
+		return getThis();
+	}
+	
+	public T withHeight(int height) {
+		this.height = height;
+		return getThis();
+	}
+	
+	public T withWidth(int Width) {
+		this.width = Width;
 		return getThis();
 	}
 	
@@ -36,8 +46,10 @@ public abstract class MatterBuilder <T extends MatterBuilder<T>> {
 	protected Coordinate location;
 	protected double health;
 	protected double mxHlth;
-	protected int id;
+	protected int matterId;
 	protected Random r;
 	protected char type;
+	protected int height;
+	protected int width;
 	public static boolean graphicsEnabled = false;
 }

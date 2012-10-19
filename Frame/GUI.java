@@ -787,7 +787,7 @@ public class GUI extends Container {
 							Organism individOrganism = Organism.organismBuilder()
 									.withHealth(500)
 									.withNumberOfGenes(numGenes)
-									.withId(i)
+									.withMatterId(i)
 									.withNumActions(100)
 									.build();
 							
@@ -916,7 +916,7 @@ public class GUI extends Container {
 						Organism individOrganism = Organism.organismBuilder()
 								.withHealth(individOrgData.getMaxHealth())
 								.withNumberOfGenes(numGenes)
-								.withId(i)
+								.withMatterId(i)
 								.withNumActions(100)
 								.build();
 						// Create temporary Linked List of type Gene to store

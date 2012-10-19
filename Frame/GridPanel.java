@@ -1,5 +1,6 @@
 package Frame;
 
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -27,6 +28,7 @@ import Interactive.HealthyFood;
 import Interactive.Matter;
 import Interactive.OrgData;
 import Interactive.Organism;
+import Interactive.OrganismBuilder;
 import Interactive.Pair;
 import Interactive.PoisonousFood;
 
@@ -461,10 +463,10 @@ public class GridPanel extends JPanel {
 		// organism.
 		for (int i = 0; i < OptionsPanel.numOrganisms; i++) {
 //			Organism org = new Organism(hlth=100.00, 2, i);
-			Organism org = new Organism.OrganismBuilder()
+			Organism org = new OrganismBuilder()
 				.withHealth(100)
 				.withNumberOfGenes(2)
-				.withId(i)
+				.withMatterId(i)
 				.build();
 			orgDataList.add(new OrgData(org.getMaxHealth(), i));
 			organisms.add(org);

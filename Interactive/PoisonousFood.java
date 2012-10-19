@@ -64,7 +64,7 @@ public class PoisonousFood extends Food {
 
 	@Override
 	public int getMatterID() {
-		return id;
+		return matterId;
 	}
 	
 	@Override

@@ -70,78 +70,78 @@ public class GEPTest {
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(10.0)
-				.withId(0)
+				.withMatterId(0)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(04.0)
-				.withId(1)
+				.withMatterId(1)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(11.0)
-				.withId(2)
+				.withMatterId(2)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(03.0)
-				.withId(3)
+				.withMatterId(3)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(10.0)
-				.withId(4)
+				.withMatterId(4)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(13.0)
-				.withId(5)
+				.withMatterId(5)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(12.0)
-				.withId(6)
+				.withMatterId(6)
 				.build());
 		
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(10.0)
-				.withId(7)
+				.withMatterId(7)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(10.0)
-				.withId(8)
+				.withMatterId(8)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(10.0)
-				.withId(9)
+				.withMatterId(9)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(10.0)
-				.withId(10)
+				.withMatterId(10)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(10.0)
-				.withId(11)
+				.withMatterId(11)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(10.0)
-				.withId(12)
+				.withMatterId(12)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(10.0)
-				.withId(0)
+				.withMatterId(0)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(10.0)
-				.withId(13)
+				.withMatterId(13)
 				.build());
 		LinkedList<Pair<Organism, Organism>> partnerList = gep
 				.partnerSelect(orgList);
@@ -169,78 +169,78 @@ public class GEPTest {
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(10.0)
-				.withId(0)
+				.withMatterId(0)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(04.0)
-				.withId(1)
+				.withMatterId(1)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(11.0)
-				.withId(2)
+				.withMatterId(2)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(03.0)
-				.withId(3)
+				.withMatterId(3)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(10.0)
-				.withId(4)
+				.withMatterId(4)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(13.0)
-				.withId(5)
+				.withMatterId(5)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(12.0)
-				.withId(6)
+				.withMatterId(6)
 				.build());
 		
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(10.0)
-				.withId(7)
+				.withMatterId(7)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(10.0)
-				.withId(8)
+				.withMatterId(8)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(10.0)
-				.withId(9)
+				.withMatterId(9)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(10.0)
-				.withId(10)
+				.withMatterId(10)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(10.0)
-				.withId(11)
+				.withMatterId(11)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(10.0)
-				.withId(12)
+				.withMatterId(12)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(10.0)
-				.withId(0)
+				.withMatterId(0)
 				.build());
 		orgList.add(Organism.organismBuilder()
 				.withNumberOfGenes(7)
 				.withFitness(10.0)
-				.withId(13)
+				.withMatterId(13)
 				.build());
 		LinkedList<Pair<Organism, Organism>> partnerList = gep
 				.partnerSelect(orgList);
@@ -271,7 +271,7 @@ public class GEPTest {
 			orgList.add(Organism.organismBuilder()
 					.withNumberOfGenes(4)
 					.withFitness(r.nextInt(20))
-					.withId(i)
+					.withMatterId(i)
 					.build());
 		LinkedList<Pair<Organism, Organism>> partnerList = gep
 				.partnerSelect(orgList);
@@ -298,7 +298,7 @@ public class GEPTest {
 			orgList.add(Organism.organismBuilder()
 					.withNumberOfGenes(4)
 					.withFitness(r.nextInt(20))
-					.withId(i)
+					.withMatterId(i)
 					.build());
 		LinkedList<Pair<Organism, Organism>> partnerList = gep
 				.partnerSelect(orgList);
@@ -333,7 +333,7 @@ public class GEPTest {
 			orgList.add(Organism.organismBuilder()
 					.withNumberOfGenes(4)
 					.withFitness(r.nextInt(20))
-					.withId(i)
+					.withMatterId(i)
 					.build());
 		LinkedList<Chromosome> chromList = gep.makeChromList(gep.tournament(gep
 				.partnerSelect(orgList)));

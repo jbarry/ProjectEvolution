@@ -15,7 +15,7 @@ public abstract class Matter extends Thread implements Comparable<Matter>, Clone
 	protected Coordinate location;
 	protected double health;
 	protected double mxHlth;
-	protected int id;
+	protected int matterId;
 	protected Random r;
 	protected char type;
 	public static boolean graphicsEnabled = false;
@@ -24,6 +24,23 @@ public abstract class Matter extends Thread implements Comparable<Matter>, Clone
 		r = new Random();
 	}
 
+	public Matter(double aMxHlth, char type) {
+		health = mxHlth = aMxHlth;
+		r = new Random();
+		this.type = type;
+		location = new Coordinate();
+		/*place(type);*/
+	}
+
+	public Matter(double aMxHlth, int anId, char type) {
+		health = mxHlth = aMxHlth;
+		matterId = anId;
+		r = new Random();
+		this.type = type;
+		location = new Coordinate();
+		/*place(type);*/
+	}
+	
 	public boolean deplete(double val) {
 		if (health - val < 0) {
 			health = 0;
@@ -69,7 +86,7 @@ public abstract class Matter extends Thread implements Comparable<Matter>, Clone
 							.get(i, j);
 					Character spaceType = space.getRight();
 					Integer spaceId = space.getLeft();
-					if (spaceType == type && spaceId != id)
+					if (spaceType == type && spaceId != matterId)
 						objectIds.add(space.getLeft());
 				} catch (ArrayIndexOutOfBoundsException e) {
 				}
@@ -125,7 +142,7 @@ public abstract class Matter extends Thread implements Comparable<Matter>, Clone
 	}
 
 	public void setId(int anId) {
-		id = anId;
+		matterId = anId;
 	}
 	
 	public abstract char getType();

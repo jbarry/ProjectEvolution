@@ -170,7 +170,7 @@ public class LocationMap {
 	 * @param width
 	 * @param height
 	 * @param value
-	 * @param id
+	 * @param matterId
 	 * @param x
 	 * @param y
 	 */

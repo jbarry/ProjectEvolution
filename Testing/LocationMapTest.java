@@ -58,7 +58,7 @@ public class LocationMapTest {
 			orgList.add(Organism.organismBuilder()
 					.withNumberOfGenes(4)
 					.withFitness(r.nextInt(20))
-					.withId(i)
+					.withMatterId(i)
 					.build());
 		map.placeOrganisms(orgList);
 		for(Organism org : orgList)
@@ -74,7 +74,7 @@ public class LocationMapTest {
 			orgList.add(Organism.organismBuilder()
 					.withNumberOfGenes(4)
 					.withFitness(r.nextInt(20))
-					.withId(i)
+					.withMatterId(i)
 					.build());
 		map.placeOrganisms(orgList);
 		while (!orgList.isEmpty()) {
@@ -103,7 +103,7 @@ public class LocationMapTest {
 			orgList.add(Organism.organismBuilder()
 					.withNumberOfGenes(4)
 					.withFitness(r.nextInt(20))
-					.withId(i)
+					.withMatterId(i)
 					.build());
 		map.placeOrganisms(orgList);
 		int count = 0;
@@ -125,7 +125,7 @@ public class LocationMapTest {
 			orgList.add(Organism.organismBuilder()
 					.withNumberOfGenes(4)
 					.withFitness(r.nextInt(20))
-					.withId(i)
+					.withMatterId(i)
 					.build());
 		map.placeOrganisms(orgList);
 		fail("not yet implemented");
@@ -142,8 +142,10 @@ public class LocationMapTest {
 				foodList.add(new PoisonousFood(100.0, i, 'p'));
 		}
 		map.placeFoods(foodList);
-		for(Food f : foodList)
+		for(Food f : foodList) {
 			Assert.assertTrue(f.getLocation().getX() != 0 && f.getLocation().getY() != 0);
+			System.out.println(f.getLocation().getX() + "y: " + f.getLocation().getY());
+		}
 		map.clearLocations();
 	}
 
@@ -209,7 +211,7 @@ public class LocationMapTest {
 			orgList.add(Organism.organismBuilder()
 					.withNumberOfGenes(4)
 					.withFitness(r.nextInt(20))
-					.withId(i)
+					.withMatterId(i)
 					.build());
 		map.placeOrganisms(orgList);
 		for (Organism org : orgList) {
@@ -239,7 +241,7 @@ public class LocationMapTest {
 		Organism org1 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(0)
+				.withMatterId(0)
 				.build();
 //		Organism org1 = new Organism(true, 4, 0.0, 0);
 		org1.getLocation().setX(10);
@@ -247,7 +249,7 @@ public class LocationMapTest {
 		Organism org2 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(1)
+				.withMatterId(1)
 				.build();
 		org2.getLocation().setX(10);
 		org2.getLocation().setY(5);
@@ -263,14 +265,14 @@ public class LocationMapTest {
 		Organism org1 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(0)
+				.withMatterId(0)
 				.build();
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
 		Organism org2 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(1)
+				.withMatterId(1)
 				.build();
 		org2.getLocation().setX(15);
 		org2.getLocation().setY(5);
@@ -286,14 +288,14 @@ public class LocationMapTest {
 		Organism org1 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(0)
+				.withMatterId(0)
 				.build();
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
 		Organism org2 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(1)
+				.withMatterId(1)
 				.build();
 		org2.getLocation().setX(15);
 		org2.getLocation().setY(15);
@@ -309,14 +311,14 @@ public class LocationMapTest {
 		Organism org1 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(0)
+				.withMatterId(0)
 				.build();
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
 		Organism org2 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(1)
+				.withMatterId(1)
 				.build();
 		org2.getLocation().setX(10);
 		org2.getLocation().setY(15);
@@ -347,14 +349,14 @@ public class LocationMapTest {
 		Organism org1 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(0)
+				.withMatterId(0)
 				.build();
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
 		Organism org2 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(1)
+				.withMatterId(1)
 				.build();
 		org2.getLocation().setX(5);
 		org2.getLocation().setY(10);
@@ -370,14 +372,14 @@ public class LocationMapTest {
 		Organism org1 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(0)
+				.withMatterId(0)
 				.build();
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
 		Organism org2 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(1)
+				.withMatterId(1)
 				.build();
 		org2.getLocation().setX(5);
 		org2.getLocation().setY(5);
@@ -393,14 +395,14 @@ public class LocationMapTest {
 		Organism org1 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(0)
+				.withMatterId(0)
 				.build();
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
 		Organism org2 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(1)
+				.withMatterId(1)
 				.build();
 		org2.getLocation().setX(4);
 		org2.getLocation().setY(4);
@@ -416,7 +418,7 @@ public class LocationMapTest {
 		Organism org1 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(0)
+				.withMatterId(0)
 				.build();
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
@@ -425,7 +427,7 @@ public class LocationMapTest {
 		Organism org2 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(1)
+				.withMatterId(1)
 				.build();
 		org2.getLocation().setX(5);
 		org2.getLocation().setY(5);
@@ -434,7 +436,7 @@ public class LocationMapTest {
 		Organism org3 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(2)
+				.withMatterId(2)
 				.build();
 		org3.getLocation().setX(10);
 		org3.getLocation().setY(5);
@@ -443,7 +445,7 @@ public class LocationMapTest {
 		Organism org4 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(3)
+				.withMatterId(3)
 				.build();
 		org4.getLocation().setX(15);
 		org4.getLocation().setY(5);
@@ -452,7 +454,7 @@ public class LocationMapTest {
 		Organism org5 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(4)
+				.withMatterId(4)
 				.build();
 		org5.getLocation().setX(15);
 		org5.getLocation().setY(10);
@@ -461,7 +463,7 @@ public class LocationMapTest {
 		Organism org6 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(5)
+				.withMatterId(5)
 				.build();
 		org6.getLocation().setX(15);
 		org6.getLocation().setY(15);
@@ -470,7 +472,7 @@ public class LocationMapTest {
 		Organism org7 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(6)
+				.withMatterId(6)
 				.build();
 		org7.getLocation().setX(5);
 		org7.getLocation().setY(15);
@@ -479,7 +481,7 @@ public class LocationMapTest {
 		Organism org8 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(7)
+				.withMatterId(7)
 				.build();
 		org8.getLocation().setX(5);
 		org8.getLocation().setY(10);
@@ -500,7 +502,7 @@ public class LocationMapTest {
 		Organism org1 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(0)
+				.withMatterId(0)
 				.build();
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
@@ -509,7 +511,7 @@ public class LocationMapTest {
 		Organism org2 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(1)
+				.withMatterId(1)
 				.build();
 		org2.getLocation().setX(5);
 		org2.getLocation().setY(5);
@@ -518,7 +520,7 @@ public class LocationMapTest {
 		Organism org3 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(2)
+				.withMatterId(2)
 				.build();
 		org3.getLocation().setX(10);
 		org3.getLocation().setY(5);
@@ -527,7 +529,7 @@ public class LocationMapTest {
 		Organism org4 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(3)
+				.withMatterId(3)
 				.build();
 		org4.getLocation().setX(15);
 		org4.getLocation().setY(5);
@@ -536,7 +538,7 @@ public class LocationMapTest {
 		Organism org5 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(4)
+				.withMatterId(4)
 				.build();
 		org5.getLocation().setX(15);
 		org5.getLocation().setY(10);
@@ -545,7 +547,7 @@ public class LocationMapTest {
 		Organism org6 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(5)
+				.withMatterId(5)
 				.build();
 		org6.getLocation().setX(15);
 		org6.getLocation().setY(15);
@@ -554,7 +556,7 @@ public class LocationMapTest {
 		Organism org7 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(6)
+				.withMatterId(6)
 				.build();
 		org7.getLocation().setX(5);
 		org7.getLocation().setY(15);
@@ -576,7 +578,7 @@ public class LocationMapTest {
 		Organism org1 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(0)
+				.withMatterId(0)
 				.build();
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
@@ -585,7 +587,7 @@ public class LocationMapTest {
 		Organism org2 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(1)
+				.withMatterId(1)
 				.build();
 		org2.getLocation().setX(5);
 		org2.getLocation().setY(5);
@@ -594,7 +596,7 @@ public class LocationMapTest {
 		Organism org3 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(2)
+				.withMatterId(2)
 				.build();
 		org3.getLocation().setX(10);
 		org3.getLocation().setY(5);
@@ -603,7 +605,7 @@ public class LocationMapTest {
 		Organism org4 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(3)
+				.withMatterId(3)
 				.build();
 		org4.getLocation().setX(15);
 		org4.getLocation().setY(5);
@@ -612,7 +614,7 @@ public class LocationMapTest {
 		Organism org5 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(4)
+				.withMatterId(4)
 				.build();
 		org5.getLocation().setX(15);
 		org5.getLocation().setY(10);
@@ -621,7 +623,7 @@ public class LocationMapTest {
 		Organism org6 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(5)
+				.withMatterId(5)
 				.build();
 		org6.getLocation().setX(15);
 		org6.getLocation().setY(15);
@@ -630,7 +632,7 @@ public class LocationMapTest {
 		Organism org7 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(6)
+				.withMatterId(6)
 				.build();
 		org7.getLocation().setX(5);
 		org7.getLocation().setY(15);
@@ -653,7 +655,7 @@ public class LocationMapTest {
 		Organism org1 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(0)
+				.withMatterId(0)
 				.build();
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
@@ -662,7 +664,7 @@ public class LocationMapTest {
 		Organism org2 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(1)
+				.withMatterId(1)
 				.build();
 		org2.getLocation().setX(5);
 		org2.getLocation().setY(5);
@@ -671,7 +673,7 @@ public class LocationMapTest {
 		Organism org3 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(2)
+				.withMatterId(2)
 				.build();
 		org3.getLocation().setX(10);
 		org3.getLocation().setY(5);
@@ -680,7 +682,7 @@ public class LocationMapTest {
 		Organism org4 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(3)
+				.withMatterId(3)
 				.build();
 		org4.getLocation().setX(15);
 		org4.getLocation().setY(5);
@@ -689,7 +691,7 @@ public class LocationMapTest {
 		Organism org5 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(4)
+				.withMatterId(4)
 				.build();
 		org5.getLocation().setX(15);
 		org5.getLocation().setY(10);
@@ -698,7 +700,7 @@ public class LocationMapTest {
 		Organism org6 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(5)
+				.withMatterId(5)
 				.build();
 		org6.getLocation().setX(15);
 		org6.getLocation().setY(15);
@@ -707,7 +709,7 @@ public class LocationMapTest {
 		Organism org7 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(6)
+				.withMatterId(6)
 				.build();
 		org7.getLocation().setX(5);
 		org7.getLocation().setY(15);
@@ -716,7 +718,7 @@ public class LocationMapTest {
 		Organism org8 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(7)
+				.withMatterId(7)
 				.build();
 		org8.getLocation().setX(5);
 		org8.getLocation().setY(15);
@@ -744,7 +746,7 @@ public class LocationMapTest {
 		Organism org1 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(0)
+				.withMatterId(0)
 				.build();
 		org1.getLocation().setX(10);
 		org1.getLocation().setY(10);
@@ -753,7 +755,7 @@ public class LocationMapTest {
 		Organism org2 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(1)
+				.withMatterId(1)
 				.build();
 		org2.getLocation().setX(5);
 		org2.getLocation().setY(5);
@@ -762,7 +764,7 @@ public class LocationMapTest {
 		Organism org3 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(2)
+				.withMatterId(2)
 				.build();
 		org3.getLocation().setX(10);
 		org3.getLocation().setY(5);
@@ -771,7 +773,7 @@ public class LocationMapTest {
 		Organism org4 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(3)
+				.withMatterId(3)
 				.build();
 		org4.getLocation().setX(15);
 		org4.getLocation().setY(5);
@@ -780,7 +782,7 @@ public class LocationMapTest {
 		Organism org5 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(4)
+				.withMatterId(4)
 				.build();
 		org5.getLocation().setX(15);
 		org5.getLocation().setY(10);
@@ -789,7 +791,7 @@ public class LocationMapTest {
 		Organism org6 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(5)
+				.withMatterId(5)
 				.build();
 		org6.getLocation().setX(15);
 		org6.getLocation().setY(15);
@@ -798,7 +800,7 @@ public class LocationMapTest {
 		Organism org7 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(6)
+				.withMatterId(6)
 				.build();
 		org7.getLocation().setX(5);
 		org7.getLocation().setY(15);
@@ -807,7 +809,7 @@ public class LocationMapTest {
 		Organism org8 = Organism.organismBuilder()
 				.withNumberOfGenes(4)
 				.withFitness(0.0)
-				.withId(7)
+				.withMatterId(7)
 				.build();
 		
 		/*Organism org9 = new Organism(true, 4, 0.0, 1);

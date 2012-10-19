@@ -43,19 +43,12 @@ public class OrganismBuilder extends MatterBuilder<OrganismBuilder> {
 	
 	@Override
 	protected OrganismBuilder getThis() {
-		// TODO Auto-generated method stub
 		return this;
 	}
 
-	private Organism org;
-	
-	int width = 5;
-	int height = 5;
 	String action;
 	double fitness;
 	OrgData orgData;
 	int numActions;
 	int numberOfGenes;
-	int id;
-	int health;
 }

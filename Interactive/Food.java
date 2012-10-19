@@ -88,7 +88,7 @@ public abstract class Food extends Matter {
 	
 	public void printInfo() {
 		System.out.println("Food: ");
-		System.out.println("Id: " + id);
+		System.out.println("Id: " + matterId);
 		System.out.println("Health: " + health);
 		System.out.println("Position: (" + location.getX() + ", "
 				+ location.getY() + ")");
