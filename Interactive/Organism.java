@@ -498,9 +498,6 @@ public class Organism extends Matter implements Cloneable {
 //		} // End mainLoop.
 	}
 	
-	// ------------------------------------------------------------------------------------
-	// --globals--
-	// ------------------------------------------------------------------------------------
 	private Chromosome chromosome;
 	public static int width = 5;
 	public static int height = 5;
