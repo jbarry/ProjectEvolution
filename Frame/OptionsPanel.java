@@ -35,6 +35,8 @@ public class OptionsPanel extends JPanel implements Runnable {
 	public static int numOrganisms = 0;
 
 	private JLabel numOrgsLbl;
+	private JLabel generationLengthLabel;
+	private JLabel healthDepletionLabel;
 	private JLabel orgSizeLbl;
 	private JLabel mutationRateLbl;
 	private JLabel rotationRateLbl;
@@ -43,6 +45,8 @@ public class OptionsPanel extends JPanel implements Runnable {
 	private JLabel timeStepSelectionLbl;
 
 	private JTextField numOrgsTxtBox;
+	private JTextField generationLengthTextBox;
+	private JTextField healthDepletionTextBox;
 	private JTextField orgWidthTxtBox;
 	private JTextField orgHeightTxtBox;
 	private JTextField mutationRateTxtBox;
@@ -121,6 +125,8 @@ public class OptionsPanel extends JPanel implements Runnable {
 				// reset all labels
 				numOrgsLbl.setText("Population Size:");
 				orgSizeLbl.setText("Organism Size: w x h");
+				generationLengthLabel.setText("Lenght of Generation");
+				healthDepletionLabel.setText("Health Depletion");
 				mutationRateLbl.setText("Mutation Rate (%): ");
 				rotationRateLbl.setText("Rotation Rate (%): ");
 				selectionRateLbl.setText("Selection Rate (%): ");
@@ -382,10 +388,40 @@ public class OptionsPanel extends JPanel implements Runnable {
 		numOrgsTxtBox.setDocument(new JTextFieldLimit(3));
 		add(numOrgsTxtBox);
 
+		generationLengthTextBox = new JTextField();
+		generationLengthTextBox.setLayout(null);
+		generationLengthTextBox.setSize(50, 20);
+		generationLengthTextBox.setLocation(120, 80);
+		generationLengthTextBox.setFocusable(true);
+		generationLengthTextBox.setDocument(new JTextFieldLimit(3));
+		add(generationLengthTextBox);
+		
+		generationLengthLabel = new JLabel();
+		generationLengthLabel.setLayout(null);
+		generationLengthLabel.setText("Gen Length:");
+		generationLengthLabel.setSize(150, 20);
+		generationLengthLabel.setLocation(120, 60);
+		add(generationLengthLabel);
+		
+		healthDepletionTextBox = new JTextField();
+		healthDepletionTextBox.setLayout(null);
+		healthDepletionTextBox.setSize(50, 20);
+		healthDepletionTextBox.setLocation(120, 120);
+		healthDepletionTextBox.setFocusable(true);
+		healthDepletionTextBox.setDocument(new JTextFieldLimit(3));
+		add(healthDepletionTextBox);
+		
+		healthDepletionLabel = new JLabel();
+		healthDepletionLabel.setLayout(null);
+		healthDepletionLabel.setText("Hlth Depletion:");
+		healthDepletionLabel.setSize(150, 20);
+		healthDepletionLabel.setLocation(120, 100);
+		add(healthDepletionLabel);
+		
 		/** Organism Size */
 		orgSizeLbl = new JLabel();
 		orgSizeLbl.setLayout(null);
-		orgSizeLbl.setText("Organism Size: w x h");
+		orgSizeLbl.setText("Org Size: w x h");
 		orgSizeLbl.setSize(150, 20);
 		orgSizeLbl.setLocation(10, 100);
 		add(orgSizeLbl);
