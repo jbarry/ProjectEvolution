@@ -140,19 +140,11 @@ public class GridPanel extends JPanel {
 	}
 	
 	private class GameThread extends Thread {
-		
 		@Override
 		public void run() {
 			while (!gamePaused) {
-				
-				// Old version. Without threading.
 				// simulateStepAstarClosedListOrgDataLoopGenes(1, 40);
-				
-				// TODO: Work on threading. (beggining stages)
-				for (Organism org : organisms) {
-					org.start();
-				} 
-			}
+			} 
 		}
 	}
 	
@@ -499,7 +491,8 @@ public class GridPanel extends JPanel {
 	 *            The number of actions that an organism will do at each time
 	 *            step.
 	 */
-	private void simulateStepAstarClosedListOrgDataLoopGenes(int numActions, double healthDepletion) {
+	public void simulateStepAstarClosedListOrgDataLoopGenes(int numActions, double healthDepletion) {
+		
 		Collections.shuffle(shuffleIds);
 		// Loop through Organisms.
 		mainLoop: for (int orgIndex = 0; orgIndex < shuffleIds.size(); orgIndex++) { // mainLoop.

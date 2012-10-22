@@ -1,5 +1,7 @@
 package Interactive;
 
+import Frame.GridPanel;
+
 public class OrganismBuilder extends MatterBuilder<OrganismBuilder> {
 	
 	public Organism build() {
@@ -51,4 +53,5 @@ public class OrganismBuilder extends MatterBuilder<OrganismBuilder> {
 	OrgData orgData;
 	int numActions;
 	int numberOfGenes;
+	GridPanel gridPanel;
 }
