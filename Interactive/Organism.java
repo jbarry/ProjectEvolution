@@ -3,11 +3,13 @@ package Interactive;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import Evaluation.Expr;
 import Frame.Coordinate;
 import Frame.GridPanel;
 import Frame.LocationMap;
@@ -413,23 +415,24 @@ public class Organism extends Matter implements Cloneable {
 			orgData.incrementSumHealth(health);
 			ArrayList<Coordinate> closedList = (ArrayList<Coordinate>) orgData
 					.getClosedList();
-			closedList.add(org.getLocation());
+			closedList.add(location);
 			orgData.setLastFoodSourceIndex(0);
 			orgData.incHlthTot();
 			// TODO: implement deplete thread
 			// TODO: implement health deplete listener.
-			double depleteValue = orgData.getMaxHealth() / (GridPanel.lengthGeneration - GridPanel.healthDepletion);
+			double depleteValue = orgData.getMaxHealth() / (gridPanel.lengthGeneration - gridPanel.healthDepletion);
 			if (deplete(depleteValue)) {
 				// TODO: make timePassed not static
 				orgData.setTimeOfDeath(GridPanel.timePassed);
 				System.out.println("remove on deplete.");
 			}
-			Chromosome chrome = org.getChromosome();
+			Chromosome chrome = chromosome;
 			int foodDestination = 0;
 			Pair<Integer, Double> bestEval = null;
+			
 			for (int geneIndex = 0; geneIndex < chrome.size(); geneIndex++) { // loopGenes.
 				Gene currentGene = chrome.getGene(geneIndex);
-				System.out.println("onGene: " + j);
+//				System.out.println("onGene: " + j);
 				for (int foodIndex = 0; foodIndex < foodList.size(); foodIndex++) { // loopFood.
 					if (geneIndex == 0 && foodIndex == 0) {
 						bestEval = new Pair<Integer, Double>(0, evaluateGeneFoodInRangeAstar(org, currentGene.getEvaledList(), foodList.get(0)));
@@ -456,7 +459,120 @@ public class Organism extends Matter implements Cloneable {
 			}
 		}
 	}
+	/**
+	 * Deplete the health of any matter to the appropriate value.
+	 * 
+	 * @param m
+	 * @param val
+	 * @return
+	 */
+	public boolean deplete(Matter m, double val) {
+		if (m.getHealth() - val < 0) {
+			m.setHealth(0);
+			Coordinate c = m.getLocation();
+			int x = c.getX();
+			int y = c.getY();
+			locationMap.setRangeToBlank(x, y, m.getWidth(), m.getHeight());
+			return true;
+		} else
+			m.setHealth(m.getHealth() - val);
+		return false;
+	}
+	/**
+	 * @param org
+	 * @param anOrgData
+	 * @param bestEval
+	 * @param aFoodDestination
+	 * @return boolean indicating whether or not the organism died while
+	 *         performing an action.
+	 */
+	public boolean doActionAstar(Organism org, OrgData anOrgData,
+			Pair<Integer, Double> bestEval, int aFoodDestination) {
+		switch (bestEval.getLeft()) {
+			case 0:
+				if (moveAstarUsingContains(org, aFoodDestination,
+						(ArrayList<Coordinate>) anOrgData.getClosedList()))
+					anOrgData.countStep();
+				break;
+			case 1:
+				return eatFood(org, aFoodDestination);
+		}
+		return false;
+	}
+	/**
+	 * @param org
+	 * @param orgData
+	 * @param aFoodDestination
+	 * @return boolean indicating whether or not the organism moved.
+	 */
+	private boolean moveAstarUsingContains(Organism org, int aFoodDestination,
+			List<Coordinate> closedList) {
+		
+		Food fd = foodList.get(aFoodDestination);
+		PriorityQueue<Coordinate> sq = LocationMap.getInstance()
+				.searchWithList(org.getLocation(), fd.getLocation(),
+						org.getMatterID());
+		if (sq.peek().equals(org.getLocation()))
+			return false;
+		do {
+			Coordinate move = sq.poll();
+			// If queue is emtpy.
+			if (move == null)
+				return false;
+			else {
+				// Check to see if the move is on the closed list.
+				if (!closedList.contains(move)) {
+					closedList.add(move);
+					org.moveTo(move);
+					return true;
+				} // Otherwise, get the next move.Hey 
+			}
+		} while (!sq.isEmpty());
+		return false;
+	}
+	/**
+	 * Checks to see if a specific food is in range and returns whether or not
+	 * the organism died while eating, if the food is in range.
+	 * 
+	 * @param org
+	 * @param aFood
+	 * @return
+	 */
+	public boolean eatFood(Organism org, int fdId) {
+		Food aFood = foodList.get(fdId);
+		if (org.matterInRange(aFood.getMatterID(), aFood.getType(), 5)) {
+			System.out.println("Ate Food!!"); // TODO: Deplete food source.
+			return org.eatFood(5 * aFood.getFoodType());
+		}
+		return false;
+	}
 	
+	private double evaluateGeneFoodInRangeAstar(Organism org, Expr result,
+			Food aFood) {
+		LocationMap map = LocationMap.getInstance();
+		HashMap<String, Double> environment = new HashMap<String, Double>();
+		double orgX = norm.normalize(org.getLocation().getX());
+		double orgY = norm.normalize(org.getLocation().getY());
+		double foodX = norm.normalize(aFood.getLocation().getX());
+		double foodY = norm.normalize(aFood.getLocation().getY());
+		double distanceToFood = norm.normalize(map.distance(orgX, orgY, foodX,
+				foodY));
+		double health = norm.normalize(org.getHealth());
+		double numSurroundingOrgs = norm.normalize(map.numSurroundingObjects(
+				org.getLocation(), org.getWidth(), org.getHeight(), 10));
+		double orgNearFood = norm.normalize(map.numSurroundingObjects(
+				aFood.getLocation(), aFood.getWidth(), aFood.getHeight(), 10));
+		double foodRemaining = norm.normalize(aFood.getHealth());
+		environment.put("a", distanceToFood); // Represents distance to
+		// food.
+		environment.put("c", orgNearFood);
+		environment.put("d", health);
+		environment.put("e", foodRemaining);
+		environment.put("f", aFood.getFoodType());
+		environment.put("g", numSurroundingOrgs);
+		return result.evaluate(environment);
+	}
+
 	public Chromosome chromosome;
 	public static int width = 5;
 	public static int height = 5;

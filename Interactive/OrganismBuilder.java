@@ -8,6 +8,11 @@ public class OrganismBuilder extends MatterBuilder<OrganismBuilder> {
 		return new Organism(this);
 	}
 	
+	public OrganismBuilder withGridPanel(GridPanel gridPanel) {
+		this.gridPanel = gridPanel;
+		return this;
+	}
+	
 	public OrganismBuilder withWidth(int width) {
 		this.width = width;
 		return this;
