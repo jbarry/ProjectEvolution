@@ -33,11 +33,6 @@ public class OrganismBuilder extends MatterBuilder<OrganismBuilder> {
 		return this;
 	}
 	
-	public OrganismBuilder withNumActions(int numActions) {
-		this.numActions = numActions;
-		return this;
-	}
-	
 	public OrganismBuilder withNumberOfGenes(int chromosomeSize) {
 		this.numberOfGenes = chromosomeSize;
 		return this;
@@ -51,7 +46,6 @@ public class OrganismBuilder extends MatterBuilder<OrganismBuilder> {
 	String action;
 	double fitness;
 	OrgData orgData;
-	int numActions;
 	int numberOfGenes;
 	GridPanel gridPanel;
 }

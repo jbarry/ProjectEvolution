@@ -491,55 +491,53 @@ public class GridPanel extends JPanel {
 	 *            The number of actions that an organism will do at each time
 	 *            step.
 	 */
-	public void simulateStepAstarClosedListOrgDataLoopGenes(
-			int numActions, double healthDepletion, Organism org) {
+	public void simulateStepAstarClosedListOrgDataLoopGenes(double healthDepletion, Organism org) {
 		OrgData orgData = org.orgData;
 		orgData.incrementSumHealth(org.getHealth());
 		ArrayList<Coordinate> closedList = (ArrayList<Coordinate>) orgData
 				.getClosedList();
 		closedList.add(org.getLocation());
 		orgData.setLastFoodSourceIndex(0);
-		for (int numActionIndex = 0; numActionIndex < numActions; numActionIndex++) { // numActions
-			orgData.incHlthTot();
-			// TODO: implement deplete thread
-			double depleteValue = orgData.getMaxHealth() / ((lengthGeneration - healthDepletion) * numActions);
-			if (deplete(org, depleteValue)) {
-				orgData.setTimeOfDeath(timePassed);
-				System.out.println("remove on deplete.");
-			}
-			Chromosome chrome = org.getChromosome();
-			int foodDestination = 0;
-			Pair<Integer, Double> bestEval = null;
-			for (int geneIndex = 0; geneIndex < chrome.size(); geneIndex++) { // loopGenes.
-				Gene currentGene = chrome.getGene(geneIndex);
-				/*System.out.println("onGene: " + j);*/
-				for (int foodIndex = 0; foodIndex < foodList.size(); foodIndex++) { // loopFood.
-					if (geneIndex == 0 && foodIndex == 0) {
-						bestEval = new Pair<Integer, Double>(0, evaluateGeneFoodInRangeAstar(org, currentGene.getEvaledList(), foodList.get(0)));
-					} else {
-						double aResult = evaluateGeneFoodInRangeAstar(org, currentGene.getEvaledList(), foodList.get(foodIndex));
-						if (aResult > bestEval.getRight()) {
-							foodDestination = foodIndex;
-							/*System.out.println("replacedId: " + k);*/
-							bestEval.setLeft(geneIndex);
-							bestEval.setRight(aResult);
-						}
+		orgData.incHlthTot();
+		// TODO: implement deplete thread
+		// TODO: implement health deplete listener.
+		double depleteValue = orgData.getMaxHealth() / (lengthGeneration - healthDepletion);
+		if (deplete(org, depleteValue)) {
+			orgData.setTimeOfDeath(timePassed);
+			System.out.println("remove on deplete.");
+		}
+		Chromosome chrome = org.getChromosome();
+		int foodDestination = 0;
+		Pair<Integer, Double> bestEval = null;
+		for (int geneIndex = 0; geneIndex < chrome.size(); geneIndex++) { // loopGenes.
+			Gene currentGene = chrome.getGene(geneIndex);
+			/*System.out.println("onGene: " + j);*/
+			for (int foodIndex = 0; foodIndex < foodList.size(); foodIndex++) { // loopFood.
+				if (geneIndex == 0 && foodIndex == 0) {
+					bestEval = new Pair<Integer, Double>(0, evaluateGeneFoodInRangeAstar(org, currentGene.getEvaledList(), foodList.get(0)));
+				} else {
+					double aResult = evaluateGeneFoodInRangeAstar(org, currentGene.getEvaledList(), foodList.get(foodIndex));
+					if (aResult > bestEval.getRight()) {
+						foodDestination = foodIndex;
+						/*System.out.println("replacedId: " + k);*/
+						bestEval.setLeft(geneIndex);
+						bestEval.setRight(aResult);
 					}
-				} // End loopFood.
-			} // End loopGenes.
-			if (orgData.getLastFoodSourceDestination() != foodDestination) {
-				closedList.clear();
-				orgData.setLastFoodSourceIndex(foodDestination);
-			}
-			// TODO: Later on replace foodDestination with
-			// objectDestination.
-			if (doActionAstar(org, orgData, bestEval,
-					orgData.getLastFoodSourceDestination())) {
-				shuffleIds.remove(new Integer(org.getMatterID()));
-				orgData.setTimeOfDeath(timePassed);
-			}
-		} // End NumAction Loop.
-		} // End mainLoop.
+				}
+			} // End loopFood.
+		} // End loopGenes.
+		if (orgData.getLastFoodSourceDestination() != foodDestination) {
+			closedList.clear();
+			orgData.setLastFoodSourceIndex(foodDestination);
+		}
+		// TODO: Later on replace foodDestination with
+		// objectDestination.
+		if (doActionAstar(org, orgData, bestEval,
+				orgData.getLastFoodSourceDestination())) {
+			shuffleIds.remove(new Integer(org.getMatterID()));
+			orgData.setTimeOfDeath(timePassed);
+		}
+	} // End mainLoop.
 
 	/**
 	 * @param org

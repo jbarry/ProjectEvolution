@@ -28,7 +28,6 @@ public class Organism extends Matter implements Cloneable {
 		action = organismBuilder.action;
 		fitness = organismBuilder.fitness;
 		orgData = organismBuilder.orgData;
-		numActions = organismBuilder.numActions;
 		health = organismBuilder.health;
 		fitness = organismBuilder.fitness;
 		chromosome = new Chromosome(organismBuilder.numberOfGenes);
@@ -409,8 +408,10 @@ public class Organism extends Matter implements Cloneable {
 
 	@Override
 	public void run() {
-		gridPanel.simulateStepAstarClosedListOrgDataLoopGenes(1, 40, this);
-		
+		// TODO: while(gamePaused) ...maybe
+		while (true) {
+			gridPanel.simulateStepAstarClosedListOrgDataLoopGenes(40, this);
+		}
 	}
 	
 	public Chromosome chromosome;
@@ -419,6 +420,5 @@ public class Organism extends Matter implements Cloneable {
 	public String action;
 	public double fitness;
 	public OrgData orgData;
-	public int numActions;
 	public GridPanel gridPanel;
 }
