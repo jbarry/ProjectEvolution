@@ -44,22 +44,22 @@ public class GridPanel extends JPanel {
 	public final static int HEIGHT = 2 * GUI.HEIGHT / 3;
 
 	/*public static Pair<Integer, Character>[][] locationMap;*/
-	private LocationMap locationMap;
-	private LinkedList<Organism> organisms;
-	private LinkedList<HealthyFood> healthFd;
-	private LinkedList<PoisonousFood> poisFood;
-	private LinkedList<Food> foodList;
-	private LinkedList<Organism> orgsUsed;
-	private ArrayList<OrgData> orgDataList;
-	private ArrayList<Integer> shuffleIds;
-	private ArrayList<String> shuffleStringIds;
-	private int lengthTimeStep = 500;
+	public LocationMap locationMap;
+	public LinkedList<Organism> organisms;
+	public LinkedList<HealthyFood> healthFd;
+	public LinkedList<PoisonousFood> poisFood;
+	public LinkedList<Food> foodList;
+	public LinkedList<Organism> orgsUsed;
+	public ArrayList<OrgData> orgDataList;
+	public ArrayList<Integer> shuffleIds;
+	public ArrayList<String> shuffleStringIds;
+	public int lengthTimeStep = 500;
 	
 	// TODO: input into GUI
 	public int lengthGeneration = 100;
 	public double healthDepletion = 40;
 	
-	public static int timePassed = 0;
+	public int timePassed = 0;
 	private int trialsPerGen = 1;
 	public int trialNum = 1;
 	public int generationNum = 1;
@@ -67,7 +67,7 @@ public class GridPanel extends JPanel {
 	private GEP g;
 	public static int numFoodSources = 0;
 	private Timer timer;
-	private Normalizer norm;
+	public Normalizer norm;
 	private int numPreProcessedGenerations = 0;
 	private Random ran;
 	private GUI gui;

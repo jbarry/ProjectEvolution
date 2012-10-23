@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Set;
 
 import Evaluation.Expr;
@@ -423,24 +424,23 @@ public class Organism extends Matter implements Cloneable {
 			double depleteValue = orgData.getMaxHealth() / (gridPanel.lengthGeneration - gridPanel.healthDepletion);
 			if (deplete(depleteValue)) {
 				// TODO: make timePassed not static
-				orgData.setTimeOfDeath(GridPanel.timePassed);
+				orgData.setTimeOfDeath(gridPanel.timePassed);
 				System.out.println("remove on deplete.");
 			}
 			Chromosome chrome = chromosome;
 			int foodDestination = 0;
 			Pair<Integer, Double> bestEval = null;
-			
 			for (int geneIndex = 0; geneIndex < chrome.size(); geneIndex++) { // loopGenes.
 				Gene currentGene = chrome.getGene(geneIndex);
 //				System.out.println("onGene: " + j);
-				for (int foodIndex = 0; foodIndex < foodList.size(); foodIndex++) { // loopFood.
+				for (int foodIndex = 0; foodIndex < gridPanel.foodList.size(); foodIndex++) { // loopFood.
 					if (geneIndex == 0 && foodIndex == 0) {
-						bestEval = new Pair<Integer, Double>(0, evaluateGeneFoodInRangeAstar(org, currentGene.getEvaledList(), foodList.get(0)));
+						bestEval = new Pair<Integer, Double>(0, evaluateGeneFoodInRangeAstar(currentGene.getEvaledList(), gridPanel.foodList.get(0)));
 					} else {
-						double aResult = evaluateGeneFoodInRangeAstar(org, currentGene.getEvaledList(), foodList.get(foodIndex));
+						double aResult = evaluateGeneFoodInRangeAstar(currentGene.getEvaledList(), gridPanel.foodList.get(foodIndex));
 						if (aResult > bestEval.getRight()) {
 							foodDestination = foodIndex;
-							System.out.println("replacedId: " + k);
+//							System.out.println("replacedId: " + k);
 							bestEval.setLeft(geneIndex);
 							bestEval.setRight(aResult);
 						}
@@ -453,9 +453,10 @@ public class Organism extends Matter implements Cloneable {
 			}
 			// TODO: Later on replace foodDestination with
 			// objectDestination.
-			if (doActionAstar(org, orgData, bestEval, orgData.getLastFoodSourceDestination())) {
-				shuffleIds.remove(new Integer(org.getMatterID()));
-				orgData.setTimeOfDeath(timePassed);
+			if (doActionAstar(bestEval)) {
+				// TODO: remove org by using listener
+//				shuffleIds.remove(new Integer(org.getMatterID()));
+				orgData.setTimeOfDeath(gridPanel.timePassed);
 			}
 		}
 	}
@@ -472,7 +473,7 @@ public class Organism extends Matter implements Cloneable {
 			Coordinate c = m.getLocation();
 			int x = c.getX();
 			int y = c.getY();
-			locationMap.setRangeToBlank(x, y, m.getWidth(), m.getHeight());
+			gridPanel.locationMap.setRangeToBlank(x, y, m.getWidth(), m.getHeight());
 			return true;
 		} else
 			m.setHealth(m.getHealth() - val);
@@ -486,16 +487,15 @@ public class Organism extends Matter implements Cloneable {
 	 * @return boolean indicating whether or not the organism died while
 	 *         performing an action.
 	 */
-	public boolean doActionAstar(Organism org, OrgData anOrgData,
-			Pair<Integer, Double> bestEval, int aFoodDestination) {
+	public boolean doActionAstar(Pair<Integer, Double> bestEval) {
+		int aFoodDestination = orgData.getLastFoodSourceDestination();
 		switch (bestEval.getLeft()) {
 			case 0:
-				if (moveAstarUsingContains(org, aFoodDestination,
-						(ArrayList<Coordinate>) anOrgData.getClosedList()))
-					anOrgData.countStep();
+				if (moveAstarUsingContains(aFoodDestination, (ArrayList<Coordinate>) orgData.getClosedList()))
+					orgData.countStep();
 				break;
 			case 1:
-				return eatFood(org, aFoodDestination);
+				return eatFood(aFoodDestination);
 		}
 		return false;
 	}
@@ -505,14 +505,11 @@ public class Organism extends Matter implements Cloneable {
 	 * @param aFoodDestination
 	 * @return boolean indicating whether or not the organism moved.
 	 */
-	private boolean moveAstarUsingContains(Organism org, int aFoodDestination,
-			List<Coordinate> closedList) {
-		
-		Food fd = foodList.get(aFoodDestination);
+	private boolean moveAstarUsingContains(int aFoodDestination, List<Coordinate> closedList) {
+		Food fd = gridPanel.foodList.get(aFoodDestination);
 		PriorityQueue<Coordinate> sq = LocationMap.getInstance()
-				.searchWithList(org.getLocation(), fd.getLocation(),
-						org.getMatterID());
-		if (sq.peek().equals(org.getLocation()))
+				.searchWithList(getLocation(), fd.getLocation(), matterId);
+		if (sq.peek().equals(location))
 			return false;
 		do {
 			Coordinate move = sq.poll();
@@ -523,13 +520,14 @@ public class Organism extends Matter implements Cloneable {
 				// Check to see if the move is on the closed list.
 				if (!closedList.contains(move)) {
 					closedList.add(move);
-					org.moveTo(move);
+					moveTo(move);
 					return true;
 				} // Otherwise, get the next move.Hey 
 			}
 		} while (!sq.isEmpty());
 		return false;
 	}
+	
 	/**
 	 * Checks to see if a specific food is in range and returns whether or not
 	 * the organism died while eating, if the food is in range.
@@ -539,7 +537,7 @@ public class Organism extends Matter implements Cloneable {
 	 * @return
 	 */
 	public boolean eatFood(Organism org, int fdId) {
-		Food aFood = foodList.get(fdId);
+		Food aFood = gridPanel.foodList.get(fdId);
 		if (org.matterInRange(aFood.getMatterID(), aFood.getType(), 5)) {
 			System.out.println("Ate Food!!"); // TODO: Deplete food source.
 			return org.eatFood(5 * aFood.getFoodType());
@@ -547,22 +545,21 @@ public class Organism extends Matter implements Cloneable {
 		return false;
 	}
 	
-	private double evaluateGeneFoodInRangeAstar(Organism org, Expr result,
-			Food aFood) {
+	private double evaluateGeneFoodInRangeAstar(Expr result, Food aFood) {
 		LocationMap map = LocationMap.getInstance();
 		HashMap<String, Double> environment = new HashMap<String, Double>();
-		double orgX = norm.normalize(org.getLocation().getX());
-		double orgY = norm.normalize(org.getLocation().getY());
-		double foodX = norm.normalize(aFood.getLocation().getX());
-		double foodY = norm.normalize(aFood.getLocation().getY());
-		double distanceToFood = norm.normalize(map.distance(orgX, orgY, foodX,
+		double orgX = gridPanel.norm.normalize(getLocation().getX());
+		double orgY = gridPanel.norm.normalize(getLocation().getY());
+		double foodX = gridPanel.norm.normalize(aFood.getLocation().getX());
+		double foodY = gridPanel.norm.normalize(aFood.getLocation().getY());
+		double distanceToFood = gridPanel.norm.normalize(map.distance(orgX, orgY, foodX,
 				foodY));
-		double health = norm.normalize(org.getHealth());
-		double numSurroundingOrgs = norm.normalize(map.numSurroundingObjects(
-				org.getLocation(), org.getWidth(), org.getHeight(), 10));
-		double orgNearFood = norm.normalize(map.numSurroundingObjects(
+		double health = gridPanel.norm.normalize(getHealth());
+		double numSurroundingOrgs = gridPanel.norm.normalize(map.numSurroundingObjects(
+				getLocation(), getWidth(), getHeight(), 10));
+		double orgNearFood = gridPanel.norm.normalize(map.numSurroundingObjects(
 				aFood.getLocation(), aFood.getWidth(), aFood.getHeight(), 10));
-		double foodRemaining = norm.normalize(aFood.getHealth());
+		double foodRemaining = gridPanel.norm.normalize(aFood.getHealth());
 		environment.put("a", distanceToFood); // Represents distance to
 		// food.
 		environment.put("c", orgNearFood);
