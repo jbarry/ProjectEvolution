@@ -788,7 +788,6 @@ public class GUI extends Container {
 									.withHealth(500)
 									.withNumberOfGenes(numGenes)
 									.withMatterId(i)
-									.withNumActions(100)
 									.build();
 							
 							LinkedList<Gene> tempGeneList = new LinkedList<Gene>();
@@ -917,7 +916,6 @@ public class GUI extends Container {
 								.withHealth(individOrgData.getMaxHealth())
 								.withNumberOfGenes(numGenes)
 								.withMatterId(i)
-								.withNumActions(100)
 								.build();
 						// Create temporary Linked List of type Gene to store
 						// each gene in a given organisms' Chromosome

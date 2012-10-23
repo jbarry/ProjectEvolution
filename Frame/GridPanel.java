@@ -56,10 +56,10 @@ public class GridPanel extends JPanel {
 	private int lengthTimeStep = 500;
 	
 	// TODO: input into GUI
-	public int lengthGeneration = 100;
-	public double healthDepletion = 40;
+	public static int lengthGeneration = 100;
+	public static double healthDepletion = 40;
 	
-	private int timePassed = 0;
+	public static int timePassed = 0;
 	private int trialsPerGen = 1;
 	public int trialNum = 1;
 	public int generationNum = 1;
@@ -490,7 +490,7 @@ public class GridPanel extends JPanel {
 	 * @param numActions
 	 *            The number of actions that an organism will do at each time
 	 *            step.
-	 */
+	 *//*
 	public void simulateStepAstarClosedListOrgDataLoopGenes(double healthDepletion, Organism org) {
 		OrgData orgData = org.orgData;
 		orgData.incrementSumHealth(org.getHealth());
@@ -511,7 +511,7 @@ public class GridPanel extends JPanel {
 		Pair<Integer, Double> bestEval = null;
 		for (int geneIndex = 0; geneIndex < chrome.size(); geneIndex++) { // loopGenes.
 			Gene currentGene = chrome.getGene(geneIndex);
-			/*System.out.println("onGene: " + j);*/
+			System.out.println("onGene: " + j);
 			for (int foodIndex = 0; foodIndex < foodList.size(); foodIndex++) { // loopFood.
 				if (geneIndex == 0 && foodIndex == 0) {
 					bestEval = new Pair<Integer, Double>(0, evaluateGeneFoodInRangeAstar(org, currentGene.getEvaledList(), foodList.get(0)));
@@ -519,7 +519,7 @@ public class GridPanel extends JPanel {
 					double aResult = evaluateGeneFoodInRangeAstar(org, currentGene.getEvaledList(), foodList.get(foodIndex));
 					if (aResult > bestEval.getRight()) {
 						foodDestination = foodIndex;
-						/*System.out.println("replacedId: " + k);*/
+						System.out.println("replacedId: " + k);
 						bestEval.setLeft(geneIndex);
 						bestEval.setRight(aResult);
 					}
@@ -532,12 +532,11 @@ public class GridPanel extends JPanel {
 		}
 		// TODO: Later on replace foodDestination with
 		// objectDestination.
-		if (doActionAstar(org, orgData, bestEval,
-				orgData.getLastFoodSourceDestination())) {
+		if (doActionAstar(org, orgData, bestEval, orgData.getLastFoodSourceDestination())) {
 			shuffleIds.remove(new Integer(org.getMatterID()));
 			orgData.setTimeOfDeath(timePassed);
 		}
-	} // End mainLoop.
+	}*/
 
 	/**
 	 * @param org
