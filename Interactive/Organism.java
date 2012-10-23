@@ -409,16 +409,16 @@ public class Organism extends Matter implements Cloneable {
 
 	@Override
 	public void run() {
-		gridPanel.simulateStepAstarClosedListOrgDataLoopGenes(1, 40);
+		gridPanel.simulateStepAstarClosedListOrgDataLoopGenes(1, 40, this);
 		
 	}
 	
-	private Chromosome chromosome;
+	public Chromosome chromosome;
 	public static int width = 5;
 	public static int height = 5;
-	private String action;
-	private double fitness;
-	private OrgData orgData;
-	private int numActions;
-	private GridPanel gridPanel;
+	public String action;
+	public double fitness;
+	public OrgData orgData;
+	public int numActions;
+	public GridPanel gridPanel;
 }
