@@ -460,6 +460,7 @@ public class Organism extends Matter implements Cloneable {
 			}
 		}
 	}
+	
 	/**
 	 * Deplete the health of any matter to the appropriate value.
 	 * 
@@ -479,6 +480,7 @@ public class Organism extends Matter implements Cloneable {
 			m.setHealth(m.getHealth() - val);
 		return false;
 	}
+	
 	/**
 	 * @param org
 	 * @param anOrgData
@@ -499,6 +501,7 @@ public class Organism extends Matter implements Cloneable {
 		}
 		return false;
 	}
+	
 	/**
 	 * @param org
 	 * @param orgData

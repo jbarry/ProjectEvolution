@@ -8,7 +8,7 @@ import Interactive.HealthyFood;
 import Interactive.Organism;
 import Interactive.PoisonousFood;
 
-public class MouseMotionListenerClass implements MouseMotionListener{
+public class MouseMotionListenerClass implements MouseMotionListener {
 	
 	private GridPanel gp;
 	
