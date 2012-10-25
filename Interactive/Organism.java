@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import Evaluation.Expr;
 import Frame.Coordinate;
@@ -423,7 +424,6 @@ public class Organism extends Matter implements Cloneable {
 			// TODO: implement health deplete listener.
 			double depleteValue = orgData.getMaxHealth() / (gridPanel.lengthGeneration - gridPanel.healthDepletion);
 			if (deplete(depleteValue)) {
-				// TODO: make timePassed not static
 				orgData.setTimeOfDeath(gridPanel.timePassed);
 				System.out.println("remove on deplete.");
 			}

@@ -73,7 +73,7 @@ public class GridPanel extends JPanel {
 	private GUI gui;
 	private GameThread gameThread;
 	public boolean isPainting;
-	private boolean gamePaused;
+	public boolean gamePaused;
 	private Thread timerCalculator;
 	
 	// ------------------------------------------------------------------------------------
@@ -110,7 +110,6 @@ public class GridPanel extends JPanel {
 			}
 		});
 		
-		gameThread = new GameThread();
 		timerCalculator = new Thread(new TimerCalculatorRunnable());
 	}
 
@@ -139,29 +138,22 @@ public class GridPanel extends JPanel {
 		}
 	}
 	
-	private class GameThread extends Thread {
-		@Override
-		public void run() {
-			while (!gamePaused) {
-				// simulateStepAstarClosedListOrgDataLoopGenes(1, 40);
-			} 
-		}
-	}
-	
 	public void pauseGame() {
 		timer.stop();
-		synchronized(gameThread) {
-			gamePaused = true;
+		for (Organism org : organisms) {
+			org.wait();
 		}
+		gamePaused = true;
+		// TODO
 	}
 
 	public void resumeGame() {
 		timer.start();
-		gameThread.notify();
+		// TODO
 	}
 	
 	public void startGame() {
-		gameThread.start();
+		// TODO
 		timerCalculator.start();
 		isPainting = true;
 		/*System.out.println("thread started: " + gameStarted);*/
